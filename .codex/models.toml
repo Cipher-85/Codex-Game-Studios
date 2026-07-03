@@ -1,0 +1,11 @@
+[tiers.opus]
+model = "gpt-5.5"
+reasoning_effort = "high"
+
+[tiers.sonnet]
+model = "gpt-5.4"
+reasoning_effort = "medium"
+
+[tiers.haiku]
+model = "gpt-5.4-mini"
+reasoning_effort = "low"

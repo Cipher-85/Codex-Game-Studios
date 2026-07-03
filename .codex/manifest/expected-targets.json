@@ -1,0 +1,2830 @@
+[
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/art-director/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/art-director.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/audio-director/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/audio-director.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/creative-director/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/creative-director.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/economy-designer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/economy-designer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/game-designer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/game-designer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/lead-programmer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agent-memory/lead-programmer/MEMORY.md"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/level-designer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/level-designer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/localization-lead/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/localization-lead.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/narrative-director/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/narrative-director.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/performance-analyst/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/performance-analyst.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/producer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/producer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/qa-lead/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/qa-lead.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/systems-designer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/systems-designer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/technical-director/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/technical-director.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/ux-designer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/ux-designer.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/world-builder/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/world-builder.md memory metadata"
+  },
+  {
+    "category": "codex_agent_memory",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/writer/MEMORY.md",
+    "rationale": "Repo-local Codex memory contract bound from custom-agent instructions.",
+    "source": ".claude/agents/writer.md memory metadata"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/accessibility-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/accessibility-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ai-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ai-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/analytics-engineer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/analytics-engineer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/art-director.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/art-director.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/audio-director.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/audio-director.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/community-manager.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/community-manager.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/creative-director.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/creative-director.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/devops-engineer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/devops-engineer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/economy-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/economy-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/engine-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/engine-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/game-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/game-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/gameplay-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/gameplay-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-csharp-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/godot-csharp-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-gdextension-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/godot-gdextension-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-gdscript-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/godot-gdscript-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-shader-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/godot-shader-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/godot-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/lead-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/lead-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/level-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/level-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/live-ops-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/live-ops-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/localization-lead.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/localization-lead.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/narrative-director.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/narrative-director.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/network-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/network-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/performance-analyst.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/performance-analyst.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/producer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/producer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/prototyper.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/prototyper.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/qa-lead.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/qa-lead.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/qa-tester.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/qa-tester.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/release-manager.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/release-manager.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/security-engineer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/security-engineer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/sound-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/sound-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/systems-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/systems-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/technical-artist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/technical-artist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/technical-director.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/technical-director.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/tools-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/tools-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-blueprint-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ue-blueprint-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-gas-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ue-gas-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-replication-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ue-replication-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-umg-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ue-umg-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ui-programmer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ui-programmer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-addressables-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unity-addressables-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-dots-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unity-dots-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-shader-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unity-shader-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unity-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-ui-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unity-ui-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unreal-specialist.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/unreal-specialist.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ux-designer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/ux-designer.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/world-builder.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/world-builder.md"
+  },
+  {
+    "category": "codex_agents",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/writer.toml",
+    "rationale": "Direct Codex custom-agent target preserving upstream role name.",
+    "source": ".claude/agents/writer.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/accessibility-requirements.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/accessibility-requirements.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-decision-record.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/architecture-decision-record.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-doc-from-code.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/architecture-doc-from-code.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-traceability.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/architecture-traceability.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/art-bible.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/art-bible.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/changelog-template.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/changelog-template.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/design-agent-protocol.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/collaborative-protocols/design-agent-protocol.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/implementation-agent-protocol.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/collaborative-protocols/implementation-agent-protocol.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/leadership-agent-protocol.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/collaborative-protocols/leadership-agent-protocol.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/concept-doc-from-prototype.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/concept-doc-from-prototype.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/design-doc-from-implementation.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/design-doc-from-implementation.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/difficulty-curve.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/difficulty-curve.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/economy-model.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/economy-model.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/faction-design.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/faction-design.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-concept.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/game-concept.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-design-document.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/game-design-document.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-pillars.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/game-pillars.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/hud-design.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/hud-design.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/incident-response.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/incident-response.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/interaction-pattern-library.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/interaction-pattern-library.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/level-design-document.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/level-design-document.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/milestone-definition.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/milestone-definition.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/narrative-character-sheet.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/narrative-character-sheet.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/pitch-document.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/pitch-document.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/player-journey.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/player-journey.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/post-mortem.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/post-mortem.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project-stage-report.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/project-stage-report.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/prototype-report.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/prototype-report.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/release-checklist-template.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/release-checklist-template.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/release-notes.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/release-notes.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/risk-register-entry.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/risk-register-entry.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/skill-test-spec.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/skill-test-spec.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/sound-bible.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/sound-bible.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/sprint-plan.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/sprint-plan.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/systems-index.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/systems-index.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/technical-design-document.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/technical-design-document.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/test-evidence.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/test-evidence.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/test-plan.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/test-plan.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/ux-spec.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/ux-spec.md"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/vertical-slice-report.md",
+    "rationale": "Codex-owned template copy.",
+    "source": ".claude/docs/templates/vertical-slice-report.md"
+  },
+  {
+    "category": "codex_hooks_new",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/studio-status-on-start.sh",
+    "rationale": "Startup hook for project-specific status breadcrumb.",
+    "source": "Codex conversion plan"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/detect-gaps.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/detect-gaps.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/log-agent-stop.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/log-agent-stop.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/log-agent.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/log-agent.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/post-compact.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/post-compact.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/pre-compact.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/pre-compact.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/session-start.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/session-start.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/session-stop.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/session-stop.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-assets.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/validate-assets.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-commit.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/validate-commit.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-push.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/validate-push.sh"
+  },
+  {
+    "category": "codex_hooks_ported",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-skill-change.sh",
+    "rationale": "Supported lifecycle hook port.",
+    "source": ".claude/hooks/validate-skill-change.sh"
+  },
+  {
+    "category": "codex_skills_new",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/studio-status/SKILL.md",
+    "rationale": "Codex-native status skill for game-stage breadcrumb.",
+    "source": "Codex conversion plan"
+  },
+  {
+    "category": "codex_skills_new",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/studio-next/SKILL.md",
+    "rationale": "Codex-native continuity router for post-task next-action selection.",
+    "source": "Codex continuity orchestrator plan"
+  },
+  {
+    "category": "codex_skills_new",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/handoff/SKILL.md",
+    "rationale": "Codex-native session handoff writer paired with resume-from-handoff.",
+    "source": "Codex continuity handoff plan"
+  },
+  {
+    "category": "codex_skills_new",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/resume-from-handoff/SKILL.md",
+    "rationale": "Codex-native session resume reader for canonical handoff state.",
+    "source": "Codex continuity handoff plan"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/adopt/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/adopt/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/architecture-decision/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/architecture-decision/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/architecture-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/architecture-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/art-bible/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/art-bible/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/asset-audit/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/asset-audit/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/asset-spec/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/asset-spec/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/balance-check/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/balance-check/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/brainstorm/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/brainstorm/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/bug-report/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/bug-report/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/bug-triage/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/bug-triage/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/changelog/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/changelog/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/code-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/code-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/consistency-check/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/consistency-check/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/content-audit/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/content-audit/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-architecture/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/create-architecture/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-control-manifest/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/create-control-manifest/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-epics/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/create-epics/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-stories/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/create-stories/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/day-one-patch/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/day-one-patch/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/design-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/design-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/design-system/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/design-system/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/dev-story/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/estimate/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/estimate/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/gate-check/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/gate-check/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/help/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/help/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/hotfix/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/hotfix/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/launch-checklist/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/launch-checklist/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/localize/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/localize/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/map-systems/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/map-systems/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/milestone-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/milestone-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/onboard/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/onboard/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/patch-notes/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/patch-notes/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/perf-profile/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/perf-profile/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/playtest-report/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/playtest-report/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/project-stage-detect/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/project-stage-detect/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/propagate-design-change/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/propagate-design-change/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/prototype/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/prototype/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/qa-plan/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/qa-plan/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/quick-design/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/quick-design/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/regression-suite/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/regression-suite/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/release-checklist/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/release-checklist/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/retrospective/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/retrospective/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/reverse-document/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/reverse-document/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/review-all-gdds/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/review-all-gdds/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/scope-check/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/scope-check/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/security-audit/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/security-audit/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/setup-engine/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/setup-engine/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/skill-improve/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/skill-improve/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/skill-test/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/skill-test/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/smoke-check/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/smoke-check/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/soak-test/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/soak-test/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/sprint-plan/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/sprint-plan/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/sprint-status/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/sprint-status/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/start/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/start/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/story-done/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-readiness/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/story-readiness/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-audio/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-audio/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-combat/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-combat/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-level/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-level/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-live-ops/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-live-ops/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-narrative/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-narrative/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-polish/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-polish/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-qa/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-qa/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-release/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-release/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-ui/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/team-ui/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/tech-debt/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/tech-debt/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-evidence-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/test-evidence-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-flakiness/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/test-flakiness/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-helpers/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/test-helpers/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-setup/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/test-setup/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/ux-design/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/ux-design/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/ux-review/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/ux-review/SKILL.md"
+  },
+  {
+    "category": "codex_skills_ported",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/vertical-slice/SKILL.md",
+    "rationale": "Direct repo skill target preserving upstream skill name.",
+    "source": ".claude/skills/vertical-slice/SKILL.md"
+  },
+  {
+    "category": "nested_agents_md",
+    "owner": "codex-game-studios",
+    "path": "AGENTS.md",
+    "rationale": "Marker-managed Codex instruction target.",
+    "source": "CLAUDE.md or .claude/rules/*.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/ai-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/ai-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/data-files.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/data-files.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/design-directory.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": "design/CLAUDE.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/design-docs.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/design-docs.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/docs-directory.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": "docs/CLAUDE.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/engine-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/engine-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/gameplay-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/gameplay-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/narrative.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/narrative.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/network-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/network-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/prototype-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/prototype-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/shader-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/shader-code.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/source-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": "src/CLAUDE.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/test-standards.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/test-standards.md"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/tool-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": "Codex-specific tool workflow discipline"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/ui-code.md",
+    "rationale": "Codex-readable path-scoped authoring instruction loaded through root AGENTS.md routing.",
+    "source": ".claude/rules/ui-code.md"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/UPSTREAM-LICENSE.md",
+    "rationale": "Installed upstream MIT license copy that avoids overwriting the target project's root license.",
+    "source": "LICENSE"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/file-lifecycle.md",
+    "rationale": "Package-owned support file required for the Codex port install surface.",
+    "source": "Codex port refinement"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/session-continuity.md",
+    "rationale": "Package-owned support file required for the Codex port install surface.",
+    "source": "Codex port refinement"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/verification-integrity.md",
+    "rationale": "Package-owned support file required for the Codex port install surface.",
+    "source": "Codex port refinement"
+  },
+  {
+    "category": "shared_src",
+    "owner": "codex-game-studios",
+    "path": "src/.gitkeep",
+    "rationale": "Package-owned support file required for the Codex port install surface.",
+    "source": "Codex port refinement"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/AGENTS.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/CLAUDE.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/README.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/README.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/art-director.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/directors/art-director.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/creative-director.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/directors/creative-director.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/producer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/directors/producer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/technical-director.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/directors/technical-director.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-csharp-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/godot/godot-csharp-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdextension-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdextension-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdscript-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdscript-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-shader-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/godot/godot-shader-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/godot/godot-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-addressables-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unity/unity-addressables-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-dots-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unity/unity-dots-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-shader-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unity/unity-shader-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unity/unity-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-ui-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unity/unity-ui-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-blueprint-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unreal/ue-blueprint-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-gas-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unreal/ue-gas-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-replication-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unreal/ue-replication-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-umg-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unreal/ue-umg-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/unreal-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/engine/unreal/unreal-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/audio-director.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/audio-director.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/game-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/game-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/lead-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/lead-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/level-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/level-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/narrative-director.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/narrative-director.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/qa-lead.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/qa-lead.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/systems-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/leads/systems-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/analytics-engineer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/analytics-engineer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/community-manager.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/community-manager.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/devops-engineer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/devops-engineer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/economy-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/economy-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/live-ops-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/live-ops-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/localization-lead.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/localization-lead.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/release-manager.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/operations/release-manager.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/accessibility-specialist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/qa/accessibility-specialist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/qa-tester.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/qa/qa-tester.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/security-engineer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/qa/security-engineer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ai-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/ai-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/engine-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/engine-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/gameplay-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/gameplay-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/network-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/network-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/performance-analyst.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/performance-analyst.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/prototyper.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/prototyper.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/sound-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/sound-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/technical-artist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/technical-artist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/tools-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/tools-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ui-programmer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/ui-programmer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ux-designer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/ux-designer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/world-builder.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/world-builder.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/writer.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/agents/specialists/writer.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/catalog.yaml",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/catalog.yaml"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/quality-rubric.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/quality-rubric.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/asset-audit.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/asset-audit.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/balance-check.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/balance-check.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/code-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/code-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/consistency-check.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/consistency-check.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/content-audit.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/content-audit.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/estimate.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/estimate.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/perf-profile.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/perf-profile.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/scope-check.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/scope-check.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/security-audit.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/security-audit.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/tech-debt.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/tech-debt.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/test-evidence-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/test-evidence-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/test-flakiness.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/analysis/test-flakiness.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/architecture-decision.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/architecture-decision.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/art-bible.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/art-bible.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/create-architecture.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/create-architecture.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/design-system.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/design-system.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/quick-design.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/quick-design.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/ux-design.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/ux-design.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/ux-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/authoring/ux-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/gate/gate-check.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/gate/gate-check.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-control-manifest.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/create-control-manifest.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-epics.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/create-epics.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-stories.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/create-stories.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/dev-story.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/dev-story.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/map-systems.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/map-systems.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/propagate-design-change.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/pipeline/propagate-design-change.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/readiness/story-done.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/readiness/story-done.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/readiness/story-readiness.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/readiness/story-readiness.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/architecture-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/review/architecture-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/design-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/review/design-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/review-all-gdds.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/review/review-all-gdds.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/changelog.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/changelog.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/milestone-review.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/milestone-review.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/patch-notes.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/patch-notes.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/retrospective.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/retrospective.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/sprint-plan.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/sprint-plan.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/sprint-status.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/sprint/sprint-status.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-audio.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-audio.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-combat.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-combat.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-level.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-level.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-live-ops.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-live-ops.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-narrative.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-narrative.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-polish.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-polish.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-qa.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-qa.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-release.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-release.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-ui.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/team/team-ui.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/adopt.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/adopt.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/asset-spec.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/asset-spec.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/brainstorm.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/brainstorm.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/bug-report.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/bug-report.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/bug-triage.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/bug-triage.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/day-one-patch.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/day-one-patch.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/help.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/help.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/hotfix.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/hotfix.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/launch-checklist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/launch-checklist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/localize.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/localize.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/onboard.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/onboard.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/playtest-report.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/playtest-report.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/project-stage-detect.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/project-stage-detect.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/prototype.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/prototype.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/qa-plan.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/qa-plan.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/regression-suite.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/regression-suite.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/release-checklist.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/release-checklist.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/reverse-document.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/reverse-document.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/setup-engine.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/setup-engine.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/skill-improve.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/skill-improve.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/skill-test.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/skill-test.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/smoke-check.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/smoke-check.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/soak-test.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/soak-test.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/start.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/start.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/test-helpers.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/test-helpers.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/test-setup.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/skills/utility/test-setup.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/templates/agent-test-spec.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/templates/agent-test-spec.md"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/templates/skill-test-spec.md",
+    "rationale": "Preserve testing framework asset or replace framework Claude guidance with Codex guidance.",
+    "source": "CCGS Skill Testing Framework/templates/skill-test-spec.md"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/COLLABORATIVE-DESIGN-PRINCIPLE.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/WORKFLOW-GUIDE.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/architecture/tr-registry.yaml",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/README.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/VERSION.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/breaking-changes.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/current-best-practices.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/deprecated-apis.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/animation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/audio.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/input.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/navigation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/networking.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/physics.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/rendering.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/ui.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/PLUGINS.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/VERSION.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/breaking-changes.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/current-best-practices.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/deprecated-apis.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/animation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/audio.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/input.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/navigation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/networking.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/physics.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/rendering.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/ui.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/addressables.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/cinemachine.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/dots-entities.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/PLUGINS.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/VERSION.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/breaking-changes.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/current-best-practices.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/deprecated-apis.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/animation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/audio.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/input.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/navigation.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/networking.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/physics.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/rendering.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/ui.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/common-ui.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/gameplay-ability-system.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/gameplay-camera-system.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/pcg.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/README.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/reverse-document-workflow-example.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-adopt-brownfield.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-design-crafting-system.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-design-system-skill.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-gate-check-phase-transition.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-implement-combat-damage.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-scope-crisis-decision.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-story-lifecycle.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-ux-pipeline.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/skill-flow-diagrams.md",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  },
+  {
+    "category": "shared_docs",
+    "owner": "codex-game-studios",
+    "path": "docs/registry/architecture.yaml",
+    "rationale": "Shared visible project documentation preserved in deployed game projects.",
+    "source": "upstream shared docs"
+  }
+]

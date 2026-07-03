@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "apply_patch",
+  "tool_input": {
+    "patch": "*** Begin Patch\\n*** End Patch\\n"
+  }
+}

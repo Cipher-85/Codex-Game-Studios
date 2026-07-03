@@ -1,0 +1,166 @@
+# Codex Game Studios Instructions
+
+<!-- BEGIN CCGS CODEX PORT -->
+## Codex Game Studios
+
+Codex Game Studios coordinates indie game development through 49 Codex role
+agents with strict domain ownership, user-owned design decisions, and
+verification-first implementation.
+
+## Startup Contract
+
+- Treat `.codex/agents/*.toml` as the authoritative role registration source.
+- Use exact hyphenated agent names. Shorthand: CD is `creative-director`, TD is
+  `technical-director`, and LP is `lead-programmer`.
+- Do not write to legacy Claude runtime files or add them as Codex runtime
+  dependencies.
+- Do not commit, push, or make game-feel/balance decisions without explicit user
+  instruction.
+- Use the active reported context percentage for compaction and handoff
+  decisions; do not rely on hardcoded token-window math.
+
+## Resume And Wrap-Up Routing
+
+- When the user asks to resume, catch up, pick up where they left off, find the
+  current state, or choose the next work item from saved state, use
+  `$resume-from-handoff` if `production/session-handoff.md` exists.
+- If no handoff exists, do not infer one from another doc. Route first-session
+  setup to `$start`, broad orientation to `$help`, or full gap discovery to
+  `$project-stage-detect`.
+- At wrap-up, keep `$studio-next` as the lightweight epilogue router and suggest
+  `$handoff` only when the current state should be durable for a future session.
+
+## Available Codex Role Agents
+
+- Leadership: `creative-director`, `technical-director`, `producer`.
+- Department leads: `game-designer`, `lead-programmer`, `art-director`,
+  `audio-director`, `narrative-director`, `qa-lead`, `release-manager`,
+  `localization-lead`.
+- Design/content: `systems-designer`, `level-designer`, `economy-designer`,
+  `writer`, `world-builder`, `ux-designer`, `accessibility-specialist`,
+  `live-ops-designer`, `community-manager`, `analytics-engineer`.
+- Engineering/QA/ops: `gameplay-programmer`, `engine-programmer`,
+  `ai-programmer`, `network-programmer`, `tools-programmer`, `ui-programmer`,
+  `technical-artist`, `sound-designer`, `performance-analyst`,
+  `security-engineer`, `devops-engineer`, `qa-tester`, `prototyper`.
+- Engine agents: `godot-specialist`, `godot-gdscript-specialist`,
+  `godot-csharp-specialist`, `godot-shader-specialist`,
+  `godot-gdextension-specialist`, `unity-specialist`, `unity-dots-specialist`,
+  `unity-shader-specialist`, `unity-addressables-specialist`,
+  `unity-ui-specialist`, `unreal-specialist`, `ue-blueprint-specialist`,
+  `ue-gas-specialist`, `ue-replication-specialist`, `ue-umg-specialist`.
+
+## Technology Stack
+
+- Engine: Godot 4.6.
+- Primary language: GDScript.
+- Version control: Git with trunk-based development.
+- Engine reference: read `docs/engine-reference/godot/VERSION.md` before using
+  Godot APIs; the pinned engine is newer than much model training data.
+- Technical routing: read `.codex/docs/technical-preferences.md` when selecting
+  engine specialists or file-extension routing.
+
+## Collaboration Boundary
+
+This project is user-driven. For design documents and broad multi-file plans,
+follow Question -> Options -> Decision -> Draft -> Approval. For explicit
+implementation requests, make the scoped change, keep edits surgical, and report
+what changed.
+
+No commits without user instruction. Multi-file design or architecture changes
+should be summarized before writing. See
+`docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` when a task is collaborative design
+rather than direct implementation.
+
+## Verification Integrity
+
+- Never claim a build, test, lint, smoke check, or playtest passed unless it ran
+  in this turn or you clearly label it as file-reported historical evidence.
+- If verification is blocked, state the blocker and the exact command or action
+  still owed.
+- Treat CI output as evidence only after reading the relevant job or log result,
+  not from a status badge or assumption.
+- After any false pass claim or uncertain verification state, follow
+  `.codex/docs/verification-integrity.md` before closing the work.
+
+## Vertical-Slice Forcing Function
+
+Before recommending process work, identify the smallest next playable advance.
+Classify plausible lanes as:
+
+- `extend`: directly makes the playable slice larger or more complete.
+- `feed`: supplies required design, art, QA, or architecture input for the slice.
+- `carve-out`: useful but not on the slice path.
+
+The smallest playable advance wins unless owed verification, a gate, or a
+blocker must be cleared first.
+
+## Path-Scoped Instructions
+
+Before creating or editing a matching path, read the listed path rule from
+`.codex/instructions/path-rules/`. These Markdown files are authoring
+instructions, not command-approval policy. Keep command policy in
+`.codex/rules/*.rules`.
+
+| Path | Rule Files |
+| ---- | ---- |
+| `src/**` | `source-code.md` |
+| `src/gameplay/**` | `source-code.md`, `gameplay-code.md` |
+| `src/core/**` | `source-code.md`, `engine-code.md` |
+| `src/ai/**` | `source-code.md`, `ai-code.md` |
+| `src/networking/**` | `source-code.md`, `network-code.md` |
+| `src/ui/**` | `source-code.md`, `ui-code.md` |
+| `design/**` | `design-directory.md` |
+| `design/gdd/**` | `design-directory.md`, `design-docs.md` |
+| `design/narrative/**` | `design-directory.md`, `narrative.md` |
+| `docs/**` | `docs-directory.md` |
+| `assets/data/**` | `data-files.md` |
+| `assets/shaders/**` | `shader-code.md` |
+| `tests/**` | `test-standards.md` |
+| `tools/**` | `tool-code.md` |
+| `prototypes/**` | `prototype-code.md` |
+
+## Code-Turn Discipline
+
+For code, tests, and tools:
+
+1. Think before coding: identify the behavioral contract and the minimal files
+   that need to change.
+2. Define verifiable success before editing.
+3. Prefer the simplest working design that fits existing patterns.
+4. Make surgical changes and avoid unrelated refactors.
+5. Verify with the narrowest meaningful command, then broaden when risk warrants.
+
+## Merge Gates
+
+- Run `$design-review` before handing a GDD to programmers.
+- Use the design-review verdict as a merge gate for implementation work that
+  depends on that GDD.
+- Use `$code-review`, `$story-done`, `$smoke-check`, or `$team-qa` when the
+  current story or sprint state calls for them.
+
+## File Lifecycle
+
+- Tracked docs are the project memory. Keep active state in
+  `production/session-state/active.md` when the project has one.
+- Preserve session continuity in `production/session-handoff.md`; archive only
+  when the continuity docs call for it.
+- Keep generated caches, local-only logs, and transient evidence out of tracked
+  runtime instructions unless a doc explicitly says otherwise.
+- Full rules: `.codex/docs/file-lifecycle.md`.
+
+## Continuity Epilogue
+
+After each discrete work unit, apply this mentally or run `$studio-next`:
+
+1. Summarize what was completed.
+2. Surface owed verification.
+3. Recommend the single best next action from handoff, session, sprint, stage,
+   workflow, and slice state.
+4. Suggest `$handoff` when installed and session state should be preserved.
+
+Read `.codex/docs/session-continuity.md` and
+`.codex/docs/context-management.md` for full pause/resume guidance.
+
+> First session? If the project has no configured game concept, run `$start`.
+<!-- END CCGS CODEX PORT -->

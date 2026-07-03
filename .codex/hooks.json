@@ -1,0 +1,115 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=session-start.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Loading Codex Game Studios session context"
+          },
+          {
+            "type": "command",
+            "command": "bash -lc 'n=detect-gaps.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Checking project documentation gaps"
+          },
+          {
+            "type": "command",
+            "command": "bash -lc 'n=studio-status-on-start.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Rendering studio status"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=validate-commit.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Checking commit command"
+          },
+          {
+            "type": "command",
+            "command": "bash -lc 'n=validate-push.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Checking push command"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=validate-assets.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Checking changed assets"
+          },
+          {
+            "type": "command",
+            "command": "bash -lc 'n=validate-skill-change.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Checking skill changes"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=pre-compact.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Saving context before compaction"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=post-compact.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Restoring context after compaction"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=log-agent.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Logging subagent start"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=log-agent-stop.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Logging subagent stop"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'n=session-stop.sh; d=$PWD; while [ \"$d\" != / ]; do p=\"$d/.codex/hooks/$n\"; [ -x \"$p\" ] && CCGS_ROOT=\"$d\" exec \"$p\"; d=$(dirname \"$d\"); done; echo \"missing CCGS hook: $n\" >&2; exit 127'",
+            "statusMessage": "Saving Codex Game Studios session summary"
+          }
+        ]
+      }
+    ]
+  }
+}

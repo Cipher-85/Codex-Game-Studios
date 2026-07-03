@@ -1,0 +1,45 @@
+# Codex Game Studios command policy examples.
+
+# Safe read/status commands used by validation and planning.
+prefix_rule(["git", "status"], decision = "allow")
+prefix_rule(["git", "diff"], decision = "allow")
+prefix_rule(["python3", ".codex/lib/validate_manifest.py"], decision = "allow")
+prefix_rule(["./.codex/audit.sh"], decision = "allow")
+
+# Destructive or high-risk commands are blocked before escalation.
+prefix_rule(
+    pattern = ["rm", "-rf"],
+    decision = "forbidden",
+    justification = "Use a scoped non-destructive command, or ask the user for an explicit cleanup plan.",
+    match = ["rm -rf build"],
+)
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "Use non-destructive git inspection or ask the user before discarding work.",
+    match = ["git reset --hard"],
+)
+prefix_rule(
+    pattern = ["git", "clean", "-fdx"],
+    decision = "forbidden",
+    justification = "Use git status and ask the user before removing untracked files.",
+    match = ["git clean -fdx"],
+)
+prefix_rule(
+    pattern = ["git", "push", "--force"],
+    decision = "forbidden",
+    justification = "Do not force push or rewrite remote history without explicit user approval.",
+    match = ["git push --force"],
+)
+prefix_rule(
+    pattern = ["cat", "~/.ssh"],
+    decision = "forbidden",
+    justification = "Do not read local SSH secrets.",
+    match = ["cat ~/.ssh"],
+)
+prefix_rule(
+    pattern = ["cat", "~/.env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["cat ~/.env"],
+)

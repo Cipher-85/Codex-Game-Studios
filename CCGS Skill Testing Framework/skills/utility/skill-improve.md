@@ -1,9 +1,9 @@
-# Skill Test Spec: /skill-improve
+# Skill Test Spec: $skill-improve
 
 ## Skill Summary
 
-`/skill-improve` runs an automated test-fix-retest improvement loop on a skill
-file. It invokes `/skill-test static` (and optionally `/skill-test category`) to
+`$skill-improve` runs an automated test-fix-retest improvement loop on a skill
+file. It invokes `$skill-test static` (and optionally `$skill-test category`) to
 establish a baseline score, diagnoses the failing checks, proposes targeted fixes
 to the SKILL.md file, asks "May I write the improvements to [skill path]?", applies
 the fixes, and re-runs the tests to confirm improvement.
@@ -18,19 +18,19 @@ REVERTED (fix was applied but caused regression and was reverted).
 
 ## Static Assertions (Structural)
 
-Verified automatically by `/skill-test static` — no fixture needed.
+Verified automatically by `$skill-test static` — no fixture needed.
 
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: IMPROVED, NO CHANGE, REVERTED
 - [ ] Contains "May I write" collaborative protocol language before applying fixes
-- [ ] Has a next-step handoff (e.g., run `/skill-test spec` to validate behavioral compliance)
+- [ ] Has a next-step handoff (e.g., run `$skill-test spec` to validate behavioral compliance)
 
 ---
 
 ## Director Gate Checks
 
-None. `/skill-improve` is a meta-utility skill. No director gates apply.
+None. `$skill-improve` is a meta-utility skill. No director gates apply.
 
 ---
 
@@ -39,20 +39,20 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 1: Happy Path — Skill With 2 Static Failures, Both Fixed, IMPROVED
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has 2 static failures:
+- `.agents/skills/some-skill/SKILL.md` has 2 static failures:
   - Check 4: no "May I write" language despite having Write in allowed-tools
   - Check 5: no next-step handoff at the end
 
-**Input:** `/skill-improve some-skill`
+**Input:** `$skill-improve some-skill`
 
 **Expected behavior:**
-1. Skill runs `/skill-test static some-skill` — baseline: 5/7 checks pass
+1. Skill runs `$skill-test static some-skill` — baseline: 5/7 checks pass
 2. Skill diagnoses the 2 failing checks (4 and 5)
 3. Skill proposes fixes:
    - Add "May I write" language to the appropriate phase
    - Add a next-step handoff section at the end
-4. Skill asks "May I write improvements to `.claude/skills/some-skill/SKILL.md`?"
-5. Fixes applied; `/skill-test static some-skill` re-run — now 7/7 checks pass
+4. Skill asks "May I write improvements to `.agents/skills/some-skill/SKILL.md`?"
+5. Fixes applied; `$skill-test static some-skill` re-run — now 7/7 checks pass
 6. Verdict is IMPROVED (5→7)
 
 **Assertions:**
@@ -67,11 +67,11 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 2: Fix Causes Regression — Score Comparison Shows Regression, REVERTED
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has 1 static failure (missing handoff)
+- `.agents/skills/some-skill/SKILL.md` has 1 static failure (missing handoff)
 - Proposed fix inadvertently removes the verdict keywords section
   (introducing a new failure)
 
-**Input:** `/skill-improve some-skill`
+**Input:** `$skill-improve some-skill`
 
 **Expected behavior:**
 1. Baseline: 6/7 checks pass (1 failure: missing handoff)
@@ -94,11 +94,11 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 3: Skill With Category Assignment — Baseline Captures Both Scores
 
 **Fixture:**
-- `.claude/skills/gate-check/SKILL.md` is a gate skill with 1 static failure
+- `.agents/skills/gate-check/SKILL.md` is a gate skill with 1 static failure
   and 2 category (G-criteria) failures
 - `tests/skills/quality-rubric.md` has Gate Skills section
 
-**Input:** `/skill-improve gate-check`
+**Input:** `$skill-improve gate-check`
 
 **Expected behavior:**
 1. Skill runs both static and category tests for the baseline:
@@ -106,7 +106,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
    - Category: 3/5 G-criteria pass
 2. Combined baseline: 9/12
 3. Skill diagnoses all 3 failures and proposes fixes
-4. "May I write improvements to `.claude/skills/gate-check/SKILL.md`?"
+4. "May I write improvements to `.agents/skills/gate-check/SKILL.md`?"
 5. Fixes applied; both test types re-run
 6. Re-test: static 7/7, category 5/5 = 12/12
 7. Verdict is IMPROVED (9→12)
@@ -123,13 +123,13 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 4: Skill Already Perfect — No Improvements Needed
 
 **Fixture:**
-- `.claude/skills/brainstorm/SKILL.md` has no static failures
+- `.agents/skills/brainstorm/SKILL.md` has no static failures
 - Category score is also 5/5 (if applicable)
 
-**Input:** `/skill-improve brainstorm`
+**Input:** `$skill-improve brainstorm`
 
 **Expected behavior:**
-1. Skill runs `/skill-test static brainstorm` — 7/7 checks pass
+1. Skill runs `$skill-test static brainstorm` — 7/7 checks pass
 2. If category applies: 5/5 criteria pass
 3. Skill outputs: "No improvements needed — brainstorm is fully compliant"
 4. Skill exits without proposing any changes
@@ -150,7 +150,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 **Fixture:**
 - Skill with at least 1 static failure
 
-**Input:** `/skill-improve some-skill`
+**Input:** `$skill-improve some-skill`
 
 **Expected behavior:**
 1. Skill runs the test-fix-retest loop
@@ -178,7 +178,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ## Coverage Notes
 
 - The improvement loop is designed to run only one fix-retest cycle per
-  invocation; running multiple iterations requires re-invoking `/skill-improve`.
+  invocation; running multiple iterations requires re-invoking `$skill-improve`.
 - Behavioral compliance (spec-mode test results) is not included in the
   improvement loop — only structural (static) and category scores are automated.
 - The case where the skill file cannot be read (permissions error or missing file)

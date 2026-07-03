@@ -46,11 +46,11 @@
 ### Case 4: Branching strategy conflict
 **Input**: "Half the team wants to use GitFlow with long-lived feature branches. The other half wants trunk-based development. How should we set this up?"
 **Expected behavior**:
-- Recommends trunk-based development per project conventions (CLAUDE.md / coordination-rules.md specify Git with trunk-based development)
+- Recommends trunk-based development per project conventions (AGENTS.md / coordination-rules.md specify Git with trunk-based development)
 - Provides concrete rationale for the recommendation in this project's context: smaller team, fewer integration conflicts, faster CI feedback
 - Does NOT present this as a 50/50 choice if the project has an established convention
 - Explains how to implement trunk-based development with short-lived feature branches and feature flags if needed
-- Does NOT override the project convention without flagging that doing so requires updating CLAUDE.md
+- Does NOT override the project convention without flagging that doing so requires updating AGENTS.md
 
 ### Case 5: Context pass — platform-specific build matrix
 **Input context**: Project targets PC (Windows, Linux), Nintendo Switch, and PlayStation 5.
@@ -77,4 +77,4 @@
 - Case 1 (Godot CI) references `coding-standards.md` CI rules — verify this file is present and current before running this test
 - Case 4 (branching strategy) is a convention-enforcement test — agent must know the project convention, not just give neutral advice
 - Case 5 requires that project's target platforms are documented (in `technical-preferences.md` or equivalent)
-- No automated runner; review manually or via `/skill-test`
+- No automated runner; review manually or via `$skill-test`

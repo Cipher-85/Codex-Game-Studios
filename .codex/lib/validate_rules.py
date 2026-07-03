@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Validate Codex config and command-rule files."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+import tomllib
+from pathlib import Path
+
+
+LEGACY_STATUS_LINE_ITEMS = {
+    "context": "context-used or context-remaining",
+    "current_dir": "current-dir",
+    "git_branch": "git-branch",
+}
+
+
+def emit(root: Path, errors: list[str], warnings: list[str]) -> int:
+    status = "pass" if not errors else "fail"
+    print(json.dumps({"check": "config", "root": str(root), "status": status, "errors": errors, "warnings": warnings}, indent=2, sort_keys=True))
+    if errors:
+        print(f"config: {len(errors)} validation failure(s)", file=sys.stderr)
+        return 1
+    print("config: pass")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", default=".")
+    args = parser.parse_args()
+    root = Path(args.root).resolve()
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    config = root / ".codex" / "config.toml"
+    if config.exists():
+        text = config.read_text(encoding="utf-8")
+        try:
+            data = tomllib.loads(text)
+        except tomllib.TOMLDecodeError as exc:
+            errors.append(f".codex/config.toml: invalid TOML: {exc}")
+            data = {}
+        if "prefix_rules" in text:
+            errors.append(".codex/config.toml: prefix_rules belongs in .codex/rules/*.rules")
+        if "sandbox_mode" in data and ("default_permissions" in data or "permissions" in data):
+            errors.append(".codex/config.toml: do not mix sandbox_mode with permission profiles")
+        if "notify" in data:
+            errors.append(".codex/config.toml: project config must not set user-level notify")
+        tui = data.get("tui")
+        if isinstance(tui, dict) and "status_line" in tui:
+            status_line = tui["status_line"]
+            if not isinstance(status_line, list):
+                errors.append(".codex/config.toml: tui.status_line must be a list under [tui], not a table")
+            else:
+                for index, item in enumerate(status_line):
+                    if not isinstance(item, str):
+                        errors.append(f".codex/config.toml: tui.status_line[{index}] must be a string")
+                        continue
+                    if item in LEGACY_STATUS_LINE_ITEMS:
+                        errors.append(
+                            ".codex/config.toml: tui.status_line uses legacy item "
+                            f"{item!r}; use {LEGACY_STATUS_LINE_ITEMS[item]!r}"
+                        )
+    else:
+        warnings.append(".codex/config.toml not present yet")
+
+    rules = root / ".codex" / "rules" / "settings.rules"
+    rules_dir = root / ".codex" / "rules"
+    if rules_dir.exists():
+        for rule_file in sorted(p for p in rules_dir.iterdir() if p.is_file()):
+            text = rule_file.read_text(encoding="utf-8", errors="ignore")
+            rel = rule_file.relative_to(root)
+            if rule_file.suffix != ".rules":
+                errors.append(f"{rel}: .codex/rules is command-policy only; put authoring instructions in .codex/instructions/path-rules/")
+            if "paths:" in text or "Path-Specific" in text or "Code Rules" in text:
+                errors.append(f"{rel}: appears to contain path authoring prose; .codex/rules is command-policy only")
+    if rules.exists():
+        text = rules.read_text(encoding="utf-8")
+        if "prefix_rules" in text:
+            errors.append(".codex/rules/settings.rules: use prefix_rule syntax, not prefix_rules")
+        if "match(" in text:
+            errors.append(".codex/rules/settings.rules: match is a prefix_rule field, not a top-level function")
+        if 'decision = "deny"' in text:
+            errors.append('.codex/rules/settings.rules: use decision = "forbidden", not "deny"')
+        for required in ("git reset --hard", "rm -rf", "force push"):
+            if required not in text:
+                warnings.append(f".codex/rules/settings.rules: missing example text for {required}")
+    else:
+        warnings.append(".codex/rules/settings.rules not present yet")
+
+    return emit(root, errors, warnings)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

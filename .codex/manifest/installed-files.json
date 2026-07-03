@@ -1,0 +1,2292 @@
+[
+  {
+    "mode": "marker",
+    "owner": "codex-game-studios",
+    "path": "AGENTS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "ATTRIBUTION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/art-director/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/audio-director/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/creative-director/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/economy-designer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/game-designer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/lead-programmer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/level-designer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/localization-lead/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/narrative-director/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/performance-analyst/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/producer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/qa-lead/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/systems-designer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/technical-director/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/ux-designer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/world-builder/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agent-memory/writer/MEMORY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/accessibility-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ai-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/analytics-engineer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/art-director.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/audio-director.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/community-manager.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/creative-director.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/devops-engineer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/economy-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/engine-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/game-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/gameplay-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-csharp-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-gdextension-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-gdscript-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-shader-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/godot-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/lead-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/level-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/live-ops-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/localization-lead.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/narrative-director.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/network-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/performance-analyst.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/producer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/prototyper.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/qa-lead.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/qa-tester.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/release-manager.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/security-engineer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/sound-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/systems-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/technical-artist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/technical-director.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/tools-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-blueprint-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-gas-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-replication-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ue-umg-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ui-programmer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-addressables-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-dots-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-shader-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unity-ui-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/unreal-specialist.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/ux-designer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/world-builder.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/agents/writer.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/audit.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/backups/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/config.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/CLAUDE-local-template.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/COEXISTENCE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/MIGRATION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/UPSTREAM-LICENSE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/VALIDATION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/agent-coordination-map.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/agent-roster.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/coding-standards.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/context-management.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/coordination-rules.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/director-gates.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/directory-structure.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/hook-input-schemas.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/post-merge-asset-validation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/post-sprint-retrospective.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/pre-commit-code-quality.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/pre-commit-design-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference/pre-push-test-gate.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/hooks-reference.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/quick-start.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/review-workflow.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/rules-reference.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/settings-local-template.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/setup-requirements.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/skills-reference.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/technical-preferences.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/accessibility-requirements.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-decision-record.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-doc-from-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/architecture-traceability.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/art-bible.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/changelog-template.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/design-agent-protocol.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/implementation-agent-protocol.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/collaborative-protocols/leadership-agent-protocol.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/concept-doc-from-prototype.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/design-doc-from-implementation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/difficulty-curve.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/economy-model.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/faction-design.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-concept.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-design-document.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-pillars.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/hud-design.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/incident-response.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/interaction-pattern-library.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/level-design-document.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/milestone-definition.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/narrative-character-sheet.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/pitch-document.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/player-journey.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/post-mortem.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project-stage-report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/prototype-report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/release-checklist-template.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/release-notes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/risk-register-entry.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/skill-test-spec.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/sound-bible.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/sprint-plan.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/systems-index.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/technical-design-document.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/test-evidence.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/test-plan.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/ux-spec.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/vertical-slice-report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/workflow-catalog.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/detect-gaps.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/log-agent-stop.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/log-agent.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/post-compact.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/pre-compact.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/session-start.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/session-stop.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/studio-status-on-start.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-assets.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-commit.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-push.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-skill-change.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/ai-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/data-files.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/design-directory.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/design-docs.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/docs-directory.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/engine-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/gameplay-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/narrative.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/network-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/prototype-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/shader-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/source-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/test-standards.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/tool-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/ui-code.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/file-lifecycle.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/session-continuity.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/verification-integrity.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/install.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/agents.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/hooks.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/install.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/state.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_hooks.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_install.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_manifest.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_rules.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_runtime.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_smoke.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/manifest/installed-files.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/manifest/expected-targets.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/manifest/upstream-assets.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/models.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/rules/settings.rules"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/uninstall.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/adopt/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/architecture-decision/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/architecture-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/art-bible/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/asset-audit/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/asset-spec/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/balance-check/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/brainstorm/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/bug-report/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/bug-triage/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/changelog/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/code-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/consistency-check/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/content-audit/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-architecture/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-control-manifest/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-epics/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-stories/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/day-one-patch/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/design-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/design-system/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/estimate/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/gate-check/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/handoff/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/help/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/hotfix/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/launch-checklist/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/localize/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/map-systems/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/milestone-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/onboard/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/patch-notes/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/perf-profile/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/playtest-report/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/project-stage-detect/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/propagate-design-change/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/prototype/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/qa-plan/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/quick-design/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/regression-suite/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/release-checklist/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/retrospective/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/reverse-document/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/resume-from-handoff/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/review-all-gdds/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/scope-check/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/security-audit/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/setup-engine/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/skill-improve/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/skill-test/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/smoke-check/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/soak-test/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/sprint-plan/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/sprint-status/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/start/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-readiness/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/studio-status/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/studio-next/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-audio/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-combat/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-level/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-live-ops/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-narrative/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-polish/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-qa/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-release/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/team-ui/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/tech-debt/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-evidence-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-flakiness/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-helpers/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/test-setup/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/ux-design/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/ux-review/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/vertical-slice/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/AGENTS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/art-director.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/creative-director.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/producer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/directors/technical-director.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-csharp-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdextension-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-gdscript-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-shader-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/godot/godot-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-addressables-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-dots-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-shader-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unity/unity-ui-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-blueprint-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-gas-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-replication-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/ue-umg-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/engine/unreal/unreal-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/audio-director.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/game-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/lead-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/level-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/narrative-director.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/qa-lead.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/leads/systems-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/analytics-engineer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/community-manager.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/devops-engineer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/economy-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/live-ops-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/localization-lead.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/operations/release-manager.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/accessibility-specialist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/qa-tester.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/qa/security-engineer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ai-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/engine-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/gameplay-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/network-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/performance-analyst.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/prototyper.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/sound-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/technical-artist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/tools-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ui-programmer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/ux-designer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/world-builder.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/agents/specialists/writer.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/catalog.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/quality-rubric.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/asset-audit.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/balance-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/code-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/consistency-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/content-audit.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/estimate.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/perf-profile.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/scope-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/security-audit.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/tech-debt.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/test-evidence-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/analysis/test-flakiness.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/architecture-decision.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/art-bible.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/create-architecture.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/design-system.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/quick-design.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/ux-design.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/authoring/ux-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/gate/gate-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-control-manifest.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-epics.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/create-stories.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/dev-story.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/map-systems.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/pipeline/propagate-design-change.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/readiness/story-done.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/readiness/story-readiness.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/architecture-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/design-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/review/review-all-gdds.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/changelog.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/milestone-review.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/patch-notes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/retrospective.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/sprint-plan.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/sprint/sprint-status.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-audio.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-combat.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-level.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-live-ops.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-narrative.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-polish.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-qa.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-release.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/team/team-ui.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/adopt.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/asset-spec.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/brainstorm.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/bug-report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/bug-triage.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/day-one-patch.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/help.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/hotfix.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/launch-checklist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/localize.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/onboard.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/playtest-report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/project-stage-detect.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/prototype.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/qa-plan.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/regression-suite.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/release-checklist.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/reverse-document.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/setup-engine.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/skill-improve.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/skill-test.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/smoke-check.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/soak-test.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/start.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/test-helpers.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/test-setup.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/templates/agent-test-spec.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/templates/skill-test-spec.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "design/registry/entities.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/COLLABORATIVE-DESIGN-PRINCIPLE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/WORKFLOW-GUIDE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/architecture/tr-registry.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/VERSION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/breaking-changes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/current-best-practices.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/deprecated-apis.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/animation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/audio.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/input.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/navigation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/networking.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/physics.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/rendering.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/godot/modules/ui.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/PLUGINS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/VERSION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/breaking-changes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/current-best-practices.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/deprecated-apis.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/animation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/audio.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/input.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/navigation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/networking.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/physics.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/rendering.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/modules/ui.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/addressables.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/cinemachine.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unity/plugins/dots-entities.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/PLUGINS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/VERSION.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/breaking-changes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/current-best-practices.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/deprecated-apis.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/animation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/audio.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/input.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/navigation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/networking.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/physics.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/rendering.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/modules/ui.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/common-ui.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/gameplay-ability-system.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/gameplay-camera-system.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/engine-reference/unreal/plugins/pcg.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/reverse-document-workflow-example.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-adopt-brownfield.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-design-crafting-system.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-design-system-skill.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-gate-check-phase-transition.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-implement-combat-damage.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-scope-crisis-decision.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-story-lifecycle.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/session-ux-pipeline.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/examples/skill-flow-diagrams.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "docs/registry/architecture.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "production/session-state/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "src/.gitkeep"
+  }
+]

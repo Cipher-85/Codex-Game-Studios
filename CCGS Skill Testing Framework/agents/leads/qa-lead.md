@@ -10,7 +10,7 @@
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.claude/agents/qa-lead.md` frontmatter:
+Verified by reading the agent's `.codex/agents/qa-lead.md` frontmatter:
 
 - [ ] `description:` field is present and domain-specific (references test strategy, story readiness, coverage, bug triage — not generic)
 - [ ] `allowed-tools:` list is read-focused; may include Read for story files, test files, and coding-standards; Bash only if running test commands is required
@@ -80,6 +80,6 @@ Verified by reading the agent's `.claude/agents/qa-lead.md` frontmatter:
 
 ## Coverage Notes
 - QL-TEST-COVERAGE (overall coverage assessment for a sprint or milestone) is not covered — a dedicated case should be added when coverage reports are available.
-- Bug severity triage (P0/P1/P2 classification) is not covered here — deferred to /bug-triage skill integration.
+- Bug severity triage (P0/P1/P2 classification) is not covered here — deferred to $bug-triage skill integration.
 - Release quality gate behavior (PASS / FAIL vocabulary variant) is not covered.
-- Interaction between QL-STORY-READY and story Done criteria (/story-done skill) is not covered.
+- Interaction between QL-STORY-READY and story Done criteria ($story-done skill) is not covered.

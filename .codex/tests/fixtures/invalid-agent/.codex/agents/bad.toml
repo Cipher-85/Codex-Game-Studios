@@ -1,0 +1,4 @@
+name = "not-bad"
+description = "Invalid agent fixture."
+developer_instructions = "Fixture only."
+tools = ["bash"]

@@ -11,6 +11,7 @@ ccgs_migrated_end="<!-- END CCGS MIGRATED LEGACY INSTRUCTIONS -->"
 ccgs_gitignore_start="# BEGIN CCGS CODEX PORT GITIGNORE"
 ccgs_gitignore_end="# END CCGS CODEX PORT GITIGNORE"
 ccgs_install_state_rel=".codex/manifest/install-state.json"
+ccgs_install_state_schema_version=2
 
 ccgs_refuse_claude_path() {
   local path="$1"
@@ -88,6 +89,59 @@ ccgs_detect_mode() {
   fi
 }
 
+ccgs_package_version() {
+  tr -d '[:space:]' < "$ccgs_source_root/.codex/VERSION"
+}
+
+ccgs_package_commit() {
+  if git -C "$ccgs_source_root" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    git -C "$ccgs_source_root" rev-parse --short=12 HEAD 2>/dev/null || printf 'unknown\n'
+  else
+    printf 'unknown\n'
+  fi
+}
+
+ccgs_install_state_schema() {
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  [ -f "$state_file" ] || return 1
+  python3 - "$state_file" <<'PY'
+import json, sys
+from pathlib import Path
+try:
+    print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8")).get("schema_version", ""))
+except Exception:
+    raise SystemExit(1)
+PY
+}
+
+ccgs_select_patch_mode() {
+  if [ -n "${CCGS_REQUESTED_PATCH_MODE:-}" ]; then
+    case "$CCGS_REQUESTED_PATCH_MODE" in
+      incremental|full)
+        printf '%s\n' "$CCGS_REQUESTED_PATCH_MODE"
+        return 0
+        ;;
+      *)
+        printf 'unsupported patch mode: %s\n' "$CCGS_REQUESTED_PATCH_MODE" >&2
+        return 2
+        ;;
+    esac
+  fi
+
+  local state_file schema
+  state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  if [ ! -f "$state_file" ]; then
+    printf 'full\n'
+    return 0
+  fi
+  schema="$(ccgs_install_state_schema || true)"
+  if [ "$schema" = "$ccgs_install_state_schema_version" ]; then
+    printf 'incremental\n'
+  else
+    printf 'full\n'
+  fi
+}
+
 ccgs_install_mode() {
   if [ -n "${CCGS_INSTALL_MODE:-}" ]; then
     printf '%s\n' "$CCGS_INSTALL_MODE"
@@ -150,10 +204,14 @@ ccgs_path_in_state_created_shared() {
 ccgs_capture_install_state() {
   local output_file="$1"
   local mode="${CCGS_INSTALL_MODE:-$(ccgs_detect_mode)}"
-  local temp_dir
+  local patch_mode="${CCGS_PATCH_MODE:-$(ccgs_select_patch_mode)}"
+  local package_version package_commit temp_dir
+  package_version="$(ccgs_package_version)"
+  package_commit="$(ccgs_package_commit)"
   temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/ccgs-install-state.XXXXXX")"
   ccgs_claude_guardrail_signals > "$temp_dir/guardrails"
   ccgs_shared_signature_paths > "$temp_dir/signatures"
+  ccgs_deploy_paths | sort -u > "$temp_dir/deploy-paths"
   : > "$temp_dir/created"
   : > "$temp_dir/preserved"
 
@@ -164,31 +222,69 @@ ccgs_capture_install_state() {
     elif [ ! -e "$ccgs_install_root/$path" ]; then
       printf '%s\n' "$path" >> "$temp_dir/created"
     fi
-  done < <(ccgs_deploy_paths | sort -u)
+  done < "$temp_dir/deploy-paths"
 
-  python3 - "$output_file" "$mode" "$temp_dir/guardrails" "$temp_dir/signatures" "$temp_dir/created" "$temp_dir/preserved" <<'PY'
+  python3 - "$output_file" "$mode" "$patch_mode" "$package_version" "$package_commit" "$ccgs_source_root" "$temp_dir/guardrails" "$temp_dir/signatures" "$temp_dir/created" "$temp_dir/preserved" "$temp_dir/deploy-paths" "$ccgs_marker_start" "$ccgs_marker_end" <<'PY'
+import hashlib
 import json, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 output = Path(sys.argv[1])
 mode = sys.argv[2]
-guardrails = Path(sys.argv[3])
-signatures = Path(sys.argv[4])
-created = Path(sys.argv[5])
-preserved = Path(sys.argv[6])
+patch_mode = sys.argv[3]
+package_version = sys.argv[4]
+package_commit = sys.argv[5]
+source_root = Path(sys.argv[6])
+guardrails = Path(sys.argv[7])
+signatures = Path(sys.argv[8])
+created = Path(sys.argv[9])
+preserved = Path(sys.argv[10])
+deploy_paths = Path(sys.argv[11])
+marker_start = sys.argv[12]
+marker_end = sys.argv[13]
 
 def lines(path: Path) -> list[str]:
     return [line for line in path.read_text(encoding="utf-8").splitlines() if line]
 
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+def marker_block(text: str, rel: str) -> str:
+    start_index = text.find(marker_start)
+    end_index = text.find(marker_end)
+    if start_index == -1 or end_index == -1 or end_index < start_index:
+        raise SystemExit(f"{rel}: missing CCGS marker block")
+    end_index += len(marker_end)
+    return text[start_index:end_index]
+
+installed_file_hashes = {}
+marker_block_hashes = {}
+for rel in lines(deploy_paths):
+    source_file = source_root / rel
+    if not source_file.is_file():
+        continue
+    data = source_file.read_bytes()
+    installed_file_hashes[rel] = sha256_bytes(data)
+    if not rel.startswith(".codex/tests/") and (rel == "AGENTS.md" or rel.endswith("/AGENTS.md")):
+        marker = marker_block(data.decode("utf-8"), rel)
+        marker_block_hashes[rel] = sha256_bytes(marker.encode("utf-8"))
+
+now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 data = {
-    "schema_version": 1,
-    "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+    "schema_version": 2,
+    "generated_at": now,
+    "installed_at": now,
     "detected_mode": mode,
+    "patch_mode": patch_mode,
+    "ccgs_version": package_version,
+    "package_commit": package_commit,
     "claude_guardrail_signals": lines(guardrails),
     "shared_ccgs_asset_signatures_found": lines(signatures),
     "shared_paths_created_by_codex": lines(created),
     "shared_paths_preserved_preexisting": lines(preserved),
+    "installed_file_hashes": installed_file_hashes,
+    "marker_block_hashes": marker_block_hashes,
 }
 output.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
@@ -217,6 +313,8 @@ from pathlib import Path
 data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 action = sys.argv[2]
 print(f"{action} mode: {data.get('detected_mode', '<unknown>')}")
+print(f"Patch mode: {data.get('patch_mode', '<unknown>')}")
+print(f"CCGS version: {data.get('ccgs_version', '<unknown>')}")
 print("Claude guardrail signals: " + (", ".join(data.get("claude_guardrail_signals", [])) or "<none>"))
 print("Shared CCGS signatures found: " + (", ".join(data.get("shared_ccgs_asset_signatures_found", [])) or "<none>"))
 print("Shared paths preserved: " + (", ".join(data.get("shared_paths_preserved_preexisting", [])) or "<none>"))
@@ -590,6 +688,53 @@ ccgs_remove_agents_stub_if_empty() {
   fi
 }
 
+ccgs_incremental_source_unchanged() {
+  local path="$1"
+  [ "${CCGS_PATCH_MODE:-}" = "incremental" ] || return 1
+  [ -e "$ccgs_install_root/$path" ] || return 1
+  local state_file
+  state_file="$(ccgs_install_state_file)"
+  [ -f "$state_file" ] || return 1
+  python3 - "$state_file" "$ccgs_source_root" "$path" "$ccgs_marker_start" "$ccgs_marker_end" <<'PY'
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+state = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+source_root = Path(sys.argv[2])
+rel = sys.argv[3]
+marker_start = sys.argv[4]
+marker_end = sys.argv[5]
+
+if state.get("schema_version") != 2:
+    raise SystemExit(1)
+
+source_file = source_root / rel
+if not source_file.is_file():
+    raise SystemExit(1)
+
+data = source_file.read_bytes()
+actual_file_hash = hashlib.sha256(data).hexdigest()
+if state.get("installed_file_hashes", {}).get(rel) != actual_file_hash:
+    raise SystemExit(1)
+
+if not rel.startswith(".codex/tests/") and (rel == "AGENTS.md" or rel.endswith("/AGENTS.md")):
+    text = data.decode("utf-8")
+    start_index = text.find(marker_start)
+    end_index = text.find(marker_end)
+    if start_index == -1 or end_index == -1 or end_index < start_index:
+        raise SystemExit(1)
+    end_index += len(marker_end)
+    marker = text[start_index:end_index].encode("utf-8")
+    actual_marker_hash = hashlib.sha256(marker).hexdigest()
+    if state.get("marker_block_hashes", {}).get(rel) != actual_marker_hash:
+        raise SystemExit(1)
+
+raise SystemExit(0)
+PY
+}
+
 ccgs_install_file() {
   local path="$1"
   ccgs_refuse_claude_path "$path"
@@ -600,6 +745,11 @@ ccgs_install_file() {
   if [ ! -f "$source_file" ]; then
     printf 'missing source path: %s\n' "$path" >&2
     return 1
+  fi
+
+  if ccgs_incremental_source_unchanged "$path"; then
+    [ "$ccgs_dry_run" = "1" ] && printf 'would skip unchanged %s\n' "$path"
+    return 0
   fi
 
   if [ "$mode" = "claude_ccgs_coexist" ] && ccgs_shared_manifest_path "$path" && [ -e "$target_file" ]; then

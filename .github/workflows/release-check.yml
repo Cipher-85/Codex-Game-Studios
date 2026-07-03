@@ -1,0 +1,15 @@
+name: Release Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate release versioning
+        run: ./.codex/audit.sh release --root "$PWD"

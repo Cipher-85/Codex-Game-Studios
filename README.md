@@ -4,6 +4,8 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
+Current package version: `0.2.0`.
+
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
 pinned to upstream commit `984023ddac0d5e27624f2baacde6105e45de375f`. It keeps
@@ -19,6 +21,8 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
     `resume-from-handoff`
 - Root `AGENTS.md` startup instructions and hidden path rules under `.codex/`
 - Codex hooks, command rules, config, installer, uninstaller, and validators
+- Manual release tooling in `.codex/release.sh` with CI-backed consistency
+  checks
 - Ported docs, templates, production scaffolding, source placeholders, and the
   CCGS Skill Testing Framework
 - Coexistence rules for repositories that already contain Claude Code files
@@ -44,6 +48,13 @@ Preview install or uninstall actions without writing:
 ./.codex/uninstall.sh --dry-run /path/to/game-project
 ```
 
+Patch an existing install explicitly:
+
+```bash
+./.codex/install.sh --patch incremental /path/to/game-project
+./.codex/install.sh --patch full /path/to/game-project
+```
+
 Remove Codex Game Studios from a project:
 
 ```bash
@@ -55,11 +66,34 @@ files instead of replacing project instructions. It preserves `CLAUDE.md`,
 `claude.md`, and `.claude/**` when they exist, and it records installed package
 ownership in `.codex/manifest/install-state.json`.
 
-## Validate This Package
+Default install behavior is patch-aware: a fresh target or old install-state
+schema receives a full install, while a target with modern install state receives
+an incremental patch based on recorded package file hashes.
 
-Run the static and headless release checks:
+## Release Workflow
+
+`.codex/VERSION` is the package version source of truth. The installer reads it
+but never decides or mutates the release number.
+
+Maintainer commands:
 
 ```bash
+./.codex/release.sh current
+./.codex/release.sh bump patch|minor|major
+./.codex/release.sh check
+./.codex/audit.sh release --root "$PWD"
+```
+
+Version bumps are manual. Push and pull request automation only verifies that
+release metadata, changelog entries, and changed installable files are
+consistent.
+
+## Validate This Package
+
+Run the static, release, and headless checks:
+
+```bash
+./.codex/audit.sh release --root "$PWD"
 ./.codex/audit.sh all --root "$PWD"
 ./.codex/audit.sh smoke-headless --root "$PWD"
 ```

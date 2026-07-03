@@ -11,10 +11,13 @@ Rules:
 - Workflow-created shared folders such as `assets/`, `tests/`, `tools/`, and
   `prototypes/` are created lazily when needed.
 - Package ownership is tracked in `.codex/manifest/installed-files.json`.
-- Each target install writes `.codex/manifest/install-state.json` with the
-  detected coexistence mode, Claude guardrail signals, shared CCGS signatures,
-  shared paths created by Codex, and shared paths preserved because they already
-  existed.
+- Each target install writes `.codex/manifest/install-state.json` with schema
+  version, installed CCGS version, package commit, timestamp, patch mode, file
+  hashes, marker-block hashes, detected coexistence mode, Claude guardrail
+  signals, shared CCGS signatures, shared paths created by Codex, and shared
+  paths preserved because they already existed.
+- Fresh targets and missing or old install-state schemas use full patch mode.
+  Modern install state uses incremental patch mode by default.
 - Install backs up changed target files under `.codex/backups/` before replacing
   package-owned assets.
 - If the target repo has `.gitignore`, install writes a marker-managed allowlist
@@ -44,5 +47,12 @@ Install detects three modes:
   removes Codex runtime files and only the shared paths recorded as created by
   Codex. If `install-state.json` is missing, uninstall preserves shared visible
   CCGS assets as the safer fallback.
+
+Patch modes:
+
+- `incremental`: copies only package files whose current source hash differs
+  from the hash recorded in modern install state.
+- `full`: refreshes every CCGS-owned installable file using the existing
+  backup-before-overwrite behavior.
 
 Skill and agent names intentionally preserve upstream names for workflow ergonomics. If another active skill or custom agent has the same name, the audit/installer should report the exact competing path and require a manual decision rather than silently renaming this port.

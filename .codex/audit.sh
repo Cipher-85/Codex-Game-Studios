@@ -41,6 +41,9 @@ case "$cmd" in
   coexistence)
     run validate_install.py "$@"
     ;;
+  release)
+    run validate_release.py "$@"
+    ;;
   smoke-headless)
     run validate_smoke.py headless "$@"
     ;;

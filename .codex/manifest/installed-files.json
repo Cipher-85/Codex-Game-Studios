@@ -52,6 +52,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".github/workflows/release-check.yml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/README.md"
   },
   {
@@ -388,6 +393,11 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": ".codex/audit.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/VERSION"
   },
   {
     "mode": "file",
@@ -902,6 +912,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".codex/release.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/lib/agents.sh"
   },
   {
@@ -938,6 +953,11 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": ".codex/lib/validate_manifest.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_release.py"
   },
   {
     "mode": "file",

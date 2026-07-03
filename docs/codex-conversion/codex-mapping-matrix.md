@@ -74,20 +74,26 @@ Official docs used: `https://developers.openai.com/codex/guides/agents-md`, `htt
 
 ## Hook Mapping
 
+The installed Codex hooks are upstream behavior with Codex adapter edits, not
+freeform rewrites. Adapter edits are limited to Codex-owned paths, `$skill`
+invocation text, `CCGS_ROOT` root-stable execution, `git -C "$ccgs_root"` calls,
+and Codex hook payload parsing through `.codex/lib/hooks.sh`.
+
 | Upstream hook | Upstream behavior | Claude event | Codex target | Disposition | Parity | Implementation notes | Verification method |
 |---|---|---|---|---|---|---|---|
 | `.claude/hooks/session-start.sh` | Session startup context | `SessionStart` | `.codex/hooks/session-start.sh` | ported | semantic equivalent | Rewrite stdin JSON fields to Codex hook schema. | Fixture stdin test; hooks.json event check. |
 | `.claude/hooks/detect-gaps.sh` | Startup gap detection | `SessionStart` | `.codex/hooks/detect-gaps.sh` | ported | semantic equivalent | Must read neutral `production/`, `design/`, `docs/architecture/` paths. | Fixture with missing/complete project state. |
 | `.claude/hooks/validate-commit.sh` | Git commit gate | `PreToolUse` on Bash | `.codex/hooks/validate-commit.sh` plus `.codex/rules/settings.rules` | ported | semantic equivalent | Blocking command policy belongs primarily in `.rules`; hook can add context-specific checks. | Bash fixture; command-rule `match`/`not_match` tests. |
-| `.claude/hooks/validate-push.sh` | Git push/test gate | `PreToolUse` on Bash | `.codex/hooks/validate-push.sh` plus `.codex/rules/settings.rules` | ported | semantic equivalent | Keep protected-branch and test-evidence checks. | Bash fixture; protected push denial smoke. |
-| `.claude/hooks/validate-assets.sh` | Asset validation after edits | `PostToolUse` on Write/Edit | `.codex/hooks/validate-assets.sh` | ported | partial | Use `PreToolUse` where Codex input shape permits blocking; use `PostToolUse` for advisory checks after apply_patch. | apply_patch fixture with valid/invalid JSON/assets. |
-| `.claude/hooks/validate-skill-change.sh` | Skill metadata/content guard | `PostToolUse` on Write/Edit | `.codex/hooks/validate-skill-change.sh` | ported | semantic equivalent | Validate Codex `name`/`description`, not Claude-only frontmatter. | Fixture modifies sample skill; lint output. |
+| `.claude/hooks/validate-push.sh` | Git push protected-branch warning | `PreToolUse` on Bash | `.codex/hooks/validate-push.sh` plus `.codex/rules/settings.rules` | ported | semantic equivalent | Warn, do not block, for explicit or current-branch pushes to `develop`, `main`, or `master`. | Bash fixture; protected push advisory smoke. |
+| `.claude/hooks/validate-assets.sh` | Asset validation after edits | `PostToolUse` on Write/Edit | `.codex/hooks/validate-assets.sh` | ported | semantic equivalent with Codex timing caveat | Parse Codex `apply_patch` payload paths; keep naming advisory and invalid JSON blocking signal. | apply_patch fixture with naming warning and invalid JSON block. |
+| `.claude/hooks/validate-skill-change.sh` | Skill metadata/content guard | `PostToolUse` on Write/Edit | `.codex/hooks/validate-skill-change.sh` | ported | semantic equivalent | Parse Codex `apply_patch` payload paths and advise `$skill-test static <name>` for `.agents/skills/<name>/SKILL.md`. | Fixture modifies sample skill; lint output. |
 | `.claude/hooks/pre-compact.sh` | Preserve session notes before compaction | `PreCompact` | `.codex/hooks/pre-compact.sh` | ported | semantic equivalent | Codex matcher values are manual/auto. | PreCompact fixture. |
 | `.claude/hooks/post-compact.sh` | Reload session notes after compaction | `PostCompact` | `.codex/hooks/post-compact.sh` | ported | semantic equivalent | Read/write only Codex-owned logs plus shared neutral handoff docs. | PostCompact fixture. |
 | `.claude/hooks/log-agent.sh` | Log agent start | `SubagentStart` | `.codex/hooks/log-agent.sh` | ported | semantic equivalent | Codex fields include `agent_id` and `agent_type`. | SubagentStart fixture; log assertion. |
 | `.claude/hooks/log-agent-stop.sh` | Log agent stop | `SubagentStop` | `.codex/hooks/log-agent-stop.sh` | ported | semantic equivalent | Same log namespace as start. | SubagentStop fixture; log assertion. |
 | `.claude/hooks/session-stop.sh` | End-session summary/logging | `Stop` | `.codex/hooks/session-stop.sh` | ported | semantic equivalent | Use common fields only; no Claude matcher assumptions. | Stop fixture. |
 | `.claude/hooks/notify.sh` | Desktop notification when Claude emits a notification | `Notification` hook event | Native Codex notifications documented for user-level setup; no project hook | `.codex/docs/COEXISTENCE.md` / `.codex/docs/README.md` notification section | replaced | partial | Codex has native TUI notifications and user-level `notify`, but no Claude-style `Notification` hook event, and project config cannot set user-level `notify`. Upstream script is Windows-oriented, so the faithful Codex port documents native notification setup rather than installing this script as a project hook. | Assert `Notification` absent from hooks.json; docs mention `notify`, `[tui].notifications`, and project-local limitation. |
+| n/a | Codex startup status summary | `SessionStart` | `.codex/hooks/studio-status-on-start.sh` | added | Codex-additive | Not upstream parity; preserves status visibility using Codex-native shared state reads. | Fixture stdin test; documentation marks additive. |
 
 ## Rule Mapping
 

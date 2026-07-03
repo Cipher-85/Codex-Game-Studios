@@ -9,15 +9,15 @@ you'll lose validation features.
 | Tool | Purpose | Install |
 | ---- | ---- | ---- |
 | **Git** | Version control, branch management | [git-scm.com](https://git-scm.com/) |
-| **Codex** | AI agent CLI | `npm install -g @anthropic-ai/claude-code` |
+| **Codex** | AI agent CLI | Use the OpenAI Codex install path for your environment |
+| **Python 3** | Shared hook JSON parsing and data-file validation | [python.org](https://www.python.org/) |
+| **Bash** | Hook script execution | Included with Git for Windows |
 
 ## Recommended
 
 | Tool | Used By | Purpose | Install |
 | ---- | ---- | ---- | ---- |
-| **jq** | Hooks (7 of 12) | JSON parsing in commit/push/asset/agent hooks | See below |
-| **Python 3** | Hooks (2 of 12) | JSON validation for data files | [python.org](https://www.python.org/) |
-| **Bash** | All hooks | Shell script execution | Included with Git for Windows |
+| **jq** | Manual debugging only | Optional JSON inspection while troubleshooting hook payloads | See below |
 
 ### Installing jq
 
@@ -44,14 +44,15 @@ sudo pacman -S jq       # Arch
 
 ### Windows
 - Git for Windows includes **Git Bash**, which provides the `bash` command
-  used by all hooks in `settings.json`
+  used by all hooks in `.codex/hooks.json`
 - Ensure Git Bash is on your PATH (default if installed via the Git installer)
-- Hooks use `bash .codex/hooks/[name].sh` — this works on Windows because
-  Codex invokes commands through a shell that can find `bash.exe`
+- Hooks are dispatched through `.codex/hooks.json` with `CCGS_ROOT` set to the
+  project root, so they work even when Codex starts from a subdirectory
 
 ### macOS / Linux
 - Bash is available natively
-- Install `jq` via your package manager for full hook support
+- Python 3 is usually available; install it if hook parsing or JSON validation
+  reports it missing
 
 ## Verifying Your Setup
 
@@ -61,16 +62,15 @@ Run these commands to check prerequisites:
 git --version          # Should show git version
 bash --version         # Should show bash version
 jq --version           # Should show jq version (optional)
-python3 --version      # Should show python version (optional)
+python3 --version      # Should show python version
 ```
 
 ## What Happens Without Optional Tools
 
 | Missing Tool | Effect |
 | ---- | ---- |
-| **jq** | Commit validation, push protection, asset validation, and agent audit hooks silently skip their checks. Commits and pushes still work. |
-| **Python 3** | JSON data file validation in commit and asset hooks is skipped. Invalid JSON can be committed without warning. |
-| **Both** | All hooks still execute without error (exit 0) but provide no validation. You're flying without safety nets. |
+| **jq** | No runtime effect; hook scripts use the shared Python parser. |
+| **Python 3** | Hook payload parsing and JSON data validation fail. Install Python 3 before relying on hook validation. |
 
 ## Recommended IDE
 

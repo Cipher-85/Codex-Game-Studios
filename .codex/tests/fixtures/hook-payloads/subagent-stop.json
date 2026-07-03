@@ -1,0 +1,5 @@
+{
+  "hook_event_name": "SubagentStop",
+  "agent_id": "agent-fixture",
+  "agent_type": "technical-director"
+}

@@ -317,7 +317,7 @@ Port Claude statusline behavior through the closest Codex-native surfaces:
 - `studio-status` skill for on-demand stage/review/session breadcrumb rendering.
 
 Known parity boundary:
-- Claude supports `statusLine.command = "bash .claude/statusline.sh"` and can render arbitrary project state directly in the footer. The verified Codex surface is a built-in item list, not a project script footer item. Therefore model/context footer parity is native, while the game-stage breadcrumb is preserved through context and skill output unless Codex later exposes a custom footer command.
+- Claude supports `statusLine.command = "bash .claude/statusline.sh"` and can render arbitrary project state directly in the footer. The verified Codex surface is a built-in item list, not a project script footer item. Therefore model/context footer parity is native, while an actual footer `Stage:` item is blocked until Codex exposes a documented project custom footer item. The game-stage breadcrumb is preserved through context and skill output in the meantime.
 
 Lifecycle parity:
 - Preserve phases: concept, systems-design, technical-setup, pre-production, production, polish, release.
@@ -344,8 +344,8 @@ Templates:
 
 Testing framework:
 - Port `CCGS Skill Testing Framework/**` to `CCGS Skill Testing Framework/**`.
-- Preserve 49 agent specs and 72 skill specs.
-- Record the missing upstream `vertical-slice` skill spec as an upstream coverage gap, not a Codex conversion miss.
+- Preserve 49 agent specs and 72 upstream skill specs.
+- Add a clearly labeled Codex-only `vertical-slice` skill spec to close coverage for PROCEED/PIVOT/KILL verdict behavior while preserving the upstream inventory as historical evidence of the inherited gap.
 
 ## Optional Plugin Package
 

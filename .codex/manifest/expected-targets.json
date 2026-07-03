@@ -1,5 +1,54 @@
 [
   {
+    "category": "github",
+    "owner": "codex-game-studios",
+    "path": ".github/CODEOWNERS",
+    "rationale": "Codex fork governance metadata for repository ownership.",
+    "source": ".github/CODEOWNERS"
+  },
+  {
+    "category": "github",
+    "owner": "codex-game-studios",
+    "path": ".github/FUNDING.yml",
+    "rationale": "Comment-only funding placeholder for fork-owner customization.",
+    "source": ".github/FUNDING.yml"
+  },
+  {
+    "category": "github",
+    "owner": "codex-game-studios",
+    "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "rationale": "Codex fork issue template for reproducible bug reports.",
+    "source": ".github/ISSUE_TEMPLATE/bug_report.md"
+  },
+  {
+    "category": "github",
+    "owner": "codex-game-studios",
+    "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+    "rationale": "Codex fork issue template for focused feature requests.",
+    "source": ".github/ISSUE_TEMPLATE/feature_request.md"
+  },
+  {
+    "category": "github",
+    "owner": "codex-game-studios",
+    "path": ".github/PULL_REQUEST_TEMPLATE.md",
+    "rationale": "Codex fork pull request checklist for scoped verification.",
+    "source": ".github/PULL_REQUEST_TEMPLATE.md"
+  },
+  {
+    "category": "root_files",
+    "owner": "codex-game-studios",
+    "path": "SECURITY.md",
+    "rationale": "Codex-native security reporting policy for this fork.",
+    "source": "SECURITY.md"
+  },
+  {
+    "category": "root_files",
+    "owner": "codex-game-studios",
+    "path": "UPGRADING.md",
+    "rationale": "Codex-native upgrade guidance for distribution and target installs.",
+    "source": "UPGRADING.md"
+  },
+  {
     "category": "codex_agent_memory",
     "owner": "codex-game-studios",
     "path": ".codex/agent-memory/art-director/MEMORY.md",
@@ -2826,5 +2875,12 @@
     "path": "docs/registry/architecture.yaml",
     "rationale": "Shared visible project documentation preserved in deployed game projects.",
     "source": "upstream shared docs"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/vertical-slice.md",
+    "rationale": "Codex-added testing framework coverage for the inherited upstream vertical-slice spec gap.",
+    "source": "Codex-added coverage"
   }
 ]

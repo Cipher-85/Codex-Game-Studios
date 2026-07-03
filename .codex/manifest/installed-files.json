@@ -17,6 +17,41 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": "SECURITY.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "UPGRADING.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".github/CODEOWNERS"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".github/FUNDING.yml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".github/ISSUE_TEMPLATE/bug_report.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".github/ISSUE_TEMPLATE/feature_request.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".github/PULL_REQUEST_TEMPLATE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/README.md"
   },
   {
@@ -2283,6 +2318,11 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": "production/session-state/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/vertical-slice.md"
   },
   {
     "mode": "file",

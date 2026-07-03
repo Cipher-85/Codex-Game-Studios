@@ -67,9 +67,9 @@ Checks:
 - Category counts match the Phase 3 matrix: 49 agents, 73 skills, 12 hooks, 11 rules, 40 templates, 23 `.claude/docs` non-template docs, 1 upstream explicit agent-memory file, 17 generated Codex memory contract targets, 127 testing-framework assets, 62 upstream root/shared `docs/**` files, and remaining root/shared categories.
 - Every row has one of `ported`, `replaced`, `shared`, `not_applicable`, or `blocked`.
 - Every `not_applicable` and `blocked` row has a concrete rationale.
-- Only one upstream testing-framework gap is expected: missing `vertical-slice` skill spec.
+- Only one upstream testing-framework gap was inherited: missing `vertical-slice` skill spec. The Codex target distribution adds a clearly labeled spec for this skill.
 - `notify.sh` is marked as replaced by native Codex notification setup documentation, not missing.
-- Generated target counts match: 49 agents, 17 repo-local agent-memory files, 73 ported skills, 4 new Codex-native support skills (`studio-status`, `studio-next`, `handoff`, `resume-from-handoff`), 11 ported hooks plus 1 new status hook if implemented, 11 nested rule instruction targets, 40 templates, 127 testing-framework assets.
+- Generated target counts match: 49 agents, 17 repo-local agent-memory files, 73 ported skills, 4 new Codex-native support skills (`studio-status`, `studio-next`, `handoff`, `resume-from-handoff`), 11 ported hooks plus 1 new status hook if implemented, 11 nested rule instruction targets, 40 templates, 127 upstream testing-framework assets plus 1 Codex-added `vertical-slice` spec.
 
 Acceptance:
 - `audit manifest` exits 0 only when there are no uncategorized upstream files and no unexpected generated targets.
@@ -251,8 +251,8 @@ Checks:
 - All upstream root/shared project docs are either shared at the same neutral `docs/**` path or copied with rationale.
 - `.codex/docs/README.md`, `.codex/docs/MIGRATION.md`, `.codex/docs/COEXISTENCE.md`, and `ATTRIBUTION.md` exist.
 - Documentation invocation examples use upstream skill names, such as `$start` or "run the `start` skill".
-- `CCGS Skill Testing Framework/**` contains 127 upstream testing-framework assets.
-- The validation report identifies the missing upstream `vertical-slice` skill spec as expected.
+- `CCGS Skill Testing Framework/**` contains 127 upstream testing-framework assets plus the Codex-added `vertical-slice` skill spec.
+- The validation report preserves the missing upstream `vertical-slice` spec as historical evidence and includes the Codex-added target spec.
 
 Acceptance:
 - `audit docs` exits 0 when counts, paths, and rewrite scans pass.

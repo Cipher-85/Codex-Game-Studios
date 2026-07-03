@@ -15,18 +15,20 @@ Flow State, Bartle Player Types). Use whichever engine set matches your project.
 
 ### 1. Understand the Hierarchy
 
-There are three tiers of agents:
+There are three tiers of agents. The Opus/Sonnet/Haiku labels are upstream
+Claude tier labels retained for parity; the active Codex model/effort mapping
+lives in `.codex/agents/*.toml`.
 
-- **Tier 1 (Opus)**: Directors who make high-level decisions
+- **Tier 1 (upstream Opus tier)**: Directors who make high-level decisions
   - `creative-director` -- vision and creative conflict resolution
   - `technical-director` -- architecture and technology decisions
   - `producer` -- scheduling, coordination, and risk management
 
-- **Tier 2 (Sonnet)**: Department leads who own their domain
+- **Tier 2 (upstream Sonnet tier)**: Department leads who own their domain
   - `game-designer`, `lead-programmer`, `art-director`, `audio-director`,
     `narrative-director`, `qa-lead`, `release-manager`, `localization-lead`
 
-- **Tier 3 (Sonnet/Haiku)**: Specialists who execute within their domain
+- **Tier 3 (upstream Sonnet/Haiku tier)**: Specialists who execute within their domain
   - Designers, programmers, artists, writers, testers, engineers
 
 ### 2. Pick the Right Agent for the Job

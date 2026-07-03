@@ -65,9 +65,11 @@ EXPECTED_TARGET_COUNTS = {
     "codex_path_rules": 15,
     "codex_docs_non_templates": 4,
     "codex_docs_templates": 40,
+    "github": 5,
+    "root_files": 2,
     "shared_docs": 61,
     "shared_src": 1,
-    "testing_framework": 127,
+    "testing_framework": 128,
 }
 
 

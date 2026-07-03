@@ -13,7 +13,7 @@ This port maps upstream workflows to Codex-native surfaces:
 
 Partial parity gaps are intentional:
 
-- Scripted footer breadcrumb behavior is represented by `[tui].status_line`, `studio-status-on-start.sh`, and `$studio-status`.
+- Built-in footer items are represented by `[tui].status_line`; the upstream scripted Stage/session footer is blocked until Codex exposes a documented project custom footer item, with `studio-status-on-start.sh` and `$studio-status` as startup/on-demand fallbacks.
 - Structured choice prompts are written as numbered natural-language choices.
 - Role delegation is written as Codex subagent delegation by upstream role name.
 - Per-agent tool fences, max-turns, and worktree isolation are preserved as explicit instructions and policy checks rather than unsupported TOML fields.

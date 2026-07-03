@@ -124,7 +124,7 @@ For phase gates, record in `docs/architecture/architecture.md` or
 
 ## Tier 1 — Creative Director Gates
 
-Agent: `creative-director` | Model tier: Opus | Domain: Vision, pillars, player experience
+Agent: `creative-director` | Upstream tier: Opus | Codex mapping: `.codex/agents/creative-director.toml` | Domain: Vision, pillars, player experience
 
 ---
 
@@ -266,7 +266,7 @@ any session that produces player feedback
 
 ## Tier 1 — Technical Director Gates
 
-Agent: `technical-director` | Model tier: Opus | Domain: Architecture, engine risk, performance
+Agent: `technical-director` | Upstream tier: Opus | Codex mapping: `.codex/agents/technical-director.toml` | Domain: Architecture, engine risk, performance
 
 ---
 
@@ -412,7 +412,7 @@ or before finalizing any engine-specific implementation approach
 
 ## Tier 1 — Producer Gates
 
-Agent: `producer` | Model tier: Opus | Domain: Scope, timeline, dependencies, production risk
+Agent: `producer` | Upstream tier: Opus | Codex mapping: `.codex/agents/producer.toml` | Domain: Scope, timeline, dependencies, production risk
 
 ---
 
@@ -538,7 +538,7 @@ is invoked
 
 ## Tier 1 — Art Director Gates
 
-Agent: `art-director` | Model tier: Sonnet | Domain: Visual identity, art bible, visual production readiness
+Agent: `art-director` | Upstream tier: Sonnet | Codex mapping: `.codex/agents/art-director.toml` | Domain: Visual identity, art bible, visual production readiness
 
 ---
 
@@ -619,7 +619,8 @@ Agent: `art-director` | Model tier: Sonnet | Domain: Visual identity, art bible,
 ## Tier 2 — Lead Gates
 
 These gates are invoked by orchestration skills and senior skills when a domain
-specialist's feasibility sign-off is needed. Tier 2 leads use Sonnet (default).
+specialist's feasibility sign-off is needed. Tier 2 leads use the upstream
+Sonnet tier, mapped through their Codex agent TOML files.
 
 ---
 

@@ -1241,22 +1241,28 @@ Tier 3 (Specialists):  gameplay-programmer, engine-programmer,
 
 ### Automated Hooks (Safety Net)
 
-The system has 12 hooks that run automatically:
+The Codex port installs 12 active hooks. Upstream `notify.sh` is not installed
+because Codex project hooks do not expose Claude's `Notification` event; native
+Codex notifications are configured at user scope instead.
 
 | Hook | Trigger | What It Does |
 |------|---------|-------------|
 | `session-start.sh` | Session start | Shows branch, recent commits, detects active.md for recovery |
 | `detect-gaps.sh` | Session start | Detects fresh projects (no engine, no concept) and suggests `$start` |
+| `studio-status-on-start.sh` | Session start | Prints Stage, review mode, and active session breadcrumb as startup context |
 | `pre-compact.sh` | Before compaction | Dumps session state into conversation for auto-recovery |
 | `post-compact.sh` | After compaction | Reminds Codex to restore session state from `active.md` |
-| `notify.sh` | Notification event | Shows Windows toast notification via PowerShell |
 | `validate-commit.sh` | Before commit | Checks for design doc references, valid JSON, no hardcoded values |
 | `validate-push.sh` | Before push | Warns on pushes to main/develop |
-| `validate-assets.sh` | Before commit | Checks asset naming and size |
-| `validate-skill-change.sh` | Skill file written | Advises running `$skill-test` after `.agents/skills/` changes |
+| `validate-assets.sh` | After `apply_patch` | Checks asset naming and JSON validity for changed `assets/` paths |
+| `validate-skill-change.sh` | After `apply_patch` | Advises running `$skill-test` after `.agents/skills/` changes |
 | `log-agent.sh` | Agent start | Logs agent invocations for audit trail |
 | `log-agent-stop.sh` | Agent stop | Completes agent audit trail (start + stop) |
 | `session-stop.sh` | Session end | Final session logging |
+
+`notify.sh` remains an upstream-only replaced artifact. Users who want desktop
+notifications should configure native Codex notification settings in user-level
+config; project-local `.codex/config.toml` must not set `notify`.
 
 ### Context Resilience
 

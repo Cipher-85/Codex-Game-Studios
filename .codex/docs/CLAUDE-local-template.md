@@ -7,8 +7,8 @@ This file is gitignored and will not be committed.
 # Personal Preferences
 
 ## Model Preferences
-- Prefer Opus for complex design tasks
-- Use Haiku for quick lookups and simple edits
+- Prefer high reasoning effort for complex design tasks
+- Prefer lower reasoning effort for quick lookups and simple edits
 
 ## Workflow Preferences
 - Always run tests after code changes

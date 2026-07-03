@@ -48,6 +48,13 @@ CCGS Skill Testing Framework/
 
 ---
 
+## Model Tier Labels
+
+Some inherited specs use upstream Claude tier names such as Opus, Sonnet, and
+Haiku. In this Codex port they are historical tier labels only. Runtime agent
+configuration lives in `.codex/agents/*.toml` and maps those tiers to Codex
+models and reasoning effort.
+
 ## How to use it
 
 All testing is driven by two skills already in the framework:

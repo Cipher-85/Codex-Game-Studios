@@ -22,4 +22,9 @@ Review mode: <review mode or unset>
 Active session: <first heading or summary from active.md, or unset>
 ```
 
-This skill preserves the game-stage/review/session breadcrumb from the upstream shell statusline as an on-demand Codex-native workflow. Codex built-in model, context, current-directory, and git footer items remain configured separately through `[tui].status_line` when project config is installed.
+This skill preserves the game-stage/review/session breadcrumb from the upstream
+shell statusline as an on-demand Codex-native workflow. Codex built-in model,
+context, current-directory, and git footer items remain configured separately
+through `[tui].status_line` when project config is installed. A real footer
+`Stage:` item is blocked until Codex documents support for project custom footer
+items; do not add an unverified fake status-line entry.

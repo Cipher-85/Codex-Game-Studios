@@ -12,6 +12,8 @@ from pathlib import Path
 
 
 SEMVER_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
+CODEX_TAG_PREFIX = "codex-v"
+LEGACY_BASELINE_TAG = "v0.1.0"
 
 
 class ValidationError(Exception):
@@ -89,22 +91,29 @@ def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
     return result.returncode == 0
 
 
-def semver_tags(root: Path) -> list[tuple[tuple[int, int, int], str]]:
-    result = run_git(root, "tag", "--list", "v[0-9]*.[0-9]*.[0-9]*")
+def codex_release_tags(root: Path) -> list[tuple[tuple[int, int, int], str]]:
+    result = run_git(root, "tag", "--list", f"{CODEX_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*")
     tags: list[tuple[tuple[int, int, int], str]] = []
+    baseline_commit = tag_commit(root, LEGACY_BASELINE_TAG)
+    if baseline_commit:
+        tags.append(((0, 1, 0), LEGACY_BASELINE_TAG))
     if result.returncode != 0:
         return tags
-    port_root = tag_commit(root, "v0.1.0")
-    if not port_root:
-        return tags
     for tag in result.stdout.splitlines():
-        raw = tag.removeprefix("v")
+        raw = tag.removeprefix(CODEX_TAG_PREFIX)
         try:
             parsed = parse_semver(raw)
         except ValidationError:
             continue
-        commit = tag_commit(root, tag)
-        if port_root and commit and not is_ancestor(root, port_root, commit):
+        if baseline_commit and parsed == (0, 1, 0):
+            commit = tag_commit(root, tag)
+            if commit and commit != baseline_commit:
+                continue
+        elif baseline_commit:
+            commit = tag_commit(root, tag)
+            if commit and not is_ancestor(root, baseline_commit, commit):
+                continue
+        if any(existing == parsed for existing, _ in tags):
             continue
         tags.append((parsed, tag))
     return sorted(tags)
@@ -136,9 +145,9 @@ def validate_release(root: Path) -> tuple[list[str], list[str]]:
     if not changelog_has_version(root, version):
         errors.append(f"CHANGELOG.md is missing a section for v{version}")
 
-    tags = semver_tags(root)
+    tags = codex_release_tags(root)
     if not tags:
-        warnings.append("no vX.Y.Z git tags found; skipping tag-diff version-bump check")
+        warnings.append("no codex-vX.Y.Z git tags or legacy v0.1.0 baseline found; skipping tag-diff version-bump check")
         return errors, warnings
 
     latest_tuple, latest_tag = tags[-1]

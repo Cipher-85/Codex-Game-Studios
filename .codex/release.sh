@@ -12,6 +12,7 @@ usage:
   ./.codex/release.sh current
   ./.codex/release.sh bump patch|minor|major|X.Y.Z [--dry-run] [--date YYYY-MM-DD]
   ./.codex/release.sh check
+  ./.codex/release.sh publish [--dry-run]
 EOF
 }
 
@@ -26,6 +27,14 @@ value = sys.argv[1]
 if not re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", value):
     raise SystemExit(f"invalid version: {value}")
 PY
+}
+
+release_tag() {
+  printf 'codex-v%s\n' "$(current_version)"
+}
+
+release_title() {
+  printf 'Codex Game Studios v%s\n' "$(current_version)"
 }
 
 bump_version() {
@@ -53,6 +62,117 @@ else:
     raise SystemExit(f"unsupported bump: {kind}")
 print(f"{major}.{minor}.{patch}")
 PY
+}
+
+extract_release_notes() {
+  local version="$1"
+  python3 - "$changelog_file" "$version" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+version = sys.argv[2]
+try:
+    text = path.read_text(encoding="utf-8")
+except FileNotFoundError as exc:
+    raise SystemExit(f"release: missing CHANGELOG.md: {exc}")
+
+heading_pattern = re.compile(
+    rf"^## v{re.escape(version)}(?:\s+-\s+\d{{4}}-\d{{2}}-\d{{2}})?\s*$",
+    re.MULTILINE,
+)
+match = heading_pattern.search(text)
+if not match:
+    raise SystemExit(f"release: CHANGELOG.md is missing section ## v{version}")
+
+body_start = text.find("\n", match.end())
+if body_start == -1:
+    body = ""
+else:
+    next_heading = re.search(r"^##\s+", text[body_start + 1 :], re.MULTILINE)
+    if next_heading:
+        body = text[body_start + 1 : body_start + 1 + next_heading.start()]
+    else:
+        body = text[body_start + 1 :]
+
+notes = body.strip()
+placeholder_markers = (
+    "Document release notes before tagging this version.",
+    "TBD",
+    "TODO",
+    "[PLACEHOLDER]",
+    "[TODO]",
+)
+if not notes:
+    raise SystemExit(f"release: CHANGELOG.md section v{version} has no release notes")
+if any(marker in notes for marker in placeholder_markers):
+    raise SystemExit(f"release: CHANGELOG.md section v{version} still contains placeholder text")
+
+print(notes)
+PY
+}
+
+require_clean_worktree() {
+  if [ -n "$(git -C "$root" status --porcelain)" ]; then
+    printf 'release: worktree must be clean before publishing\n' >&2
+    exit 1
+  fi
+}
+
+require_gh_ready() {
+  if ! command -v gh >/dev/null 2>&1; then
+    printf 'release: gh CLI is required for publishing\n' >&2
+    exit 1
+  fi
+  if ! gh auth status >/dev/null 2>&1; then
+    printf 'release: gh CLI is not authenticated\n' >&2
+    exit 1
+  fi
+}
+
+origin_main_commit() {
+  git -C "$root" ls-remote --exit-code origin refs/heads/main | awk '{print $1}'
+}
+
+require_head_matches_origin_main() {
+  local head
+  local origin_main
+  head="$(git -C "$root" rev-parse HEAD)"
+  if ! origin_main="$(origin_main_commit)"; then
+    printf 'release: could not read origin/main\n' >&2
+    exit 1
+  fi
+  if [ "$head" != "$origin_main" ]; then
+    printf 'release: HEAD (%s) does not match origin/main (%s)\n' "$head" "$origin_main" >&2
+    exit 1
+  fi
+}
+
+origin_tag_commit() {
+  local tag="$1"
+  local peeled
+  local exact
+  peeled="$(git -C "$root" ls-remote --tags origin "refs/tags/$tag^{}" | awk '{print $1}')"
+  if [ -n "$peeled" ]; then
+    printf '%s\n' "$peeled"
+    return 0
+  fi
+  exact="$(git -C "$root" ls-remote --tags origin "refs/tags/$tag" | awk '{print $1}')"
+  if [ -n "$exact" ]; then
+    printf '%s\n' "$exact"
+  fi
+}
+
+require_origin_tag_missing_or_head() {
+  local tag="$1"
+  local head="$2"
+  local remote_tag
+  remote_tag="$(origin_tag_commit "$tag")"
+  if [ -n "$remote_tag" ] && [ "$remote_tag" != "$head" ]; then
+    printf 'release: origin tag %s points at %s, not HEAD %s\n' "$tag" "$remote_tag" "$head" >&2
+    exit 1
+  fi
 }
 
 write_changelog_section() {
@@ -97,6 +217,61 @@ case "$cmd" in
     ;;
   check)
     python3 "$root/.codex/lib/validate_release.py" --root "$root"
+    ;;
+  publish)
+    dry_run=0
+    while [ "$#" -gt 0 ]; do
+      case "$1" in
+        --dry-run)
+          dry_run=1
+          shift
+          ;;
+        *)
+          printf 'release: unsupported argument: %s\n' "$1" >&2
+          usage
+          exit 2
+          ;;
+      esac
+    done
+
+    validate_version "$(current_version)"
+    version="$(current_version)"
+    tag="$(release_tag)"
+    title="$(release_title)"
+    head="$(git -C "$root" rev-parse HEAD)"
+    notes="$(extract_release_notes "$version")"
+
+    if [ "$dry_run" = "1" ]; then
+      printf 'intended release tag: %s\n' "$tag"
+      printf 'intended release title: %s\n' "$title"
+      printf 'intended release target: %s\n' "$head"
+      printf 'intended release branch: origin/main\n'
+    fi
+
+    require_clean_worktree
+    require_gh_ready
+    require_head_matches_origin_main
+    "$script_dir/release.sh" check
+    require_origin_tag_missing_or_head "$tag" "$head"
+
+    if [ "$dry_run" != "1" ]; then
+      printf 'release tag: %s\n' "$tag"
+      printf 'release title: %s\n' "$title"
+      printf 'release target: %s\n' "$head"
+      printf 'release branch: origin/main\n'
+    fi
+
+    if [ "$dry_run" = "1" ]; then
+      printf 'dry run: checks passed; would create GitHub release and tag if missing\n'
+      exit 0
+    fi
+
+    gh release create "$tag" \
+      --title "$title" \
+      --notes "$notes" \
+      --target "$head" \
+      --latest \
+      --fail-on-no-commits
     ;;
   bump)
     bump_kind="${1:-}"

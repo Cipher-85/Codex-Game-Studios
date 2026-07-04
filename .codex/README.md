@@ -8,8 +8,8 @@ manifest assets for the Codex-native port of
 Current package version:
 - `.codex/VERSION` is the source of truth.
 - `install.sh` reads the version and records it in target install state.
-- `release.sh` is the manual maintainer workflow for current, bump, and check
-  operations.
+- `release.sh` is the manual maintainer workflow for current, bump, check, and
+  explicit publish operations.
 
 Current status:
 - The package version is `v0.3.0`.
@@ -17,8 +17,9 @@ Current status:
   state, and default patch-aware installs.
 - `v0.3.0` documents the latest root workflow alignment and the hook parser fix
   for current Codex `apply_patch` JSON payloads and legacy raw patch payloads.
-- Release validation compares against Codex-port tags at or after `v0.1.0`,
-  not upstream Claude release tags inherited through the pinned source history.
+- Release validation compares against `codex-vX.Y.Z` tags, plus the legacy
+  `v0.1.0` initial Codex-port baseline, not upstream Claude release tags
+  inherited through the pinned source history.
 
 Coexistence rules:
 - Do not write to `.claude/`.
@@ -32,6 +33,9 @@ Install and release notes:
 - Incremental patch mode can be forced with `install.sh --patch incremental`.
 - `audit.sh release` validates `.codex/VERSION`, `CHANGELOG.md`, release tags,
   and changed installable files without mutating the checkout.
+- Package publishing is `bump -> edit changelog/docs -> check -> commit/push ->
+  publish`. The `bump` command never publishes, and GitHub Actions remain
+  validation-only.
 
 Port status notes:
 - `.codex/manifest/upstream-assets.json` is the durable upstream inventory for all 417 pinned upstream files.

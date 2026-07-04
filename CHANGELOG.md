@@ -15,8 +15,12 @@
   timing and current Codex hook matcher behavior.
 - Refreshed public status docs for the current package state after the v0.2.0
   release tooling and patch-install work.
-- Scoped release validation to Codex-port tags at or after `v0.1.0` so
-  inherited upstream Claude release tags do not block Codex package versioning.
+- Added an explicit `./.codex/release.sh publish` command for manual GitHub
+  Release creation with clean-worktree, authenticated `gh`, `origin/main`,
+  changelog, and tag-target checks.
+- Switched Codex package publishing and release validation to namespaced
+  `codex-vX.Y.Z` tags while keeping the legacy `v0.1.0` baseline accepted and
+  ignoring inherited upstream Claude release tags.
 
 ## v0.2.0 - 2026-07-04
 

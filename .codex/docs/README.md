@@ -47,9 +47,12 @@ Latest runtime notes:
 
 - `.codex/VERSION` is the release source of truth; release tooling validates
   metadata and changed installable files without mutating the checkout.
-- Release validation scopes semver comparison to Codex-port tags at or after
-  `v0.1.0`, so inherited upstream Claude tags do not force this port's package
-  version.
+- Codex package releases use `codex-vX.Y.Z` git tags. The legacy `v0.1.0` tag
+  is accepted only as the initial Codex-port baseline, so inherited upstream
+  Claude tags such as plain `v0.2.0` and `v0.3.0` do not force this port's
+  package version.
+- Release publishing is manual through `./.codex/release.sh publish`; GitHub
+  Actions validate release metadata only and do not publish.
 - `apply_patch` hooks use the shared parser in `.codex/lib/hooks.sh`, which
   accepts current JSON-argument payloads and legacy raw patch payloads.
 - Root `AGENTS.md` is aligned with the upstream workflow contract while keeping

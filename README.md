@@ -94,14 +94,24 @@ Maintainer commands:
 ./.codex/release.sh current
 ./.codex/release.sh bump patch|minor|major
 ./.codex/release.sh check
+./.codex/release.sh publish --dry-run
+./.codex/release.sh publish
 ./.codex/audit.sh release --root "$PWD"
 ```
 
-Version bumps are manual. Release validation verifies that release metadata,
-changelog entries, Codex-port semver tags, and changed installable files are
-consistent, but it does not create commits, create tags, edit files, or choose
-release numbers. Upstream Claude release tags before the Codex `v0.1.0` fork
-point are ignored by the Codex package version check.
+The release sequence is manual: bump the version, edit changelog/docs, run
+`check`, commit and push to `origin/main`, then run `publish`. `bump` does not
+publish. `publish --dry-run` performs the same local and remote read checks but
+does not create tags or GitHub releases.
+
+Codex package releases use namespaced GitHub tags such as `codex-v0.3.0` to
+avoid collisions with inherited upstream Claude tags. Release titles and
+changelog headings keep the human-facing `Codex Game Studios vX.Y.Z` and
+`## vX.Y.Z` forms. Release validation verifies that release metadata,
+changelog entries, Codex package tags, and changed installable files are
+consistent, but it does not create commits, create tags, edit files, publish,
+or choose release numbers. GitHub Actions run release validation only; publishing
+is always an explicit maintainer command.
 
 ## Validate This Package
 

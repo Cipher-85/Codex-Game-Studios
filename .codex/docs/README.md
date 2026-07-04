@@ -9,6 +9,7 @@ Core commands:
 ```bash
 ./.codex/audit.sh all --root "$PWD"
 ./.codex/audit.sh smoke-headless --root "$PWD"
+./.codex/audit.sh release --root "$PWD"
 ./.codex/install.sh /path/to/game-project
 ./.codex/uninstall.sh /path/to/game-project
 ```
@@ -20,6 +21,9 @@ signatures, preserved shared paths, and Codex-created shared paths. Installs
 write target-local state to `.codex/manifest/install-state.json` so uninstall
 can distinguish Codex-created shared scaffolds from preexisting Claude CCGS
 assets.
+Existing modern installs receive incremental patching by default. Use
+`--patch full` or `--patch incremental` when the patch mode needs to be
+explicit.
 When a target repo already has `.gitignore`, install maintains a marker-managed
 allowlist for the deployed paths and verifies they are not still ignored.
 
@@ -38,3 +42,15 @@ Path-scoped authoring instructions live in
 `.codex/instructions/path-rules/*.md`; root `AGENTS.md` routes Codex to the
 right file before work starts. `.codex/rules/*.rules` remains command-policy
 only.
+
+Latest runtime notes:
+
+- `.codex/VERSION` is the release source of truth; release tooling validates
+  metadata and changed installable files without mutating the checkout.
+- Release validation scopes semver comparison to Codex-port tags at or after
+  `v0.1.0`, so inherited upstream Claude tags do not force this port's package
+  version.
+- `apply_patch` hooks use the shared parser in `.codex/lib/hooks.sh`, which
+  accepts current JSON-argument payloads and legacy raw patch payloads.
+- Root `AGENTS.md` is aligned with the upstream workflow contract while keeping
+  Claude runtime files out of Codex dependencies.

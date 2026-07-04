@@ -56,7 +56,16 @@ Package versioning is manual and lives in `.codex/VERSION`.
 ```
 
 CI verifies release consistency on push and pull request. It does not bump the
-version, edit `CHANGELOG.md`, create commits, or create tags.
+version, edit `CHANGELOG.md`, create commits, or create tags. Release
+validation compares `.codex/VERSION` to Codex-port semver tags at or after
+`v0.1.0`; upstream Claude release tags inherited from the pinned source history
+are ignored.
+
+For `v0.3.0`, make sure the root README, `.codex/README.md`,
+`.codex/docs/README.md`, and `CHANGELOG.md` are updated with the release status
+before tagging. This line includes the `apply_patch` hook payload compatibility
+fix and the root `AGENTS.md` workflow-alignment update after the `v0.2.0`
+release tooling work.
 
 ## Verify After Upgrade
 
@@ -78,3 +87,5 @@ upgrade notes.
   this port.
 - Project-specific stage, review mode, and active session state remain in
   neutral shared paths under `production/`.
+- Hooks expect Python for reliable payload parsing; without Python they fail
+  open with warnings, as described in `.codex/docs/setup-requirements.md`.

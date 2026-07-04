@@ -77,17 +77,36 @@ def changelog_has_version(root: Path, version: str) -> bool:
     return re.search(rf"^## v{re.escape(version)}(?:\s+-\s+\d{{4}}-\d{{2}}-\d{{2}})?\s*$", text, re.MULTILINE) is not None
 
 
+def tag_commit(root: Path, tag: str) -> str | None:
+    result = run_git(root, "rev-list", "-n", "1", tag)
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
+
+
+def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
+    result = run_git(root, "merge-base", "--is-ancestor", ancestor, descendant)
+    return result.returncode == 0
+
+
 def semver_tags(root: Path) -> list[tuple[tuple[int, int, int], str]]:
     result = run_git(root, "tag", "--list", "v[0-9]*.[0-9]*.[0-9]*")
     tags: list[tuple[tuple[int, int, int], str]] = []
     if result.returncode != 0:
         return tags
+    port_root = tag_commit(root, "v0.1.0")
+    if not port_root:
+        return tags
     for tag in result.stdout.splitlines():
         raw = tag.removeprefix("v")
         try:
-            tags.append((parse_semver(raw), tag))
+            parsed = parse_semver(raw)
         except ValidationError:
             continue
+        commit = tag_commit(root, tag)
+        if port_root and commit and not is_ancestor(root, port_root, commit):
+            continue
+        tags.append((parsed, tag))
     return sorted(tags)
 
 

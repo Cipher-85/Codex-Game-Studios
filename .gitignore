@@ -10,3 +10,12 @@
 
 # Codex hook runtime logs
 /production/session-logs/
+
+# App launcher (machine-specific, created by mklauncher)
+/Codex-Game-Studios (Codex).app/
+
+# Python bytecode caches
+__pycache__/
+
+# Generated local branding drafts
+/assets/branding/codex-game-studios-app-icon-v3-editor-world.png

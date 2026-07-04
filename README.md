@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.2.0`.
+Current package version: `0.3.0`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -26,6 +26,19 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 - Ported docs, templates, production scaffolding, source placeholders, and the
   CCGS Skill Testing Framework
 - Coexistence rules for repositories that already contain Claude Code files
+
+## Current Status
+
+The current release line is `v0.3.0`. It includes:
+
+- Package versioning through `.codex/VERSION`, release checks, and patch-aware
+  installs introduced in `v0.2.0`.
+- Defensive `apply_patch` hook payload parsing for both current Codex JSON
+  argument shapes and legacy raw patch payloads.
+- Root `AGENTS.md` guidance aligned with the upstream workflow contract:
+  role registration comes from `.codex/agents/*.toml`, Claude runtime files are
+  not Codex dependencies, and context-management decisions use the active
+  reported context percentage.
 
 ## Install
 
@@ -84,9 +97,11 @@ Maintainer commands:
 ./.codex/audit.sh release --root "$PWD"
 ```
 
-Version bumps are manual. Push and pull request automation only verifies that
-release metadata, changelog entries, and changed installable files are
-consistent.
+Version bumps are manual. Release validation verifies that release metadata,
+changelog entries, Codex-port semver tags, and changed installable files are
+consistent, but it does not create commits, create tags, edit files, or choose
+release numbers. Upstream Claude release tags before the Codex `v0.1.0` fork
+point are ignored by the Codex package version check.
 
 ## Validate This Package
 

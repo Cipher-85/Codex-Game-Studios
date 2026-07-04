@@ -20,6 +20,8 @@
   changelog, and tag-target checks.
 - Made publish check for new commits against the actual previous release tag
   ref instead of relying on GitHub Release branch metadata.
+- Made publish pass the `origin` repository explicitly to GitHub release calls
+  instead of relying on `gh` repository auto-detection.
 - Switched Codex package publishing and release validation to namespaced
   `codex-vX.Y.Z` tags while keeping the legacy `v0.1.0` baseline accepted and
   ignoring inherited upstream Claude release tags.

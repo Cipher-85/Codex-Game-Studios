@@ -175,15 +175,33 @@ require_origin_tag_missing_or_head() {
   fi
 }
 
-gh_repo() {
-  gh repo view --json nameWithOwner --jq .nameWithOwner
+origin_repo() {
+  local url
+  url="$(git -C "$root" remote get-url origin)"
+  python3 - "$url" <<'PY'
+import re
+import sys
+
+url = sys.argv[1].strip()
+patterns = (
+    r"^https://github\.com/([^/]+/[^/]+?)(?:\.git)?$",
+    r"^git@github\.com:([^/]+/[^/]+?)(?:\.git)?$",
+    r"^ssh://git@github\.com/([^/]+/[^/]+?)(?:\.git)?$",
+)
+for pattern in patterns:
+    match = re.match(pattern, url)
+    if match:
+        print(match.group(1))
+        raise SystemExit(0)
+raise SystemExit(f"release: unsupported origin URL: {url}")
+PY
 }
 
 previous_release_tag() {
   local current_tag="$1"
   local candidate
   local repo
-  repo="$(gh_repo)"
+  repo="$(origin_repo)"
   while IFS= read -r candidate; do
     if [ "$candidate" = "$current_tag" ]; then
       continue
@@ -285,10 +303,12 @@ case "$cmd" in
     version="$(current_version)"
     tag="$(release_tag)"
     title="$(release_title)"
+    repo="$(origin_repo)"
     head="$(git -C "$root" rev-parse HEAD)"
     notes="$(extract_release_notes "$version")"
 
     if [ "$dry_run" = "1" ]; then
+      printf 'intended release repo: %s\n' "$repo"
       printf 'intended release tag: %s\n' "$tag"
       printf 'intended release title: %s\n' "$title"
       printf 'intended release target: %s\n' "$head"
@@ -303,6 +323,7 @@ case "$cmd" in
     require_new_commits_since_previous_release "$tag" "$head"
 
     if [ "$dry_run" != "1" ]; then
+      printf 'release repo: %s\n' "$repo"
       printf 'release tag: %s\n' "$tag"
       printf 'release title: %s\n' "$title"
       printf 'release target: %s\n' "$head"
@@ -315,6 +336,7 @@ case "$cmd" in
     fi
 
     gh release create "$tag" \
+      --repo "$repo" \
       --title "$title" \
       --notes "$notes" \
       --target "$head" \

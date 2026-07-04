@@ -39,6 +39,8 @@ Install and release notes:
 - Publish checks for new commits against the actual previous release tag ref,
   avoiding branch-shaped GitHub Release metadata such as `targetCommitish:
   main`.
+- Publish targets the GitHub repository configured as `origin` explicitly, so
+  an inherited `upstream` remote cannot receive release API calls.
 
 Port status notes:
 - `.codex/manifest/upstream-assets.json` is the durable upstream inventory for all 417 pinned upstream files.

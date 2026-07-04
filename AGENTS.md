@@ -52,25 +52,29 @@ verification-first implementation.
 
 ## Technology Stack
 
-- Engine: Godot 4.6.
-- Primary language: GDScript.
+- Engine: [CHOOSE: Godot 4 / Unity / Unreal Engine 5].
+- Primary language: [CHOOSE: GDScript / C# / C++ / Blueprint].
 - Version control: Git with trunk-based development.
-- Engine reference: read `docs/engine-reference/godot/VERSION.md` before using
-  Godot APIs; the pinned engine is newer than much model training data.
+- Build system: [SPECIFY after choosing engine].
+- Asset pipeline: [SPECIFY after choosing engine].
+- Engine reference: after engine setup, read the matching
+  `docs/engine-reference/<engine>/VERSION.md` before using engine APIs; the
+  pinned engine may be newer than much model training data.
 - Technical routing: read `.codex/docs/technical-preferences.md` when selecting
   engine specialists or file-extension routing.
 
 ## Collaboration Boundary
 
-This project is user-driven. For design documents and broad multi-file plans,
-follow Question -> Options -> Decision -> Draft -> Approval. For explicit
-implementation requests, make the scoped change, keep edits surgical, and report
-what changed.
+This project is user-driven, not autonomous execution. Every task follows:
+Question -> Options -> Decision -> Draft -> Approval.
 
-No commits without user instruction. Multi-file design or architecture changes
-should be summarized before writing. See
-`docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` when a task is collaborative design
-rather than direct implementation.
+- Agents must ask "May I write this to [filepath]?" before using write/edit
+  tools.
+- Agents must show drafts or summaries before requesting approval.
+- Multi-file changes require explicit approval for the full changeset.
+- No commits without user instruction.
+
+See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 
 ## Verification Integrity
 
@@ -131,13 +135,16 @@ For code, tests, and tools:
 4. Make surgical changes and avoid unrelated refactors.
 5. Verify with the narrowest meaningful command, then broaden when risk warrants.
 
-## Merge Gates
+## Workflow Gates
 
-- Run `$design-review` before handing a GDD to programmers.
-- Use the design-review verdict as a merge gate for implementation work that
-  depends on that GDD.
-- Use `$code-review`, `$story-done`, `$smoke-check`, or `$team-qa` when the
-  current story or sprint state calls for them.
+- Run `$design-review` before handing a GDD to programmers. Its verdict gates
+  implementation work that depends on that GDD.
+- Run `$story-done` before marking a story complete.
+- Run `$smoke-check` before QA hand-off; a failed smoke check blocks QA.
+- Run `$team-qa` when seeking sprint or feature QA sign-off.
+- Run `$code-review` after major features or when the current story/sprint state
+  calls for architectural review; it is recommended unless the active story
+  workflow or review mode makes it a gate.
 
 ## File Lifecycle
 

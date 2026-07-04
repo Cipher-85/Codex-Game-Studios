@@ -36,6 +36,9 @@ Install and release notes:
 - Package publishing is `bump -> edit changelog/docs -> check -> commit/push ->
   publish`. The `bump` command never publishes, and GitHub Actions remain
   validation-only.
+- Publish checks for new commits against the actual previous release tag ref,
+  avoiding branch-shaped GitHub Release metadata such as `targetCommitish:
+  main`.
 
 Port status notes:
 - `.codex/manifest/upstream-assets.json` is the durable upstream inventory for all 417 pinned upstream files.

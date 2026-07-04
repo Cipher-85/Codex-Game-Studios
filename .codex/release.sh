@@ -175,6 +175,53 @@ require_origin_tag_missing_or_head() {
   fi
 }
 
+gh_repo() {
+  gh repo view --json nameWithOwner --jq .nameWithOwner
+}
+
+previous_release_tag() {
+  local current_tag="$1"
+  local candidate
+  local repo
+  repo="$(gh_repo)"
+  while IFS= read -r candidate; do
+    if [ "$candidate" = "$current_tag" ]; then
+      continue
+    fi
+    if [[ "$candidate" == "v0.1.0" || "$candidate" =~ ^codex-v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done < <(gh api "repos/$repo/releases" --jq '.[] | select(.draft == false) | .tag_name')
+}
+
+require_new_commits_since_previous_release() {
+  local current_tag="$1"
+  local head="$2"
+  local previous_tag
+  local previous_commit
+  local commit_count
+  previous_tag="$(previous_release_tag "$current_tag")"
+  if [ -z "$previous_tag" ]; then
+    printf 'release previous tag: none\n'
+    return 0
+  fi
+
+  previous_commit="$(origin_tag_commit "$previous_tag")"
+  if [ -z "$previous_commit" ]; then
+    printf 'release: previous release tag %s does not exist on origin\n' "$previous_tag" >&2
+    exit 1
+  fi
+
+  commit_count="$(git -C "$root" rev-list --count "$previous_commit..$head")"
+  printf 'release previous tag: %s\n' "$previous_tag"
+  printf 'release commits since previous tag: %s\n' "$commit_count"
+  if [ "$commit_count" = "0" ]; then
+    printf 'release: no new commits since previous release tag %s\n' "$previous_tag" >&2
+    exit 1
+  fi
+}
+
 write_changelog_section() {
   local version="$1"
   local release_date="$2"
@@ -253,6 +300,7 @@ case "$cmd" in
     require_head_matches_origin_main
     "$script_dir/release.sh" check
     require_origin_tag_missing_or_head "$tag" "$head"
+    require_new_commits_since_previous_release "$tag" "$head"
 
     if [ "$dry_run" != "1" ]; then
       printf 'release tag: %s\n' "$tag"
@@ -270,8 +318,7 @@ case "$cmd" in
       --title "$title" \
       --notes "$notes" \
       --target "$head" \
-      --latest \
-      --fail-on-no-commits
+      --latest
     ;;
   bump)
     bump_kind="${1:-}"

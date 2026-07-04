@@ -107,11 +107,13 @@ does not create tags or GitHub releases.
 Codex package releases use namespaced GitHub tags such as `codex-v0.3.0` to
 avoid collisions with inherited upstream Claude tags. Release titles and
 changelog headings keep the human-facing `Codex Game Studios vX.Y.Z` and
-`## vX.Y.Z` forms. Release validation verifies that release metadata,
-changelog entries, Codex package tags, and changed installable files are
-consistent, but it does not create commits, create tags, edit files, publish,
-or choose release numbers. GitHub Actions run release validation only; publishing
-is always an explicit maintainer command.
+`## vX.Y.Z` forms. Before publishing, the release script compares the target
+commit against the actual previous release tag ref instead of GitHub Release
+branch metadata. Release validation verifies that release metadata, changelog
+entries, Codex package tags, and changed installable files are consistent, but
+it does not create commits, create tags, edit files, publish, or choose release
+numbers. GitHub Actions run release validation only; publishing is always an
+explicit maintainer command.
 
 ## Validate This Package
 

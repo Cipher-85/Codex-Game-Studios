@@ -29,7 +29,9 @@ Validator policy:
   `v1.0.0` are ignored.
 - GitHub Actions are validation-only. Maintainers publish explicitly with
   `./.codex/release.sh publish` after the version bump, changelog/docs update,
-  release check, commit, and push have completed.
+  release check, commit, and push have completed. Publish checks for new
+  commits against the actual previous release tag ref, not mutable GitHub
+  Release branch metadata.
 - Runtime files must not depend on Claude-owned paths.
 - Generated skills must not retain raw structured-choice tool names, raw Claude task-delegation syntax, unsupported frontmatter, or bare custom slash commands.
 - Generated agents must not use unsupported top-level fields such as `tools`, `disallowedTools`, `maxTurns`, `memory`, `skills`, or `isolation`.

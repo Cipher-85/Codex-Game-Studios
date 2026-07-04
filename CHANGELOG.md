@@ -18,6 +18,8 @@
 - Added an explicit `./.codex/release.sh publish` command for manual GitHub
   Release creation with clean-worktree, authenticated `gh`, `origin/main`,
   changelog, and tag-target checks.
+- Made publish check for new commits against the actual previous release tag
+  ref instead of relying on GitHub Release branch metadata.
 - Switched Codex package publishing and release validation to namespaced
   `codex-vX.Y.Z` tags while keeping the legacy `v0.1.0` baseline accepted and
   ignoring inherited upstream Claude release tags.

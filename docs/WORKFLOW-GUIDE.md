@@ -37,8 +37,9 @@ Before you start, make sure you have:
 
 - **Codex** installed and working
 - **Git** with Git Bash (Windows) or standard terminal (Mac/Linux)
-- **jq** (optional but recommended -- hooks fall back to `grep` if missing)
-- **Python 3** (optional -- some hooks use it for JSON validation)
+- **Python** available as `python3`, `python`, or `py` for hook payload parsing
+  and JSON validation
+- **jq** (optional; useful only for manual hook-payload debugging)
 
 ### Step 1: Clone and Open
 
@@ -1254,8 +1255,8 @@ Codex notifications are configured at user scope instead.
 | `post-compact.sh` | After compaction | Reminds Codex to restore session state from `active.md` |
 | `validate-commit.sh` | Before commit | Checks for design doc references, valid JSON, no hardcoded values |
 | `validate-push.sh` | Before push | Warns on pushes to main/develop |
-| `validate-assets.sh` | After `apply_patch` | Checks asset naming and JSON validity for changed `assets/` paths |
-| `validate-skill-change.sh` | After `apply_patch` | Advises running `$skill-test` after `.agents/skills/` changes |
+| `validate-assets.sh` | After `apply_patch` | Checks asset naming and JSON validity for changed `assets/` paths; feedback happens after the edit and does not roll back side effects |
+| `validate-skill-change.sh` | After `apply_patch` | Advises running `$skill-test` after `.agents/skills/` changes; feedback happens after the edit |
 | `log-agent.sh` | Agent start | Logs agent invocations for audit trail |
 | `log-agent-stop.sh` | Agent stop | Completes agent audit trail (start + stop) |
 | `session-stop.sh` | Session end | Final session logging |
@@ -1263,6 +1264,10 @@ Codex notifications are configured at user scope instead.
 `notify.sh` remains an upstream-only replaced artifact. Users who want desktop
 notifications should configure native Codex notification settings in user-level
 config; project-local `.codex/config.toml` must not set `notify`.
+
+The asset and skill hooks intentionally remain post-edit, matching the upstream
+hook timing. A future PreToolUse `apply_patch` validator could add stricter
+pre-edit hardening, but it is not a parity requirement.
 
 ### Context Resilience
 

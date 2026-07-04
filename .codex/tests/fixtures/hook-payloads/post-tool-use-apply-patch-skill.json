@@ -2,6 +2,6 @@
   "hook_event_name": "PostToolUse",
   "tool_name": "apply_patch",
   "tool_input": {
-    "patch": "*** Begin Patch\n*** Update File: .agents/skills/example-skill/SKILL.md\n@@\n*** End Patch\n"
+    "command": "*** Begin Patch\n*** Update File: .agents/skills/example-skill/SKILL.md\n@@\n*** End Patch\n"
   }
 }

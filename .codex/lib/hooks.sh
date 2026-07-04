@@ -36,7 +36,15 @@ ccgs_read_stdin() {
 ccgs_json_field() {
   local json="$1"
   local field="$2"
-  python3 -c 'import json,sys
+  local python_cmd
+  python_cmd="$(ccgs_first_python || true)"
+  if [ -z "$python_cmd" ]; then
+    printf 'WARNING: Python not found; cannot parse hook JSON field %s. Hook will fail open.\n' "$field" >&2
+    printf '\n'
+    return 0
+  fi
+
+  "$python_cmd" -c 'import json,sys
 try:
     data=json.loads(sys.stdin.read() or "{}")
 except json.JSONDecodeError:
@@ -46,7 +54,11 @@ for part in sys.argv[1].split("."):
     value=value.get(part, "") if isinstance(value, dict) else ""
 if value is None:
     value=""
-print(value if isinstance(value, str) else json.dumps(value))' "$field" <<<"$json"
+print(value if isinstance(value, str) else json.dumps(value))' "$field" <<<"$json" || {
+    printf 'WARNING: Python failed while parsing hook JSON field %s. Hook will fail open.\n' "$field" >&2
+    printf '\n'
+    return 0
+  }
 }
 
 ccgs_log_dir() {
@@ -73,7 +85,10 @@ ccgs_payload_paths() {
   fi
 
   local patch
-  patch="$(ccgs_json_field "$payload" "tool_input.patch")"
+  patch="$(ccgs_json_field "$payload" "tool_input.command")"
+  if [ -z "$patch" ]; then
+    patch="$(ccgs_json_field "$payload" "tool_input.patch")"
+  fi
   if [ -z "$patch" ]; then
     return
   fi

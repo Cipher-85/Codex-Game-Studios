@@ -287,7 +287,7 @@ AGENTS.md                          -- Master config and path-rule router
     context-management.md          -- Context budgets and compaction instructions
     directory-structure.md         -- Project directory layout
     workflow-catalog.yaml          -- 7-phase pipeline definition (read by $help)
-    setup-requirements.md          -- System prerequisites (Git Bash, jq, Python)
+    setup-requirements.md          -- System prerequisites (Git Bash, Python; jq for debugging)
     settings-local-template.md     -- Personal settings.local.json guide
     templates/                     -- Document templates
 .agents/

@@ -31,7 +31,9 @@ Fired before a tool is executed. PreToolUse hooks can allow the tool by exiting
 
 Fired after a tool completes. This port uses PostToolUse for `apply_patch`
 advisories. Since the edit has already happened, these hooks can surface errors
-or warnings but should not be documented as pre-edit prevention.
+or warnings but should not be documented as pre-edit blocking. Exit code 2 on
+PostToolUse reports feedback after the tool ran; it does not undo file-system
+side effects.
 
 ### PostToolUse: apply_patch
 
@@ -40,7 +42,7 @@ or warnings but should not be documented as pre-edit prevention.
   "hook_event_name": "PostToolUse",
   "tool_name": "apply_patch",
   "tool_input": {
-    "patch": "*** Begin Patch\n*** Update File: assets/data/enemy_stats.json\n@@\n*** End Patch\n"
+    "command": "*** Begin Patch\n*** Update File: assets/data/enemy_stats.json\n@@\n*** End Patch\n"
   }
 }
 ```
@@ -96,14 +98,20 @@ directly and do not require stdin.
 | Exit Code | Meaning | Applicable Events |
 |-----------|---------|-------------------|
 | 0 | Allow / Success | All events |
-| 2 | Block | PreToolUse |
+| 2 | Block before the tool runs; report feedback after the tool ran | PreToolUse; PostToolUse advisories |
 | Other | Hook error or advisory | All events |
 
 ## Notes
 
 - JSON-capable hooks receive payloads on stdin. Use `INPUT=$(cat)` to capture.
-- Parse with `jq` if available; fall back to portable shell parsing only where needed.
-- File-change hooks should parse Codex `apply_patch` payloads, not legacy Write/Edit payloads.
+- Runtime hooks parse JSON with the shared Python helper. Supported executable
+  names are `python3`, `python`, and `py`; missing Python fails open with a
+  visible warning.
+- File-change hooks should parse Codex `apply_patch` payloads from
+  `tool_input.command`. `tool_input.patch` is accepted only as a legacy fixture
+  fallback.
+- PreToolUse `apply_patch` validation would be a future hardening enhancement,
+  not a parity fix for the upstream PostToolUse asset and skill hooks.
 - Subagent hooks should use `agent_type`; `agent_name` is a legacy Claude-style field.
 - On Windows, `grep -P` is often unavailable. Use `grep -E` instead.
 - Path separators may be `\` on Windows. Normalize with `sed 's|\\|/|g'` when comparing paths.

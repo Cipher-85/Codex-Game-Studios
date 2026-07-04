@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "apply_patch",
+  "tool_input": {
+    "patch": "*** Begin Patch\n*** Update File: assets/data/legacy.json\n@@\n*** End Patch\n"
+  }
+}

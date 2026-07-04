@@ -1,8 +1,8 @@
 # Setup Requirements
 
-This template requires a few tools to be installed for full functionality.
-All hooks fail gracefully if tools are missing — nothing will break, but
-you'll lose validation features.
+This template requires a few tools to be installed for full hook validation.
+Hooks fail open with visible warnings when Python is unavailable, but payload
+parsing and validation are not reliable until Python is installed.
 
 ## Required
 
@@ -10,7 +10,7 @@ you'll lose validation features.
 | ---- | ---- | ---- |
 | **Git** | Version control, branch management | [git-scm.com](https://git-scm.com/) |
 | **Codex** | AI agent CLI | Use the OpenAI Codex install path for your environment |
-| **Python 3** | Shared hook JSON parsing and data-file validation | [python.org](https://www.python.org/) |
+| **Python** | Shared hook JSON parsing and data-file validation; accepted commands are `python3`, `python`, or `py` | [python.org](https://www.python.org/) |
 | **Bash** | Hook script execution | Included with Git for Windows |
 
 ## Recommended
@@ -51,8 +51,8 @@ sudo pacman -S jq       # Arch
 
 ### macOS / Linux
 - Bash is available natively
-- Python 3 is usually available; install it if hook parsing or JSON validation
-  reports it missing
+- Python is usually available; install it if hook parsing or JSON validation
+  reports it missing. The hooks check `python3`, then `python`, then `py`.
 
 ## Verifying Your Setup
 
@@ -62,15 +62,15 @@ Run these commands to check prerequisites:
 git --version          # Should show git version
 bash --version         # Should show bash version
 jq --version           # Should show jq version (optional)
-python3 --version      # Should show python version
+python3 --version      # Should show python version, or use python / py
 ```
 
-## What Happens Without Optional Tools
+## Missing Tools
 
 | Missing Tool | Effect |
 | ---- | ---- |
 | **jq** | No runtime effect; hook scripts use the shared Python parser. |
-| **Python 3** | Hook payload parsing and JSON data validation fail. Install Python 3 before relying on hook validation. |
+| **Python** | Hooks fail open with visible warnings; payload parsing and JSON data validation are skipped. Install Python before relying on hook validation. |
 
 ## Recommended IDE
 

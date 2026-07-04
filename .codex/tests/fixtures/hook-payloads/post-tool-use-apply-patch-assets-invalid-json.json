@@ -2,6 +2,6 @@
   "hook_event_name": "PostToolUse",
   "tool_name": "apply_patch",
   "tool_input": {
-    "patch": "*** Begin Patch\n*** Update File: assets/data/bad.json\n@@\n*** End Patch\n"
+    "command": "*** Begin Patch\n*** Update File: assets/data/bad.json\n@@\n*** End Patch\n"
   }
 }

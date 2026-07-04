@@ -56,6 +56,21 @@ def run_hook(root: Path, tmp_root: Path, script_name: str, payload: str) -> subp
     )
 
 
+def run_payload_paths(root: Path, tmp_root: Path, payload: str) -> subprocess.CompletedProcess[str]:
+    env = os.environ.copy()
+    env["CCGS_ROOT"] = str(tmp_root)
+    env["CCGS_REPO_ROOT"] = str(root)
+    return subprocess.run(
+        ["bash", "-lc", 'source "$CCGS_REPO_ROOT/.codex/lib/hooks.sh"; payload="$(cat)"; ccgs_payload_paths "$payload"'],
+        input=payload,
+        text=True,
+        capture_output=True,
+        cwd=tmp_root,
+        env=env,
+        check=False,
+    )
+
+
 def git_init(tmp_root: Path) -> None:
     subprocess.run(["git", "-C", str(tmp_root), "init", "-q"], check=True, capture_output=True, text=True)
 
@@ -97,6 +112,7 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
         "post-tool-use-apply-patch-assets-naming.json",
         "post-tool-use-apply-patch-assets-invalid-json.json",
         "post-tool-use-apply-patch-skill.json",
+        "post-tool-use-apply-patch-legacy-patch.json",
         "pre-compact.json",
         "post-compact.json",
         "subagent-start.json",
@@ -113,6 +129,13 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
     except (OSError, subprocess.CalledProcessError) as exc:
         warnings.append(f"git unavailable; skipped behavioral hook fixtures: {exc}")
         return
+
+    with make_temp_project() as tmp:
+        tmp_root = Path(tmp)
+        result = run_payload_paths(root, tmp_root, load_payload(fixtures, "post-tool-use-apply-patch-assets-invalid-json.json"))
+        assert_result(errors, "ccgs_payload_paths command field", result, 0, stdout_contains="assets/data/bad.json")
+        result = run_payload_paths(root, tmp_root, load_payload(fixtures, "post-tool-use-apply-patch-legacy-patch.json"))
+        assert_result(errors, "ccgs_payload_paths legacy patch field", result, 0, stdout_contains="assets/data/legacy.json")
 
     with make_temp_project() as tmp:
         tmp_root = Path(tmp)

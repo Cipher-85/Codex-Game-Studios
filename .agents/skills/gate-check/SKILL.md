@@ -440,8 +440,9 @@ echo -n "Production" > production/stage.txt
 
 ## 7. Closing Continuity Step
 
-After the verdict is presented and any stage.txt update is complete, apply
-`$studio-next` continuity behavior. Recommend one best next action unless the
+After the verdict is presented and any stage.txt update is complete, read or
+update the `## Session Worklist` and `## Phase Guard` in
+`production/session-state/active.md`. Recommend one best next action unless the
 gate outcome leaves 2-3 genuinely viable lanes. When multiple lanes are viable,
 use `request_user_input` when available; otherwise use a concise numbered prompt.
 
@@ -449,7 +450,7 @@ use `request_user_input` when available; otherwise use a concise numbered prompt
 
 For **systems-design PASS**:
 ```
-Gate passed. What would you like to do next?
+Gate passed. Recommended next lane:
 [A] Run $create-architecture — produce your master architecture blueprint and ADR work plan (recommended next step)
 [B] Design more GDDs first — return here when all MVP systems are complete
 [C] Stop here for this session
@@ -459,7 +460,7 @@ Gate passed. What would you like to do next?
 
 For **technical-setup PASS**:
 ```
-Gate passed. What would you like to do next?
+Gate passed. Recommended next lane:
 [A] Run $create-control-manifest — generate the layer rules manifest from your Accepted ADRs (do this first)
 [B] Run $vertical-slice — build the Vertical Slice (do this before writing epics — validate fun first)
 [C] Write more ADRs first — run $architecture-decision [next-system]
@@ -482,8 +483,8 @@ Gate passed. What would you like to do next?
 > then plan in detail. This is the #1 lesson from GDC postmortem data.
 
 For all other gates, feed the two most logical next steps for that phase plus
-session preservation into the `$studio-next` ranking rules. Do not produce a broad
-open-ended prompt.
+session preservation into the active session worklist ranking rules. Do not
+produce a broad open-ended prompt.
 
 ---
 

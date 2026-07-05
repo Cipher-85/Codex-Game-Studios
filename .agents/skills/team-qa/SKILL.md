@@ -230,10 +230,11 @@ A summary covering: stories in scope, smoke check result, manual QA results, bug
 Verdict: **COMPLETE** — QA cycle finished.
 Verdict: **BLOCKED** — smoke check failed or critical blocker prevented cycle completion; partial report produced.
 
-After the final verdict or BLOCKED partial report, apply `$studio-next`
-continuity behavior. The default best next action is usually `$gate-check` after
-APPROVED, resolving listed conditions after APPROVED WITH CONDITIONS, or fixing
-blocking QA failures before re-running `$team-qa`.
+After the final verdict or BLOCKED partial report, read or update the
+`## Session Worklist` in `production/session-state/active.md`. The default best
+next action is usually `$gate-check` after APPROVED, resolving listed conditions
+after APPROVED WITH CONDITIONS, or fixing blocking QA failures before re-running
+`$team-qa`.
 
 ## Session State Update
 

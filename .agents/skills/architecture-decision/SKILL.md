@@ -422,7 +422,10 @@ changing, set the old entry to `status: superseded_by: ADR-[NNNN]` and add the n
 
 ## 6. Closing Next Steps
 
-After the ADR is written (and registry optionally updated), close with `numbered choice prompt`.
+After the ADR is written (and registry optionally updated), read or update the
+`## Session Worklist` in `production/session-state/active.md`, then close with a
+ranked `numbered choice prompt` only when multiple priority ADRs or phase lanes
+are genuinely available.
 
 Before generating the widget:
 1. Read `docs/registry/architecture.yaml` — check if any priority ADRs are still unwritten (look for ADRs flagged in technical-preferences.md or systems-index.md as prerequisites)
@@ -431,7 +434,7 @@ Before generating the widget:
 
 Widget format:
 ```
-ADR-[NNNN] written and registry updated. What would you like to do next?
+ADR-[NNNN] written and registry updated. Recommended next lane:
 [1] Write [next-priority-adr-name] — [brief description from prerequisites list]
 [2] Write [another-priority-adr] — [brief description]  (include ALL remaining ones)
 [N] Start writing GDDs — run `$design-system [first-undesigned-system]` (only show if all prerequisite ADRs are written)

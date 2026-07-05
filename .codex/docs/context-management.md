@@ -21,7 +21,13 @@ after each significant milestone:
 - Test results obtained
 
 The state file should contain: current task, progress checklist, key decisions
-made, files being worked on, and open questions.
+made, files being worked on, open questions, owed verification, `## Session
+Worklist`, and `## Phase Guard`.
+
+`$resume-from-handoff` compiles `## Session Worklist` and `## Phase Guard` at
+session entry from the canonical handoff, sprint status, stage file, workflow
+catalog, and slice state. Post-work closeouts should read or refresh those
+sections instead of running a separate continuity router.
 
 ### Status Line Block (Production+ only)
 

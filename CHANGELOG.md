@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.3.3 - 2026-07-05
+
+- Reworked continuity routing so post-work recommendations read the live
+  `## Session Worklist` and `## Phase Guard` in
+  `production/session-state/active.md` instead of automatically routing through
+  `$studio-next`.
+- Made `$resume-from-handoff` the session-entry compiler that reads the
+  canonical handoff, sprint status, active state, `production/stage.txt`, and
+  `.codex/docs/workflow-catalog.yaml`, then writes the ranked session cache.
+- Deprecated `$studio-next` to a manual compatibility reference while updating
+  core closeout skills, phase help, and continuity docs to recommend the top
+  valid lane from `active.md`.
+
 ## v0.3.2 - 2026-07-05
 
 - Made explicit `$handoff` invocation authorize the Codex-native handoff workflow

@@ -400,10 +400,11 @@ agent to begin manual verification."
 QA hand-off: share `production/qa/qa-plan-[sprint].md` with the qa-tester
 agent to begin manual verification."
 
-After the gate verdict, apply `$studio-next` continuity behavior. The default
-best next action is usually `$team-qa sprint` for PASS or PASS WITH WARNINGS, and
-fixing failures then re-running `$smoke-check` for FAIL. If handoff or story
-closure is equally plausible, use `request_user_input` when available.
+After the gate verdict, read or update the `## Session Worklist` in
+`production/session-state/active.md`. The default best next action is usually
+`$team-qa sprint` for PASS or PASS WITH WARNINGS, and fixing failures then
+re-running `$smoke-check` for FAIL. If handoff or story closure is equally
+plausible, use `request_user_input` when available.
 
 ---
 

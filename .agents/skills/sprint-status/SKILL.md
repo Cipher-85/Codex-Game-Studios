@@ -156,8 +156,9 @@ stories with no owner. If none, write "None identified."]
 
 ### Recommendation
 [One concrete action, or "Sprint is on track — no action needed." If multiple
-lanes look equally plausible, point to `$studio-next` rather than expanding this
-status check into a planning session.]
+lanes look equally plausible, point to the `## Session Worklist` in
+`production/session-state/active.md` rather than expanding this status check into
+a planning session.]
 ```
 
 ---
@@ -198,8 +199,9 @@ This skill is read-only. It reports observed facts from files on disk.
 - It does not change story status
 - It does not propose scope cuts (that is `$sprint-plan update`)
 - It makes at most one recommendation per run
-- It may point to `$studio-next` when the sprint snapshot reveals competing
-  implementation, QA, gate, or handoff lanes
+- It may point to the `## Session Worklist` in
+  `production/session-state/active.md` when the sprint snapshot reveals
+  competing implementation, QA, gate, or handoff lanes
 
 For more detail on a specific story, the user can read the story file directly
 or run `$story-readiness [path]`.

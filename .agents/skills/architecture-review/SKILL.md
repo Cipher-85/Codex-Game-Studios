@@ -612,15 +612,18 @@ After completing the review and writing approved files, present:
 3. **Rerun trigger**: "Re-run `$architecture-review` after each new ADR is written
    to verify coverage improves"
 
-Then close with `numbered choice prompt` tailored to the pre-gate checklist state:
+Then close with a ranked `numbered choice prompt` tailored to the pre-gate
+checklist state. If `production/session-state/active.md` has a
+`## Session Worklist`, align the recommendation with the top valid lane there;
+otherwise use the checklist result below.
 - If ADR gaps remain or any pre-gate item is ❌:
-  - "Architecture review complete. What would you like to do next?"
+  - "Architecture review complete. Recommended next lane:"
     - [A] Write a missing ADR — open a fresh session and run `$architecture-decision [system]`
     - [B] Run `$test-setup` — required before gate-check (only show if test infrastructure is ❌)
     - [C] Run `$ux-design` — required before gate-check (only show if UX/accessibility files are ❌)
     - [D] Stop here for this session
 - If all pre-gate checklist items are ✅ and no blocking ADR gaps remain:
-  - "Architecture review complete. All pre-gate items confirmed. What would you like to do next?"
+  - "Architecture review complete. All pre-gate items confirmed. Recommended next lane:"
     - [A] Run `$gate-check pre-production`
     - [B] Write a missing ADR — open a fresh session and run `$architecture-decision [system]`
     - [C] Stop here for this session

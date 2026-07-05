@@ -772,7 +772,8 @@ Update `production/session-state/active.md` with:
 
 ### 5f: Suggest Next Steps
 
-Apply `$studio-next` continuity behavior instead of a static next-step menu.
+Read or update the `## Session Worklist` in
+`production/session-state/active.md`, then recommend the top valid next lane.
 Candidate lanes usually include:
 
 - `$consistency-check` before designing the next system.
@@ -781,8 +782,10 @@ Candidate lanes usually include:
 - `$gate-check` if enough MVP systems are designed.
 - `$handoff` when installed and session state should be preserved.
 
-If 2-3 lanes are genuinely viable, use `request_user_input` when available.
-If unavailable, use a concise numbered prompt with the same lanes.
+If 2-3 lanes are genuinely viable, use `request_user_input` when available. If
+unavailable, use a concise numbered prompt with the same lanes and exactly one
+`(Recommended)` option. If one lane is clearly next, state it directly without an
+unnecessary prompt.
 
 ---
 
@@ -872,7 +875,8 @@ shows context at or above 70%. If so, append this notice to the response:
 - Run `$consistency-check` to verify this GDD's values don't conflict with other GDDs
 - Run `$map-systems next` to move to the next highest-priority undesigned system
 - Run `$gate-check pre-production` when all MVP GDDs are authored and reviewed
-- Run `$studio-next` when you want the router to pick the best lane from the current session state
+- Read the `## Session Worklist` in `production/session-state/active.md` when
+  choosing among competing lanes
 
 ## Ported metadata
 

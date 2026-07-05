@@ -99,8 +99,10 @@ Run domain-specific checks:
 
 ## Phase 6: Fix & Verify Cycle
 
-After presenting the report, use `numbered choice prompt`:
-- Prompt: "Balance check complete. What would you like to do next?"
+After presenting the report, read the `## Session Worklist` in
+`production/session-state/active.md` if it exists, then use `numbered choice
+prompt` only when more than one lane is genuinely viable:
+- Prompt: "Balance check complete. Recommended next lane:"
 - Options:
   - `[A] Fix highest-priority issue now — walk me through it`
   - `[B] Save report to design/balance/balance-check-[system]-[date].md`

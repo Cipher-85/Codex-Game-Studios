@@ -432,10 +432,11 @@ If there are Should Have stories still unstarted, surface them alongside the clo
 If no more stories are ready but Must Have stories are still In Progress (not Complete):
 "No more stories ready to start — [N] Must Have stories still in progress. Continue implementing those before sprint close-out."
 
-After surfacing the next-story or sprint close-out inventory, apply
-`$studio-next` continuity behavior. Recommend one best next action across the
-ready-story, smoke-check, QA, gate, tech-debt, and handoff lanes. Use
-`request_user_input` when available only if 2-3 lanes are genuinely tied.
+After surfacing the next-story or sprint close-out inventory, read or update the
+`## Session Worklist` in `production/session-state/active.md`. Recommend one
+best next action across the ready-story, smoke-check, QA, gate, tech-debt, and
+handoff lanes. Use `request_user_input` when available only if 2-3 lanes are
+genuinely tied.
 
 ---
 
@@ -458,7 +459,8 @@ ready-story, smoke-check, QA, gate, tech-debt, and handoff lanes. Use
 - Run `$story-readiness [next-story-path]` to validate the next story before starting implementation
 - If all Must Have stories are complete: run `$smoke-check sprint` → `$team-qa sprint` → `$gate-check`
 - If tech debt was logged: track it via `$tech-debt` to keep the register current
-- Run `$studio-next` to choose the best next lane from current sprint and session state
+- Read the `## Session Worklist` in `production/session-state/active.md` to
+  choose among competing sprint, QA, gate, and handoff lanes
 
 ## Ported metadata
 

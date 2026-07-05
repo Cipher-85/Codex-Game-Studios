@@ -164,7 +164,8 @@ This skill is read-only — no files are written.
 
 ## Phase 9: Next Steps
 
-Close by applying `$studio-next` continuity behavior instead of a static menu.
+Close by reading or updating the `## Session Worklist` in
+`production/session-state/active.md` instead of using a static menu.
 
 - If verdict is APPROVED, the best next action is normally `$story-done [story-path]`.
 - If verdict is CHANGES REQUIRED or MAJOR REVISION, the best next action is normally

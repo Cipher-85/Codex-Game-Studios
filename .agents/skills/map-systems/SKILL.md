@@ -305,9 +305,12 @@ If continuing, return to Step 6a.
 
 ## Phase 7: Suggest Next Steps
 
-After the systems index is created (or after designing some systems), present next actions using `numbered choice prompt`:
+After the systems index is created (or after designing some systems), read or
+update the `## Session Worklist` in `production/session-state/active.md`, then
+present next actions using `numbered choice prompt` only when multiple lanes are
+genuinely viable:
 
-- "Systems index is written. What would you like to do next?"
+- "Systems index is written. Recommended next lane:"
   - [A] Start designing GDDs — run `$design-system [first-system-in-order]`
   - [B] Run `$gate-check systems-design` — triggers the CD-SYSTEMS and TD-SYSTEM-BOUNDARY gates automatically for a formal director sign-off on the system set
   - [C] Stop here for this session

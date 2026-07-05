@@ -9,8 +9,8 @@
 | `$start` | First-time onboarding — asks where you are, then guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
 | `$handoff` | Preserve current session state in the canonical handoff for future resume |
-| `$resume-from-handoff` | Start a fresh session by reading the canonical handoff and choosing a next lane |
-| `$studio-next` | Post-task continuity router — reads current state and recommends the single best next action |
+| `$resume-from-handoff` | Start a fresh session by reading the canonical handoff and compiling `active.md` Session Worklist |
+| `$studio-next` | Deprecated manual continuity reference; normal routing reads `active.md` Session Worklist |
 | `$studio-status` | Show stage, review mode, and active-session breadcrumb from shared project state |
 | `$project-stage-detect` | Full project audit — detect phase, identify existence gaps, recommend next steps |
 | `$setup-engine` | Configure engine + version, detect knowledge gaps, populate version-aware reference docs |

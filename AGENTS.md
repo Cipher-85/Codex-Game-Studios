@@ -27,8 +27,10 @@ verification-first implementation.
 - If no handoff exists, do not infer one from another doc. Route first-session
   setup to `$start`, broad orientation to `$help`, or full gap discovery to
   `$project-stage-detect`.
-- At wrap-up, keep `$studio-next` as the lightweight epilogue router and suggest
-  `$handoff` only when the current state should be durable for a future session.
+- At wrap-up, read or update the `## Session Worklist` in
+  `production/session-state/active.md`, surface owed verification, and recommend
+  the top valid lane. Suggest `$handoff` only when the current state should be
+  durable for a future session.
 
 ## Available Codex Role Agents
 
@@ -183,13 +185,16 @@ For code, tests, and tools:
 
 ## Continuity Epilogue
 
-After each discrete work unit, apply this mentally or run `$studio-next`:
+After each discrete work unit, apply this mentally using
+`production/session-state/active.md`:
 
 1. Summarize what was completed.
 2. Surface owed verification.
-3. List the viable next actions from handoff, session, sprint, stage, workflow,
-   and slice state, with one clearly marked `(Recommended)`.
-4. Suggest `$handoff` when installed and session state should be preserved.
+3. Read or refresh the `## Session Worklist` and `## Phase Guard` from handoff,
+   session, sprint, stage, workflow, and slice state.
+4. Recommend the top valid lane, with one clearly marked `(Recommended)` only
+   when multiple real lanes remain.
+5. Suggest `$handoff` when installed and session state should be preserved.
 
 Read `.codex/docs/session-continuity.md` and
 `.codex/docs/context-management.md` for full pause/resume guidance.

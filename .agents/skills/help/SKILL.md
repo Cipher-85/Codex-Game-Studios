@@ -11,10 +11,14 @@ This skill figures out exactly where you are in the game development pipeline an
 tells you what comes next. It is **lightweight** — not a full audit. For a full
 gap analysis, use `$project-stage-detect`.
 
-For post-task continuity after a discrete unit of work, prefer `$studio-next`.
-`$help` answers "where am I in the phase pipeline?"; `$studio-next` answers
-"given the latest handoff/session/sprint/slice state, what is the single best
-next action?"
+`$help` answers "where am I in the phase pipeline?" It is the phase-orientation
+tool: stage plus catalog plus the first incomplete required step.
+
+For post-task continuity after a discrete unit of work, read or update the
+`## Session Worklist` in `production/session-state/active.md`. That worklist is
+compiled by `$resume-from-handoff` at session entry and refreshed by closeout
+workflows. `production/session-handoff.md` remains the durable cross-session
+source of truth.
 
 ---
 
@@ -79,9 +83,10 @@ Read `production/session-state/active.md` if it exists. Extract:
 - What was most recently worked on
 - Any in-progress tasks or open questions
 - Current epic/feature/task from STATUS block (if present)
+- The `## Session Worklist` and `## Phase Guard` sections, if present
 
-This tells you what the user just finished or is stuck on — use it to personalize
-the output.
+This tells you what the user just finished or is stuck on. Use it to
+personalize the phase summary, but keep `$help` focused on catalog position.
 
 ---
 
@@ -190,8 +195,10 @@ Approaching **[next phase]** gate → run `$gate-check` when ready.
 Verdict: **COMPLETE** — next steps identified.
 
 If the user just completed a work unit and needs the best next action across
-handoff, sprint, QA, gate, or slice lanes, route to `$studio-next` instead of
-expanding this phase summary.
+handoff, sprint, QA, gate, or slice lanes, read the `## Session Worklist` from
+`active.md`, surface owed verification, and recommend the top valid lane. If the
+worklist is missing or stale, say so and recommend `$resume-from-handoff` only
+for a new session entry, not as a mid-session loop.
 
 ---
 

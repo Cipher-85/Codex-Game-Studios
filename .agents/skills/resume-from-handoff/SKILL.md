@@ -3,30 +3,37 @@ name: resume-from-handoff
 description: Use when starting a fresh project session, resuming from saved state, asking where the project stands, choosing the next work item from handoff state, or saying resume, pick up where I left off, what should I work on, where am I, or catch me up.
 ---
 
-# Resume From Handoff - Boot A Fresh Session Into Productive Work
+# Resume From Handoff - Compile A Fresh Session Worklist
 
-The read-only inverse of `$handoff`. `$handoff` writes the canonical resume doc
-at the end of a session; this skill reads it at the start of the next one and
-turns it into an oriented, prioritized plan.
+`$handoff` writes the canonical resume doc at the end of a session. This skill
+reads it once at the start of the next session, merges the live backlog with
+phase guardrails, and writes the current-session routing cache to
+`production/session-state/active.md`.
 
-This skill writes no files and runs no side-effect commands: no commit, no push,
-no mutating `gh`, and no boot smoke. It reads, synthesizes, and recommends. A
+This skill writes exactly one file: `production/session-state/active.md`. It
+does not commit, push, run mutating `gh`, launch builds, or run boot smoke. A
 project-level CI status rule in `AGENTS.md` may still require read-only `gh run`
 status checks when a CI-green verification is explicitly owed; report those
 outputs as observed in this turn if you run them.
 
 This is a deep read, not a glance. Read the full handoff, follow the playable or
-slice-state pointer declared by the handoff, cross-reference sprint status when
-present, and produce a generous worklist. For lightweight phase orientation use
-`$help`; for a full artifact gap audit use `$project-stage-detect`. This skill
-is neither: it operationalizes the canonical handoff narrative.
+slice-state pointer declared by the handoff, cross-reference sprint status,
+stage, active state, and the workflow catalog, then compile a ranked
+`## Session Worklist`. For lightweight phase orientation use `$help`; for a full
+artifact gap audit use `$project-stage-detect`. This skill is neither: it
+operationalizes the canonical handoff narrative into the session cache.
 
 ## Step 0: Handle Missing Handoff
 
 If `production/session-handoff.md` does not exist, do not substitute another
 document as the canonical handoff. Report that no handoff exists yet, recommend
-the appropriate first-session setup or `$handoff` once there is state to
-preserve, and stop unless the user asked for a general project audit.
+the appropriate route, and stop unless the user asked for a general project
+audit:
+
+- First-session setup: `$start`
+- Broad phase orientation: `$help`
+- Full gap discovery: `$project-stage-detect`
+- Preserve future state once work exists: `$handoff`
 
 ## Step 1: Read The Canonical State In Full
 
@@ -44,7 +51,11 @@ Read these in order. The handoff is the source of truth.
 3. `production/sprint-status.yaml` for per-story status if present.
 4. `production/session-state/active.md` if present. It is a local scratchpad in
    many projects and may not exist on a fresh clone.
-5. `production/session-archive.md` only to resolve a specific historical
+5. `production/stage.txt` if present. This is the authoritative current stage
+   anchor for phase guardrails.
+6. `.codex/docs/workflow-catalog.yaml`. This is the authoritative phase catalog
+   and required-step sequence.
+7. `production/session-archive.md` only to resolve a specific historical
    question the live handoff does not answer. Do not read it by default.
 
 If the user passed a focus area, bias the worklist toward it, but still surface
@@ -74,6 +85,10 @@ Give the user a concise "you are here" map:
 
 - Stage from `production/stage.txt` if present and from the handoff Current
   Stage.
+- Catalog phase from `.codex/docs/workflow-catalog.yaml`.
+- First incomplete required catalog step for that phase.
+- Next gate and any mismatch between `stage.txt`, handoff stage, and catalog
+  evidence.
 - Pipeline position: concept -> systems design -> technical setup ->
   pre-production -> production -> polish -> release.
 - Active milestone and sprint from the handoff or sprint status.
@@ -97,6 +112,8 @@ Group by lane:
   declared slice source.
 - Hygiene, deferred, and owed: open items, doc reconciles, deferred ACs, owed
   playtests, owed CI, and integrity checks.
+- Phase guard work: first incomplete required catalog step and the next gate
+  from `workflow-catalog.yaml`.
 
 For each item include:
 
@@ -105,8 +122,25 @@ For each item include:
   `$design-system`.
 - Slice tag: extend, feed, or carve-out.
 - Rough size in sessions, never days or weeks.
+- Source: handoff, sprint status, active state, slice source, stage file, or
+  workflow catalog.
 
 Do not silently truncate. If you cap the visible list, say what you left out.
+
+### Ranking Rules
+
+Rank in this order:
+
+1. Owed verification and blockers.
+2. Handoff Next Action and Tracked Open Items.
+3. In-progress or ready sprint stories.
+4. Slice-state playable advances.
+5. Required phase work from `stage.txt` and `workflow-catalog.yaml`.
+6. Optional hygiene or carve-outs.
+
+`stage.txt` and `workflow-catalog.yaml` are guardrails, not the whole backlog.
+Out-of-phase items may appear only when labeled as explicit carve-outs or user
+overrides.
 
 ## Step 5: Surface Blockers, Gates, And Integrity Items
 
@@ -125,7 +159,51 @@ Reporting integrity: this skill runs no measurements by default, so it has no
 verified numbers of its own unless you actually produced them in this turn.
 Report handoff figures as claims, not as facts you observed.
 
-## Step 6: Present The Resume Briefing
+## Step 6: Write The Session Cache
+
+Write `production/session-state/active.md` with the current session routing
+cache. Preserve only concise current-state notes from the old `active.md` when
+they are still relevant; stale scratchpad content should not outrank the live
+handoff.
+
+Required sections:
+
+```markdown
+# Active Session State
+
+Updated: [date/time or current date if exact time unavailable]
+Source: production/session-handoff.md
+
+## Current Focus
+- Stage: [stage from stage.txt or inferred]
+- Handoff stage: [handoff Current Stage or unset]
+- Milestone: [milestone or unset]
+- Sprint: [sprint or unset]
+- Slice: [version/label or undeclared]
+- Playable/Slice State Source: [relative path, Not declared, or unavailable path]
+
+## Phase Guard
+- Stage file: [value or missing]
+- Catalog phase: [phase key/label or unmatched]
+- First incomplete required step: [step + command or unknown]
+- Next gate: [current -> next phase, or none]
+- Phase mismatch: [none, unset stage, handoff drift, or out-of-phase backlog]
+
+## Session Worklist
+1. (Recommended) [lane title] - [why] -> `[command-or-skill]` [extend/feed/carve-out, ~N sessions, source]
+2. [lane title] - [why] -> `[command-or-skill]` [tag, ~N sessions, source]
+
+## Owed Before Starting
+- [owed verification, blocker, gate, or "None"]
+
+## Notes
+- [handoff claims vs verified-now caveats]
+```
+
+The write is part of this skill's declared workflow. Do not commit, push, or
+stage it here.
+
+## Step 7: Present The Resume Briefing
 
 Use this shape:
 
@@ -135,12 +213,19 @@ Use this shape:
 Stage: <stage> | Milestone: <milestone> | Sprint: <sprint> | Slice: <version or undeclared>
 Pipeline: concept -> ... -> [current] -> ...   next gate: <gate>
 Playable/Slice State Source: <relative path, Not declared, or unavailable path>
+Session cache: production/session-state/active.md updated
 
 Vertical-slice forcing function:
 - Slice version: <version and one-line real/stubbed state, or undeclared>
 - Last clean boot: <when, and whether verified this turn or reported by handoff>
 - Smallest next playable advance: <concrete, <=1 session>
 - This session's likely work: <extend/feed/carve-out>
+
+Phase guard:
+- Stage file: <value or missing>
+- Catalog phase: <phase>
+- First incomplete required step: <step or unknown>
+- Phase mismatch: <none/mismatch>
 
 Recommended next action:
 - <one top thing> - <why> -> `<command-or-skill>` [<tag>, ~<n> sessions]
@@ -157,59 +242,23 @@ Before you start - check / honor first:
 - <owed verification or gate>
 ```
 
-After the briefing, do not end with a free-text "which would you like?" line.
-Proceed to Step 7.
+If one lane is clearly valid, state it as the recommended next action and give
+the exact starting command. If multiple lanes are genuinely viable, use a
+compact numbered prompt with exactly one `(Recommended)` item, or
+`request_user_input` when available. Do not end with an unstructured "what do you
+want to do?" line.
 
-## Step 7: Ask Which Work Item To Start With `request_user_input`
-
-After the briefing, capture the user's lane choice with Codex's
-`request_user_input` tool when that tool is available in the current surface.
-Do not satisfy this step with an ordinary prose question when
-`request_user_input` is available.
-
-Build 2-3 mutually exclusive lane options from the ranked worklist:
-
-- Put the recommended primary path first and append `(Recommended)` to its
-  label.
-- Keep each label short, such as `Primary path`, `Sprint story`,
-  `Slice carve-out`, or `Hygiene`.
-- Each option description must include the one-line reason, start command or
-  skill, slice tag, and rough size in sessions.
-- Include owed FIRST checks in the option description or immediately before the
-  question so they cannot be skipped silently.
-- If the worklist has more than three viable lanes, show the full ranked menu in
-  the briefing text, then put only the top three choices in the picker.
-
-Use one `request_user_input` question with:
-
-- `header`: `Next work`
-- `question`: `Which work item should we start this session?`
-- `options`: the 2-3 lane options above, with the recommended lane first and
-  labeled `(Recommended)`.
-
-Omit `autoResolutionMs` because this choice gates the next lane. If
-`request_user_input` is not available, fall back to a concise numbered prompt
-with the same options and make clear that the user should pick a number or name.
-
-Honor any FIRST verification owed regardless of the selected lane. Once the user
-selects, confirm the chosen lane and exact starting command. The selection is
-the user's explicit go-ahead for that lane; start that lane or hand off the exact
-command according to the lane's normal skill and project instructions.
-
-When the selected lane completes, apply `$studio-next` continuity behavior
-before ending the session so the work flows into the next best action instead of
-stopping disconnected.
-
-Any further decision in the same turn should also use `request_user_input` when
-available. Do not relapse into prose forks when the structured tool is available.
+Do not point the user back to `$resume-from-handoff` after work completes. Later
+closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
 
 ## Collaborative Protocol
 
-- Read-only until the user selects a lane; no writes, commits, pushes, mutating
+- Writes only `production/session-state/active.md`; no commits, pushes, mutating
   `gh`, or boot smoke from this skill.
-- Use `request_user_input`, not a free-text prompt, for the work-item choice and
-  follow-up decisions when the tool is available.
-- Never jump to work the user did not select.
+- Use `request_user_input`, not a free-text prompt, for true multi-lane choices
+  when the tool is available.
+- Never jump to work the user did not select unless there is one obvious next
+  step and the invoked workflow already authorizes it.
 - Make one primary recommendation. The user should leave knowing the top thing
   to do, with the rest as a ranked menu.
 - The vertical-slice forcing function overrides doc-track drift.
@@ -217,7 +266,8 @@ available. Do not relapse into prose forks when the structured tool is available
 
 ## What This Skill Does Not Do
 
-- Does not write, commit, or push; that is `$handoff`.
+- Does not write anything except `production/session-state/active.md`.
+- Does not commit or push; that is `$handoff`.
 - Does not perform a full artifact gap audit; that is `$project-stage-detect`.
 - Does not replace reading the handoff; it operationalizes the canonical handoff
-  into an oriented, prioritized plan.
+  into an oriented, prioritized session worklist.

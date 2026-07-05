@@ -72,6 +72,14 @@ Question -> Options -> Decision -> Draft -> Approval.
   tools.
 - Agents must show drafts or summaries before requesting approval.
 - Multi-file changes require explicit approval for the full changeset.
+- `$handoff` exception: explicit invocation of the Codex-native `$handoff` skill
+  counts as user approval for that skill's declared handoff workflow only:
+  update `production/session-handoff.md`, `production/session-archive.md`, and
+  `production/session-state/active.md`; stage relevant uncommitted changes by
+  path; create the standard handoff commit; and push the current branch.
+- The `$handoff` exception does not authorize design/game-feel/balance
+  decisions, new source edits outside the continuity files, writes to undeclared
+  files, branch switching, force-pushes, or `--no-verify` / amend workarounds.
 - No commits without user instruction.
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.

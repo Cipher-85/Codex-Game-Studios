@@ -12,6 +12,21 @@ pair for `$resume-from-handoff`.
 
 - Respect the current branch. Never switch branches during handoff.
 - Do not edit Claude-owned runtime files or legacy Claude instruction surfaces.
+- Explicit invocation of `$handoff` authorizes this skill's declared handoff
+  workflow without a second approval confirmation: update continuity files, stage
+  relevant uncommitted changes by path, create the standard handoff commit, and
+  push the current branch.
+- Declared continuity files:
+  `production/session-handoff.md`, `production/session-archive.md`, and
+  `production/session-state/active.md`.
+- Show the user the intended handoff label and concise update summary, then
+  run the declared handoff workflow directly. Do not pause between the summary,
+  continuity writes, commit, and push unless the work would leave the declared
+  workflow.
+- This authorization does not include making new source edits outside the
+  continuity files, design decisions, game-feel/balance calls, writes outside
+  declared continuity files, branch switching, force-pushes, or `--no-verify` /
+  amend workarounds.
 - Use evidence from the current turn for every status, count, and verification
   claim.
 - If a command fails, halt the current phase and report the exact failure.
@@ -117,7 +132,7 @@ Overwrite `production/session-state/active.md` with a short pointer stub to
 projects; keep it coherent but do not stage it unless the repo explicitly tracks
 it.
 
-## Phase 3: Commit When Authorized
+## Phase 3: Commit Handoff
 
 Run:
 
@@ -130,7 +145,8 @@ git log -5 --oneline
 If there are no relevant uncommitted changes, skip the commit and say why.
 
 Otherwise stage only the relevant paths by name. Avoid broad staging unless the
-user explicitly asked for it. Before committing, verify:
+user explicitly asked for it. `$handoff` invocation is commit authorization for
+the relevant handoff work. Before committing, verify:
 
 ```bash
 git diff --cached --name-status
@@ -141,7 +157,7 @@ if that is normal for this repo.
 
 Never use `--no-verify`. Never amend as a workaround for a failed hook.
 
-## Phase 4: Push When Authorized
+## Phase 4: Push Handoff
 
 Determine the branch:
 
@@ -150,7 +166,9 @@ git rev-parse --abbrev-ref HEAD
 ```
 
 Push only if the handoff trigger or user instruction authorizes it. If the
-branch has no upstream, use `git push -u origin <branch>`. Never force-push.
+branch has no upstream, use `git push -u origin <branch>`. Explicit `$handoff`
+invocation is normal push authorization for the standard handoff commit. Never
+force-push.
 
 ## Phase 5: Report And Stop
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.2 - 2026-07-05
+
+- Made explicit `$handoff` invocation authorize the Codex-native handoff workflow
+  end to end: continuity-file updates, path-scoped staging, the standard
+  handoff commit, and a normal push of the current branch.
+- Kept the exception narrowly scoped to `$handoff` so upstream-style
+  collaboration rules and other skills continue to require explicit write
+  approval.
+- Documented the `$handoff` safety bounds: no new source edits during handoff,
+  no undeclared file writes, no branch switching, no force-pushes, and no
+  `--no-verify` or amend workarounds.
+
 ## v0.3.1 - 2026-07-05
 
 - Added low-friction CCGS decision-prompt rules so next-step handoffs list real

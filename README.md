@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.3.0`.
+Current package version: `0.3.1`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,8 +29,12 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.3.0`. It includes:
+The current release line is `v0.3.1`. It includes:
 
+- Low-friction CCGS decision prompts that list real viable options, mark one
+  recommendation, and support short numbered or `a. yes` / `b. no` replies.
+- `.gitignore` allowlist generation that keeps shared project content roots
+  trackable while still managing CCGS-owned runtime paths.
 - Package versioning through `.codex/VERSION`, release checks, and patch-aware
   installs introduced in `v0.2.0`.
 - Defensive `apply_patch` hook payload parsing for both current Codex JSON

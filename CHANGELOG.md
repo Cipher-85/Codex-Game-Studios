@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.1 - 2026-07-05
+
+- Added low-friction CCGS decision-prompt rules so next-step handoffs list real
+  viable options, mark one recommendation, and use short numbered or `a. yes` /
+  `b. no` responses when Codex has no clickable choice UI.
+- Updated `$studio-next` to rank viable next actions instead of collapsing most
+  situations to a single next step, while keeping mandatory gates as go/no-go
+  prompts.
+- Kept generated `.gitignore` allowlists from blanket-reignoring shared project
+  content roots such as `design/`, `docs/`, `production/`, and `src/`, with
+  validation coverage for trackability.
+
 ## v0.3.0 - 2026-07-04
 
 - Aligned root `AGENTS.md` with the upstream workflow contract, including

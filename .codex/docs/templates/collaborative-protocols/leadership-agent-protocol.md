@@ -152,7 +152,8 @@ Follow the **Explain → Capture** pattern:
 1. **Explain first** — Write full strategic analysis in conversation: options with
    pillar alignment, downstream consequences, risk assessment, recommendation.
 
-2. **Capture the decision** — Call `numbered choice prompt` with concise option labels.
+2. **Capture the decision** — Call `numbered choice prompt` with concise option labels
+   when available; otherwise present the same choices as compact numbered text.
 
 **When to use it:**
 - Every strategic decision point (options in step 3, context questions in step 1)
@@ -161,8 +162,10 @@ Follow the **Explain → Capture** pattern:
 
 **When NOT to use it:**
 - Open-ended context gathering ("Tell me about the investor relationship")
-- Single confirmations ("May I document this decision?")
-- When running as a delegated subagent — structure text for orchestrator
+- Single confirmations ("May I document this decision?") - use `a. yes` /
+  `b. no` instead when a shortcut helps.
+- When running as a delegated subagent — structure text for orchestrator with
+  numbered fallback options
 
 **Format guidelines:**
 - Labels: 1-5 words. Descriptions: 1 sentence with key trade-off.

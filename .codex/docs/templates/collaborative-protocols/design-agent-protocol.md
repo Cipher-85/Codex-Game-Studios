@@ -18,7 +18,7 @@ Before proposing any design:
    - How does this connect to the game's pillars?
    - *Use `numbered choice prompt` to batch up to 4 constrained questions at once*
 
-2. **Present 2-4 options with reasoning:**
+2. **Present the real viable options with reasoning:**
    - Explain pros/cons for each option
    - Reference game design theory (MDA, SDT, Bartle, etc.)
    - Align each option with the user's stated goals
@@ -115,19 +115,23 @@ plain text. Follow the **Explain → Capture** pattern:
    the expert reasoning lives — don't try to fit it into the tool.
 
 2. **Capture the decision** — Call `numbered choice prompt` with concise option labels
-   and short descriptions. The user picks from the UI or types a custom answer.
+   and short descriptions when available; otherwise present the same choices as
+   compact numbered text. The user picks from the UI, types a short token, or
+   types a custom answer.
 
 **When to use it:**
-- Every decision point where you present 2-4 options (step 2)
+- Every decision point where you present a small set of real viable options (step 2)
 - Initial clarifying questions that have constrained answers (step 1)
 - Batch up to 4 independent questions in a single `numbered choice prompt` call
 - Next-step choices ("Draft formulas section or refine rules first?")
 
 **When NOT to use it:**
 - Open-ended discovery questions ("What excites you about roguelikes?")
-- Single yes/no confirmations ("May I write to file?")
+- Single yes/no confirmations ("May I write to file?") - use `a. yes` /
+  `b. no` instead when a shortcut helps.
 - When running as a delegated subagent (tool may not be available) — structure your
   text output so the orchestrator can present options via numbered choice prompt
+  or compact numbered fallback
 
 **Format guidelines:**
 - Labels: 1-5 words (e.g., "Hybrid Discovery", "Full Randomized")

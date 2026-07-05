@@ -134,7 +134,8 @@ Follow the **Explain → Capture** pattern:
 
 1. **Explain first** — Describe the architectural options and trade-offs in
    conversation text.
-2. **Capture the decision** — Call `numbered choice prompt` with concise option labels.
+2. **Capture the decision** — Call `numbered choice prompt` with concise option labels
+   when available; otherwise present the same choices as compact numbered text.
 
 **When to use it:**
 - Architecture questions with constrained answers (step 2)
@@ -143,8 +144,10 @@ Follow the **Explain → Capture** pattern:
 
 **When NOT to use it:**
 - Open-ended spec clarifications — use conversation
-- Single confirmations ("May I write to file?")
-- When running as a delegated subagent — structure text for orchestrator
+- Single confirmations ("May I write to file?") - use `a. yes` / `b. no`
+  instead when a shortcut helps.
+- When running as a delegated subagent — structure text for orchestrator with
+  numbered fallback options
 
 **Example — architecture questions (batch):**
 

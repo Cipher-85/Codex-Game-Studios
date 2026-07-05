@@ -335,6 +335,19 @@ Use the `numbered choice prompt` tool to present decisions as a **selectable UI*
 of plain markdown text. This gives the user a clean interface to pick from options
 (or type "Other" for a custom answer).
 
+Codex surfaces may not always provide that clickable UI. When the tool is not
+available, use the same structure as compact plain text so the user can answer
+with a short token:
+
+- Multiple viable options: `1.`, `2.`, `3.` with one `(Recommended)` option.
+- Yes/no confirmations:
+  - `a. yes`
+  - `b. no`
+- List all real viable options, usually 3-5 when available and fewer when fewer
+  are viable. Do not invent filler options.
+- Never end with an unstructured "what do you want to do?" when a small viable
+  choice set is possible.
+
 ### The Explain → Capture Pattern
 
 Detailed reasoning doesn't fit in the tool's short descriptions. So use a two-step
@@ -345,12 +358,14 @@ pattern:
    where the reasoning lives.
 
 2. **Capture the decision** — Call `numbered choice prompt` with concise option labels
-   and short descriptions. The user picks from the UI or types a custom answer.
+   and short descriptions when available; otherwise present the same options as
+   compact numbered text. The user picks from the UI, types a short token, or
+   types a custom answer.
 
 ### When to Use numbered choice prompt
 
 ✅ **Use it for:**
-- Every decision point where you'd present 2-4 options
+- Every decision point where you'd present a small set of real viable options
 - Initial clarifying questions with constrained answers
 - Batching up to 4 independent questions in one call
 - Next-step choices ("Draft formulas or refine rules first?")
@@ -359,7 +374,8 @@ pattern:
 
 ❌ **Don't use it for:**
 - Open-ended discovery questions ("What excites you about roguelikes?")
-- Single yes/no confirmations ("May I write to file?")
+- Single yes/no confirmations ("May I write to file?") - use `a. yes` /
+  `b. no` instead when a shortcut helps.
 - When running as a Task subagent (tool may not be available)
 
 ### Format Guidelines
@@ -367,6 +383,8 @@ pattern:
 - **Labels**: 1-5 words (e.g., "Hybrid Discovery", "Full Randomized")
 - **Descriptions**: 1 sentence summarizing the approach and key trade-off
 - **Recommended**: Add "(Recommended)" to your preferred option's label
+- **Fallback**: If no selectable UI is available, preserve the same choices as
+  numbered or lettered plain text.
 - **Previews**: Use `markdown` field for comparing code structures or formulas
 - **Multi-select**: Use `multiSelect: true` when choices aren't mutually exclusive
 
@@ -658,7 +676,7 @@ BEFORE proposing solutions:
 3. Gather context about user's vision and constraints
 
 WHEN proposing solutions:
-1. Present 2-4 options (not just one)
+1. Present the real viable options, usually 3-5 and fewer when fewer are viable
 2. Explain trade-offs for each
 3. Reference game design theory, user's pillars, or comparable games
 4. Make a recommendation but defer final decision to user
@@ -666,7 +684,7 @@ WHEN proposing solutions:
 BEFORE writing files:
 1. Show draft or summary
 2. Explicitly ask: "May I write this to [file]?"
-3. Wait for "yes"
+3. Offer `a. yes` / `b. no` and wait for approval
 
 WHEN implementing:
 1. Explain architectural choices

@@ -76,6 +76,23 @@ Question -> Options -> Decision -> Draft -> Approval.
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 
+## Low-Friction Decision Prompts
+
+Codex may not have a clickable choice UI available. When handing control back to
+the user, make the reply easy to answer with a short token.
+
+- For multiple viable choices, list all real options, usually 3-5 when available
+  and fewer when fewer are viable. Do not invent filler options.
+- Use numbered options for multi-choice prompts. Mark exactly one option
+  `(Recommended)`.
+- For yes/no confirmations, include explicit letter shortcuts:
+  - `a. yes`
+  - `b. no`
+- Keep each option label short. Put reasoning in one brief sentence before the
+  options or after each option only when needed.
+- Never end with an unstructured "what do you want to do?" when a small viable
+  choice set is possible.
+
 ## Verification Integrity
 
 - Never claim a build, test, lint, smoke check, or playtest passed unless it ran
@@ -162,8 +179,8 @@ After each discrete work unit, apply this mentally or run `$studio-next`:
 
 1. Summarize what was completed.
 2. Surface owed verification.
-3. Recommend the single best next action from handoff, session, sprint, stage,
-   workflow, and slice state.
+3. List the viable next actions from handoff, session, sprint, stage, workflow,
+   and slice state, with one clearly marked `(Recommended)`.
 4. Suggest `$handoff` when installed and session state should be preserved.
 
 Read `.codex/docs/session-continuity.md` and

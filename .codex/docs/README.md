@@ -25,7 +25,10 @@ Existing modern installs receive incremental patching by default. Use
 `--patch full` or `--patch incremental` when the patch mode needs to be
 explicit.
 When a target repo already has `.gitignore`, install maintains a marker-managed
-allowlist for the deployed paths and verifies they are not still ignored.
+allowlist for the deployed paths and verifies they are not still ignored. Shared
+project-content roots such as `design/`, `docs/`, `production/`, and `src/`
+are not blanket-reignored by that allowlist, so new project docs and source
+files remain trackable under normal Git rules.
 
 Existing `AGENTS.md` content stays first, with the CCGS marker block appended
 after it. If a project has only a legacy Claude guardrail file, install creates

@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +19,51 @@ def emit(root: Path, errors: list[str], warnings: list[str]) -> int:
         return 1
     print("coexistence: pass")
     return 0
+
+
+def validate_gitignore_allowlist(root: Path, errors: list[str]) -> None:
+    env = os.environ.copy()
+    env["CCGS_SOURCE_ROOT"] = str(root)
+    env["CCGS_INSTALL_ROOT"] = str(root)
+    env["CCGS_DRY_RUN"] = "0"
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1/.codex/lib/install.sh"; ccgs_gitignore_allowlist_block', "ccgs-gitignore-test", str(root)],
+        cwd=root,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        errors.append(f"gitignore allowlist generator failed: {result.stderr.strip() or result.stdout.strip()}")
+        return
+
+    lines = set(result.stdout.splitlines())
+    for forbidden in (
+        ".github/*",
+        ".github/workflows/*",
+        "design/*",
+        "design/registry/*",
+        "docs/*",
+        "docs/architecture/*",
+        "docs/engine-reference/*",
+        "production/*",
+        "production/session-state/*",
+        "src/*",
+    ):
+        if forbidden in lines:
+            errors.append(f"gitignore allowlist must not blanket-ignore shared content path: {forbidden}")
+
+    for required in (
+        ".codex/*",
+        ".agents/*",
+        "!design/registry/entities.yaml",
+        "!docs/WORKFLOW-GUIDE.md",
+        "!production/session-state/.gitkeep",
+        "!src/.gitkeep",
+    ):
+        if required not in lines:
+            errors.append(f"gitignore allowlist missing expected pattern: {required}")
 
 
 def main() -> int:
@@ -71,6 +118,7 @@ def main() -> int:
                     errors.append(f"installed-files must not own Claude path {path}")
                 if not (root / path).exists():
                     errors.append(f"installed-files path missing on disk: {path}")
+        validate_gitignore_allowlist(root, errors)
 
     if fixture.name == "claude-existing":
         for required in (".claude", "CLAUDE.md"):

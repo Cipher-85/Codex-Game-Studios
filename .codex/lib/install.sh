@@ -357,6 +357,21 @@ from pathlib import Path
 def escape(path: str) -> str:
     return path.replace("\\", "\\\\").replace(" ", "\\ ")
 
+shared_content_roots = {
+    ".github",
+    "assets",
+    "design",
+    "docs",
+    "production",
+    "prototypes",
+    "src",
+    "tests",
+    "tools",
+}
+
+def is_shared_content_path(path: str) -> bool:
+    return path.split("/", 1)[0] in shared_content_roots
+
 children: dict[str, set[str]] = defaultdict(set)
 files_by_dir: dict[str, set[str]] = defaultdict(set)
 
@@ -374,7 +389,8 @@ for raw in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
 
 def emit_dir(path: str) -> None:
     print("!" + escape(path) + "/")
-    print(escape(path) + "/*")
+    if not is_shared_content_path(path):
+        print(escape(path) + "/*")
     for child in sorted(children.get(path, ())):
         emit_dir(child)
     for file_path in sorted(files_by_dir.get(path, ())):

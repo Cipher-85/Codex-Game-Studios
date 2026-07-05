@@ -21,7 +21,10 @@ Rules:
 - Install backs up changed target files under `.codex/backups/` before replacing
   package-owned assets.
 - If the target repo has `.gitignore`, install writes a marker-managed allowlist
-  for deployed CCGS paths and verifies those paths are not still ignored.
+  for deployed CCGS paths and verifies those paths are not still ignored. Shared
+  project-content roots such as `design/`, `docs/`, `production/`, and `src/`
+  are not blanket-reignored by that allowlist, so new project docs and source
+  files remain trackable under normal Git rules.
 - Existing `AGENTS.md` content stays first, with the CCGS marker block appended
   after it. If a project has only a legacy Claude guardrail file, install creates
   `AGENTS.md` with a sanitized migrated project-instructions block first and

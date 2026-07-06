@@ -189,6 +189,13 @@ For **Protocol Compliance** assertions (always present):
 - Check whether the skill presents findings before requesting approval
 - Check whether the skill ends with a recommended next step
 - Check whether the skill avoids auto-creating files without approval
+- If the skill declares role-agent or director/lead gate delegation, check that
+  it relies on the central delegation contract in `AGENTS.md`,
+  `.codex/docs/coordination-rules.md`, and `.codex/docs/director-gates.md`
+  instead of requiring duplicate user consent before every declared spawn
+- Check that skipped, blocked, or unavailable role-agent reviews are reported as
+  missing delegation and are not replaced with internal simulated specialist or
+  director verdicts
 
 ### Step 4 — Build Report
 
@@ -213,6 +220,7 @@ Protocol Compliance:
   [PASS] Uses "May I write" before file writes
   [PASS] Presents findings before asking approval
   [WARN] No explicit next-step handoff at end
+  [PASS] Delegated role-agent reviews use central authorization and are not simulated
 
 Overall Verdict: FAIL (1 case failed, 1 warning)
 ```

@@ -100,6 +100,23 @@ Question -> Options -> Decision -> Draft -> Approval.
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 
+## Role-Agent Delegation Authorization
+
+Explicit invocation of a CCGS skill whose workflow declares role-agent
+delegation authorizes only the role-agent spawns named by that workflow for that
+single run. The authorization covers spawning and receiving role-agent analysis;
+it does not authorize file writes, commits, pushes, branch changes, design
+decisions, game-feel or balance decisions, undeclared agents, or edits outside
+the invoked skill's normal approval flow.
+
+Before spawning any director or lead gate, resolve the active review mode as
+declared by `.codex/docs/director-gates.md`. `solo` skips all director gates;
+`lean` skips non-PHASE-GATE director gates; `full` runs declared gates normally.
+If the current Codex runtime still requires literal delegation consent before
+the first spawn, ask once: "This skill declares [agents/gates]. May I spawn those
+role agents for this run?" If the user says no, do not simulate specialist or
+director verdicts; report the skipped delegation as a limitation.
+
 ## Low-Friction Decision Prompts
 
 Codex may not have a clickable choice UI available. When handing control back to

@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.4.1 - 2026-07-06
+
+- Added a central Role-Agent Delegation Authorization contract so explicit CCGS
+  skill invocation authorizes only the role-agent spawns declared by that skill
+  for the current run.
+- Clarified director gate review-mode behavior: `full` runs declared gates,
+  `lean` runs PHASE-GATE directors at `$gate-check`, and `solo` skips director
+  gates.
+- Added runtime-fallback wording that asks once for delegation consent when
+  required and forbids simulated specialist or director verdicts when delegation
+  is denied, skipped, blocked, or unavailable.
+- Extended `$skill-test` behavioral checks so subagent-using skills must rely on
+  the central delegation contract and report missing role-agent reviews instead
+  of replacing them with internal simulation.
+
 ## v0.4.0 - 2026-07-06
 
 - Required closeout-enforced skills and shared continuity docs to end completed

@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.4.0`.
+Current package version: `0.4.1`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,8 +29,16 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.4.0`. It includes:
+The current release line is `v0.4.1`. It includes:
 
+- A central role-agent delegation contract: invoking a CCGS skill authorizes
+  only the role-agent spawns declared by that skill for that run.
+- Review-mode clarification for director gates: `full` runs declared gates,
+  `lean` keeps PHASE-GATE directors active at `$gate-check`, and `solo` skips
+  director gates.
+- Runtime fallback rules for stricter Codex sessions: ask once for delegation
+  consent if required, and never simulate specialist or director verdicts when
+  delegation is denied, skipped, blocked, or unavailable.
 - Numbered closeout routing for completed work units: final responses now end
   with a `Next action:` prompt and exactly one numeric `(Recommended)` option,
   even when only one valid lane remains.

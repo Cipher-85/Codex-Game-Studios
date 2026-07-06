@@ -131,6 +131,51 @@ ALLOWED_PROJECT_LOCAL_SKILLS = {
     "gen-asset",
 }
 
+REQUIRED_CLOSEOUT_ROUTING_SKILLS = {
+    "architecture-decision",
+    "architecture-review",
+    "art-bible",
+    "asset-spec",
+    "brainstorm",
+    "code-review",
+    "consistency-check",
+    "design-system",
+    "dev-story",
+    "gate-check",
+    "help",
+    "map-systems",
+    "project-stage-detect",
+    "quick-design",
+    "smoke-check",
+    "story-done",
+    "story-readiness",
+    "team-qa",
+    "ux-design",
+}
+
+CLOSEOUT_MARKERS = (
+    "Verdict: **COMPLETE**",
+    "Verdict: COMPLETE",
+    "**Verdict: COMPLETE**",
+    "## Recommended Next Steps",
+)
+
+CLOSEOUT_REQUIRED_PHRASES = (
+    "Session Worklist",
+    "production/session-state/active.md",
+    "completed work",
+    "owed verification",
+    "numbered next-action prompt",
+    "Next action:",
+    "1. (Recommended)",
+    "(Recommended)",
+)
+
+CLOSEOUT_FORBIDDEN_PHRASES = (
+    "one recommended next action",
+    "numbered choice set",
+)
+
 STARTUP_AGENT_ROSTER_HEADING = "## Available Codex Role Agents"
 AGENTS_MD_TARGET_BYTES = 16 * 1024
 AGENTS_MD_MAX_BYTES = 20 * 1024
@@ -297,6 +342,19 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
             errors.append(f"{rel}: missing explicit worktree guidance")
         if skill_file.parent.name in {"architecture-review", "gate-check", "review-all-gdds"} and "high-reasoning" not in text:
             errors.append(f"{rel}: missing high-reasoning guidance")
+        if folder in REQUIRED_CLOSEOUT_ROUTING_SKILLS and any(marker in text for marker in CLOSEOUT_MARKERS):
+            missing_closeout = [phrase for phrase in CLOSEOUT_REQUIRED_PHRASES if phrase not in text]
+            if missing_closeout:
+                errors.append(
+                    f"{rel}: completion closeout missing worklist-backed routing language: "
+                    + ", ".join(missing_closeout)
+                )
+            forbidden_closeout = [phrase for phrase in CLOSEOUT_FORBIDDEN_PHRASES if phrase in text]
+            if forbidden_closeout:
+                errors.append(
+                    f"{rel}: completion closeout still permits old non-numeric routing language: "
+                    + ", ".join(forbidden_closeout)
+                )
     return errors
 
 

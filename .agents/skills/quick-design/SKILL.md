@@ -264,9 +264,17 @@ Type: [Tuning / Tweak / Addition / New Small System]
 System: [system name]
 GDD update: [Required — pending approval / Applied / Not required]
 
-Next step: This spec is ready for `$story-readiness` validation before
-implementation. Reference this spec in the story's GDD Reference field.
+Completed work: quick spec written and any approved GDD update applied or noted.
+Verification: [checks run / not run / owed verification].
+Next action:
+1. (Recommended) [action label] - [brief reason / command]
 ```
+
+Before choosing the next action, read `production/session-state/active.md` if it
+exists. Use its `## Session Worklist` and owed verification to pick the top
+valid lane. If no worklist exists, the default recommendation is
+`$story-readiness [story-path]` before implementation, with this quick spec
+referenced in the story's GDD Reference field.
 
 ### Pipeline Notes
 
@@ -294,6 +302,23 @@ using `$design-system` to author a full GDD for this."
 - Run `$story-readiness [story-path]` to validate the story before implementation begins — reference this spec in the story's GDD Reference field
 - Run `$dev-story [story-path]` to implement once the story passes readiness checks
 - If the change is larger than expected, run `$design-system [system-name]` to author a full GDD instead
+
+## Closeout Contract
+
+Every final response from this skill must include completed work, verification
+run or owed verification, and next-lane routing. Read or refresh the
+`## Session Worklist` in `production/session-state/active.md` when present. End
+with a numbered next-action prompt using numeric format only, even when there is
+only one valid lane:
+
+```md
+Next action:
+1. (Recommended) [action label] - [brief reason / command]
+```
+
+If multiple lanes are viable, add more numbered options and keep exactly one
+`(Recommended)` option. The user can reply with `1`. Do not end with only a
+static command list.
 
 ## Ported metadata
 

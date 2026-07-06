@@ -80,6 +80,24 @@ The skill must end with a recommended next action or follow-up path. Look for:
 
 **WARN** if absent.
 
+For high-traffic completion skills, this is a hard closeout-routing check. If a
+skill has a `COMPLETE` verdict or `## Recommended Next Steps` closeout, it must
+also instruct the agent to read or refresh the `## Session Worklist` in
+`production/session-state/active.md`, surface verification or owed verification,
+and finish with a numbered next-action prompt using numeric format only. The
+fallback shape must be:
+
+```md
+Next action:
+1. (Recommended) [action label] - [brief reason / command]
+```
+
+This is required even when only one valid next lane remains.
+
+**FAIL** if a required completion skill has a closeout but lacks this
+worklist-backed numeric routing language, or if it still permits the old
+plain-text single-action closeout shape.
+
 ### Check 6 — Fork Context Complexity
 If frontmatter contains `context: fork`, the skill should have ≥5 phase headings
 (`##` level or numbered Phase N headers). Fork context is for complex multi-phase

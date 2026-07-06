@@ -28,6 +28,12 @@ Before pausing a meaningful work unit:
 2. Record verification that passed, failed, was blocked, or was not run.
 3. Read or refresh `## Session Worklist` in
    `production/session-state/active.md` and recommend the top valid lane.
+   The final response must include completed work, verification or owed
+   verification, and a numbered next-action prompt with exactly one
+   `(Recommended)` option. Use this numeric fallback even when there is only one
+   clear next lane:
+   `Next action:` then `1. (Recommended) [action label] - [brief reason /
+   command]`. The user can reply with `1`.
 4. Preserve exact next commands only when they are known to be useful.
 5. Keep local-only notes out of tracked docs unless they are project state.
 6. Suggest `$handoff [short-label]` when installed and the next session would

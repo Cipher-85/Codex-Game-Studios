@@ -28,9 +28,16 @@ verification-first implementation.
   setup to `$start`, broad orientation to `$help`, or full gap discovery to
   `$project-stage-detect`.
 - At wrap-up, read or update the `## Session Worklist` in
-  `production/session-state/active.md`, surface owed verification, and recommend
-  the top valid lane. Suggest `$handoff` only when the current state should be
-  durable for a future session.
+  `production/session-state/active.md`, surface owed verification, and present
+  the top valid lane as a numbered next-action prompt. Suggest `$handoff` only
+  when the current state should be durable for a future session.
+- Every discrete work-unit final response must close the loop: summarize
+  completed work, state verification run or owed verification, and end with a
+  numbered next-action prompt with exactly one `(Recommended)` option. Use this
+  format even when there is only one clear next action:
+  `Next action:` then `1. (Recommended) [action label] - [brief reason /
+  command]`. Base that next action on the `## Session Worklist` when
+  `production/session-state/active.md` exists. The user can reply with `1`.
 
 ## Available Codex Role Agents
 
@@ -82,6 +89,13 @@ Question -> Options -> Decision -> Draft -> Approval.
 - The `$handoff` exception does not authorize design/game-feel/balance
   decisions, new source edits outside the continuity files, writes to undeclared
   files, branch switching, force-pushes, or `--no-verify` / amend workarounds.
+- `$resume-from-handoff` exception: explicit invocation of the Codex-native
+  `$resume-from-handoff` skill counts as user approval to write or overwrite
+  only `production/session-state/active.md` with the current session routing
+  cache. Do not pause mid-flow to ask for that file write.
+- The `$resume-from-handoff` exception does not authorize edits to handoff,
+  archive, source, design, or docs files; commits; pushes; branch changes;
+  builds; boot smoke; mutating `gh`; or additional file writes.
 - No commits without user instruction.
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
@@ -192,8 +206,8 @@ After each discrete work unit, apply this mentally using
 2. Surface owed verification.
 3. Read or refresh the `## Session Worklist` and `## Phase Guard` from handoff,
    session, sprint, stage, workflow, and slice state.
-4. Recommend the top valid lane, with one clearly marked `(Recommended)` only
-   when multiple real lanes remain.
+4. Present the top valid lane as a numbered next-action prompt with exactly one
+   `(Recommended)` option, even when only one real lane remains.
 5. Suggest `$handoff` when installed and session state should be preserved.
 
 Read `.codex/docs/session-continuity.md` and

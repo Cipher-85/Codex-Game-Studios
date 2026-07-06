@@ -454,6 +454,23 @@ If there are no remaining priority ADRs and no undesigned GDD systems, offer onl
 
 Update any stories that were `Status: Blocked` pending this ADR to `Status: Ready`.
 
+## Closeout Contract
+
+Every final response from this skill must include completed work, verification
+run or owed verification, and next-lane routing. Read or refresh the
+`## Session Worklist` in `production/session-state/active.md` when present. End
+with a numbered next-action prompt using numeric format only, even when there is
+only one valid lane:
+
+```md
+Next action:
+1. (Recommended) [action label] - [brief reason / command]
+```
+
+If multiple lanes are viable, add more numbered options and keep exactly one
+`(Recommended)` option. The user can reply with `1`. Do not end with only a
+static command list.
+
 ## Ported metadata
 
 The following upstream metadata is preserved as context only; Codex does not enforce it from skill frontmatter.

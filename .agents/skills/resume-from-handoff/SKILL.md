@@ -11,10 +11,13 @@ phase guardrails, and writes the current-session routing cache to
 `production/session-state/active.md`.
 
 This skill writes exactly one file: `production/session-state/active.md`. It
-does not commit, push, run mutating `gh`, launch builds, or run boot smoke. A
-project-level CI status rule in `AGENTS.md` may still require read-only `gh run`
-status checks when a CI-green verification is explicitly owed; report those
-outputs as observed in this turn if you run them.
+does not commit, push, run mutating `gh`, launch builds, or run boot smoke.
+Explicit invocation of `$resume-from-handoff` counts as approval to write or
+overwrite that one session-cache file; do not pause mid-flow to ask for
+permission for `production/session-state/active.md`. A project-level CI status
+rule in `AGENTS.md` may still require read-only `gh run` status checks when a
+CI-green verification is explicitly owed; report those outputs as observed in
+this turn if you run them.
 
 This is a deep read, not a glance. Read the full handoff, follow the playable or
 slice-state pointer declared by the handoff, cross-reference sprint status,
@@ -255,6 +258,9 @@ closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
 
 - Writes only `production/session-state/active.md`; no commits, pushes, mutating
   `gh`, or boot smoke from this skill.
+- Explicit invocation authorizes that one write. Do not ask "May I write this
+  session cache?" for `production/session-state/active.md` after the user has
+  invoked `$resume-from-handoff`.
 - Use `request_user_input`, not a free-text prompt, for true multi-lane choices
   when the tool is available.
 - Never jump to work the user did not select unless there is one obvious next

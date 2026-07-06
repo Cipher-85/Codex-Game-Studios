@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.4.0 - 2026-07-06
+
+- Required closeout-enforced skills and shared continuity docs to end completed
+  work units with a numbered `Next action:` prompt, even when there is only one
+  valid lane.
+- Standardized the final-response format on a numeric-only
+  `1. (Recommended)` option so users can reply with `1` instead of parsing a
+  plain-text next-action sentence.
+- Added runtime validation that rejects closeout-enforced skills retaining the
+  older "one recommended next action" wording or missing numbered next-action
+  routing language.
+- Updated the quick-design handoff template and installed package outputs so
+  downstream projects receive the same numeric closeout contract.
+
 ## v0.3.3 - 2026-07-05
 
 - Reworked continuity routing so post-work recommendations read the live

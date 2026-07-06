@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.3.3`.
+Current package version: `0.4.0`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,8 +29,15 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.3.3`. It includes:
+The current release line is `v0.4.0`. It includes:
 
+- Numbered closeout routing for completed work units: final responses now end
+  with a `Next action:` prompt and exactly one numeric `(Recommended)` option,
+  even when only one valid lane remains.
+- Runtime validation for closeout-enforced skills so stale plain-text
+  "one recommended next action" contracts fail before install or release.
+- Updated quick-design and continuity handoff language so installed packages
+  preserve the same numeric closeout format in downstream projects.
 - Continuity recommendations now route through the live `## Session Worklist`
   and `## Phase Guard` in `production/session-state/active.md` instead of
   automatically invoking `$studio-next`.

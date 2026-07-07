@@ -11,7 +11,7 @@ prefix_rule(
     pattern = ["rm", "-rf"],
     decision = "forbidden",
     justification = "Use a scoped non-destructive command, or ask the user for an explicit cleanup plan.",
-    match = ["rm -rf build"],
+    match = ["rm -rf"],
 )
 prefix_rule(
     pattern = ["git", "reset", "--hard"],
@@ -26,10 +26,46 @@ prefix_rule(
     match = ["git clean -fdx"],
 )
 prefix_rule(
+    pattern = ["git", "clean", "-f"],
+    decision = "forbidden",
+    justification = "Use git status and ask the user before removing untracked files.",
+    match = ["git clean -f"],
+)
+prefix_rule(
+    pattern = ["git", "clean", "-fd"],
+    decision = "forbidden",
+    justification = "Use git status and ask the user before removing untracked files.",
+    match = ["git clean -fd"],
+)
+prefix_rule(
+    pattern = ["git", "clean", "-fx"],
+    decision = "forbidden",
+    justification = "Use git status and ask the user before removing untracked files.",
+    match = ["git clean -fx"],
+)
+prefix_rule(
     pattern = ["git", "push", "--force"],
     decision = "forbidden",
     justification = "Do not force push or rewrite remote history without explicit user approval.",
     match = ["git push --force"],
+)
+prefix_rule(
+    pattern = ["git", "push", "-f"],
+    decision = "forbidden",
+    justification = "Do not force push or rewrite remote history without explicit user approval.",
+    match = ["git push -f"],
+)
+prefix_rule(
+    pattern = ["sudo"],
+    decision = "forbidden",
+    justification = "Do not escalate privileges from project automation.",
+    match = ["sudo"],
+)
+prefix_rule(
+    pattern = ["chmod", "777"],
+    decision = "forbidden",
+    justification = "Use the narrowest file mode required instead of world-writable permissions.",
+    match = ["chmod 777"],
 )
 prefix_rule(
     pattern = ["cat", "~/.ssh"],
@@ -37,9 +73,44 @@ prefix_rule(
     justification = "Do not read local SSH secrets.",
     match = ["cat ~/.ssh"],
 )
+
+# Prefix rules can cover direct tokenized .env reads, including the literal
+# shell glob token users type before expansion. Upstream .env redirection or
+# write patterns are outside this syntax and must stay handled by prompts,
+# hooks, or manual review rather than unsupported redirection rules.
+prefix_rule(
+    pattern = ["cat", ".env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["cat .env"],
+)
+prefix_rule(
+    pattern = ["cat", "*.env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["cat *.env"],
+)
 prefix_rule(
     pattern = ["cat", "~/.env"],
     decision = "forbidden",
     justification = "Do not read local environment secret files.",
     match = ["cat ~/.env"],
+)
+prefix_rule(
+    pattern = ["type", ".env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["type .env"],
+)
+prefix_rule(
+    pattern = ["type", "*.env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["type *.env"],
+)
+prefix_rule(
+    pattern = ["type", "~/.env"],
+    decision = "forbidden",
+    justification = "Do not read local environment secret files.",
+    match = ["type ~/.env"],
 )

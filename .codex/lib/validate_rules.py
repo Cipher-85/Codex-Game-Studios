@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import tomllib
 from pathlib import Path
@@ -15,6 +16,26 @@ LEGACY_STATUS_LINE_ITEMS = {
     "current_dir": "current-dir",
     "git_branch": "git-branch",
 }
+
+REQUIRED_FORBIDDEN_COMMAND_EXAMPLES = (
+    "rm -rf",
+    "git reset --hard",
+    "git clean -f",
+    "git clean -fd",
+    "git clean -fx",
+    "git clean -fdx",
+    "git push --force",
+    "git push -f",
+    "sudo",
+    "chmod 777",
+    "cat ~/.ssh",
+    "cat .env",
+    "cat *.env",
+    "cat ~/.env",
+    "type .env",
+    "type *.env",
+    "type ~/.env",
+)
 
 
 def emit(root: Path, errors: list[str], warnings: list[str]) -> int:
@@ -85,9 +106,17 @@ def main() -> int:
             errors.append(".codex/rules/settings.rules: match is a prefix_rule field, not a top-level function")
         if 'decision = "deny"' in text:
             errors.append('.codex/rules/settings.rules: use decision = "forbidden", not "deny"')
-        for required in ("git reset --hard", "rm -rf", "force push"):
-            if required not in text:
-                warnings.append(f".codex/rules/settings.rules: missing example text for {required}")
+        if 'decision = "forbidden"' not in text:
+            errors.append('.codex/rules/settings.rules: missing decision = "forbidden" for denied command policy')
+        quoted_examples = set(re.findall(r'"([^"]*)"', text))
+        missing_forbidden_examples = [
+            example for example in REQUIRED_FORBIDDEN_COMMAND_EXAMPLES if example not in quoted_examples
+        ]
+        if missing_forbidden_examples:
+            errors.append(
+                ".codex/rules/settings.rules: missing parity-critical forbidden command coverage for "
+                + ", ".join(missing_forbidden_examples)
+            )
     else:
         warnings.append(".codex/rules/settings.rules not present yet")
 

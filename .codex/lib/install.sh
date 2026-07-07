@@ -408,6 +408,8 @@ ccgs_gitignore_allowlist_block() {
   printf '%s\n' "$ccgs_gitignore_start"
   printf '# Added by Codex Game Studios so installed repo-local runtime files remain trackable.\n'
   ccgs_gitignore_allowlist_patterns
+  printf '# Keep the live session checkpoint local while preserving production/session-state/.gitkeep.\n'
+  printf '/production/session-state/active.md\n'
   printf '%s\n' "$ccgs_gitignore_end"
 }
 

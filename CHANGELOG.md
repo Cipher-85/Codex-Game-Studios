@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.4.2 - 2026-07-07
+
+- Added a narrow active session-state checkpoint exception: after the user
+  approves the underlying workflow artifact or decision, skills may update only
+  `production/session-state/active.md` without asking a second "May I write?"
+  question.
+- Updated high-traffic design, architecture, QA, story, and continuity skills,
+  plus generated design role-agent prompts, to treat `active.md` writes as
+  derived checkpoints while preserving normal approval gates for durable
+  artifacts, source edits, commits, pushes, builds, and new decisions.
+- Extended runtime validation so active.md write instructions in both skills and
+  role-agent prompts must include no-extra-approval language and must not ask a
+  separate active.md write/update prompt.
+- Kept installed `production/session-state/active.md` local-only by updating
+  package and installer `.gitignore` handling while preserving the tracked
+  `production/session-state/.gitkeep` scaffold.
+
 ## v0.4.1 - 2026-07-06
 
 - Added a central Role-Agent Delegation Authorization contract so explicit CCGS

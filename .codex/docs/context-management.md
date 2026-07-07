@@ -24,6 +24,16 @@ The state file should contain: current task, progress checklist, key decisions
 made, files being worked on, open questions, owed verification, `## Session
 Worklist`, and `## Phase Guard`.
 
+Checkpoint updates to `production/session-state/active.md` are derived session
+state, not separate approval surfaces. After the user approves the workflow
+artifact or decision being recorded, update this file without asking another
+"May I write?" question, as long as the change only records current task,
+completed sections, files touched, already-approved decisions, open questions,
+owed verification, `## Session Worklist`, or `## Phase Guard`. Any durable
+artifact edit, registry/index/status update, source edit, commit, push, build,
+or new design/architecture/balance decision still requires its normal explicit
+approval.
+
 `$resume-from-handoff` compiles `## Session Worklist` and `## Phase Guard` at
 session entry from the canonical handoff, sprint status, stage file, workflow
 catalog, and slice state. Post-work closeouts should read or refresh those
@@ -56,7 +66,7 @@ When creating multi-section documents (design docs, architecture docs, lore entr
 1. Create the file immediately with a skeleton (all section headers, empty bodies)
 2. Discuss and draft one section at a time in conversation
 3. Write each section to the file as soon as it's approved
-4. Update the session state file after each section
+4. Silently update the session state file after each approved section write
 5. After writing a section, previous discussion about that section can be safely
    compacted — the decisions are in the file
 

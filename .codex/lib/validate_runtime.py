@@ -176,6 +176,17 @@ CLOSEOUT_FORBIDDEN_PHRASES = (
     "numbered choice set",
 )
 
+ACTIVE_STATE_PATH = "production/session-state/active.md"
+ACTIVE_STATE_WRITE_VERBS = r"(?:create|update|append|overwrite|write)"
+ACTIVE_STATE_CHECKPOINT_REQUIRED_PHRASES = (
+    "derived checkpoint",
+    'Do not ask a separate "May I write?" for this file',
+)
+ACTIVE_STATE_NAMED_EXCEPTIONS = {
+    "handoff",
+    "resume-from-handoff",
+}
+
 STARTUP_AGENT_ROSTER_HEADING = "## Available Codex Role Agents"
 AGENTS_MD_TARGET_BYTES = 16 * 1024
 AGENTS_MD_MAX_BYTES = 20 * 1024
@@ -299,6 +310,46 @@ def validate_instruction_budgets(root: Path) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = False) -> list[str]:
+    if exempt or ACTIVE_STATE_PATH not in text:
+        return []
+
+    errors: list[str] = []
+    normalized_text = re.sub(r"\s+", " ", text)
+    normalized_lower = normalized_text.lower()
+    normalized_path = re.escape(ACTIVE_STATE_PATH)
+    write_verb_pattern = (
+        rf"(?<!does not )(?<!do not )(?<!must not )\b{ACTIVE_STATE_WRITE_VERBS}\b"
+        rf"(?!\s+(?:is|was|complete))"
+    )
+    active_write_pattern = (
+        rf"(?is){write_verb_pattern}[^.!?;]{{0,180}}`?{normalized_path}`?"
+        rf"|`?{normalized_path}`?[^.!?;]{{0,180}}{write_verb_pattern}"
+    )
+    if re.search(active_write_pattern, normalized_text):
+        missing_active_phrases = [
+            phrase
+            for phrase in ACTIVE_STATE_CHECKPOINT_REQUIRED_PHRASES
+            if phrase.lower() not in normalized_lower
+        ]
+        if missing_active_phrases:
+            errors.append(
+                f"{rel}: active.md checkpoint write missing no-extra-approval language: "
+                + ", ".join(missing_active_phrases)
+            )
+
+    prompt_text = normalized_text
+    for phrase in ACTIVE_STATE_CHECKPOINT_REQUIRED_PHRASES:
+        prompt_text = re.sub(re.escape(phrase), "", prompt_text, flags=re.IGNORECASE)
+    active_prompt_pattern = (
+        rf"(?is)May I (?:write|update)\b(?:\s+[\w/-]+){{0,10}}\s+"
+        rf"(?:to\s+|at\s+)?`?(?:{normalized_path}|active\.md)`?[^?]*\?"
+    )
+    if re.search(active_prompt_pattern, prompt_text):
+        errors.append(f"{rel}: active.md checkpoint must not request a separate May I write/update prompt")
+    return errors
+
+
 def validate_skills(root: Path, require_present: bool = False) -> list[str]:
     errors: list[str] = []
     skill_root = root / ".agents" / "skills"
@@ -355,6 +406,7 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
                     f"{rel}: completion closeout still permits old non-numeric routing language: "
                     + ", ".join(forbidden_closeout)
                 )
+        errors.extend(validate_active_state_checkpoint_text(rel, text, folder in ACTIVE_STATE_NAMED_EXCEPTIONS))
     return errors
 
 
@@ -421,6 +473,7 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
         model_key = (str(data.get("model", "")), str(data.get("model_reasoning_effort", "")))
         model_counts[model_key] = model_counts.get(model_key, 0) + 1
         instructions = str(data.get("developer_instructions", ""))
+        errors.extend(validate_active_state_checkpoint_text(rel, instructions))
         if "Ported Claude memory scope:" in instructions:
             memory_path = f".codex/agent-memory/{agent_file.stem}/MEMORY.md"
             if memory_path not in instructions:

@@ -265,7 +265,8 @@ Ready for: `$code-review [file1] [file2]` then `$story-done [story-path]`
 
 ## Phase 7: Update Session State
 
-Silently append to `production/session-state/active.md`:
+Silently append to `production/session-state/active.md` as a derived checkpoint.
+Do not ask a separate "May I write?" for this file:
 
 ```
 ## Session Extract — $dev-story [date]
@@ -327,7 +328,7 @@ Common blockers:
 - Run `$code-review [file1] [file2]` to review the implementation before closing the story
 - Run `$story-done [story-path]` to verify acceptance criteria and mark the story complete
 - After all sprint stories are done: run `$team-qa sprint` for the full QA cycle before advancing the project stage
-- After the implementation summary, read or update the `## Session Worklist` in
+- After the implementation summary, read or silently refresh the `## Session Worklist` in
   `production/session-state/active.md`. The default best next action is
   `$code-review`; if verification, story closure, QA, or handoff is equally
   plausible, use `request_user_input` when available.

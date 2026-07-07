@@ -27,7 +27,7 @@ verification-first implementation.
 - If no handoff exists, do not infer one from another doc. Route first-session
   setup to `$start`, broad orientation to `$help`, or full gap discovery to
   `$project-stage-detect`.
-- At wrap-up, read or update the `## Session Worklist` in
+- At wrap-up, read or silently refresh the `## Session Worklist` in
   `production/session-state/active.md`, surface owed verification, and present
   the top valid lane as a numbered next-action prompt. Suggest `$handoff` only
   when the current state should be durable for a future session.
@@ -81,6 +81,17 @@ Question -> Options -> Decision -> Draft -> Approval.
   tools.
 - Agents must show drafts or summaries before requesting approval.
 - Multi-file changes require explicit approval for the full changeset.
+- Active session state checkpoint exception: after the user approves the
+  workflow artifact or decision being recorded, skills may create or update only
+  `production/session-state/active.md` without a separate "May I write?" prompt
+  when the change is a derived checkpoint or routing cache: current task,
+  completed sections, files touched, decisions already approved, open
+  questions, owed verification, `## Session Worklist`, or `## Phase Guard`.
+- The checkpoint exception does not authorize new design/game-feel/balance or
+  architecture decisions, durable artifact edits, registry/index/status-file
+  updates, source edits, commits, pushes, branch changes, builds, boot smoke,
+  mutating `gh`, or writes to any path other than
+  `production/session-state/active.md`.
 - `$handoff` exception: explicit invocation of the Codex-native `$handoff` skill
   counts as user approval for that skill's declared handoff workflow only:
   update `production/session-handoff.md`, `production/session-archive.md`, and
@@ -208,6 +219,9 @@ For code, tests, and tools:
 
 - Tracked docs are the project memory. Keep active state in
   `production/session-state/active.md` when the project has one.
+- Treat `production/session-state/active.md` as a local checkpoint/routing
+  cache. It may be regenerated or overwritten by declared workflows and should
+  not be treated as the durable project record.
 - Preserve session continuity in `production/session-handoff.md`; archive only
   when the continuity docs call for it.
 - Keep generated caches, local-only logs, and transient evidence out of tracked

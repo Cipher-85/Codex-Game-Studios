@@ -422,8 +422,8 @@ changing, set the old entry to `status: superseded_by: ADR-[NNNN]` and add the n
 
 ## 6. Closing Next Steps
 
-After the ADR is written (and registry optionally updated), read or update the
-`## Session Worklist` in `production/session-state/active.md`, then close with a
+After the ADR is written (and registry optionally updated), read or silently
+refresh the `## Session Worklist` in `production/session-state/active.md`, then close with a
 ranked `numbered choice prompt` only when multiple priority ADRs or phase lanes
 are genuinely available.
 

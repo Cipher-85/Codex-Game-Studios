@@ -14,7 +14,7 @@ gap analysis, use `$project-stage-detect`.
 `$help` answers "where am I in the phase pipeline?" It is the phase-orientation
 tool: stage plus catalog plus the first incomplete required step.
 
-For post-task continuity after a discrete unit of work, read or update the
+For post-task continuity after a discrete unit of work, read or silently refresh the
 `## Session Worklist` in `production/session-state/active.md`. That worklist is
 compiled by `$resume-from-handoff` at session entry and refreshed by closeout
 workflows. `production/session-handoff.md` remains the durable cross-session

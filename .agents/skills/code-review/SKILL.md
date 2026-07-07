@@ -164,7 +164,7 @@ This skill is read-only — no files are written.
 
 ## Phase 9: Next Steps
 
-Close by reading or updating the `## Session Worklist` in
+Close by reading or silently refreshing the `## Session Worklist` in
 `production/session-state/active.md` instead of using a static menu.
 
 - If verdict is APPROVED, the best next action is normally `$story-done [story-path]`.

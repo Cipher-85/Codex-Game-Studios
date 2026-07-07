@@ -375,7 +375,8 @@ The `validate-commit.sh` hook will verify design doc references and check for ha
 ### Session State Update
 
 After updating the story file, silently append to
-`production/session-state/active.md`:
+`production/session-state/active.md` as a derived checkpoint. Do not ask a
+separate "May I write?" for this file:
 
     ## Session Extract — $story-done [date]
     - Verdict: [COMPLETE / COMPLETE WITH NOTES / BLOCKED]
@@ -432,8 +433,9 @@ If there are Should Have stories still unstarted, surface them alongside the clo
 If no more stories are ready but Must Have stories are still In Progress (not Complete):
 "No more stories ready to start — [N] Must Have stories still in progress. Continue implementing those before sprint close-out."
 
-After surfacing the next-story or sprint close-out inventory, read or update the
-`## Session Worklist` in `production/session-state/active.md`. Recommend one
+After surfacing the next-story or sprint close-out inventory, read or silently
+refresh the `## Session Worklist` in `production/session-state/active.md`.
+Recommend one
 best next action across the ready-story, smoke-check, QA, gate, tech-debt, and
 handoff lanes. Use `request_user_input` when available only if 2-3 lanes are
 genuinely tied.

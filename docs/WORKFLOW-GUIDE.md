@@ -1275,6 +1275,12 @@ pre-edit hardening, but it is not a parity requirement.
 checkpoint. Update it after each significant milestone. After any disruption
 (compaction, crash, `/clear`), read this file first.
 
+`active.md` is derived checkpoint and routing state. Once the underlying
+workflow artifact or decision has been approved, update only this file without a
+second write-approval prompt. Durable artifacts, registry/index/status files,
+source, commits, pushes, branch changes, builds, and new design decisions still
+use their normal approval gates.
+
 **Incremental writing:** When creating multi-section documents, write each
 section to file immediately after approval. This means completed sections
 survive crashes and context compactions. Previous discussion about written

@@ -10,6 +10,7 @@
 
 # Codex hook runtime logs
 /production/session-logs/
+/production/session-state/active.md
 
 # App launcher (machine-specific, created by mklauncher)
 /Codex-Game-Studios (Codex).app/

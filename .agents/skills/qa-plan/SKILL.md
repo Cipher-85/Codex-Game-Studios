@@ -250,7 +250,9 @@ Next steps:
 - For Logic/Integration stories, create the test files at the listed paths
   before marking stories done — `$story-done` checks for them"
 
-Silently append to `production/session-state/active.md` (create the file if it does not exist):
+Silently append to `production/session-state/active.md` as a derived checkpoint
+(create the file if it does not exist). Do not ask a separate "May I write?" for
+this file:
 
 ```
 <!-- QA-PLAN: [date] | System: [system/sprint identifier] | Plan written: production/qa/qa-plan-[identifier]-[date].md -->

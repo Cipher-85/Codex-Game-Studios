@@ -14,8 +14,9 @@ contract now lives in `production/session-state/active.md`:
   required step, next gate, and phase mismatch notes.
 
 `$resume-from-handoff` is the one-time session-entry compiler that creates or
-refreshes those sections. Later closeouts should read or update that saved
-worklist directly, surface owed verification, and recommend the top valid lane.
+refreshes those sections. Later closeouts should read or silently refresh that
+saved worklist directly, surface owed verification, and recommend the top valid
+lane.
 
 This file remains only as a compatibility reference for old handoffs or explicit
 user requests for `$studio-next`.

@@ -441,7 +441,7 @@ echo -n "Production" > production/stage.txt
 ## 7. Closing Continuity Step
 
 After the verdict is presented and any stage.txt update is complete, read or
-update the `## Session Worklist` and `## Phase Guard` in
+silently refresh the `## Session Worklist` and `## Phase Guard` in
 `production/session-state/active.md`. Recommend one best next action unless the
 gate outcome leaves 2-3 genuinely viable lanes. When multiple lanes are viable,
 use `request_user_input` when available; otherwise use a concise numbered prompt.

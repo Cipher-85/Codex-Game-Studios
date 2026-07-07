@@ -230,7 +230,7 @@ A summary covering: stories in scope, smoke check result, manual QA results, bug
 Verdict: **COMPLETE** — QA cycle finished.
 Verdict: **BLOCKED** — smoke check failed or critical blocker prevented cycle completion; partial report produced.
 
-After the final verdict or BLOCKED partial report, read or update the
+After the final verdict or BLOCKED partial report, read or silently refresh the
 `## Session Worklist` in `production/session-state/active.md`. The default best
 next action is usually `$gate-check` after APPROVED, resolving listed conditions
 after APPROVED WITH CONDITIONS, or fixing blocking QA failures before re-running
@@ -238,7 +238,9 @@ after APPROVED WITH CONDITIONS, or fixing blocking QA failures before re-running
 
 ## Session State Update
 
-After the final phase completes (sign-off report written or BLOCKED verdict reached), silently append to `production/session-state/active.md`:
+After the final phase completes (sign-off report written or BLOCKED verdict
+reached), silently append to `production/session-state/active.md` as a derived
+checkpoint. Do not ask a separate "May I write?" for this file:
 
 ```
 <!-- QA RUN: [date] | Sprint: [sprint identifier or "ad-hoc"] | Verdict: [PASS/FAIL/CONCERNS] | Report: production/qa/qa-[date].md -->

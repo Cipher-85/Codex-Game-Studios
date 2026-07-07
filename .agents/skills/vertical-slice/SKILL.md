@@ -95,12 +95,14 @@ Define in bullet points:
 
 Ask the user to confirm scope before building.
 
-Once confirmed, write a session checkpoint to `production/session-state/active.md`
-(create `production/session-state/` if it does not exist). Include: concept name,
-validation question, systems in scope, art quality level, and current phase ("Phase
-4 — Implement"). Update this file at the end of each build day with what was
-completed. This is the primary recovery mechanism if the session ends mid-slice —
-multi-week Engine builds will span many sessions.
+Once confirmed, silently write a derived checkpoint to
+`production/session-state/active.md` (create `production/session-state/` if it
+does not exist). Do not ask a separate "May I write?" for this file. Include:
+concept name, validation question, systems in scope, art quality level, and
+current phase ("Phase 4 — Implement"). Silently update this file at the end of
+each build day with what was completed. This is the primary recovery mechanism
+if the session ends mid-slice — multi-week Engine builds will span many
+sessions.
 
 ---
 

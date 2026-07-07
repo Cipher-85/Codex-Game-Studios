@@ -69,6 +69,10 @@ The skill must contain ask-before-write language. Look for:
 - `"before writing"` or `"approval"` near file-write instructions
 - `"ask"` + `"write"` in close proximity (within same section)
 
+Exception: writes only to `production/session-state/active.md` may be silent
+when they are explicitly described as derived checkpoints and say: Do not ask a
+separate "May I write?" for this file.
+
 **WARN** if absent (some read-only skills legitimately skip this).
 **FAIL** if `allowed-tools` includes `Write` or `Edit` but no ask-before-write language is found.
 
@@ -97,6 +101,11 @@ This is required even when only one valid next lane remains.
 **FAIL** if a required completion skill has a closeout but lacks this
 worklist-backed numeric routing language, or if it still permits the old
 plain-text single-action closeout shape.
+
+Skills that create, update, append, overwrite, or write
+`production/session-state/active.md` must state that the change is a derived
+checkpoint and must say: Do not ask a separate "May I write?" for this file.
+Durable artifact writes still require normal explicit approval.
 
 ### Check 6 — Fork Context Complexity
 If frontmatter contains `context: fork`, the skill should have ≥5 phase headings

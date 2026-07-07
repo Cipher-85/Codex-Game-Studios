@@ -286,7 +286,10 @@ If the user declines: Stop with the following message:
 > "Verdict: **BLOCKED** — skeleton creation declined. The design session cannot proceed without the skeleton file, as all subsequent phases use it as the base. Re-run `$design-system [system]` when ready to create the file."
 Do not proceed to Section A.
 
-After writing, update `production/session-state/active.md`:
+After writing the approved skeleton, silently update
+`production/session-state/active.md` as a derived checkpoint. Do not ask a
+separate "May I write?" for this file; the user's approval of the skeleton
+authorizes only this session-state checkpoint.
 - Use Glob to check if the file exists.
 - If it **does not exist**: use the **Write** tool to create it. Never attempt Edit on a file that may not exist.
 - If it **already exists**: use the **Edit** tool to update the relevant fields.
@@ -354,9 +357,11 @@ Context  ->  Questions  ->  Options  ->  Decision  ->  Draft  ->  Approval  ->  
    - If new (not in registry): flag it as a candidate for registry registration
      (will be handled in Phase 5).
 
-After writing each section, update `production/session-state/active.md` with the
-completed section name. Use Glob to check if the file exists — use Write to create
-it if absent, Edit to update it if present.
+After writing each approved section, silently update
+`production/session-state/active.md` with the completed section name as a
+derived checkpoint. Do not ask a separate "May I write?" for this file. Use Glob
+to check if the file exists — use Write to create it if absent, Edit to update
+it if present.
 
 ### Section-Specific Guidance
 
@@ -763,7 +768,8 @@ Ask: "May I update the systems index at `design/gdd/systems-index.md`?"
 
 ### 5e: Update Session State
 
-Update `production/session-state/active.md` with:
+Silently update `production/session-state/active.md` with the final derived
+checkpoint. Do not ask a separate "May I write?" for this file.
 - Codex subagent delegation: [system-name] GDD
 - Status: Complete (or In Review if design-review was run)
 - File: design/gdd/[system-name].md
@@ -772,7 +778,7 @@ Update `production/session-state/active.md` with:
 
 ### 5f: Suggest Next Steps
 
-Read or update the `## Session Worklist` in
+Read or silently refresh the `## Session Worklist` in
 `production/session-state/active.md`, then recommend the top valid next lane.
 Candidate lanes usually include:
 
@@ -847,7 +853,10 @@ This skill follows the collaborative design principle at every step:
    - Phase 5: "Run design review? Update systems index? What's next?"
 3. **"May I write to [filepath]?"** before the skeleton and before each section write
 4. **Incremental writing**: Each section is written to file immediately after approval
-5. **Session state updates**: After every section write
+5. **Session state updates**: Silently update
+   `production/session-state/active.md` after every approved section write as a
+   derived checkpoint; do not ask a separate write-approval question for this
+   file.
 6. **Cross-referencing**: Every section checks existing GDDs for conflicts
 7. **Specialist routing**: Complex sections get expert agent input, presented to
    the user for decision — never written silently

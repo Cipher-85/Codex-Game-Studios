@@ -195,10 +195,10 @@ Run `$story-readiness sprint` to validate story file coverage.
 
 This skill is read-only. It reports observed facts from files on disk.
 
-- It does not update the sprint plan
-- It does not change story status
-- It does not propose scope cuts (that is `$sprint-plan update`)
-- It makes at most one recommendation per run
+- It does not update the sprint plan.
+- It does not change story status.
+- It does not propose scope cuts (that is `$sprint-plan update`).
+- It makes at most one recommendation per run.
 - It may point to the `## Session Worklist` in
   `production/session-state/active.md` when the sprint snapshot reveals
   competing implementation, QA, gate, or handoff lanes

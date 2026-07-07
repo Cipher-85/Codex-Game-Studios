@@ -394,7 +394,10 @@ Ask: "May I create the skeleton file at `design/ux/[filename].md`?"
 
 ---
 
-After writing the skeleton, update `production/session-state/active.md` with:
+After writing the approved skeleton, silently update
+`production/session-state/active.md` as a derived checkpoint. Do not ask a
+separate "May I write?" for this file; the user's approval of the skeleton
+authorizes only this session-state checkpoint.
 - Codex subagent delegation: Designing [screen/flow name] UX spec
 - Current section: Starting (skeleton created)
 - File: design/ux/[filename].md
@@ -426,7 +429,9 @@ Context  ->  Questions  ->  Options  ->  Decision  ->  Draft  ->  Approval  ->  
    - Options: "Yes, write it", "Wait — one more change"
    Once confirmed, use `Edit` to replace the `[To be designed]` placeholder with approved content.
 
-After writing each section, update `production/session-state/active.md`.
+After writing each approved section, silently update
+`production/session-state/active.md` as a derived checkpoint. Do not ask a
+separate "May I write?" for this file.
 
 ---
 
@@ -879,7 +884,8 @@ When all sections are approved and written:
 
 ### 6a: Update Session State
 
-Update `production/session-state/active.md` with:
+Silently update `production/session-state/active.md` with the final derived
+checkpoint. Do not ask a separate "May I write?" for this file.
 - Codex subagent delegation: [screen-name] UX spec
 - Status: Complete (or In Review)
 - File: design/ux/[filename].md
@@ -961,7 +967,10 @@ This skill follows the collaborative design principle at every step:
    - Phase 5: "Run cross-reference check? What's next?"
 3. **"May I write to [filepath]?"** before the skeleton and before each section write
 4. **Incremental writing**: Each section is written to file immediately after approval
-5. **Session state updates**: After every section write
+5. **Session state updates**: Silently update
+   `production/session-state/active.md` after every approved section write as a
+   derived checkpoint; do not ask a separate write-approval question for this
+   file.
 
 **Aesthetic deference**: When layout or visual choices come down to personal taste,
 present the options and ask. Do not select a layout because it is "standard" — always

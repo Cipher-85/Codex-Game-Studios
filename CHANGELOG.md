@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Tightened the role-agent delegation contract so invoking a CCGS skill is the
+  authorization for its declared role-agent spawns after review-mode filtering;
+  duplicate spawn-consent prompts are no longer part of normal skill flow.
+- Clarified director gate behavior: `full` runs declared gates immediately,
+  `lean` skips non-PHASE-GATE reviews such as `CD-GDD-ALIGN`, and `solo` skips
+  all director gates.
+- Added runtime and skill validation coverage to reject reintroduced duplicate
+  spawn-consent fallback wording.
+- Fixed closeout-boundary wording so automatic read-only workflow phases
+  continue without being offered as user-selected `Next action` prompts, while
+  registry, index, review-log, durable artifact, commit, push, and branch
+  mutations remain explicitly permission-gated.
+
 ## v0.4.2 - 2026-07-07
 
 - Added a narrow active session-state checkpoint exception: after the user

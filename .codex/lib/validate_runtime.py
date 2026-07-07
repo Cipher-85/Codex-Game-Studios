@@ -17,6 +17,25 @@ FORBIDDEN_RUNTIME = [
     ("AskUserQuestion", "raw Claude AskUserQuestion reference"),
 ]
 
+DUPLICATE_DELEGATION_CONSENT_PATTERNS = (
+    (
+        re.compile(r"May I spawn[^?\n]{0,120}role agents", re.IGNORECASE),
+        "duplicate role-agent spawn consent prompt",
+    ),
+    (
+        re.compile(r"literal delegation consent", re.IGNORECASE),
+        "duplicate role-agent spawn consent fallback",
+    ),
+    (
+        re.compile(
+            r"ask (?:once|one confirmation)[^.\n]{0,180}"
+            r"(?:delegation consent|subagent spawn|role agents)",
+            re.IGNORECASE,
+        ),
+        "duplicate role-agent spawn consent fallback",
+    ),
+)
+
 UNSUPPORTED_SKILL_FRONTMATTER = {
     "allowed-tools",
     "model",
@@ -176,6 +195,24 @@ CLOSEOUT_FORBIDDEN_PHRASES = (
     "numbered choice set",
 )
 
+INTERNAL_READONLY_CLOSEOUT_PATTERNS = (
+    (re.compile(r"\bself[- ]check\b", re.IGNORECASE), "Self-Check"),
+    (re.compile(r"\bregistry (?:candidate )?scan\b", re.IGNORECASE), "registry scan"),
+    (re.compile(r"\bcandidate discovery\b", re.IGNORECASE), "candidate discovery"),
+    (re.compile(r"\bregistry candidate discovery\b", re.IGNORECASE), "registry candidate discovery"),
+    (re.compile(r"\bread ?backs?\b", re.IGNORECASE), "readback"),
+    (re.compile(r"\bread back\b", re.IGNORECASE), "readback"),
+    (re.compile(r"\bcontext gathering\b", re.IGNORECASE), "context gathering"),
+    (re.compile(r"\bvalidation summar(?:y|ies)\b", re.IGNORECASE), "validation summary"),
+)
+CLOSEOUT_MENU_CONTEXT_RE = re.compile(
+    r"\b(?:Next action|Recommended Next Steps|closeout|closing widget|what next|next steps)\b",
+    re.IGNORECASE,
+)
+CLOSEOUT_OPTION_LINE_RE = re.compile(
+    r"^\s*(?:[-*]\s*)?(?:\d+[.)]|\[[A-Z]\]|[A-Z][.)]|`?\[_\]`?)\s+"
+)
+
 ACTIVE_STATE_PATH = "production/session-state/active.md"
 ACTIVE_STATE_WRITE_VERBS = r"(?:create|update|append|overwrite|write)"
 ACTIVE_STATE_CHECKPOINT_REQUIRED_PHRASES = (
@@ -266,8 +303,47 @@ def validate_forbidden_references(root: Path) -> list[str]:
         for needle, label in FORBIDDEN_RUNTIME:
             if needle in text:
                 errors.append(f"{rel}: {label}")
+        errors.extend(validate_duplicate_delegation_consent_text(rel, text))
         if re.search(r"(?m)(^|\\s)/(start|brainstorm|gate-check|dev-story|prototype|vertical-slice)\\b", text):
             errors.append(f"{rel}: bare custom slash-command reference")
+    return errors
+
+
+def validate_duplicate_delegation_consent_text(rel: Path, text: str) -> list[str]:
+    errors: list[str] = []
+    for pattern, label in DUPLICATE_DELEGATION_CONSENT_PATTERNS:
+        if pattern.search(text):
+            errors.append(
+                f"{rel}: {label}; skill invocation already authorizes declared role-agent spawns"
+            )
+    return errors
+
+
+def validate_internal_readonly_closeout_options(rel: Path, text: str) -> list[str]:
+    errors: list[str] = []
+    context_lines_remaining = 0
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if CLOSEOUT_MENU_CONTEXT_RE.search(line):
+            context_lines_remaining = 18
+
+        matched_label = None
+        for pattern, label in INTERNAL_READONLY_CLOSEOUT_PATTERNS:
+            if pattern.search(line):
+                matched_label = label
+                break
+
+        if matched_label:
+            option_line = bool(CLOSEOUT_OPTION_LINE_RE.search(line))
+            inline_options = "options:" in line.lower()
+            if context_lines_remaining and (option_line or inline_options):
+                errors.append(
+                    f"{rel}:{line_number}: closeout/next-action menu offers internal read-only phase "
+                    f"{matched_label!r}; run read-only workflow phases automatically until a mutation prompt, "
+                    "design decision, blocker, or true stop point"
+                )
+
+        if context_lines_remaining:
+            context_lines_remaining -= 1
     return errors
 
 
@@ -383,6 +459,8 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
             errors.append(f"{rel}: raw AskUserQuestion reference remains")
         if ".claude/" in text or "CLAUDE.md" in text:
             errors.append(f"{rel}: runtime Claude path reference remains")
+        errors.extend(validate_duplicate_delegation_consent_text(rel, text))
+        errors.extend(validate_internal_readonly_closeout_options(rel, text))
         if skill_names:
             slash_pattern = r"(?m)(^|\\s)/(" + "|".join(re.escape(name) for name in sorted(skill_names, key=len, reverse=True)) + r")\\b"
             if re.search(slash_pattern, text):

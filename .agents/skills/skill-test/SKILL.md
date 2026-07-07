@@ -98,6 +98,12 @@ Next action:
 
 This is required even when only one valid next lane remains.
 
+This closeout routing applies only at true final closeout or pause boundaries.
+Automatic read-only workflow phases must continue without being offered as
+selectable next actions. **FAIL** if a closeout or next-action menu offers
+internal phases such as Self-Check, registry scan, candidate discovery, readback,
+context gathering, or validation summary.
+
 **FAIL** if a required completion skill has a closeout but lacks this
 worklist-backed numeric routing language, or if it still permits the old
 plain-text single-action closeout shape.
@@ -201,10 +207,17 @@ For **Protocol Compliance** assertions (always present):
 - If the skill declares role-agent or director/lead gate delegation, check that
   it relies on the central delegation contract in `AGENTS.md`,
   `.codex/docs/coordination-rules.md`, and `.codex/docs/director-gates.md`
-  instead of requiring duplicate user consent before every declared spawn
+  instead of requiring preemptive or duplicate user consent before declared
+  role-agent spawns
+- Check that declared role-agent spawns run immediately after review-mode
+  filtering when the subagent tool is available: `full` runs declared gates,
+  `lean` skips non-PHASE-GATE reviews, and `solo` skips director gates
 - Check that skipped, blocked, or unavailable role-agent reviews are reported as
   missing delegation and are not replaced with internal simulated specialist or
   director verdicts
+- Check that automatic read-only phases continue without a final closeout prompt:
+  self-checks, scans, candidate discovery, readbacks, context gathering, and
+  validation summaries must not be offered as user-selected next actions.
 
 ### Step 4 — Build Report
 
@@ -229,7 +242,8 @@ Protocol Compliance:
   [PASS] Uses "May I write" before file writes
   [PASS] Presents findings before asking approval
   [WARN] No explicit next-step handoff at end
-  [PASS] Delegated role-agent reviews use central authorization and are not simulated
+  [PASS] Delegated role-agent reviews use central authorization without duplicate spawn-consent prompts and are not simulated
+  [PASS] Automatic read-only phases are not offered as closeout next-action options
 
 Overall Verdict: FAIL (1 case failed, 1 warning)
 ```

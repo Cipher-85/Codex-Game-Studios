@@ -675,12 +675,17 @@ fully resolved. Each question should have an owner and target resolution date.
 
 ## 5. Post-Design Validation
 
-After all sections are written:
+After all sections are written, continue automatically through every read-only
+validation phase. Do not offer Self-Check, readback, registry candidate scan,
+candidate discovery, context gathering, or validation summary as a selectable
+`Next action`. Stop only for a mutation prompt, a design decision, a blocker, or
+the final closeout after all automatic phases and write prompts are resolved.
 
 ### 5a: Self-Check
 
-Read back the complete GDD from file (not from conversation memory — the file is
-the source of truth). Verify:
+Automatically read back the complete GDD from file (not from conversation memory
+— the file is the source of truth). Do not ask whether to run this readback or
+self-check. Verify:
 - All 8 required sections have real content (not placeholders)
 - Formulas reference defined variables
 - Edge cases have resolutions
@@ -705,7 +710,10 @@ Handle verdict per the standard rules in `director-gates.md`. After resolution, 
 
 ### 5b: Update Entity Registry
 
-Scan the completed GDD for cross-system facts that should be registered:
+Automatically scan the completed GDD for cross-system facts that should be
+registered. This scan and candidate discovery are read-only continuation phases;
+do not ask whether to run them and do not present them as a next-action option.
+Scan for:
 - Named entities (enemies, NPCs, bosses) with stats or drops
 - Named items with values, weights, or categories
 - Named formulas with defined variables and output ranges
@@ -778,6 +786,10 @@ checkpoint. Do not ask a separate "May I write?" for this file.
 
 ### 5f: Suggest Next Steps
 
+Run this only after Phase 5's automatic read-only phases are complete and all
+registry, systems-index, and session-state write prompts have been resolved or
+declined.
+
 Read or silently refresh the `## Session Worklist` in
 `production/session-state/active.md`, then recommend the top valid next lane.
 Candidate lanes usually include:
@@ -788,10 +800,10 @@ Candidate lanes usually include:
 - `$gate-check` if enough MVP systems are designed.
 - `$handoff` when installed and session state should be preserved.
 
-If 2-3 lanes are genuinely viable, use `request_user_input` when available. If
-unavailable, use a concise numbered prompt with the same lanes and exactly one
-`(Recommended)` option. If one lane is clearly next, state it directly without an
-unnecessary prompt.
+Use a concise numbered prompt with the viable lanes and exactly one
+`(Recommended)` option. Use this final closeout prompt even when only one lane is
+clearly next; do not use a numeric `Next action:` prompt for internal read-only
+continuation phases.
 
 ---
 
@@ -903,6 +915,12 @@ Next action:
 If multiple lanes are viable, add more numbered options and keep exactly one
 `(Recommended)` option. The user can reply with `1`. Do not end with only a
 static command list.
+
+This final closeout contract applies only at true final closeout or pause
+boundaries. While Phase 5 still has automatic read-only self-checks, readbacks,
+registry candidate scans, candidate discovery, context gathering, or validation
+summaries remaining, continue the invoked workflow instead of offering those
+internal phases as selectable next actions.
 
 ## Ported metadata
 

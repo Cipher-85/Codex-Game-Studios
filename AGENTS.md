@@ -31,6 +31,10 @@ verification-first implementation.
   `production/session-state/active.md`, surface owed verification, and present
   the top valid lane as a numbered next-action prompt. Suggest `$handoff` only
   when the current state should be durable for a future session.
+- Do not close out or ask for a user-selected next action while an invoked
+  workflow still has automatic read-only phases remaining. Readbacks, scans,
+  self-checks, candidate discovery, context gathering, and validation summaries
+  continue until a mutation prompt, design decision, blocker, or true stop point.
 - Every discrete work-unit final response must close the loop: summarize
   completed work, state verification run or owed verification, and end with a
   numbered next-action prompt with exactly one `(Recommended)` option. Use this
@@ -114,19 +118,20 @@ See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 ## Role-Agent Delegation Authorization
 
 Explicit invocation of a CCGS skill whose workflow declares role-agent
-delegation authorizes only the role-agent spawns named by that workflow for that
-single run. The authorization covers spawning and receiving role-agent analysis;
-it does not authorize file writes, commits, pushes, branch changes, design
-decisions, game-feel or balance decisions, undeclared agents, or edits outside
-the invoked skill's normal approval flow.
+delegation is the user's request to spawn the role agents named by that workflow
+after review-mode filtering, for that single run only. Do not ask a duplicate
+confirmation before spawning those declared role agents. The authorization covers
+spawning and receiving role-agent analysis; it does not authorize file writes,
+commits, pushes, branch changes, design decisions, game-feel or balance
+decisions, undeclared agents, or edits outside the invoked skill's normal
+approval flow.
 
 Before spawning any director or lead gate, resolve the active review mode as
 declared by `.codex/docs/director-gates.md`. `solo` skips all director gates;
-`lean` skips non-PHASE-GATE director gates; `full` runs declared gates normally.
-If the current Codex runtime still requires literal delegation consent before
-the first spawn, ask once: "This skill declares [agents/gates]. May I spawn those
-role agents for this run?" If the user says no, do not simulate specialist or
-director verdicts; report the skipped delegation as a limitation.
+`lean` skips non-PHASE-GATE director gates; `full` runs declared gates
+immediately when the workflow reaches them. If the subagent tool is unavailable
+or a hard runtime gate prevents a declared spawn, report the missing delegation
+as skipped or blocked and do not simulate specialist or director verdicts.
 
 ## Low-Friction Decision Prompts
 

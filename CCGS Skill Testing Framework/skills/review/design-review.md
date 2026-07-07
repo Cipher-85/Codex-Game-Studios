@@ -7,8 +7,9 @@ the project's 8-section design standard (Overview, Player Fantasy, Detailed
 Rules, Formulas, Edge Cases, Dependencies, Tuning Knobs, Acceptance Criteria).
 It checks for internal consistency, implementability, and cross-system
 conflicts. It produces a verdict of APPROVED, NEEDS REVISION, or MAJOR
-REVISION NEEDED. It is a read-only skill (no file writes) and runs as a
-`context: fork` subagent.
+REVISION NEEDED. It is read-only through Phase 4; optional Phase 5 tracking
+writes to `design/gdd/systems-index.md` or
+`design/gdd/reviews/[doc-name]-review-log.md` require explicit approval.
 
 ---
 
@@ -19,7 +20,7 @@ Verified automatically by `$skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings or numbered steps
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Does NOT require "May I write" language (read-only skill — `allowed-tools` excludes Write/Edit)
+- [ ] Documents that Phase 4 is read-only and Phase 5 tracking writes require approval
 - [ ] Output format is documented (review template shown in skill body)
 
 ---
@@ -127,35 +128,66 @@ Verified automatically by `$skill-test static` — no fixture needed.
 
 ---
 
-### Case 5: Director Gate — no gate spawned regardless of review mode
+### Case 5: Specialist Depth — `--depth` controls specialist spawning, not review mode
 
 **Fixture:**
 - `design/gdd/light-manipulation.md` exists with all 8 sections
-- `production/session-state/review-mode.txt` exists with `full` (most permissive mode)
+- `production/review-mode.txt` exists with `full` (most permissive global mode)
 
-**Input:** `$design-review design/gdd/light-manipulation.md` (with full review mode active)
+**Input:** `$design-review design/gdd/light-manipulation.md --depth lean`
 
 **Expected behavior:**
 1. Skill reads the GDD document
-2. Skill does NOT read `review-mode.txt` — this skill has no director gates
-3. Skill produces the review output normally
-4. No director gate agents are spawned at any point
-5. Verdict is APPROVED (all 8 sections present in fixture)
+2. Skill parses `--depth lean`
+3. Skill skips Phase 3b specialist delegation because analysis depth is lean
+4. Skill produces the review output normally
+5. The full-mode notice, when shown in full mode, says `--depth lean` rather than the legacy review-mode flag
 
 **Assertions:**
-- [ ] Skill does NOT spawn any director gate agent (CD-, TD-, PR-, AD- prefixed agents)
-- [ ] Skill does NOT read `review-mode.txt` or equivalent mode file
-- [ ] The `--review` flag or `full` mode state has NO effect on whether directors spawn
-- [ ] Output does not contain any "Gate: [GATE-ID]" entries
-- [ ] Skill IS the review — it does not delegate the review to a director
+- [ ] `--depth lean` skips Phase 3b specialist delegation
+- [ ] The skill does NOT document or advertise the legacy review-mode flag for lean analysis depth
+- [ ] Global `production/review-mode.txt` does not override the `--depth` argument
+- [ ] The full-review notice points users to `--depth lean` for faster single-session analysis
+
+---
+
+### Case 6: Post-Revision and Tracking Writes — optional Phase 5 mutations are gated
+
+**Fixture:**
+- `design/gdd/light-manipulation.md` exists and receives NEEDS REVISION verdict
+- User selects "Revise the GDD now" and approves the generated revision edits
+- Revisions resolve all blockers
+- `design/gdd/systems-index.md` exists
+- `design/gdd/reviews/light-manipulation-review-log.md` may or may not exist
+
+**Input:** `$design-review design/gdd/light-manipulation.md`
+
+**Expected behavior:**
+1. Skill outputs Phase 4 review findings without writing files
+2. User selects "Revise the GDD now"
+3. Skill applies only user-approved GDD revisions
+4. Skill shows the post-revision closing widget: "Revisions complete — [N] blockers resolved. What next?"
+5. If the user chooses an approved path, skill reads design path rules before Phase 5 tracking writes
+6. Skill asks before updating `design/gdd/systems-index.md`
+7. Skill asks before appending `design/gdd/reviews/[doc-name]-review-log.md`
+8. Final next-action routing appears only after tracking prompts are resolved or declined
+
+**Assertions:**
+- [ ] Phase 4 remains read-only
+- [ ] Post-revision widget remains authoritative after blocker fixes
+- [ ] Before Phase 5 tracking writes, the skill reads `design-directory.md` and `design-docs.md`
+- [ ] Systems-index update is optional and permission-gated
+- [ ] Review-log append is optional and permission-gated
+- [ ] Final next-action routing is shown only after tracking prompts finish
 
 ---
 
 ## Protocol Compliance
 
-- [ ] Does NOT use Write or Edit tools (read-only skill)
+- [ ] Does NOT use Write or Edit tools through Phase 4
+- [ ] Optional Phase 5 tracking writes require explicit approval
 - [ ] Presents complete findings before any verdict
-- [ ] Does not ask for approval before producing output (no writes to approve)
+- [ ] Does not ask for approval before producing Phase 4 output (no writes to approve)
 - [ ] Ends with recommended next step (e.g., fix issues and re-run, or proceed to `$map-systems`)
 
 ---

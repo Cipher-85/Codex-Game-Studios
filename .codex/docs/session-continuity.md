@@ -28,7 +28,11 @@ branch, build, boot-smoke, mutating `gh`, or additional file changes.
 
 ## Pause Procedure
 
-Before pausing a meaningful work unit:
+Before pausing a meaningful work unit, check whether the invoked workflow still
+has automatic read-only phases remaining. Do not convert self-checks, readbacks,
+scans, candidate discovery, context gathering, or validation summaries into
+selectable `Next action` prompts. Keep going until a mutation prompt, design
+decision, blocker, or true stop point.
 
 1. Record what changed and what remains.
 2. Record verification that passed, failed, was blocked, or was not run.

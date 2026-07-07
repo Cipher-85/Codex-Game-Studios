@@ -68,7 +68,7 @@ Evaluate against the Design Document Standard checklist:
 **This phase is MANDATORY in full mode.** Do not skip it.
 
 **Before spawning any agents**, print this notice:
-> "Full review: spawning specialist agents in parallel. This typically takes 8–15 minutes. Use `--review lean` for faster single-session analysis."
+> "Full review: spawning specialist agents in parallel. This typically takes 8–15 minutes. Use `--depth lean` for faster single-session analysis."
 
 ### Step 1 — Identify all domains the GDD touches
 
@@ -178,11 +178,17 @@ Label clearly: "Rough scope signal: M (producer should verify before sprint plan
 ### Verdict: [APPROVED / NEEDS REVISION / MAJOR REVISION NEEDED]
 ```
 
-This skill is read-only — no files are written during Phase 4.
+This skill is read-only through Phase 4 — no files are written while producing
+the review findings and verdict.
 
 ---
 
 ## Phase 5: Next Steps
+
+Phase 5 may perform optional tracking writes only after explicit user approval.
+Before any Phase 5 write to `design/gdd/**`, read
+`.codex/instructions/path-rules/design-directory.md` and
+`.codex/instructions/path-rules/design-docs.md`.
 
 Use `numbered choice prompt` for ALL closing interactions. Never plain text.
 

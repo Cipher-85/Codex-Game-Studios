@@ -42,7 +42,9 @@ and orchestration skills. Subagents share the session's permission context, run
 sequentially or in parallel within the session, and return results to the parent.
 
 Explicit invocation of a CCGS skill authorizes only the subagent spawns declared
-by that skill's workflow for that run. This authorization is limited to
+by that skill's workflow for that run after review-mode filtering. The skill
+invocation is already the user's request for those declared spawns; do not ask a
+duplicate confirmation before spawning them. This authorization is limited to
 delegation; normal approval rules still govern file writes, commits, pushes,
 branch changes, design decisions, game-feel or balance decisions, and any agent
 not named by the workflow.
@@ -57,13 +59,10 @@ active review mode using `.codex/docs/director-gates.md`. `solo` skips all
 director gates, `lean` runs only PHASE-GATE director gates, and `full` runs
 declared gates normally.
 
-**Runtime fallback**: If the current Codex runtime requires literal user consent
-before the first subagent spawn, ask one confirmation before spawning:
-"This skill declares [agents/gates]. May I spawn those role agents for this
-run?" If the user declines or delegation is unavailable, do not invent,
-summarize, or simulate specialist/director verdicts. Report the missing
-delegation as skipped or blocked, then continue only where the workflow allows a
-partial result.
+**Runtime fallback**: If the subagent delegation tool is unavailable or a hard
+runtime gate prevents a declared spawn, do not invent, summarize, or simulate
+specialist/director verdicts. Report the missing delegation as skipped or
+blocked, then continue only where the workflow allows a partial result.
 
 ### Parallel Codex Sessions (manual escalation)
 Multiple independent Codex sessions can be coordinated manually through tracked

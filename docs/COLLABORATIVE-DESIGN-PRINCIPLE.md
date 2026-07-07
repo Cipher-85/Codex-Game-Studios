@@ -376,7 +376,7 @@ pattern:
 - Open-ended discovery questions ("What excites you about roguelikes?")
 - Single yes/no confirmations ("May I write to file?") - use `a. yes` /
   `b. no` instead when a shortcut helps.
-- When running as a Task subagent (tool may not be available)
+- When running through Codex subagent delegation (tool may not be available)
 
 ### Format Guidelines
 

@@ -249,7 +249,7 @@ Present the assessment. If REJECT, revise the system set with the user before GD
 After writing the approved systems index, silently create
 `production/session-state/active.md` if it does not exist, then update it as a
 derived checkpoint. Do not ask a separate "May I write?" for this file.
-- Codex subagent delegation: Systems decomposition
+- Current task: Systems decomposition
 - Status: Systems index created
 - File: design/gdd/systems-index.md
 - Next: Design individual system GDDs

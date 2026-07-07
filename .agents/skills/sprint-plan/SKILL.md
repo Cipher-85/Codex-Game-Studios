@@ -59,19 +59,19 @@ For `new`:
 ## Tasks
 
 ### Must Have (Critical Path)
-| ID | Codex subagent delegation | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
+| ID | Task | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
 |----|------|-------------|-----------|-------------|-------------------|
 
 ### Should Have
-| ID | Codex subagent delegation | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
+| ID | Task | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
 |----|------|-------------|-----------|-------------|-------------------|
 
 ### Nice to Have
-| ID | Codex subagent delegation | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
+| ID | Task | Agent/Owner | Est. Days | Dependencies | Acceptance Criteria |
 |----|------|-------------|-----------|-------------|-------------------|
 
 ## Carryover from Previous Sprint
-| Codex subagent delegation | Reason | New Estimate |
+| Task | Reason | New Estimate |
 |------|--------|-------------|
 
 ## Risks
@@ -116,19 +116,19 @@ For `status`:
 ## Progress: [X/Y tasks complete] ([Z%])
 
 ### Completed
-| Codex subagent delegation | Completed By | Notes |
+| Task | Completed By | Notes |
 |------|-------------|-------|
 
 ### In Progress
-| Codex subagent delegation | Owner | % Done | Blockers |
+| Task | Owner | % Done | Blockers |
 |------|-------|--------|----------|
 
 ### Not Started
-| Codex subagent delegation | Owner | At Risk? | Notes |
+| Task | Owner | At Risk? | Notes |
 |------|-------|----------|-------|
 
 ### Blocked
-| Codex subagent delegation | Blocker | Owner of Blocker | ETA |
+| Task | Blocker | Owner of Blocker | ETA |
 |------|---------|-----------------|-----|
 
 ## Burndown Assessment

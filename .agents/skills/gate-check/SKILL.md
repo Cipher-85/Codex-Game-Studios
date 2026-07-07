@@ -19,7 +19,7 @@ The project progresses through these stages:
 2. **Systems Design** — Mapping systems, writing GDDs
 3. **Technical Setup** — Engine config, architecture decisions
 4. **Pre-Production** — Prototyping, vertical slice validation
-5. **Production** — Feature development (Epic/Feature/Codex subagent delegation tracking active)
+5. **Production** — Feature development (Epic/Feature/Task tracking active)
 6. **Polish** — Performance, playtesting, bug fixing
 7. **Release** — Launch prep, certification
 

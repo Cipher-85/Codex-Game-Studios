@@ -128,7 +128,7 @@ Keep the output concise. The story status table is mandatory — do not truncate
 
 ### Progress: [complete/total] tasks ([%])
 
-| Story / Codex subagent delegation         | Priority   | Status      | Owner   | Blocker        |
+| Story / Task         | Priority   | Status      | Owner   | Blocker        |
 |----------------------|------------|-------------|---------|----------------|
 | [title]              | Must Have  | DONE        | [owner] |                |
 | [title]              | Must Have  | IN PROGRESS | [owner] |                |
@@ -136,7 +136,7 @@ Keep the output concise. The story status table is mandatory — do not truncate
 | [title]              | Should Have| NOT STARTED | [owner] |                |
 
 ### Attention Needed
-| Story / Codex subagent delegation         | Status      | Last Updated   | Days Stale | Note           |
+| Story / Task         | Status      | Last Updated   | Days Stale | Note           |
 |----------------------|-------------|----------------|------------|----------------|
 | [title]              | IN PROGRESS | [date or N/A]  | [N days]   | [STALE / no timestamp — cannot check staleness / inline task — cannot check staleness] |
 

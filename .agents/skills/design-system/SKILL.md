@@ -295,7 +295,7 @@ authorizes only this session-state checkpoint.
 - If it **already exists**: use the **Edit** tool to update the relevant fields.
 
 File content:
-- Codex subagent delegation: Designing [system-name] GDD
+- Current task: Designing [system-name] GDD
 - Current section: Starting (skeleton created)
 - File: design/gdd/[system-name].md
 
@@ -778,7 +778,7 @@ Ask: "May I update the systems index at `design/gdd/systems-index.md`?"
 
 Silently update `production/session-state/active.md` with the final derived
 checkpoint. Do not ask a separate "May I write?" for this file.
-- Codex subagent delegation: [system-name] GDD
+- Current task: [system-name] GDD
 - Status: Complete (or In Review if design-review was run)
 - File: design/gdd/[system-name].md
 - Sections: All 8 written

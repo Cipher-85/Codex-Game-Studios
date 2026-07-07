@@ -136,7 +136,7 @@ Generated: [Date]
 
 ### Estimation Accuracy
 
-| Codex subagent delegation | Estimated | Actual | Variance | Likely Cause |
+| Task | Estimated | Actual | Variance | Likely Cause |
 |------|-----------|--------|----------|--------------|
 | [Most overestimated task] | [X] | [Y] | [+Z] | [Why] |
 | [Most underestimated task] | [X] | [Y] | [-Z] | [Why] |
@@ -148,9 +148,9 @@ tasks? What adjustment should we apply?]
 
 ### Carryover Analysis
 
-| Codex subagent delegation | Original Sprint | Times Carried | Reason | Action |
+| Task | Original Sprint | Times Carried | Reason | Action |
 |------|----------------|---------------|--------|--------|
-| [Codex subagent delegation that was not completed] | [Sprint N-X] | [N] | [Why] | [Complete / Descope / Redesign] |
+| [Task that was not completed] | [Sprint N-X] | [N] | [Why] | [Complete / Descope / Redesign] |
 
 ### Technical Debt Status
 - Current TODO count: [N] (previous: [N])

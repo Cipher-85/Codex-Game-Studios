@@ -60,7 +60,7 @@ EXPECTED_TARGET_COUNTS = {
     "codex_skills_ported": 73,
     "codex_skills_new": 4,
     "codex_hooks_ported": 11,
-    "codex_hooks_new": 1,
+    "codex_hooks_new": 2,
     "nested_agents_md": 1,
     "codex_path_rules": 15,
     "codex_docs_non_templates": 4,

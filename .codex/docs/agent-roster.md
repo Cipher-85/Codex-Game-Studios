@@ -8,6 +8,11 @@ domain lead) should delegate to specialists.
 Model labels below are upstream Claude tier labels retained for parity. The
 active Codex model and reasoning mapping is defined in `.codex/agents/*.toml`.
 
+Some upstream roles declared `disallowedTools: Bash`. Codex custom-agent TOML
+does not support that field, so those roles carry an explicit instruction-level
+boundary instead: they must not run shell commands and should ask the parent
+session for command evidence.
+
 ## Tier 1 -- Leadership Agents (Upstream Opus Tier)
 | Agent | Domain | When to Use |
 |-------|--------|-------------|

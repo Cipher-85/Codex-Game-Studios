@@ -807,6 +807,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-secrets.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/hooks/validate-skill-change.sh"
   },
   {

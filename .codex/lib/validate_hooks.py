@@ -109,6 +109,9 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
         "pre-tool-use-bash-push-main.json",
         "pre-tool-use-bash-push-master.json",
         "pre-tool-use-bash-commit.json",
+        "pre-tool-use-bash-env-safe.json",
+        "pre-tool-use-bash-env-read.json",
+        "pre-tool-use-bash-env-redirection.json",
         "post-tool-use-apply-patch-assets-naming.json",
         "post-tool-use-apply-patch-assets-invalid-json.json",
         "post-tool-use-apply-patch-skill.json",
@@ -142,6 +145,26 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
         git_init(tmp_root)
         result = run_hook(root, tmp_root, "validate-push.sh", load_payload(fixtures, "pre-tool-use-bash-unrelated-push-text.json"))
         assert_result(errors, "validate-push unrelated text", result, 0, stderr_absent="Push to protected branch")
+
+    with make_temp_project() as tmp:
+        tmp_root = Path(tmp)
+        result = run_hook(root, tmp_root, "validate-secrets.sh", load_payload(fixtures, "pre-tool-use-bash-env-safe.json"))
+        assert_result(errors, "validate-secrets safe env command", result, 0, stderr_absent="BLOCKED:")
+
+    for fixture_name, label in (
+        ("pre-tool-use-bash-env-read.json", "validate-secrets env read"),
+        ("pre-tool-use-bash-env-redirection.json", "validate-secrets env redirection"),
+    ):
+        with make_temp_project() as tmp:
+            tmp_root = Path(tmp)
+            result = run_hook(root, tmp_root, "validate-secrets.sh", load_payload(fixtures, fixture_name))
+            assert_result(
+                errors,
+                label,
+                result,
+                2,
+                stderr_contains="BLOCKED: Bash command attempts to read or write .env secret files",
+            )
 
     for branch in ("develop", "main", "master"):
         with make_temp_project() as tmp:

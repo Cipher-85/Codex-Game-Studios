@@ -3,7 +3,7 @@ name: estimate
 description: "Estimates task effort by analyzing complexity, dependencies, historical velocity, and risk factors. Produces a structured estimate with confidence levels for Codex Game Studios."
 ---
 
-## Phase 1: Understand the Codex subagent delegation
+## Phase 1: Understand the Task
 
 Read the task description from the argument. If the description is too vague to estimate meaningfully, ask for clarification before proceeding.
 
@@ -50,10 +50,10 @@ Identify files and modules that would need to change:
 ## Phase 4: Generate the Estimate
 
 ```markdown
-## Codex subagent delegation Estimate: [Codex subagent delegation Name]
+## Task Estimate: [Task Name]
 Generated: [Date]
 
-### Codex subagent delegation Description
+### Task Description
 [Restate the task clearly in 1-2 sentences]
 
 ### Complexity Assessment

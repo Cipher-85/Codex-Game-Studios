@@ -798,6 +798,13 @@
     "source": "Codex conversion plan"
   },
   {
+    "category": "codex_hooks_new",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-secrets.sh",
+    "rationale": "Codex PreToolUse guard restoring upstream .env secret-file denial for shell reads, writes, and redirections.",
+    "source": "Codex parity remediation"
+  },
+  {
     "category": "codex_hooks_ported",
     "owner": "codex-game-studios",
     "path": ".codex/hooks/detect-gaps.sh",

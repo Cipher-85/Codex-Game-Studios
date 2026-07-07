@@ -398,7 +398,7 @@ After writing the approved skeleton, silently update
 `production/session-state/active.md` as a derived checkpoint. Do not ask a
 separate "May I write?" for this file; the user's approval of the skeleton
 authorizes only this session-state checkpoint.
-- Codex subagent delegation: Designing [screen/flow name] UX spec
+- Current task: Designing [screen/flow name] UX spec
 - Current section: Starting (skeleton created)
 - File: design/ux/[filename].md
 
@@ -886,7 +886,7 @@ When all sections are approved and written:
 
 Silently update `production/session-state/active.md` with the final derived
 checkpoint. Do not ask a separate "May I write?" for this file.
-- Codex subagent delegation: [screen-name] UX spec
+- Current task: [screen-name] UX spec
 - Status: Complete (or In Review)
 - File: design/ux/[filename].md
 - Sections: All written

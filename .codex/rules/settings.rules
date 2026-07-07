@@ -74,10 +74,10 @@ prefix_rule(
     match = ["cat ~/.ssh"],
 )
 
-# Prefix rules can cover direct tokenized .env reads, including the literal
-# shell glob token users type before expansion. Upstream .env redirection or
-# write patterns are outside this syntax and must stay handled by prompts,
-# hooks, or manual review rather than unsupported redirection rules.
+# Prefix rules cover direct tokenized .env reads, including the literal shell
+# glob token users type before expansion. Redirection and broader .env
+# read/write patterns are enforced by the PreToolUse Bash hook
+# `.codex/hooks/validate-secrets.sh`.
 prefix_rule(
     pattern = ["cat", ".env"],
     decision = "forbidden",

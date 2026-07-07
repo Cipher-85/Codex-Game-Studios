@@ -36,3 +36,6 @@ Validator policy:
 - Generated skills must not retain raw structured-choice tool names, raw Claude task-delegation syntax, unsupported frontmatter, or bare custom slash commands.
 - Generated agents must not use unsupported top-level fields such as `tools`, `disallowedTools`, `maxTurns`, `memory`, `skills`, or `isolation`.
 - Hooks must not include a `Notification` event.
+- The Bash PreToolUse secret guard must block `.env` reads, writes, and
+  redirections through `tool_input.command`; prefix rules only cover direct
+  tokenized examples.

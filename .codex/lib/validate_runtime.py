@@ -172,6 +172,38 @@ REQUIRED_CLOSEOUT_ROUTING_SKILLS = {
     "ux-design",
 }
 
+UPSTREAM_NO_BASH_AGENTS = {
+    "art-director",
+    "audio-director",
+    "community-manager",
+    "creative-director",
+    "economy-designer",
+    "game-designer",
+    "level-designer",
+    "live-ops-designer",
+    "narrative-director",
+    "sound-designer",
+    "systems-designer",
+    "ue-blueprint-specialist",
+    "ux-designer",
+    "world-builder",
+    "writer",
+}
+
+NO_BASH_INSTRUCTION_PHRASE = (
+    "Upstream role disallowed Bash; do not run shell commands in this role. "
+    "Ask the parent session for command evidence instead."
+)
+
+TASK_LABEL_CORRUPTION_PATTERNS = (
+    (re.compile(r"Phase 1: Understand the Codex subagent delegation"), "task heading"),
+    (re.compile(r"Codex subagent delegation Estimate:"), "task estimate heading"),
+    (re.compile(r"Codex subagent delegation Description"), "task description heading"),
+    (re.compile(r"Feature/Codex subagent delegation tracking"), "production-stage task tracking label"),
+    (re.compile(r"^\s*[-|]\s*(?:Story / )?Codex subagent delegation\b", re.MULTILINE), "task table label"),
+    (re.compile(r"^\s*-\s+Codex subagent delegation:\s+(?:Designing|\[|Systems decomposition)", re.MULTILINE), "session-state task label"),
+)
+
 CLOSEOUT_MARKERS = (
     "Verdict: **COMPLETE**",
     "Verdict: COMPLETE",
@@ -347,6 +379,18 @@ def validate_internal_readonly_closeout_options(rel: Path, text: str) -> list[st
     return errors
 
 
+def validate_task_label_corruption(rel: Path, text: str) -> list[str]:
+    errors: list[str] = []
+    for pattern, label in TASK_LABEL_CORRUPTION_PATTERNS:
+        for match in pattern.finditer(text):
+            line_number = text.count("\n", 0, match.start()) + 1
+            errors.append(
+                f"{rel}:{line_number}: mechanical task-label corruption remains ({label}); "
+                "use Task, Task Estimate, Story / Task, or Current task wording outside real delegation instructions"
+            )
+    return errors
+
+
 def validate_instruction_budgets(root: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -461,6 +505,7 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
             errors.append(f"{rel}: runtime Claude path reference remains")
         errors.extend(validate_duplicate_delegation_consent_text(rel, text))
         errors.extend(validate_internal_readonly_closeout_options(rel, text))
+        errors.extend(validate_task_label_corruption(rel, text))
         if skill_names:
             slash_pattern = r"(?m)(^|\\s)/(" + "|".join(re.escape(name) for name in sorted(skill_names, key=len, reverse=True)) + r")\\b"
             if re.search(slash_pattern, text):
@@ -557,6 +602,10 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
             if memory_path not in instructions:
                 errors.append(f"{rel}: memory-scoped agent does not reference {memory_path}")
             memory_bound_agents.add(agent_file.stem)
+        if agent_file.stem in UPSTREAM_NO_BASH_AGENTS and NO_BASH_INSTRUCTION_PHRASE not in instructions:
+            errors.append(
+                f"{rel}: upstream disallowed Bash but Codex instructions lack the required no-Bash role boundary"
+            )
         if "~/.codex/memories" in instructions:
             errors.append(f"{rel}: generated agent must not write global Codex memories")
 

@@ -8,6 +8,7 @@ fields.
 
 | Hook | Event | Trigger | Action |
 | ---- | ----- | ------- | ------ |
+| `validate-secrets.sh` | PreToolUse (Bash) | Bash commands | Blocks `.env` secret-file reads, writes, and redirections from `tool_input.command` |
 | `validate-commit.sh` | PreToolUse (Bash) | `git commit` commands | Validates design doc sections, JSON data files, hardcoded values, TODO format |
 | `validate-push.sh` | PreToolUse (Bash) | `git push` commands | Warns on pushes to protected branches (`develop`, `main`, `master`) |
 | `validate-assets.sh` | PostToolUse (`apply_patch`) | Asset file changes | Checks naming conventions and JSON validity for files in `assets/`; feedback is after the edit and does not roll back side effects |

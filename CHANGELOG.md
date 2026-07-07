@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Nothing yet.
+
+## v0.4.3 - 2026-07-08
+
 - Tightened the role-agent delegation contract so invoking a CCGS skill is the
   authorization for its declared role-agent spawns after review-mode filtering;
   duplicate spawn-consent prompts are no longer part of normal skill flow.
@@ -14,6 +18,13 @@
   continue without being offered as user-selected `Next action` prompts, while
   registry, index, review-log, durable artifact, commit, push, and branch
   mutations remain explicitly permission-gated.
+- Restored upstream no-Bash role boundaries as explicit Codex instructions for
+  the 15 affected agents, with runtime validation preventing regressions.
+- Added a Bash PreToolUse `.env` secret guard that blocks reads, writes, and
+  redirections from `tool_input.command`, plus fixtures, docs, and manifest
+  coverage.
+- Corrected mechanically corrupted task-tracking skill wording while preserving
+  genuine Codex role-agent delegation instructions.
 
 ## v0.4.2 - 2026-07-07
 

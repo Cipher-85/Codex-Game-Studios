@@ -255,6 +255,46 @@ PLAYTEST_FOCUS_CONTRACT = {
     ),
 }
 
+BUG_LIFECYCLE_REQUIRED_PHRASES = {
+    ".agents/skills/bug-report/SKILL.md": (
+        "treat verification, closure, stale triage",
+        "one deterministic bug lifecycle operation",
+        "Do not stop after VERIFIED FIXED to offer `$bug-report close [BUG-ID]` as the",
+        "refresh stale triage metadata under the same approval",
+        "zero-open-bugs refresh",
+        "derived checkpoint",
+        'Do not ask a separate "May I write?" for `production/session-state/active.md`',
+        "Do not bundle and stop for user decision if triage would require assigning",
+    ),
+    ".agents/skills/bug-triage/SKILL.md": (
+        "zero-open-bugs closure refresh",
+        "Treat it as metadata cleanup",
+        "non-blocking follow-up",
+        "Exception for bundled bug lifecycle cleanup",
+        "deterministic metadata cleanup",
+        "It must be explicitly marked non-blocking if it cannot be completed safely",
+        "Do not bundle if the triage work would require assigning priorities",
+    ),
+}
+
+BUG_LIFECYCLE_FORBIDDEN_PHRASES = (
+    (
+        ".agents/skills/bug-report/SKILL.md",
+        'Bug [ID] is referenced in the triage report. Run `$bug-triage` to refresh the open bug count.',
+        "bug close still defers deterministic triage refresh to a separate prompt",
+    ),
+    (
+        ".agents/skills/bug-report/SKILL.md",
+        "Run `$bug-report close [BUG-ID]` — write the closure record and update status",
+        "verified-fixed still forces a separate close step",
+    ),
+    (
+        ".agents/skills/bug-report/SKILL.md",
+        "Run `$bug-triage` to refresh the open bug count and remove it from the active list",
+        "verified-fixed still forces a separate triage cleanup step",
+    ),
+)
+
 INTERNAL_READONLY_CLOSEOUT_PATTERNS = (
     (re.compile(r"\bself[- ]check\b", re.IGNORECASE), "Self-Check"),
     (re.compile(r"\bregistry (?:candidate )?scan\b", re.IGNORECASE), "registry scan"),
@@ -472,6 +512,33 @@ def validate_playtest_focus_contract(root: Path) -> list[str]:
     return errors
 
 
+def contains_phrase(text: str, phrase: str) -> bool:
+    normalized_text = re.sub(r"\s+", " ", text)
+    normalized_phrase = re.sub(r"\s+", " ", phrase)
+    return normalized_phrase in normalized_text
+
+
+def validate_bug_lifecycle_contract(root: Path) -> list[str]:
+    errors: list[str] = []
+    for rel, required_phrases in BUG_LIFECYCLE_REQUIRED_PHRASES.items():
+        path = root / rel
+        if not path.exists():
+            errors.append(f"{rel}: missing bug lifecycle contract surface")
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+        if missing:
+            errors.append(f"{rel}: missing bug lifecycle contract phrase(s): {', '.join(missing)}")
+
+    for rel, phrase, message in BUG_LIFECYCLE_FORBIDDEN_PHRASES:
+        path = root / rel
+        if not path.exists():
+            continue
+        if phrase in path.read_text(encoding="utf-8"):
+            errors.append(f"{rel}: {message}")
+    return errors
+
+
 def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = False) -> list[str]:
     if exempt or ACTIVE_STATE_PATH not in text:
         return []
@@ -525,6 +592,7 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
     unexpected = sorted(skill_names - REQUIRED_CORE_SKILLS - ALLOWED_PROJECT_LOCAL_SKILLS)
     if unexpected:
         errors.append(f".agents/skills: unexpected project-local skills: {', '.join(unexpected)}")
+    errors.extend(validate_bug_lifecycle_contract(root))
 
     for skill_file in skill_files:
         rel = skill_file.relative_to(root)

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.4.5 - 2026-07-09
+
+- Updated `$bug-report verify` so a VERIFIED FIXED result can complete
+  verification evidence, closure, safe stale triage cleanup, and derived
+  session-state routing under one approved changeset.
+- Updated `$bug-report close` so already verified bugs can close and refresh
+  stale triage metadata without handing the user a separate bookkeeping prompt.
+- Clarified `$bug-triage` zero-open-bugs closure refreshes as deterministic
+  metadata cleanup when they do not require priority, sprint-scope, severity, or
+  Won't Fix decisions.
+- Added runtime validation to keep the bug lifecycle contract from regressing
+  back into forced verify -> close -> triage handoffs.
+
 ## Unreleased
 
 - Nothing yet.

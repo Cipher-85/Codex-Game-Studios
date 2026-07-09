@@ -227,6 +227,34 @@ CLOSEOUT_FORBIDDEN_PHRASES = (
     "numbered choice set",
 )
 
+PLAYTEST_FOCUS_CONTRACT = {
+    "AGENTS.md": (
+        "user-owned playtest",
+        "Playtest focus:",
+        "hypothesis",
+        "setup/build",
+        "2-4 observation",
+        "verdict/evidence",
+    ),
+    ".codex/docs/session-continuity.md": (
+        "user-owned playtest",
+        "Playtest focus:",
+        "hypothesis",
+        "setup/build",
+        "2-4 observation",
+        "verdict/evidence",
+        "Session Worklist",
+    ),
+    ".agents/skills/playtest-report/SKILL.md": (
+        "user-owned playtest",
+        "Playtest focus:",
+        "hypothesis",
+        "setup/build",
+        "2-4 observation",
+        "verdict/evidence",
+    ),
+}
+
 INTERNAL_READONLY_CLOSEOUT_PATTERNS = (
     (re.compile(r"\bself[- ]check\b", re.IGNORECASE), "Self-Check"),
     (re.compile(r"\bregistry (?:candidate )?scan\b", re.IGNORECASE), "registry scan"),
@@ -428,6 +456,20 @@ def validate_instruction_budgets(root: Path) -> tuple[list[str], list[str]]:
                 f"path-rule chain {rel}: {size} bytes exceeds {INSTRUCTION_CHAIN_MAX_BYTES} byte budget ({labels})"
             )
     return errors, warnings
+
+
+def validate_playtest_focus_contract(root: Path) -> list[str]:
+    errors: list[str] = []
+    for rel, required_phrases in PLAYTEST_FOCUS_CONTRACT.items():
+        path = root / rel
+        if not path.exists():
+            errors.append(f"{rel}: missing playtest focus contract surface")
+            continue
+        text = path.read_text(encoding="utf-8").lower()
+        missing = [phrase for phrase in required_phrases if phrase.lower() not in text]
+        if missing:
+            errors.append(f"{rel}: missing playtest focus contract phrase(s): {', '.join(missing)}")
+    return errors
 
 
 def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = False) -> list[str]:
@@ -639,6 +681,7 @@ def main() -> int:
         budget_errors, budget_warnings = validate_instruction_budgets(root)
         errors.extend(budget_errors)
         warnings.extend(budget_warnings)
+        errors.extend(validate_playtest_focus_contract(root))
     if args.kind == "skills":
         errors.extend(validate_skills(root, args.require_present))
     if args.kind == "agents":

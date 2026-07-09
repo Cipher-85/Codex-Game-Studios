@@ -4,6 +4,19 @@
 
 - Nothing yet.
 
+## v0.4.4 - 2026-07-09
+
+- Added a user-owned playtest focus contract so closeouts and owed verification
+  must include a `Playtest focus:` brief instead of generic playtest requests.
+- Updated session continuity guidance to preserve the playtest hypothesis,
+  setup/build, observation prompts, and requested verdict/evidence in
+  `## Session Worklist` entries.
+- Updated `$playtest-report` templates and routing so new reports and follow-up
+  playtests carry a concrete hypothesis while leaving game-feel and balance
+  verdicts with the user.
+- Added runtime validation to keep the playtest-focus rule present in root
+  instructions, continuity docs, and the playtest-report workflow.
+
 ## v0.4.3 - 2026-07-08
 
 - Tightened the role-agent delegation contract so invoking a CCGS skill is the

@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.4.2`.
+Current package version: `0.4.4`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,8 +29,16 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.4.2`. It includes:
+The current release line is `v0.4.4`. It includes:
 
+- User-owned playtest focus routing: when owed verification or the next action
+  is a manual playtest, closeouts include a `Playtest focus:` brief with the
+  hypothesis, setup/build, observation prompts, and verdict/evidence to return.
+- `$playtest-report` templates and follow-up routing now require concrete
+  hypotheses before sending the user back to play, while preserving the user's
+  ownership of game-feel and balance verdicts.
+- Runtime validation keeps the playtest-focus contract present in root
+  instructions, session-continuity docs, and the playtest-report workflow.
 - Active session-state checkpoint updates: after the user approves the
   underlying workflow artifact or decision, skills may update only
   `production/session-state/active.md` without asking a second "May I write?"

@@ -2,6 +2,9 @@
 
 77 core skills organized by phase. Invoke them from Codex with the `$skill-name` form when available.
 
+Projects may also provide optional local extensions. They are not part of the
+77 shipped skills and remain owned by the game project rather than CCGS.
+
 ## Onboarding & Navigation
 
 | Command | Purpose |
@@ -34,6 +37,17 @@
 | `$art-bible` | Guided, section-by-section Art Bible authoring — creates visual identity spec before asset production begins |
 | `$asset-spec` | Generate per-asset visual specifications and AI generation prompts from GDDs, level docs, or character profiles |
 | `$asset-audit` | Audit assets for naming conventions, file size budgets, and pipeline compliance |
+
+Optional project-local extension:
+
+| Command | Purpose |
+|---------|---------|
+| `$gen-asset` | Generate profiled raster candidates with built-in image generation, stage them under `tmp/gen-asset/**`, and wait for one contact-sheet approval before placement |
+
+CCGS validates a present `.agents/skills/gen-asset/` core and its profiles but
+does not ship, install, uninstall, or count it among the 77 core skills. ACTIVE
+profiles must define the full generation/placement schema; minimal STUB
+profiles are valid and refuse generation.
 
 ## UX & Interface Design
 

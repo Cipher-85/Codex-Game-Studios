@@ -79,6 +79,37 @@ def changelog_has_version(root: Path, version: str) -> bool:
     return re.search(rf"^## v{re.escape(version)}(?:\s+-\s+\d{{4}}-\d{{2}}-\d{{2}})?\s*$", text, re.MULTILINE) is not None
 
 
+def validate_readme_versions(root: Path, version: str) -> list[str]:
+    errors: list[str] = []
+    surfaces = {
+        "README.md": (
+            ("Current package version", r"Current package version:\s*`v?([^`]+)`"),
+            ("current release line", r"current release line is\s*`v?([^`]+)`"),
+        ),
+        ".codex/README.md": (
+            ("package status version", r"The package version is\s*`v?([^`]+)`"),
+        ),
+    }
+    for rel, checks in surfaces.items():
+        path = root / rel
+        try:
+            text = path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            errors.append(f"{rel}: missing README version summary surface")
+            continue
+        for label, pattern in checks:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if not match:
+                errors.append(f"{rel}: missing {label} summary")
+                continue
+            reported = match.group(1)
+            if reported != version:
+                errors.append(
+                    f"{rel}: {label} reports {reported}, expected package version {version}"
+                )
+    return errors
+
+
 def tag_commit(root: Path, tag: str) -> str | None:
     result = run_git(root, "rev-list", "-n", "1", tag)
     if result.returncode != 0:
@@ -144,6 +175,7 @@ def validate_release(root: Path) -> tuple[list[str], list[str]]:
 
     if not changelog_has_version(root, version):
         errors.append(f"CHANGELOG.md is missing a section for v{version}")
+    errors.extend(validate_readme_versions(root, version))
 
     tags = codex_release_tags(root)
     if not tags:

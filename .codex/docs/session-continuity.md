@@ -82,6 +82,23 @@ On resume:
 4. Verify drift-prone claims cheaply before acting on them.
 5. Continue from the saved `## Session Worklist` unless there is a real
    inconsistency.
+6. Stop at lane selection. A focus argument changes ranking but does not select
+   work. For multiple viable lanes, use `request_user_input` when available and
+   put the recommendation first. For one valid lane, show the numeric
+   `Next action:` fallback and wait for `1`. Never start an unselected lane.
+7. Treat FIRST verification as mandatory across every lane, and treat each
+   follow-up workflow fork as a new structured decision. Resume selection
+   authorizes entering the selected workflow only; it grants no additional
+   mutation authority.
+
+## Optional Asset-Generation Continuity
+
+When a project provides `$gen-asset`, explicit invocation authorizes built-in
+generation and scratch writes only under `tmp/gen-asset/**`. Preserve one
+contact-sheet gate containing candidate verdicts, exact final paths, overwrite
+warnings, and the adapter command. Approval authorizes only those listed final
+paths and that adapter command; dependency installation, unrelated writes, and
+placement before approval remain outside the invocation.
 
 ## Context Thresholds
 

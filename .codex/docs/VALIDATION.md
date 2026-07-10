@@ -33,6 +33,17 @@ Validator policy:
   commits against the actual previous release tag ref, not mutable GitHub
   Release branch metadata.
 - Runtime files must not depend on Claude-owned paths.
+- `$resume-from-handoff` validation enforces the lane-selection pause, FIRST
+  verification, structured follow-up forks, dynamic slice pointer, stage/catalog
+  guards, and one-file session-cache boundary.
+- If an optional project-local `$gen-asset` skill exists, validation rejects
+  nested Codex CLI generation, legacy runtime paths, API/CLI fallbacks, and
+  unbounded newest-image discovery. ACTIVE profiles require the full semantic
+  schema; minimal STUB profiles remain valid refusal markers.
+- Coexistence validation requires `.agents/skills/gen-asset/**` to stay
+  trackable while remaining absent from package ownership.
+- Release validation requires the root and `.codex` README version summaries
+  to match `.codex/VERSION`.
 - Generated skills must not retain raw structured-choice tool names, raw Claude task-delegation syntax, unsupported frontmatter, or bare custom slash commands.
 - Generated agents must not use unsupported top-level fields such as `tools`, `disallowedTools`, `maxTurns`, `memory`, `skills`, or `isolation`.
 - Hooks must not include a `Notification` event.

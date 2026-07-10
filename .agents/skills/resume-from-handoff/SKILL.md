@@ -63,7 +63,7 @@ Read these in order. The handoff is the source of truth.
 
 If the user passed a focus area, bias the worklist toward it, but still surface
 the handoff's own recommended Next Action and the vertical-slice forcing
-function.
+function. A focus argument biases ranking; it does not select a lane.
 
 ## Step 2: Apply The Vertical-Slice Forcing Function
 
@@ -162,6 +162,11 @@ Reporting integrity: this skill runs no measurements by default, so it has no
 verified numbers of its own unless you actually produced them in this turn.
 Report handoff figures as claims, not as facts you observed.
 
+FIRST verification cannot be waived by choosing another lane. Run any required
+read-only FIRST check before selection when project instructions authorize it.
+Otherwise put that check at the front of every affected lane and do not enter
+the selected workflow until the check clears or is reported blocked.
+
 ## Step 6: Write The Session Cache
 
 Write `production/session-state/active.md` with the current session routing
@@ -245,11 +250,27 @@ Before you start - check / honor first:
 - <owed verification or gate>
 ```
 
-If one lane is clearly valid, state it as the recommended next action and give
-the exact starting command. If multiple lanes are genuinely viable, use a
-compact numbered prompt with exactly one `(Recommended)` item, or
-`request_user_input` when available. Do not end with an unstructured "what do you
-want to do?" line.
+The briefing ends at a selection boundary. Never start an unselected lane.
+
+- If multiple lanes are genuinely viable, use `request_user_input` when
+  available, with the recommendation as the first option. Keep the choices
+  compact, preserve exactly one recommendation, and wait for the user's
+  selection. If structured input is unavailable, use the same ordered lanes in
+  a numbered prompt and wait for the numeric reply.
+- If exactly one lane is valid, present the numeric fallback:
+  `Next action:` then `1. (Recommended) [action label] - [reason / command]`.
+  Even for this single option, wait for the user to reply `1`; do not start it
+  automatically.
+
+Resume selection authorizes entering only the selected workflow. It does not
+authorize that workflow's writes, builds, boot smoke, mutating `gh`, commits,
+pushes, branch changes, design decisions, game-feel decisions, balance
+decisions, or any other mutation beyond approvals already declared by that
+workflow. A Follow-up fork inside the selected workflow is a new decision:
+use `request_user_input` when available, otherwise use a compact numbered or
+lettered prompt, and wait again.
+
+Do not end with an unstructured "what do you want to do?" line.
 
 Do not point the user back to `$resume-from-handoff` after work completes. Later
 closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
@@ -263,8 +284,11 @@ closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
   invoked `$resume-from-handoff`.
 - Use `request_user_input`, not a free-text prompt, for true multi-lane choices
   when the tool is available.
-- Never jump to work the user did not select unless there is one obvious next
-  step and the invoked workflow already authorizes it.
+- Never start an unselected lane. A single obvious lane still waits for the
+  user's numeric `1` selection.
+- Treat later workflow forks as new structured decisions; the resume choice
+  does not pre-answer them.
+- FIRST verification remains mandatory regardless of lane choice.
 - Make one primary recommendation. The user should leave knowing the top thing
   to do, with the rest as a ranked menu.
 - The vertical-slice forcing function overrides doc-track drift.
@@ -273,6 +297,7 @@ closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
 ## What This Skill Does Not Do
 
 - Does not write anything except `production/session-state/active.md`.
+- Does not start follow-on work before the user selects a lane.
 - Does not commit or push; that is `$handoff`.
 - Does not perform a full artifact gap audit; that is `$project-stage-detect`.
 - Does not replace reading the handoff; it operationalizes the canonical handoff

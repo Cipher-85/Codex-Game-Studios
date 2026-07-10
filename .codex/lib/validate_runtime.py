@@ -429,6 +429,50 @@ ACTIVE_STATE_NAMED_EXCEPTIONS = {
     "resume-from-handoff",
 }
 
+RESUME_SKILL_PATH = Path(".agents/skills/resume-from-handoff/SKILL.md")
+RESUME_REQUIRED_PHRASES = (
+    "A focus argument biases ranking; it does not select a lane.",
+    "Never start an unselected lane.",
+    "recommendation as the first option",
+    "wait for the user to reply `1`",
+    "Resume selection authorizes entering only the selected workflow",
+    "FIRST verification cannot be waived by choosing another lane",
+    "Follow-up fork",
+    "request_user_input",
+    "Playable/Slice State Source",
+    "production/stage.txt",
+    ".codex/docs/workflow-catalog.yaml",
+    "production/session-state/active.md",
+)
+
+GEN_ASSET_SKILL_PATH = Path(".agents/skills/gen-asset/SKILL.md")
+GEN_ASSET_REQUIRED_PHRASES = (
+    "Invoke the built-in `image_gen` tool directly",
+    "If built-in image generation is unavailable, stop and report it",
+    "returned output path",
+    "created after the call began",
+    "tmp/gen-asset",
+    "at most 2 retries",
+    "contact sheet",
+    "exact final paths",
+    "overwrite warnings",
+    "adapter command",
+    "Only contact-sheet approval authorizes",
+    "regenerate only rejected candidates",
+)
+
+GEN_ASSET_ACTIVE_PROFILE_FIELDS = {
+    "Taxonomy": ("taxonomy",),
+    "Placement adapter": ("placement adapter",),
+    "target_dir": ("target_dir", "target dir"),
+    "Prompt boilerplate": ("prompt boilerplate", "boilerplate"),
+    "Style/palette rules": ("style/palette", "palette"),
+    "Background + chroma recipe": ("background + chroma", "background:", "chroma"),
+    "Acceptance criteria": ("acceptance criteria",),
+    "Corrective re-prompt": ("corrective re-prompt",),
+    "Naming": ("naming",),
+}
+
 STARTUP_AGENT_ROSTER_HEADING = "## Available Codex Role Agents"
 AGENTS_MD_TARGET_BYTES = 16 * 1024
 AGENTS_MD_MAX_BYTES = 20 * 1024
@@ -668,6 +712,107 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
     return errors
 
 
+def validate_resume_contract(root: Path) -> list[str]:
+    path = root / RESUME_SKILL_PATH
+    if not path.exists():
+        return [f"{RESUME_SKILL_PATH}: missing resume selection contract surface"]
+
+    text = path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    missing = [phrase for phrase in RESUME_REQUIRED_PHRASES if not contains_phrase(text, phrase)]
+    if missing:
+        errors.append(
+            f"{RESUME_SKILL_PATH}: missing resume selection contract phrase(s): "
+            + ", ".join(missing)
+        )
+
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        lower = line.lower()
+        starts_lane = re.search(r"\b(?:start|begin|enter)\b", lower)
+        bypasses_selection = any(
+            phrase in lower
+            for phrase in ("automatically", "immediately", "without waiting", "without selection")
+        )
+        explicitly_forbidden = any(
+            phrase in lower for phrase in ("do not", "don't", "never", "must not", "cannot")
+        )
+        if starts_lane and bypasses_selection and not explicitly_forbidden:
+            errors.append(
+                f"{RESUME_SKILL_PATH}:{line_number}: automatic lane startup is forbidden; "
+                "pause for the required selection boundary"
+            )
+    return errors
+
+
+def validate_gen_asset_profile(profile_path: Path) -> list[str]:
+    if not profile_path.exists():
+        return [f"{profile_path}: missing gen-asset profile"]
+
+    text = profile_path.read_text(encoding="utf-8")
+    status_match = re.search(r"(?i)\*\*Status:\*\*\s*(ACTIVE|STUB)\b", text)
+    if not status_match:
+        return [f"{profile_path}: missing Status: ACTIVE or Status: STUB"]
+    if status_match.group(1).upper() == "STUB":
+        return []
+
+    lower = text.lower()
+    missing = [
+        label
+        for label, alternatives in GEN_ASSET_ACTIVE_PROFILE_FIELDS.items()
+        if not any(alternative.lower() in lower for alternative in alternatives)
+    ]
+    if not missing:
+        return []
+    return [f"{profile_path}: ACTIVE profile missing semantic field(s): {', '.join(missing)}"]
+
+
+def validate_gen_asset_contract(root: Path) -> list[str]:
+    path = root / GEN_ASSET_SKILL_PATH
+    if not path.exists():
+        return []
+
+    text = path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    missing = [phrase for phrase in GEN_ASSET_REQUIRED_PHRASES if not contains_phrase(text, phrase)]
+    if missing:
+        errors.append(
+            f"{GEN_ASSET_SKILL_PATH}: missing Codex-native generation contract phrase(s): "
+            + ", ".join(missing)
+        )
+
+    forbidden_patterns = (
+        (
+            re.compile(r"(?im)^\s*(?:\$\s*)?codex\s+exec\b"),
+            "nested Codex CLI generation command",
+        ),
+        (re.compile(r"\.Codex/"), "legacy Codex skill path"),
+        (re.compile(r"\.claude/", re.IGNORECASE), "Claude runtime path"),
+        (re.compile(r"\bOPENAI_API_KEY\b"), "API-key fallback"),
+        (
+            re.compile(r"(?i)\b(?:fallback|use)\b[^.\n]{0,100}\bnewest\b[^.\n]{0,80}\b(?:image|file|png)\b"),
+            "unbounded newest-image fallback",
+        ),
+        (re.compile(r"(?i)\bcodex\s+doctor\b"), "nested Codex CLI precondition"),
+        (re.compile(r"(?i)\bsession[ -]?id\b"), "nested Codex session-ID parsing"),
+    )
+    for pattern, message in forbidden_patterns:
+        for match in pattern.finditer(text):
+            line_number = text.count("\n", 0, match.start()) + 1
+            errors.append(f"{GEN_ASSET_SKILL_PATH}:{line_number}: {message}")
+
+    profile_root = path.parent / "profiles"
+    if not profile_root.exists():
+        errors.append(f"{profile_root.relative_to(root)}: missing gen-asset profiles directory")
+        return errors
+    profile_files = sorted(profile_root.glob("*.md"))
+    if not profile_files:
+        errors.append(f"{profile_root.relative_to(root)}: no gen-asset profiles found")
+        return errors
+    for profile_path in profile_files:
+        errors.extend(validate_gen_asset_profile(profile_path))
+    return errors
+
+
 def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = False) -> list[str]:
     if exempt or ACTIVE_STATE_PATH not in text:
         return []
@@ -881,6 +1026,8 @@ def main() -> int:
         errors.extend(validate_playtest_focus_contract(root))
     if args.kind in {"runtime", "skills"}:
         errors.extend(validate_handoff_review_contract(root))
+        errors.extend(validate_resume_contract(root))
+        errors.extend(validate_gen_asset_contract(root))
     if args.kind == "skills":
         errors.extend(validate_skills(root, args.require_present))
     if args.kind == "agents":

@@ -125,6 +125,19 @@ Question -> Options -> Decision -> Draft -> Approval.
 - The `$resume-from-handoff` exception does not authorize edits to handoff,
   archive, source, design, or docs files; commits; pushes; branch changes;
   builds; boot smoke; mutating `gh`; or additional file writes.
+- A `$resume-from-handoff` focus argument only biases ranking. Resume must pause
+  for lane selection, and that selection authorizes entering only the selected
+  workflow. It does not grant any write, build, smoke, `gh`, commit, push,
+  branch, design, game-feel, balance, or other mutation authority that the
+  selected workflow does not already declare.
+- `$gen-asset` exception: explicit invocation authorizes direct built-in image
+  generation and scratch writes only under `tmp/gen-asset/**`. Before any
+  durable placement, present one contact sheet with per-candidate verdicts,
+  exact final paths, overwrite warnings, and the placement adapter command.
+- Approval of that contact sheet authorizes only the listed final paths and the
+  listed adapter command. It does not authorize dependency installation,
+  unlisted or unrelated writes, placement before approval, edits to legacy
+  Claude runtime files, commits, pushes, or branch changes.
 - No commits without user instruction.
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.

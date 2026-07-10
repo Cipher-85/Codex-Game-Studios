@@ -57,6 +57,7 @@ def validate_gitignore_allowlist(root: Path, errors: list[str]) -> None:
     for required in (
         ".codex/*",
         ".agents/*",
+        "!.agents/skills/gen-asset/",
         "!design/registry/entities.yaml",
         "!docs/WORKFLOW-GUIDE.md",
         "!production/session-state/.gitkeep",
@@ -64,6 +65,9 @@ def validate_gitignore_allowlist(root: Path, errors: list[str]) -> None:
     ):
         if required not in lines:
             errors.append(f"gitignore allowlist missing expected pattern: {required}")
+
+    if ".agents/skills/gen-asset/*" in lines:
+        errors.append("gitignore allowlist must keep project-local gen-asset descendants trackable")
 
 
 def main() -> int:
@@ -116,6 +120,8 @@ def main() -> int:
                 seen.add(path)
                 if path.startswith(".claude/") or path == "CLAUDE.md" or "/.claude/" in path or path.endswith("/CLAUDE.md"):
                     errors.append(f"installed-files must not own Claude path {path}")
+                if path == ".agents/skills/gen-asset" or path.startswith(".agents/skills/gen-asset/"):
+                    errors.append(f"installed-files must not own project-local gen-asset path {path}")
                 if not (root / path).exists():
                     errors.append(f"installed-files path missing on disk: {path}")
         validate_gitignore_allowlist(root, errors)

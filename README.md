@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.4.4`.
+Current package version: `0.4.7`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,7 +29,21 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.4.4`. It includes:
+The current release line is `v0.4.7`. It includes:
+
+- A hard `$resume-from-handoff` selection boundary: focus arguments only bias
+  ranking, multi-lane choices prefer structured input, single-lane choices wait
+  for numeric `1`, and no unselected lane starts automatically.
+- Resume FIRST-verification and follow-up-fork safeguards so choosing a lane
+  cannot waive owed checks or pre-authorize later workflow decisions.
+- An optional project-local `$gen-asset` contract for direct built-in image
+  generation, scratch-only staging, semantic ACTIVE/STUB profile validation,
+  and one contact-sheet approval before exact final paths are written.
+- Installer allowlisting that keeps `.agents/skills/gen-asset/**` trackable while
+  leaving it project-owned, outside the 77 shipped skills, and outside package
+  install/uninstall ownership.
+- Release validation that rejects drift between `.codex/VERSION` and the
+  version summaries in both README surfaces.
 
 - User-owned playtest focus routing: when owed verification or the next action
   is a manual playtest, closeouts include a `Playtest focus:` brief with the
@@ -126,6 +140,10 @@ The installer appends a marked Codex Game Studios block to existing `AGENTS.md`
 files instead of replacing project instructions. It preserves `CLAUDE.md`,
 `claude.md`, and `.claude/**` when they exist, and it records installed package
 ownership in `.codex/manifest/install-state.json`.
+
+Optional project-local extensions such as `.agents/skills/gen-asset/**` are
+allowlisted for tracking but are never copied, owned, or deleted by the CCGS
+installer or uninstaller.
 
 Default install behavior is patch-aware: a fresh target or old install-state
 schema receives a full install, while a target with modern install state receives

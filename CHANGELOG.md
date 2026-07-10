@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.4.7 - 2026-07-10
+
+- Added a hard `$resume-from-handoff` lane-selection boundary: focus arguments
+  no longer imply selection, multiple lanes use structured choice when
+  available, single lanes wait for numeric `1`, and follow-up forks remain
+  separate decisions.
+- Kept FIRST verification mandatory across resume lane choices and clarified
+  that entering a selected workflow grants no additional mutation authority.
+- Added validation for optional project-local `$gen-asset` cores and profiles,
+  rejecting nested Codex CLI/API fallbacks and allowing complete ACTIVE or
+  minimal STUB profiles.
+- Updated installer allowlisting so `.agents/skills/gen-asset/**` is trackable
+  without becoming package-owned or changing the 77 shipped-skill count.
+- Documented Claude-to-Codex project-local profile migration, scratch-only image
+  generation authorization, and the contact-sheet placement gate.
+- Corrected stale README version summaries and made release validation reject
+  future README/package-version drift.
+
 ## v0.4.6 - 2026-07-10
 
 - Restored `$handoff`'s mandatory two-round review gate, including

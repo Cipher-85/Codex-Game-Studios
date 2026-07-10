@@ -340,8 +340,15 @@ ccgs_deploy_paths() {
   fi
 }
 
+ccgs_project_owned_allowlist_paths() {
+  # Sentinel only: this makes the optional project-local subtree trackable.
+  # It is deliberately absent from deploy paths and installed-files ownership.
+  printf '%s\n' ".agents/skills/gen-asset/SKILL.md"
+}
+
 ccgs_gitignore_allowlist_paths() {
   ccgs_deploy_paths
+  ccgs_project_owned_allowlist_paths
   printf '%s\n' "$ccgs_install_state_rel"
 }
 
@@ -369,6 +376,10 @@ shared_content_roots = {
     "tools",
 }
 
+project_owned_roots = {
+    ".agents/skills/gen-asset",
+}
+
 def is_shared_content_path(path: str) -> bool:
     return path.split("/", 1)[0] in shared_content_roots
 
@@ -389,7 +400,7 @@ for raw in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
 
 def emit_dir(path: str) -> None:
     print("!" + escape(path) + "/")
-    if not is_shared_content_path(path):
+    if not is_shared_content_path(path) and path not in project_owned_roots:
         print(escape(path) + "/*")
     for child in sorted(children.get(path, ())):
         emit_dir(child)

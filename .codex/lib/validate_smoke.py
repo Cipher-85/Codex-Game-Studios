@@ -8,6 +8,7 @@ import json
 import sys
 from pathlib import Path
 
+import validate_runtime as runtime
 from validate_runtime import validate_agents, validate_forbidden_references, validate_skills
 
 
@@ -35,11 +36,31 @@ def main() -> int:
     fixtures = root / ".codex" / "tests" / "fixtures"
     errors: list[str] = []
     expected_bad = {
-        "invalid-skill": lambda p: validate_skills(p, require_present=True),
-        "invalid-agent": lambda p: validate_agents(p, require_present=True),
-        "stale-claude-reference": validate_forbidden_references,
+        "invalid-skill": (lambda p: validate_skills(p, require_present=True), ()),
+        "invalid-agent": (lambda p: validate_agents(p, require_present=True), ()),
+        "stale-claude-reference": (validate_forbidden_references, ()),
+        "invalid-resume-contract": (
+            lambda p: getattr(runtime, "validate_resume_contract", lambda _: [])(p),
+            ("automatic lane startup",),
+        ),
+        "invalid-gen-asset-contract": (
+            lambda p: getattr(runtime, "validate_gen_asset_contract", lambda _: [])(p),
+            (
+                "nested Codex CLI generation command",
+                "legacy Codex skill path",
+                "Claude runtime path",
+                "API-key fallback",
+                "unbounded newest-image fallback",
+            ),
+        ),
+        "invalid-gen-asset-profile": (
+            lambda p: getattr(runtime, "validate_gen_asset_profile", lambda _: [])(
+                p / "profiles" / "building.md"
+            ),
+            ("ACTIVE profile missing",),
+        ),
     }
-    for name, check in expected_bad.items():
+    for name, (check, expected_fragments) in expected_bad.items():
         fixture = fixtures / name
         if not fixture.exists():
             errors.append(f"missing negative fixture {fixture.relative_to(root)}")
@@ -47,6 +68,28 @@ def main() -> int:
         failures = check(fixture)
         if not failures:
             errors.append(f"negative fixture {name} unexpectedly passed")
+            continue
+        for fragment in expected_fragments:
+            if not any(fragment in failure for failure in failures):
+                errors.append(
+                    f"negative fixture {name} did not report expected failure fragment: {fragment}"
+                )
+
+    expected_good = {
+        "valid-gen-asset-stub": lambda p: getattr(
+            runtime,
+            "validate_gen_asset_profile",
+            lambda _: ["gen-asset profile validator unavailable"],
+        )(p / "profiles" / "icon.md"),
+    }
+    for name, check in expected_good.items():
+        fixture = fixtures / name
+        if not fixture.exists():
+            errors.append(f"missing positive fixture {fixture.relative_to(root)}")
+            continue
+        failures = check(fixture)
+        if failures:
+            errors.append(f"positive fixture {name} failed: {'; '.join(failures)}")
 
     return emit("headless", root, errors)
 

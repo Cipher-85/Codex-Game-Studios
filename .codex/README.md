@@ -12,7 +12,14 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.3.0`.
+- The package version is `v0.4.7`.
+- `v0.4.7` hardens resume lane selection, validates Codex-native optional
+  `gen-asset` cores and ACTIVE/STUB profiles, and keeps that project-local skill
+  trackable without adding it to package ownership.
+- Release validation rejects stale package-version summaries in the root and
+  runtime README files.
+- `v0.4.6` restored the in-session two-round `$handoff` review gate without
+  nested CLI, subagent-review, companion, or external-model fallbacks.
 - `v0.2.0` added release versioning, release validation, schema-2 install
   state, and default patch-aware installs.
 - `v0.3.0` documents the latest root workflow alignment and the hook parser fix
@@ -25,6 +32,9 @@ Coexistence rules:
 - Do not write to `.claude/`.
 - Do not require or modify `CLAUDE.md`.
 - Keep neutral game project state such as `production/`, `design/`, `docs/architecture/`, `docs/engine-reference/`, `src/`, `tests/`, and `prototypes/` shared.
+- Keep optional `.agents/skills/gen-asset/**` content project-owned; the
+  installer only makes that subtree trackable and never adds it to the package
+  manifest.
 
 Install and release notes:
 - Fresh targets and old install-state schemas receive a full install.

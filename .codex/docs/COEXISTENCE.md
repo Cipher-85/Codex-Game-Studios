@@ -11,6 +11,10 @@ Rules:
 - Workflow-created shared folders such as `assets/`, `tests/`, `tools/`, and
   `prototypes/` are created lazily when needed.
 - Package ownership is tracked in `.codex/manifest/installed-files.json`.
+- The optional `.agents/skills/gen-asset/**` subtree is project-owned. The
+  installer allowlists it so its core and profiles are trackable, but it is
+  deliberately absent from `installed-files.json`; install and uninstall never
+  copy, replace, own, or delete it.
 - Each target install writes `.codex/manifest/install-state.json` with schema
   version, installed CCGS version, package commit, timestamp, patch mode, file
   hashes, marker-block hashes, detected coexistence mode, Claude guardrail
@@ -34,6 +38,12 @@ Rules:
   preserved byte-for-byte.
 - Uninstall removes only package-owned files, CCGS marker blocks, and CCGS
   migration blocks.
+
+For a project that already has Claude-side `gen-asset` profiles, migrate only
+after reviewing the target inventory: create the Codex-native core under
+`.agents/skills/gen-asset/SKILL.md`, copy project-owned profiles byte-for-byte
+from `.claude/skills/gen-asset/profiles/`, and keep the Codex runtime independent
+of `.claude/**`. CCGS does not perform this project-specific migration itself.
 
 Install detects three modes:
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.6 - 2026-07-10
+
+- Restored `$handoff`'s mandatory two-round review gate, including
+  standard/adversarial tier selection, pure-document exemptions, finding
+  triage, conditional second review, pass caps, and an auditable handoff record.
+- Kept the cross-check inside the active Codex session and explicitly removed
+  nested Codex CLI, Claude companion, subprocess, subagent, and external model
+  review paths.
+- Expanded the `$handoff` authorization boundary for narrow intent-preserving
+  fixes and added runtime validation to prevent the review contract or its
+  no-egress safeguards from regressing.
+
 ## v0.4.5 - 2026-07-09
 
 - Updated `$bug-report verify` so a VERIFIED FIXED result can complete

@@ -295,6 +295,111 @@ BUG_LIFECYCLE_FORBIDDEN_PHRASES = (
     ),
 )
 
+HANDOFF_REVIEW_REQUIRED_PHRASES = {
+    ".agents/skills/handoff/SKILL.md": (
+        "## Round 1",
+        "## Round 2",
+        "`STANDARD`",
+        "`ADVERSARIAL`",
+        "Foundation ADR cluster closure",
+        "pure design/process-document",
+        "self-review is sufficient and the native cross-check is skipped",
+        "Mixed code-and-document changes are not exempt",
+        "distinct native Codex review pass",
+        "current Codex session",
+        "`HIGH`, `MEDIUM`, or `LOW`",
+        "`CLEAN`",
+        "`path:line`",
+        "If uncertain whether the work meets a major trigger, use `STANDARD`",
+        "quoted verbatim",
+        "stop before Phase 1",
+        "second native cross-check",
+        "`HIGH` finding",
+        "cross-cutting executable behavior",
+        "Trivial and confidently intent-preserving only",
+        "Any non-trivial fix",
+        "Do not run a third pass",
+        "three native review passes",
+        "fourth native review pass",
+        "active reported context percentage",
+        "review audit trail",
+        "every finding",
+        "Only then proceed to Phase 1",
+    ),
+    "AGENTS.md": (
+        "files already created or materially modified during the session",
+        "intent-preserving review fixes",
+        "active Codex session",
+        "Round-two non-trivial findings",
+        "external data-egress approval",
+        "new intent, architecture, game-feel, balance, or scope decisions",
+    ),
+}
+
+HANDOFF_REVIEW_FORBIDDEN_PATTERNS = (
+    (
+        re.compile(r"(?im)^\s*(?:\$\s*)?codex\s+(?:review|exec)\b"),
+        "executable nested Codex CLI review command",
+    ),
+    (
+        re.compile(r"(?im)^\s*(?:\$\s*)?node\s+[^\n]*codex-companion(?:\.mjs)?\b"),
+        "executable codex-companion command",
+    ),
+    (
+        re.compile(
+            r"(?im)^\s*(?:export\s+)?[A-Z_][A-Z0-9_]*\s*=\s*[^\n]*"
+            r"codex-companion(?:\.mjs)?\b"
+        ),
+        "executable codex-companion path assignment",
+    ),
+    (
+        re.compile(
+            r"(?i)(?<!never )(?<!do not )(?<!must not )"
+            r"\b(?:call|run|use|invoke|launch|execute)\s+`?codex\s+(?:review|exec)\b"
+        ),
+        "instruction to launch a nested Codex CLI reviewer",
+    ),
+    (
+        re.compile(
+            r"(?i)(?<!never )(?<!do not )(?<!must not )"
+            r"\b(?:call|run|use|invoke|launch|execute)\b[^.\n]{0,100}"
+            r"\bcodex-companion(?:\.mjs)?\b"
+        ),
+        "instruction to launch codex-companion",
+    ),
+    (
+        re.compile(
+            r"(?i)(?<!never )(?<!do not )(?<!must not )"
+            r"\b(?:call|run|use|invoke|launch|execute)\b[^.\n]{0,100}"
+            r"\bClaude companion plugin\b"
+        ),
+        "instruction to launch the Claude companion plugin",
+    ),
+    (
+        re.compile(
+            r"(?i)(?<!never )(?<!do not )(?<!must not )"
+            r"\b(?:call|use|invoke|launch)\b[^.\n]{0,120}"
+            r"\banother model service\b"
+        ),
+        "instruction to launch another model service",
+    ),
+    (
+        re.compile(r"(?i)\b(?:sandbox_permissions|require_escalated)\b"),
+        "external-review escalation token",
+    ),
+    (
+        re.compile(
+            r"(?i)\b(?:request|seek)\s+(?:user\s+)?approval\b"
+            r"[^.\n]{0,120}\bexternal review\b"
+        ),
+        "external-review approval instruction",
+    ),
+    (
+        re.compile(r"(?i)\bescalat(?:e|ed|ion)\b[^.\n]{0,120}\bexternal review\b"),
+        "escalated external-review instruction",
+    ),
+)
+
 INTERNAL_READONLY_CLOSEOUT_PATTERNS = (
     (re.compile(r"\bself[- ]check\b", re.IGNORECASE), "Self-Check"),
     (re.compile(r"\bregistry (?:candidate )?scan\b", re.IGNORECASE), "registry scan"),
@@ -539,6 +644,30 @@ def validate_bug_lifecycle_contract(root: Path) -> list[str]:
     return errors
 
 
+def validate_handoff_review_contract(root: Path) -> list[str]:
+    errors: list[str] = []
+    for rel, required_phrases in HANDOFF_REVIEW_REQUIRED_PHRASES.items():
+        path = root / rel
+        if not path.exists():
+            errors.append(f"{rel}: missing handoff review contract surface")
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+        if missing:
+            errors.append(f"{rel}: missing handoff review contract phrase(s): {', '.join(missing)}")
+
+    skill_rel = ".agents/skills/handoff/SKILL.md"
+    skill_path = root / skill_rel
+    if skill_path.exists():
+        skill_text = skill_path.read_text(encoding="utf-8")
+        for pattern, message in HANDOFF_REVIEW_FORBIDDEN_PATTERNS:
+            match = pattern.search(skill_text)
+            if match:
+                line_number = skill_text.count("\n", 0, match.start()) + 1
+                errors.append(f"{skill_rel}:{line_number}: {message}")
+    return errors
+
+
 def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = False) -> list[str]:
     if exempt or ACTIVE_STATE_PATH not in text:
         return []
@@ -750,6 +879,8 @@ def main() -> int:
         errors.extend(budget_errors)
         warnings.extend(budget_warnings)
         errors.extend(validate_playtest_focus_contract(root))
+    if args.kind in {"runtime", "skills"}:
+        errors.extend(validate_handoff_review_contract(root))
     if args.kind == "skills":
         errors.extend(validate_skills(root, args.require_present))
     if args.kind == "agents":

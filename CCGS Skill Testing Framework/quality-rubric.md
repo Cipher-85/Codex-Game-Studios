@@ -246,4 +246,4 @@ analytics-engineer, economy-designer, localization-lead
 |---|---|
 | **O1 — Domain ownership clear** | Agent description clearly states what it owns (pipeline, releases, economy, etc.) |
 | **O2 — Defers implementation** | Does not write game logic or engine code; delegates to appropriate specialist |
-| **O3 — Toolset matches role** | `allowed-tools` in frontmatter matches the operational (not coding) nature of the role |
+| **O3 — Tool boundary matches role** | Agent instructions and documented Codex enforcement limits match the operational (not coding) nature of the role |

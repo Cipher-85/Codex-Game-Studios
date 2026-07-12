@@ -46,6 +46,14 @@ Validator policy:
   to match `.codex/VERSION`.
 - Generated skills must not retain raw structured-choice tool names, raw Claude task-delegation syntax, unsupported frontmatter, or bare custom slash commands.
 - Generated agents must not use unsupported top-level fields such as `tools`, `disallowedTools`, `maxTurns`, `memory`, `skills`, or `isolation`.
+- Ported skills keep only `name` and `description` in Codex frontmatter and
+  preserve documentary `argument-hint`, `user-invocable`, and `allowed-tools`
+  in `## Ported metadata`. Codex-native support skills declare that status
+  instead of inventing upstream fields.
+- Run `./.codex/audit.sh coexistence --root "$PWD" --integration` for the
+  temporary-target install, unowned/modified conflict, preserved-shared mode
+  transition, missing/stale/unsafe state, path traversal, rollback failpoint,
+  dry-run, known-obsolete, and uninstall matrix.
 - Hooks must not include a `Notification` event.
 - The Bash PreToolUse secret guard must block `.env` reads, writes, and
   redirections through `tool_input.command`; prefix rules only cover direct

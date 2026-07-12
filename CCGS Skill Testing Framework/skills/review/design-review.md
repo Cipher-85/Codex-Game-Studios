@@ -17,7 +17,7 @@ writes to `design/gdd/systems-index.md` or
 
 Verified automatically by `$skill-test static` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings or numbered steps
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
 - [ ] Documents that Phase 4 is read-only and Phase 5 tracking writes require approval
@@ -197,6 +197,6 @@ Verified automatically by `$skill-test static` — no fixture needed.
 - Cross-system consistency checking (Case 3 in the skill's own phase list) is
   not directly tested here because it requires multiple GDD files to compare;
   this is covered by the `$review-all-gdds` spec instead.
-- The skill's `context: fork` behavior (running as a subagent) is not tested
+- Live Codex role-agent delegation behavior is not tested by this static spec
   at the spec level — this is a runtime behavior verified manually.
 - Performance and edge cases involving very large GDD files are not in scope.

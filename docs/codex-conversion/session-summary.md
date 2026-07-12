@@ -1,5 +1,13 @@
 # Codex Conversion Session Summary
 
+## 2026-07-12 Architecture Correction
+
+References below to creating nested `AGENTS.md` path-rule targets describe the
+original plan, not the shipped runtime. The implemented architecture uses root
+`AGENTS.md` as the canonical router to `.codex/instructions/path-rules/*.md`.
+This is advisory partial parity because Codex chooses nested instructions from
+the session root-to-CWD chain rather than from each file being edited.
+
 Last updated: 2026-07-02 Asia/Shanghai
 
 ## Current Goal

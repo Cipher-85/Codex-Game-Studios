@@ -95,9 +95,9 @@ Update the hotfix record with root cause, fix details, and test results.
 
 Use the Codex subagent delegation to request sign-off in parallel:
 
-- `subagent_type: lead-programmer` — Review the fix for correctness and side effects
-- `subagent_type: qa-tester` — Run targeted regression tests on the affected system
-- `subagent_type: producer` — Approve deployment timing and communication plan
+- Delegate to `lead-programmer` — Review the fix for correctness and side effects
+- Delegate to `qa-tester` — Run targeted regression tests on the affected system
+- Delegate to `producer` — Approve deployment timing and communication plan
 
 All three must return APPROVE before proceeding. If any returns CONCERNS or REJECT, do not deploy — surface the issue and resolve it first.
 

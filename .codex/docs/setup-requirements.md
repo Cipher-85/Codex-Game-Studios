@@ -65,6 +65,14 @@ jq --version           # Should show jq version (optional)
 python3 --version      # Should show python version, or use python / py
 ```
 
+## Project Trust And Activation
+
+Installing files and passing the static audit do not activate project-local
+hooks, rules, or configuration in an already-running untrusted session. Trust
+the target project using the Codex surface for your environment, start a new
+session in that target, and then run the interactive smoke if available. Keep
+the activation result separate from the installer's static success message.
+
 ## Missing Tools
 
 | Missing Tool | Effect |

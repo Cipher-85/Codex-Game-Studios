@@ -43,8 +43,8 @@ Collect these for the output in Step 7 — show them as a footer block:
 
 ```
 ### Also installed (not in workflow)
-- `/skill-name` — [description from SKILL.md frontmatter]
-- `/skill-name` — [description]
+- `$skill-name` — [description from SKILL.md frontmatter]
+- `$skill-name` — [description]
 ```
 
 Only show this block if at least one uncataloged skill exists. Limit to the 10

@@ -302,3 +302,7 @@ closeouts should read or refresh the saved `## Session Worklist` in `active.md`.
 - Does not perform a full artifact gap audit; that is `$project-stage-detect`.
 - Does not replace reading the handoff; it operationalizes the canonical handoff
   into an oriented, prioritized session worklist.
+
+## Ported metadata
+
+This is a Codex-native support skill. It has no upstream Claude skill equivalent.

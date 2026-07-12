@@ -39,12 +39,12 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: performance-analyst` — Profiling, optimization, memory analysis
-- `subagent_type: engine-programmer` — Engine-level fixes for rendering, memory, resource loading
-- `subagent_type: technical-artist` — VFX polish, shader optimization, visual quality
-- `subagent_type: sound-designer` — Audio polish, mixing, ambient layers
-- `subagent_type: tools-programmer` — Content pipeline and editor tool verification
-- `subagent_type: qa-tester` — Edge case testing, regression testing, soak testing
+- Delegate to `performance-analyst` — Profiling, optimization, memory analysis
+- Delegate to `engine-programmer` — Engine-level fixes for rendering, memory, resource loading
+- Delegate to `technical-artist` — VFX polish, shader optimization, visual quality
+- Delegate to `sound-designer` — Audio polish, mixing, ambient layers
+- Delegate to `tools-programmer` — Content pipeline and editor tool verification
+- Delegate to `qa-tester` — Edge case testing, regression testing, soak testing
 
 Always provide full context in each agent's prompt (target feature/area, performance budgets, known issues). Launch independent agents in parallel where the pipeline allows it (e.g., Phases 3 and 4 can run simultaneously).
 

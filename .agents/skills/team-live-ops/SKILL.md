@@ -38,12 +38,12 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: live-ops-designer` — Season/event structure and retention mechanics
-- `subagent_type: economy-designer` — Live economy balance and reward pricing
-- `subagent_type: analytics-engineer` — Success metrics, A/B tests, event instrumentation
-- `subagent_type: community-manager` — Player-facing communication and messaging
-- `subagent_type: narrative-director` — Seasonal theme and narrative framing
-- `subagent_type: writer` — All player-facing text: event descriptions, item names, copy
+- Delegate to `live-ops-designer` — Season/event structure and retention mechanics
+- Delegate to `economy-designer` — Live economy balance and reward pricing
+- Delegate to `analytics-engineer` — Success metrics, A/B tests, event instrumentation
+- Delegate to `community-manager` — Player-facing communication and messaging
+- Delegate to `narrative-director` — Seasonal theme and narrative framing
+- Delegate to `writer` — All player-facing text: event descriptions, item names, copy
 
 Always provide full context in each agent's prompt (game concept path, existing season docs, ethics policy path, current economy state). Launch independent agents in parallel where the pipeline allows it (Phases 3 and 4 can run simultaneously).
 

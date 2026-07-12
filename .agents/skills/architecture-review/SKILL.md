@@ -321,7 +321,7 @@ Post-Cutoff API Conflicts:
 After completing the engine audit above, spawn the **primary engine specialist** via Codex subagent delegation for a domain-expert second opinion:
 - Read `.codex/docs/technical-preferences.md` `Engine Specialists` section to get the primary specialist
 - If no engine is configured, skip this consultation
-- Spawn `subagent_type: [primary specialist]` with: all ADRs that contain engine-specific decisions or `Post-Cutoff APIs Used` fields, the engine reference docs, and the Phase 5 audit findings. Ask them to:
+- Spawn `[primary specialist]` via Codex subagent delegation with: all ADRs that contain engine-specific decisions or `Post-Cutoff APIs Used` fields, the engine reference docs, and the Phase 5 audit findings. Ask them to:
   1. Confirm or challenge each audit finding — specialists may know of engine nuances not captured in the reference docs
   2. Identify engine-specific anti-patterns in the ADRs that the audit may have missed (e.g., using the wrong Godot node type, Unity component coupling, Unreal subsystem misuse)
   3. Flag ADRs that make assumptions about engine behaviour that differ from the actual pinned version

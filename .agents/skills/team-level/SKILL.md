@@ -36,13 +36,13 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: narrative-director` — Narrative purpose, characters, emotional arc
-- `subagent_type: world-builder` — Lore context, environmental storytelling, world rules
-- `subagent_type: level-designer` — Spatial layout, pacing, encounters, navigation
-- `subagent_type: systems-designer` — Enemy compositions, loot tables, difficulty balance
-- `subagent_type: art-director` — Visual theme, color palette, lighting, asset requirements
-- `subagent_type: accessibility-specialist` — Navigation clarity, colorblind safety, cognitive load
-- `subagent_type: qa-tester` — Test cases, boundary testing, playtest checklist
+- Delegate to `narrative-director` — Narrative purpose, characters, emotional arc
+- Delegate to `world-builder` — Lore context, environmental storytelling, world rules
+- Delegate to `level-designer` — Spatial layout, pacing, encounters, navigation
+- Delegate to `systems-designer` — Enemy compositions, loot tables, difficulty balance
+- Delegate to `art-director` — Visual theme, color palette, lighting, asset requirements
+- Delegate to `accessibility-specialist` — Navigation clarity, colorblind safety, cognitive load
+- Delegate to `qa-tester` — Test cases, boundary testing, playtest checklist
 
 Always provide full context in each agent's prompt (game concept, pillars, existing level docs, narrative docs).
 

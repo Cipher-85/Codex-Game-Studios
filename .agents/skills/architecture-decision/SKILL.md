@@ -334,7 +334,7 @@ to implement it.]
 5.5. **Engine Specialist Validation** — Before saving, spawn the **primary engine specialist** via Codex subagent delegation to validate the drafted ADR:
    - Read `.codex/docs/technical-preferences.md` `Engine Specialists` section to get the primary specialist
    - If no engine is configured (`[TO BE CONFIGURED]`), skip this step
-   - Spawn `subagent_type: [primary specialist]` with: the ADR's Engine Compatibility section, Decision section, Key Interfaces, and the engine reference docs path. Ask them to:
+   - Spawn `[primary specialist]` via Codex subagent delegation with: the ADR's Engine Compatibility section, Decision section, Key Interfaces, and the engine reference docs path. Ask them to:
      1. Confirm the proposed approach is idiomatic for the pinned engine version
      2. Flag any APIs or patterns that are deprecated or changed post-training-cutoff
      3. Identify engine-specific risks or gotchas not captured in the current ADR draft

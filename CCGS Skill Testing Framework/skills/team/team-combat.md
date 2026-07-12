@@ -15,7 +15,7 @@ with verdict COMPLETE / NEEDS WORK / BLOCKED and handoffs to `$code-review`,
 
 ## Static Assertions (Structural)
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings (Phase 1 through Phase 6 are all present)
 - [ ] Contains verdict keywords: COMPLETE, NEEDS WORK, BLOCKED
 - [ ] Contains "May I write" or "File Write Protocol" — writes delegated to sub-agents, orchestrator does not write files directly
@@ -100,7 +100,7 @@ with verdict COMPLETE / NEEDS WORK / BLOCKED and handoffs to `$code-review`,
 
 **Assertions:**
 - [ ] Skill does NOT spawn any subagents when no argument is given
-- [ ] Usage message includes the argument-hint format from frontmatter
+- [ ] Usage message includes the argument-hint format from Ported metadata
 - [ ] Error message includes at least one example of a valid invocation
 - [ ] No file reads beyond what is needed to detect the missing argument
 - [ ] Verdict is NOT shown (pipeline never runs)

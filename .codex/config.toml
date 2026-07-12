@@ -3,5 +3,9 @@ default_permissions = "game_studios"
 [permissions.game_studios]
 extends = ":workspace"
 
+[permissions.game_studios.filesystem.":workspace_roots"]
+".env*" = "deny"
+"**/.env*" = "deny"
+
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "context-used", "git-branch"]

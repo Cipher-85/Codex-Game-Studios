@@ -10,7 +10,7 @@
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.codex/agents/narrative-director.md` frontmatter:
+Verified by parsing the agent's `.codex/agents/narrative-director.toml` fields and developer instructions:
 
 - [ ] `description:` field is present and domain-specific (references story, character, world-building, consistency — not generic)
 - [ ] `allowed-tools:` list is read-focused; includes Read for lore documents, GDDs, and narrative docs; no Bash unless justified

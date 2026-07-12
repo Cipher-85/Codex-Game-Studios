@@ -20,10 +20,13 @@ Rules:
   hashes, marker-block hashes, detected coexistence mode, Claude guardrail
   signals, shared CCGS signatures, shared paths created by Codex, and shared
   paths preserved because they already existed.
-- Fresh targets and missing or old install-state schemas use full patch mode.
-  Modern install state uses incremental patch mode by default.
-- Install backs up changed target files under `.codex/backups/` before replacing
-  package-owned assets.
+- Fresh targets use full patch mode. Existing brownfield targets without state
+  still fail closed on collisions. Valid schema-v2 state uses incremental patch
+  mode by default; invalid, unsafe, or stale state aborts before mutation.
+- Install preflights all manifest paths before mutation. Unowned collisions and
+  locally modified package-owned files abort by default. After explicit review,
+  `--replace-modified` backs up and replaces only paths proven package-owned by
+  modern install state; it never adopts an unowned shared path.
 - If the target repo has `.gitignore`, install writes a marker-managed allowlist
   for deployed CCGS paths and verifies those paths are not still ignored. Shared
   project-content roots such as `design/`, `docs/`, `production/`, and `src/`
@@ -38,6 +41,12 @@ Rules:
   preserved byte-for-byte.
 - Uninstall removes only package-owned files, CCGS marker blocks, and CCGS
   migration blocks.
+- Uninstall requires valid schema-v2 state. Missing, stale, malformed,
+  path-traversing, or symlinked state fails closed without inferring ownership
+  from file contents.
+- Obsolete cleanup uses prior install-state ownership and hashes. File contents,
+  emptiness, or a `hook_event_name` string are never treated as ownership proof,
+  and pruning is limited to empty Codex runtime directories.
 
 For a project that already has Claude-side `gen-asset` profiles, migrate only
 after reviewing the target inventory: create the Codex-native core under
@@ -58,14 +67,18 @@ Install detects three modes:
   both present. Install preserves preexisting shared visible CCGS assets, writes
   Codex-owned runtime files, and creates only missing shared scaffolds. Uninstall
   removes Codex runtime files and only the shared paths recorded as created by
-  Codex. If `install-state.json` is missing, uninstall preserves shared visible
-  CCGS assets as the safer fallback.
+  Codex. If `install-state.json` is missing or invalid, uninstall aborts without
+  changing project files.
 
 Patch modes:
 
 - `incremental`: copies only package files whose current source hash differs
   from the hash recorded in modern install state.
-- `full`: refreshes every CCGS-owned installable file using the existing
-  backup-before-overwrite behavior.
+- `full`: refreshes every CCGS-owned installable file after the same conflict
+  preflight; modified state-owned files still require `--replace-modified`.
+
+After install, trust the target project and start a new Codex session. Static
+installation success does not prove that project hooks, rules, or config are
+active.
 
 Skill and agent names intentionally preserve upstream names for workflow ergonomics. If another active skill or custom agent has the same name, the audit/installer should report the exact competing path and require a manual decision rather than silently renaming this port.

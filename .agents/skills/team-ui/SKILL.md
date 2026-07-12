@@ -46,11 +46,11 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: ux-designer` — User flows, wireframes, accessibility, input handling
-- `subagent_type: ui-programmer` — UI framework, screens, widgets, data binding
-- `subagent_type: art-director` — Visual style, layout polish, art bible consistency
-- `subagent_type: [UI engine specialist]` — Engine-specific UI pattern validation (e.g., unity-ui-specialist, ue-umg-specialist, godot-specialist)
-- `subagent_type: accessibility-specialist` — Accessibility compliance audit
+- Delegate to `ux-designer` — User flows, wireframes, accessibility, input handling
+- Delegate to `ui-programmer` — UI framework, screens, widgets, data binding
+- Delegate to `art-director` — Visual style, layout polish, art bible consistency
+- Delegate to `[UI engine specialist]` — Engine-specific UI pattern validation (e.g., unity-ui-specialist, ue-umg-specialist, godot-specialist)
+- Delegate to `accessibility-specialist` — Accessibility compliance audit
 
 Always provide full context in each agent's prompt (feature requirements, existing UI patterns, platform targets). Launch independent agents in parallel where the pipeline allows it (e.g., Phase 4 review agents can run simultaneously).
 

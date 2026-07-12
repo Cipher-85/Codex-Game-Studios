@@ -39,15 +39,24 @@ If argument is missing or unrecognized, output usage and stop.
 
 For each skill being tested, read its `SKILL.md` fully and run all 7 checks:
 
-### Check 1 — Required Frontmatter Fields
-The file must contain all of these in the YAML frontmatter block:
+### Check 1 — Codex Metadata Contract
+The YAML frontmatter block must contain only the Codex runtime fields required
+for discovery:
 - `name:`
 - `description:`
+
+For a ported upstream skill, the `## Ported metadata` section must preserve:
 - `argument-hint:`
 - `user-invocable:`
 - `allowed-tools:`
 
-**FAIL** if any are absent.
+Codex-native support skills with no upstream equivalent instead must state that
+classification explicitly in `## Ported metadata`; they do not invent legacy
+fields merely to satisfy this check.
+
+**FAIL** if `name` or `description` is absent, if unsupported Claude fields are
+placed in YAML frontmatter, or if a ported skill omits its required Ported
+metadata fields.
 
 ### Check 2 — Multiple Phases
 The skill must have ≥2 numbered phase headings. Look for patterns like:
@@ -74,7 +83,12 @@ when they are explicitly described as derived checkpoints and say: Do not ask a
 separate "May I write?" for this file.
 
 **WARN** if absent (some read-only skills legitimately skip this).
-**FAIL** if `allowed-tools` includes `Write` or `Edit` but no ask-before-write language is found.
+For ported skills, read `allowed-tools` from the Ported metadata section, not
+from YAML frontmatter. For Codex-native support skills, infer write behavior
+from the workflow's declared actions and explicit invocation exceptions.
+
+**FAIL** if the effective tool/actions contract includes Write or Edit but no
+ask-before-write or valid declared exception language is found.
 
 ### Check 5 — Next-Step Handoff
 The skill must end with a recommended next action or follow-up path. Look for:
@@ -113,17 +127,21 @@ Skills that create, update, append, overwrite, or write
 checkpoint and must say: Do not ask a separate "May I write?" for this file.
 Durable artifact writes still require normal explicit approval.
 
-### Check 6 — Fork Context Complexity
-If frontmatter contains `context: fork`, the skill should have ≥5 phase headings
-(`##` level or numbered Phase N headers). Fork context is for complex multi-phase
-skills; simple skills should not use it.
+### Check 6 — Codex Delegation Structure
+If the skill declares role-agent or director delegation, verify that it uses the
+central `AGENTS.md` delegation authorization, applies review-mode filtering when
+director gates are involved, reports unavailable/skipped/blocked delegation,
+and never simulates a specialist or director verdict.
 
-**WARN** if `context: fork` is set but fewer than 5 phases found.
+**WARN** if declared delegation lacks one of those Codex-native routing or
+fallback requirements. Non-delegating skills pass this check as not applicable.
 
 ### Check 7 — Argument Hint Plausibility
-`argument-hint` must be non-empty. If the skill body mentions multiple modes
-(e.g., "Mode A | Mode B"), the hint should reflect them. Cross-reference the
-hint against the first phase's "Parse Arguments" section.
+For ported skills, the Ported-metadata `argument-hint` must be non-empty. If the
+skill body mentions multiple modes (e.g., "Mode A | Mode B"), the hint should
+reflect them. Cross-reference the hint against the first phase's "Parse
+Arguments" section. Codex-native support skills without an upstream hint pass
+when their usage is unambiguous or explicitly argument-free.
 
 **WARN** if hint is `""` or if documented modes don't match hint.
 
@@ -135,12 +153,12 @@ For a single skill:
 ```
 === Skill Static Check: /[name] ===
 
-Check 1 — Frontmatter Fields:    PASS
+Check 1 — Codex Metadata Contract: PASS
 Check 2 — Multiple Phases:       PASS (7 phases found)
 Check 3 — Verdict Keywords:      PASS (PASS, FAIL, CONCERNS)
 Check 4 — Collaborative Protocol: PASS ("May I write" found)
 Check 5 — Next-Step Handoff:     WARN (no follow-up section found)
-Check 6 — Fork Context Complexity: PASS (8 phases, context: fork set)
+Check 6 — Codex Delegation Structure: PASS (central routing and fallback present)
 Check 7 — Argument Hint:         PASS
 
 Verdict: WARNINGS (1 warning, 0 failures)

@@ -102,6 +102,27 @@ The current release line is `v0.4.7`. It includes:
   not Codex dependencies, and context-management decisions use the active
   reported context percentage.
 
+## Runtime Parity Limits
+
+This is a faithful semantic port with documented runtime limits, not a claim
+that every Claude enforcement primitive exists in Codex:
+
+- Fifteen upstream roles that denied Bash still require file writes, and Codex
+  has no verified per-agent "files allowed, shell denied" fence. Their shell
+  boundary is instruction-, rule-, and hook-backed rather than an exact hard
+  fence.
+- Upstream per-skill model tiers and per-agent `maxTurns` are preserved as
+  guidance only. Session model choice and global agent concurrency/depth limits
+  remain the available Codex controls.
+- Prototype/worktree isolation is explicit workflow guidance, not automatic
+  subagent isolation.
+- Root `AGENTS.md` routes edits to `.codex/instructions/path-rules/*.md`.
+  Nested Codex instructions load from the session root-to-CWD chain, so they do
+  not reproduce upstream per-edited-file rule triggering in root-launched
+  sessions.
+- Project hooks, rules, and config require project trust and normally a new
+  Codex session after installation.
+
 ## Install
 
 Install Codex Game Studios into a game project:
@@ -130,11 +151,27 @@ Patch an existing install explicitly:
 ./.codex/install.sh --patch full /path/to/game-project
 ```
 
+Installation preflights the complete target before writing. An unowned
+collision or locally modified package-owned file aborts without mutation. After
+reviewing the dry-run and conflict, explicitly replace only state-proven
+package files with backup-first behavior:
+
+```bash
+./.codex/install.sh --dry-run --replace-modified /path/to/game-project
+./.codex/install.sh --replace-modified /path/to/game-project
+```
+
+`--replace-modified` never authorizes overwriting an unowned shared file.
+
 Remove Codex Game Studios from a project:
 
 ```bash
 ./.codex/uninstall.sh /path/to/game-project
 ```
+
+Uninstall requires valid `.codex/manifest/install-state.json` ownership data.
+Missing, stale, malformed, path-traversing, or symlinked state fails closed
+without removing project files.
 
 The installer appends a marked Codex Game Studios block to existing `AGENTS.md`
 files instead of replacing project instructions. It preserves `CLAUDE.md`,
@@ -145,9 +182,20 @@ Optional project-local extensions such as `.agents/skills/gen-asset/**` are
 allowlisted for tracking but are never copied, owned, or deleted by the CCGS
 installer or uninstaller.
 
-Default install behavior is patch-aware: a fresh target or old install-state
-schema receives a full install, while a target with modern install state receives
-an incremental patch based on recorded package file hashes.
+The default `game_studios` permission profile denies all access to root and
+nested `.env*` files. This protects secrets through Codex filesystem access as
+well as through the existing command rules and hooks, but it can also prevent
+Codex from creating or editing files such as `.env.example`. Use an
+agent-editable name such as `config.example` for non-secret templates.
+
+Default install behavior is patch-aware: a fresh target receives a full install,
+while a target with valid schema-v2 install state receives an incremental patch
+based on recorded package file hashes. Invalid, unsafe, or stale state aborts
+before mutation instead of being treated as ownership evidence.
+
+Installer success proves package deployment and static verification only. Trust
+the target project and start a new Codex session before treating its hooks,
+rules, permission profile, or agents as active.
 
 ## Release Workflow
 
@@ -179,7 +227,9 @@ branch metadata, and it targets the repository configured as `origin`
 explicitly. Release validation verifies that release metadata, changelog
 entries, Codex package tags, and changed installable files are consistent, but
 it does not create commits, create tags, edit files, publish, or choose release
-numbers. GitHub Actions run release validation only; publishing is always an
+numbers. GitHub Actions keep release validation as the required
+release-specific check. Integrity, headless smoke, and temporary-target
+installer regression jobs begin as advisory checks; publishing is always an
 explicit maintainer command.
 
 ## Validate This Package

@@ -252,3 +252,7 @@ Report in 15 lines or fewer:
 - Open blockers or deferred items.
 
 After reporting, stop. Do not start new feature work in the same turn.
+
+## Ported metadata
+
+This is a Codex-native support skill. It has no upstream Claude skill equivalent.

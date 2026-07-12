@@ -37,12 +37,12 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: narrative-director` — Story arcs, character design, narrative vision
-- `subagent_type: writer` — Dialogue writing, lore entries, in-game text
-- `subagent_type: world-builder` — World rules, faction design, history, geography
-- `subagent_type: art-director` — Character visual profiles, environmental visual storytelling, cinematic tone
-- `subagent_type: level-designer` — Level layouts that serve the narrative, pacing
-- `subagent_type: localization-lead` — Localization readiness — flags non-localizable strings, cultural assumptions, and i18n gaps
+- Delegate to `narrative-director` — Story arcs, character design, narrative vision
+- Delegate to `writer` — Dialogue writing, lore entries, in-game text
+- Delegate to `world-builder` — World rules, faction design, history, geography
+- Delegate to `art-director` — Character visual profiles, environmental visual storytelling, cinematic tone
+- Delegate to `level-designer` — Level layouts that serve the narrative, pacing
+- Delegate to `localization-lead` — Localization readiness — flags non-localizable strings, cultural assumptions, and i18n gaps
 
 Always provide full context in each agent's prompt (narrative brief, lore dependencies, character profiles). Launch independent agents in parallel where the pipeline allows it (e.g., Phase 2 agents can run simultaneously).
 

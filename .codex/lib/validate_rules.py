@@ -17,6 +17,11 @@ LEGACY_STATUS_LINE_ITEMS = {
     "git_branch": "git-branch",
 }
 
+REQUIRED_ENV_DENY_PATTERNS = {
+    ".env*",
+    "**/.env*",
+}
+
 REQUIRED_FORBIDDEN_COMMAND_EXAMPLES = (
     "rm -rf",
     "git reset --hard",
@@ -70,6 +75,25 @@ def main() -> int:
             errors.append(".codex/config.toml: do not mix sandbox_mode with permission profiles")
         if "notify" in data:
             errors.append(".codex/config.toml: project config must not set user-level notify")
+        permissions = data.get("permissions")
+        profile = permissions.get("game_studios") if isinstance(permissions, dict) else None
+        filesystem = profile.get("filesystem") if isinstance(profile, dict) else None
+        workspace_rules = filesystem.get(":workspace_roots") if isinstance(filesystem, dict) else None
+        if not isinstance(workspace_rules, dict):
+            errors.append(
+                '.codex/config.toml: missing [permissions.game_studios.filesystem.":workspace_roots"]'
+            )
+        else:
+            missing_env_denies = sorted(
+                pattern
+                for pattern in REQUIRED_ENV_DENY_PATTERNS
+                if workspace_rules.get(pattern) != "deny"
+            )
+            if missing_env_denies:
+                errors.append(
+                    ".codex/config.toml: missing strict workspace .env deny pattern(s): "
+                    + ", ".join(missing_env_denies)
+                )
         tui = data.get("tui")
         if isinstance(tui, dict) and "status_line" in tui:
             status_line = tui["status_line"]

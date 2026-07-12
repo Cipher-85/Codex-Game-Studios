@@ -40,14 +40,14 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: release-manager` — Release branch, versioning, changelog, deployment
-- `subagent_type: qa-lead` — Test sign-off, regression suite, release quality gate
-- `subagent_type: devops-engineer` — Build pipeline, artifacts, deployment automation
-- `subagent_type: security-engineer` — Security audit for online/multiplayer/data features
-- `subagent_type: analytics-engineer` — Telemetry event verification and dashboard readiness
-- `subagent_type: community-manager` — Patch notes and launch communication
-- `subagent_type: producer` — Go/no-go decision, stakeholder communication
-- `subagent_type: network-programmer` — Netcode stability sign-off (invoke if game has multiplayer)
+- Delegate to `release-manager` — Release branch, versioning, changelog, deployment
+- Delegate to `qa-lead` — Test sign-off, regression suite, release quality gate
+- Delegate to `devops-engineer` — Build pipeline, artifacts, deployment automation
+- Delegate to `security-engineer` — Security audit for online/multiplayer/data features
+- Delegate to `analytics-engineer` — Telemetry event verification and dashboard readiness
+- Delegate to `community-manager` — Patch notes and launch communication
+- Delegate to `producer` — Go/no-go decision, stakeholder communication
+- Delegate to `network-programmer` — Netcode stability sign-off (invoke if game has multiplayer)
 
 Always provide full context in each agent's prompt (version number, milestone status, known issues). Launch independent agents in parallel where the pipeline allows it (e.g., Phase 3 agents can run simultaneously).
 

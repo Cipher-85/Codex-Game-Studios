@@ -4,6 +4,13 @@ Phase 5 status: complete.
 
 This is the executable plan for implementing the Codex-native port of `Donchitos/Claude-Code-Game-Studios` from pinned upstream commit `984023ddac0d5e27624f2baacde6105e45de375f`.
 
+> Shipped-architecture correction (2026-07-12): the original Phase 3 nested
+> `AGENTS.md` tasks below are historical planning evidence, not the current
+> implementation contract. The shipped port keeps root `AGENTS.md` as the
+> canonical router into `.codex/instructions/path-rules/*.md`. Nested
+> instructions load from the session root-to-CWD chain and therefore do not
+> reproduce upstream per-edited-file rule triggering for root-launched sessions.
+
 Do not implement from `PLAN.md` directly. Use these artifacts as the source of truth:
 - `docs/codex-conversion/upstream-inventory.md`
 - `docs/codex-conversion/glm-plan-review.md`
@@ -109,6 +116,10 @@ Rollback/coexistence:
 - Validators must never modify project files unless running explicit install/uninstall fixture tests in temp copies.
 
 ## Phase 3 - Instructions, Rules, and Shared Docs
+
+Historical note: this phase originally specified nested `AGENTS.md` targets.
+The implemented router architecture described above supersedes those target
+paths and is validated by the root router table and path-rule chain checks.
 
 Goal: port root/nested instructions and neutral documentation without depending on Claude files.
 

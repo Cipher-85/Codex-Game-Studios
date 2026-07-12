@@ -68,13 +68,17 @@ Read the full skill file at `.agents/skills/[name]/SKILL.md`.
 
 For each failing or warning **static** check, identify the exact gap:
 
-- **Check 1 fail** → which frontmatter field is missing
+- **Check 1 fail** → which Codex frontmatter field or required Ported-metadata
+  field/classification is missing, or which unsupported field is in frontmatter
 - **Check 2 fail** → how many phases found vs. minimum required
 - **Check 3 fail** → no verdict keywords anywhere in the skill body
-- **Check 4 fail** → Write or Edit in allowed-tools but no ask-before-write language
+- **Check 4 fail** → effective Write or Edit behavior from Ported metadata or a
+  Codex-native workflow has no ask-before-write language or declared exception
 - **Check 5 warn** → no follow-up or next-step section at the end
-- **Check 6 warn** → `context: fork` set but fewer than 5 phases found
-- **Check 7 warn** → argument-hint is empty or doesn't match documented modes
+- **Check 6 warn** → declared Codex delegation lacks central authorization,
+  review-mode routing, missing-delegation reporting, or no-simulation fallback
+- **Check 7 warn** → Ported-metadata argument-hint is empty or doesn't match
+  documented modes; Codex-native argument-free support skills are not warned
 
 For each failing or warning **category** check (if category was assigned in Phase 2b),
 identify the exact gap in the skill's text. For example:

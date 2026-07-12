@@ -1012,6 +1012,196 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/claude-existing/.claude/settings.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/claude-existing/CLAUDE.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/claude-existing/production/session-state/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/codex-collisions/.agents/skills/start/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/codex-collisions/.codex/config.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/codex-collisions/.codex/hooks.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/codex-collisions/AGENTS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/empty-game/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-compact.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-tool-use-apply-patch-assets-invalid-json.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-tool-use-apply-patch-assets-naming.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-tool-use-apply-patch-legacy-patch.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-tool-use-apply-patch-skill.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/post-tool-use-apply-patch.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-compact.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-commit.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-env-read.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-env-redirection.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-env-safe.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-push-develop.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-push-main.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-push-master.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash-unrelated-push-text.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/pre-tool-use-bash.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/session-start.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/stop.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/subagent-start.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/hook-payloads/subagent-stop.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-agent/.codex/agents/bad.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-gen-asset-contract/.agents/skills/gen-asset/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-gen-asset-profile/profiles/building.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-resume-contract/.agents/skills/resume-from-handoff/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-skill/.agents/skills/bad/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/shared-state-dirty/design/registry/entities.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/shared-state-dirty/docs/architecture/README.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/shared-state-dirty/production/stage.txt"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/stale-claude-reference/AGENTS.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/valid-gen-asset-stub/profiles/icon.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".agents/skills/adopt/SKILL.md"
   },
   {

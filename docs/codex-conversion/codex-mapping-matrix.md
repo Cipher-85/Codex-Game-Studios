@@ -11,7 +11,7 @@ Verified upstream file coverage ledger: 417 files total.
 | `.claude/agents/*.md` | 49 | Port to Codex custom agents |
 | `.claude/skills/*/SKILL.md` | 73 | Port to Codex repo skills with upstream names |
 | `.claude/hooks/*` | 12 | Port 11 lifecycle hooks; replace `notify.sh` behavior with Codex native notification guidance |
-| `.claude/rules/*.md` | 11 | Faithfully port path-scoped rules to nested `AGENTS.md` instruction blocks |
+| `.claude/rules/*.md` | 11 | Port path-scoped guidance into the root-routed `.codex/instructions/path-rules/` library; keep command policy separate |
 | `.claude/docs/templates/**` | 40 | Copy to `.codex/docs/templates/**` |
 | `.claude/docs/**` excluding templates | 23 | Copy or rewrite to neutral Codex docs |
 | `.claude/settings.json`, `.claude/statusline.sh` | 2 | Replace with Codex config/rules/hooks/native status-line/status skill |
@@ -19,9 +19,9 @@ Verified upstream file coverage ledger: 417 files total.
 | Root files | 7 | Port docs/license where relevant; replace `CLAUDE.md` with `AGENTS.md` block |
 | `.github/**` | 5 | Copy as optional distribution/community docs only |
 | `CCGS Skill Testing Framework/**` | 127 | Copy to Codex testing framework docs |
-| `docs/**` | 62 | Preserve shared neutral docs; replace `docs/CLAUDE.md` with `docs/AGENTS.md` |
-| `design/**` | 2 | Preserve shared registry; replace `design/CLAUDE.md` with `design/AGENTS.md` |
-| `src/**` | 2 | Preserve placeholder; replace `src/CLAUDE.md` with `src/AGENTS.md` |
+| `docs/**` | 62 | Preserve shared neutral docs; route documentation guidance through root `AGENTS.md` to `docs-directory.md` |
+| `design/**` | 2 | Preserve shared registry; route design guidance through root `AGENTS.md` to `design-directory.md` |
+| `src/**` | 2 | Preserve placeholder; route source guidance through root `AGENTS.md` to `source-code.md` and matching specialist rules |
 | `production/**` | 1 | Preserve shared neutral state placeholder |
 
 Disposition key:
@@ -42,7 +42,7 @@ Parity key:
 
 | Codex primitive | Verified target path or mechanism | Notes |
 |---|---|---|
-| Project instructions | `AGENTS.md`, nested `AGENTS.md`, optional `AGENTS.override.md` | Loaded from project root down to current directory. No verified `@import`; keep root block compact because `project_doc_max_bytes` defaults to 32 KiB. |
+| Project instructions | Root `AGENTS.md` router plus `.codex/instructions/path-rules/*.md`; framework-local `AGENTS.md` only where separately useful | Codex loads the root-to-CWD instruction chain at session start, not rules selected per edited file. The shipped router is therefore the canonical CCGS path-rule mechanism; nested files are optional supplements, not parity enforcement. |
 | Repo skills | `.agents/skills/<skill>/SKILL.md` | Official docs describe direct skill folders under `.agents/skills`. Use upstream folder/name values for CCGS parity and add collision auditing instead of relying on undocumented suppression. |
 | Custom subagents | `.codex/agents/<agent>.toml` | Official docs describe standalone TOML files under `.codex/agents`. Preserve upstream hyphenated role names for filenames and `name` fields; add collision auditing rather than artificial prefixes. |
 | Hooks | `.codex/hooks.json` plus `.codex/hooks/*` scripts | Project hooks require project trust. Supported lifecycle events do not include Claude's `Notification` hook event. |
@@ -60,9 +60,9 @@ Official docs used: `https://developers.openai.com/codex/guides/agents-md`, `htt
 | Upstream path/component | Upstream behavior | Claude Code mechanism | Codex target mechanism | Target path/name | Disposition | Parity | Implementation notes | Verification method |
 |---|---|---|---|---|---|---|---|---|
 | `CLAUDE.md` | Root studio operating instructions, lifecycle guidance, startup nudge | Root Claude instruction file with imported docs | Marker-managed root Codex instructions | `AGENTS.md` CCGS block | replaced | semantic equivalent | Inline critical guidance; remove `.claude/`, `CLAUDE.md`, and bare Claude slash-command references; tell users to run `start`. | Grep runtime docs for forbidden refs; `wc -c AGENTS.md`; prompt-input/manual instruction check. |
-| `src/CLAUDE.md` | Source-code scope guidance | Nested Claude instructions | Nested Codex instructions | `src/AGENTS.md` CCGS block | replaced | semantic equivalent | Merge with `engine-code`, `gameplay-code`, `ai-code`, `network-code`, and `ui-code` nested rules where applicable. | Nested instruction fixture from `src/`; marker-block preservation test. |
-| `design/CLAUDE.md` | Design-document scope guidance | Nested Claude instructions | Nested Codex instructions | `design/AGENTS.md` CCGS block | replaced | semantic equivalent | Preserve design and registry guidance; keep `design/registry/entities.yaml` shared. | Nested instruction fixture from `design/`; no `.claude` refs. |
-| `docs/CLAUDE.md` | Documentation scope guidance | Nested Claude instructions | Nested Codex instructions | `docs/AGENTS.md` CCGS block | replaced | semantic equivalent | Preserve docs standards without depending on Claude imports. | Nested instruction fixture from `docs/`; marker-block preservation test. |
+| `src/CLAUDE.md` | Source-code scope guidance | Nested Claude instructions | Root-routed Codex path guidance | `.codex/instructions/path-rules/source-code.md` plus specialist rule files | replaced | partial | Root `AGENTS.md` requires reading the matching rules before edits; this is advisory rather than upstream path-trigger enforcement. | Router-chain validation and instruction-budget check. |
+| `design/CLAUDE.md` | Design-document scope guidance | Nested Claude instructions | Root-routed Codex path guidance | `.codex/instructions/path-rules/design-directory.md` | replaced | partial | Preserve design and registry guidance; keep `design/registry/entities.yaml` shared. | Router-chain validation; no runtime `.claude` refs. |
+| `docs/CLAUDE.md` | Documentation scope guidance | Nested Claude instructions | Root-routed Codex path guidance | `.codex/instructions/path-rules/docs-directory.md` | replaced | partial | Preserve docs standards without depending on Claude imports. | Router-chain validation; instruction-budget check. |
 | `CCGS Skill Testing Framework/CLAUDE.md` | Test-framework specific guidance | Nested Claude instructions | Testing-framework docs/instructions | `CCGS Skill Testing Framework/AGENTS.md` or README section | replaced | semantic equivalent | Preserve the upstream framework path; replace Claude-specific guidance with Codex guidance. | File existence; no runtime `.claude` dependency. |
 | `.claude/settings.json` permissions | Allow/deny command and path policy | Claude permissions in settings JSON | Codex permission profile plus command rules | `.codex/config.toml`, `.codex/rules/settings.rules` | replaced | semantic equivalent | Use `[permissions.game_studios] extends = ":workspace"`; deny sensitive env paths; command policies go in `.rules`, not config. | TOML parse; rules lint; forbidden command fixture. |
 | `.claude/settings.json` hooks | Hook event wiring | Claude settings hook blocks | Codex hooks config | `.codex/hooks.json` | replaced | semantic equivalent | Map supported lifecycle events only. Do not include Claude's `Notification` event; map notification behavior separately through user-level Codex notification docs. | JSON parse; event allowlist; command-path existence. |
@@ -97,21 +97,27 @@ and Codex hook payload parsing through `.codex/lib/hooks.sh`.
 
 ## Rule Mapping
 
-Upstream `.claude/rules/*.md` files are path-scoped instruction rules. The faithful Codex port is nested `AGENTS.md` because Codex applies directory-local instructions by path. They must not be converted to Codex command `.rules`, which are only for shell command approval policy.
+Upstream `.claude/rules/*.md` files are path-scoped instruction rules. CCGS
+ships them as `.codex/instructions/path-rules/*.md` and makes root `AGENTS.md`
+the canonical router. Codex's nested instruction chain is selected from the
+session working directory, not dynamically for every edited file, so nested
+`AGENTS.md` files do not restore upstream path-trigger semantics for a
+root-launched session. This is an intentional, advisory partial-parity mapping.
+Codex command `.rules` remain reserved for shell command approval policy.
 
 | Upstream rule | Codex target | Disposition | Parity | Verification |
 |---|---|---|---|---|
-| `.claude/rules/ai-code.md` | `src/ai/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture; count row in manifest. |
-| `.claude/rules/data-files.md` | `assets/data/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture; create dirs only if needed. |
-| `.claude/rules/design-docs.md` | `design/gdd/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/engine-code.md` | `src/core/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/gameplay-code.md` | `src/gameplay/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/narrative.md` | `design/narrative/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/network-code.md` | `src/networking/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/prototype-code.md` | `prototypes/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/shader-code.md` | `assets/shaders/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/test-standards.md` | `tests/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
-| `.claude/rules/ui-code.md` | `src/ui/AGENTS.md` CCGS block | replaced | semantic equivalent | Nested instruction fixture. |
+| `.claude/rules/ai-code.md` | `.codex/instructions/path-rules/ai-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/data-files.md` | `.codex/instructions/path-rules/data-files.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/design-docs.md` | `.codex/instructions/path-rules/design-docs.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/engine-code.md` | `.codex/instructions/path-rules/engine-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/gameplay-code.md` | `.codex/instructions/path-rules/gameplay-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/narrative.md` | `.codex/instructions/path-rules/narrative.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/network-code.md` | `.codex/instructions/path-rules/network-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/prototype-code.md` | `.codex/instructions/path-rules/prototype-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/shader-code.md` | `.codex/instructions/path-rules/shader-code.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/test-standards.md` | `.codex/instructions/path-rules/test-standards.md` | replaced | partial | Root-router chain validation. |
+| `.claude/rules/ui-code.md` | `.codex/instructions/path-rules/ui-code.md` | replaced | partial | Root-router chain validation. |
 
 ## Agent Mapping
 
@@ -368,7 +374,7 @@ Phase 4 must turn this matrix into checks for:
 - 49 generated custom agent TOML files.
 - 73 ported skills plus 4 new Codex-native support skills: `studio-status`, `studio-next`, `handoff`, and `resume-from-handoff`.
 - 11 ported hook scripts plus `notify.sh` replaced by native notification setup documentation.
-- 11 nested `AGENTS.md` rule targets.
+- 15 root-routed Codex path-rule documents, including the 11 upstream rule mappings.
 - 40 copied templates.
 - 127 upstream testing-framework assets plus 1 Codex-added skill spec for `vertical-slice`.
 - Zero runtime dependency on `.claude/`, `CLAUDE.md`, or bare upstream slash commands.

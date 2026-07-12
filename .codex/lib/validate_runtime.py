@@ -527,6 +527,21 @@ def frontmatter(text: str) -> dict[str, str]:
     return data
 
 
+def ported_metadata(text: str) -> tuple[dict[str, str], bool]:
+    match = re.search(r"(?ms)^## Ported metadata\s*$\n(.*?)(?=^##\s|\Z)", text)
+    if not match:
+        return {}, False
+    section = match.group(1)
+    fields: dict[str, str] = {}
+    for field_match in re.finditer(r"(?m)^- `([a-z-]+):\s*(.*?)`\s*$", section):
+        fields[field_match.group(1)] = field_match.group(2).strip()
+    is_native_support = (
+        "Codex-native support skill" in section
+        and "no upstream Claude skill equivalent" in section
+    )
+    return fields, is_native_support
+
+
 def runtime_files(root: Path) -> list[Path]:
     candidates: list[Path] = []
     for rel in ("AGENTS.md", ".agents", ".codex"):
@@ -883,6 +898,16 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
         unsupported = sorted(UNSUPPORTED_SKILL_FRONTMATTER & meta.keys())
         if unsupported:
             errors.append(f"{rel}: unsupported skill frontmatter {', '.join(unsupported)}")
+        ported, is_native_support = ported_metadata(text)
+        if not is_native_support:
+            required_ported = {"argument-hint", "user-invocable", "allowed-tools"}
+            missing_ported = sorted(required_ported - ported.keys())
+            if missing_ported:
+                errors.append(f"{rel}: missing Ported metadata {', '.join(missing_ported)}")
+            elif not ported.get("argument-hint") or not ported.get("allowed-tools"):
+                errors.append(f"{rel}: empty Ported metadata argument-hint or allowed-tools")
+            if "user-invocable" in ported and ported.get("user-invocable") != "true":
+                errors.append(f"{rel}: Ported metadata user-invocable must be true")
         if "AskUserQuestion" in text:
             errors.append(f"{rel}: raw AskUserQuestion reference remains")
         if ".claude/" in text or "CLAUDE.md" in text:
@@ -896,6 +921,8 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
                 errors.append(f"{rel}: bare custom slash-command reference remains")
         if re.search(r"\\bTask\\b", text):
             errors.append(f"{rel}: raw Claude Task reference remains")
+        if "subagent_type:" in text:
+            errors.append(f"{rel}: stale Claude subagent_type delegation vocabulary remains")
         if skill_file.parent.name in {"prototype", "vertical-slice"} and "worktree" not in text.lower():
             errors.append(f"{rel}: missing explicit worktree guidance")
         if skill_file.parent.name in {"architecture-review", "gate-check", "review-all-gdds"} and "high-reasoning" not in text:
@@ -914,6 +941,27 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
                     + ", ".join(forbidden_closeout)
                 )
         errors.extend(validate_active_state_checkpoint_text(rel, text, folder in ACTIVE_STATE_NAMED_EXCEPTIONS))
+
+    stale_framework_phrases = (
+        "Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`",
+        "`allowed-tools` frontmatter",
+        "argument-hint format from frontmatter",
+        "`context: fork` behavior",
+    )
+    framework_roots = (
+        root / "CCGS Skill Testing Framework" / "skills",
+        root / ".codex" / "docs" / "templates",
+    )
+    for framework_root in framework_roots:
+        if not framework_root.exists():
+            continue
+        for spec_file in sorted(framework_root.rglob("*.md")):
+            spec_text = spec_file.read_text(encoding="utf-8")
+            for phrase in stale_framework_phrases:
+                if phrase in spec_text:
+                    errors.append(
+                        f"{spec_file.relative_to(root)}: stale Claude skill-metadata assertion {phrase!r}"
+                    )
     return errors
 
 
@@ -1004,6 +1052,14 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
             errors.append(f".codex/agent-memory: memory files not bound by agents: {', '.join(missing)}")
         if extra:
             errors.append(f".codex/agents: memory-bound agents without memory file: {', '.join(extra)}")
+    framework_agents = root / "CCGS Skill Testing Framework" / "agents"
+    if framework_agents.exists():
+        stale_agent_reference = re.compile(r"\.codex/agents/[^`]+\.md` frontmatter")
+        for spec_file in sorted(framework_agents.rglob("*.md")):
+            if stale_agent_reference.search(spec_file.read_text(encoding="utf-8")):
+                errors.append(
+                    f"{spec_file.relative_to(root)}: stale Markdown/frontmatter custom-agent reference"
+                )
     errors.extend(validate_agent_startup_roster(root, agent_names))
     return errors
 

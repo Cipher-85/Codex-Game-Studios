@@ -39,13 +39,13 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: game-designer` — Design the mechanic, define formulas and edge cases
-- `subagent_type: gameplay-programmer` — Implement the core gameplay code
-- `subagent_type: ai-programmer` — Implement NPC/enemy AI behavior
-- `subagent_type: technical-artist` — Create VFX, shader effects, visual feedback
-- `subagent_type: sound-designer` — Define audio events, impact sounds, ambient audio
-- `subagent_type: [primary engine specialist]` — Engine idiom validation for architecture and implementation
-- `subagent_type: qa-tester` — Write test cases and validate implementation
+- Delegate to `game-designer` — Design the mechanic, define formulas and edge cases
+- Delegate to `gameplay-programmer` — Implement the core gameplay code
+- Delegate to `ai-programmer` — Implement NPC/enemy AI behavior
+- Delegate to `technical-artist` — Create VFX, shader effects, visual feedback
+- Delegate to `sound-designer` — Define audio events, impact sounds, ambient audio
+- Delegate to `[primary engine specialist]` — Engine idiom validation for architecture and implementation
+- Delegate to `qa-tester` — Write test cases and validate implementation
 
 Always provide full context in each agent's prompt (design doc path, relevant code files, constraints). Launch independent agents in parallel where the pipeline allows it (e.g., Phase 3 agents can run simultaneously).
 

@@ -69,7 +69,7 @@ Checks:
 - Every `not_applicable` and `blocked` row has a concrete rationale.
 - Only one upstream testing-framework gap was inherited: missing `vertical-slice` skill spec. The Codex target distribution adds a clearly labeled spec for this skill.
 - `notify.sh` is marked as replaced by native Codex notification setup documentation, not missing.
-- Generated target counts match: 49 agents, 17 repo-local agent-memory files, 73 ported skills, 4 new Codex-native support skills (`studio-status`, `studio-next`, `handoff`, `resume-from-handoff`), 11 ported hooks plus 1 new status hook if implemented, 11 nested rule instruction targets, 40 templates, 127 upstream testing-framework assets plus 1 Codex-added `vertical-slice` spec.
+- Generated target counts match: 49 agents, 17 repo-local agent-memory files, 73 ported skills, 4 new Codex-native support skills (`studio-status`, `studio-next`, `handoff`, `resume-from-handoff`), 11 ported hooks plus 1 new status hook if implemented, 15 root-routed path-rule documents, 40 templates, 127 upstream testing-framework assets plus 1 Codex-added `vertical-slice` spec.
 
 Acceptance:
 - `audit manifest` exits 0 only when there are no uncategorized upstream files and no unexpected generated targets.
@@ -78,7 +78,7 @@ Acceptance:
 
 Runtime paths to scan:
 - `AGENTS.md`
-- nested `AGENTS.md`
+- the framework-local `AGENTS.md` plus root-routed `.codex/instructions/path-rules/**`
 - `.agents/skills/**`
 - `.codex/**`
 - `docs/**` except explicit provenance docs
@@ -275,7 +275,7 @@ Interactive smoke, optional:
 - Run Codex in a trusted fixture and invoke `start`.
 - Trigger a subagent delegation from a team skill.
 - Trigger a hook-protected git command in a fixture.
-- Confirm prompt-input includes root and nested `AGENTS.md` content with no Claude runtime dependency.
+- Confirm prompt-input includes root `AGENTS.md` content with no Claude runtime dependency; separately verify the router names every shipped path rule.
 
 Acceptance:
 - `audit smoke-headless` must pass in CI.

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Added strict root and nested `.env*` filesystem denies with regression
+  validation and documented template-name compatibility.
+- Made install and uninstall manifest-owned and fail closed: all 38 test assets
+  are now owned, brownfield conflicts preflight before mutation, modified
+  package files require explicit backup-first replacement, and obsolete cleanup
+  no longer infers ownership from file contents or empty directories.
+- Added normalized install-state path validation, explicit package-owned paths,
+  preserved-shared exclusion, and fail-closed missing/stale-state uninstall.
+- Added transaction rollback, trust/activation messaging, backward-compatible
+  uninstall dry-run parsing, and an opt-in temporary-target integration matrix.
+- Corrected skill QA to validate Codex frontmatter plus Ported metadata, updated
+  all 73 framework skill specs, and removed stale Claude delegation vocabulary.
+- Recorded the root path-rule router as the canonical advisory architecture and
+  exposed enforcement limitations in user-facing documentation.
+
 ## v0.4.7 - 2026-07-10
 
 - Added a hard `$resume-from-handoff` lane-selection boundary: focus arguments
@@ -42,10 +59,6 @@
   Won't Fix decisions.
 - Added runtime validation to keep the bug lifecycle contract from regressing
   back into forced verify -> close -> triage handoffs.
-
-## Unreleased
-
-- Nothing yet.
 
 ## v0.4.4 - 2026-07-09
 

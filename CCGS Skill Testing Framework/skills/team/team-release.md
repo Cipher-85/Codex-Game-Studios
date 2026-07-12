@@ -14,7 +14,7 @@ NO-GO. Closes with a post-release monitoring plan.
 
 ## Static Assertions (Structural)
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "May I write" language in the File Write Protocol section (delegated to sub-agents)

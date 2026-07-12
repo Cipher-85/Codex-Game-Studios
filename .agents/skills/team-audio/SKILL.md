@@ -38,11 +38,11 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: audio-director` — Sonic identity, emotional tone, audio palette
-- `subagent_type: sound-designer` — SFX specifications, audio events, mixing groups
-- `subagent_type: technical-artist` — Audio middleware, bus structure, memory budgets
-- `subagent_type: [primary engine specialist]` — Validate audio integration patterns for the engine
-- `subagent_type: gameplay-programmer` — Audio manager, gameplay triggers, adaptive music
+- Delegate to `audio-director` — Sonic identity, emotional tone, audio palette
+- Delegate to `sound-designer` — SFX specifications, audio events, mixing groups
+- Delegate to `technical-artist` — Audio middleware, bus structure, memory budgets
+- Delegate to `[primary engine specialist]` — Validate audio integration patterns for the engine
+- Delegate to `gameplay-programmer` — Audio manager, gameplay triggers, adaptive music
 
 Always provide full context in each agent's prompt (feature description, existing audio assets, design doc references).
 

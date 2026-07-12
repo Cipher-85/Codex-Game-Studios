@@ -31,8 +31,8 @@ Store the resolved mode for use in all subsequent phases.
 ## How to Delegate
 
 Use the Codex subagent delegation to spawn each team member as a subagent:
-- `subagent_type: qa-lead` — Strategy, planning, classification, sign-off
-- `subagent_type: qa-tester` — Test case writing and bug report writing
+- Delegate to `qa-lead` — Strategy, planning, classification, sign-off
+- Delegate to `qa-tester` — Test case writing and bug report writing
 
 Always provide full context in each agent's prompt (story file paths, QA plan path, scope constraints). Launch independent qa-tester tasks in parallel where possible (e.g., multiple stories in Phase 5 can be scaffolded simultaneously).
 

@@ -19,7 +19,7 @@ with velocity data and a PROCEED/PIVOT/KILL recommendation.
 
 ## Static Assertions
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has 2+ phase headings
 - [ ] Contains verdict keywords: PROCEED, PIVOT, KILL
 - [ ] Contains "May I create the vertical slice directory" before implementation files are created

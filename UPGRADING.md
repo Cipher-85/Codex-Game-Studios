@@ -21,9 +21,10 @@ From this repository, run:
 
 Default upgrade behavior is patch-aware:
 
-- Targets without `.codex/manifest/install-state.json` receive a full install.
-- Targets with old install-state schema receive a full patch and then get a
-  modern state file.
+- Fresh targets without `.codex/manifest/install-state.json` receive a full
+  install. Brownfield targets without state still fail closed on collisions.
+- Targets with invalid, unsafe, or stale install state abort before mutation;
+  restore valid schema-v2 state from backup or resolve ownership manually.
 - Targets with modern install state receive an incremental patch based on the
   package file hashes recorded at the last install.
 
@@ -40,9 +41,22 @@ Force a patch mode when needed:
 ./.codex/install.sh --patch full /path/to/game-project
 ```
 
+Upgrades fail closed when a package-owned path was modified locally. Review the
+dry-run, then opt into backup-first replacement only for paths proven by modern
+install state:
+
+```bash
+./.codex/install.sh --dry-run --replace-modified /path/to/game-project
+./.codex/install.sh --replace-modified /path/to/game-project
+```
+
+Pre-existing shared paths without package ownership state are never overwritten
+by this option. Merge those files manually, then rerun the ordinary dry-run.
+
 The installer backs up replaced Codex-owned files under `.codex/backups/` and
 records target-local ownership state, package version, package commit, patch
-mode, file hashes, and marker-block hashes in
+mode, explicit package-owned paths, file hashes, preserved shared paths, and
+marker-block hashes in
 `.codex/manifest/install-state.json`.
 
 ## Upgrade This Distribution
@@ -61,11 +75,9 @@ validation compares `.codex/VERSION` to Codex-port semver tags at or after
 `v0.1.0`; upstream Claude release tags inherited from the pinned source history
 are ignored.
 
-For `v0.3.0`, make sure the root README, `.codex/README.md`,
-`.codex/docs/README.md`, and `CHANGELOG.md` are updated with the release status
-before tagging. This line includes the `apply_patch` hook payload compatibility
-fix and the root `AGENTS.md` workflow-alignment update after the `v0.2.0`
-release tooling work.
+Before tagging any release, update the root README, `.codex/README.md`,
+`.codex/docs/README.md`, `CHANGELOG.md`, and any shared-path merge notes for the
+new version. Release metadata does not merge downstream project-owned changes.
 
 ## Verify After Upgrade
 
@@ -79,6 +91,9 @@ python3 .codex/lib/validate_manifest.py --root "$PWD"
 
 If verification is blocked, keep the exact failing command and output with the
 upgrade notes.
+
+Installer success is static evidence only. Trust the upgraded project and start
+a new Codex session before verifying hooks, rules, permissions, and agents.
 
 ## Compatibility Notes
 

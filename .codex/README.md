@@ -35,12 +35,25 @@ Coexistence rules:
 - Keep optional `.agents/skills/gen-asset/**` content project-owned; the
   installer only makes that subtree trackable and never adds it to the package
   manifest.
+- The default permission profile denies all access to root and nested `.env*`
+  files. Non-secret templates that Codex should edit must use a different name,
+  such as `config.example`.
 
 Install and release notes:
-- Fresh targets and old install-state schemas receive a full install.
-- Targets with modern install state receive incremental patching by default.
+- Fresh targets receive a full install. Existing targets without ownership state
+  still fail closed on collisions.
+- Valid schema-v2 install state receives incremental patching by default;
+  invalid, unsafe, or stale state aborts before mutation.
 - Full patch mode can be forced with `install.sh --patch full`.
 - Incremental patch mode can be forced with `install.sh --patch incremental`.
+- Install preflights every manifest path and aborts before mutation on unowned
+  collisions or locally modified package-owned paths. `--replace-modified`
+  permits backup-first replacement only when modern install state proves
+  package ownership.
+- Uninstall requires valid install state and never infers ownership from file
+  contents when state is missing or stale.
+- Installer success is static package verification, not proof that project
+  trust, hooks, rules, or config are active in the current Codex session.
 - `audit.sh release` validates `.codex/VERSION`, `CHANGELOG.md`, release tags,
   and changed installable files without mutating the checkout.
 - Package publishing is `bump -> edit changelog/docs -> check -> commit/push ->
@@ -64,3 +77,7 @@ Port status notes:
   without depending on a single payload shape.
 - The upstream testing framework was missing a `vertical-slice` skill spec. This port now includes a Codex-added spec while preserving the upstream inventory as historical evidence of the inherited gap.
 - Codex currently supports `[tui].status_line` built-in footer items here, but no documented project custom footer command for rendering `Stage:` directly in the footer has been verified. Stage/review/session breadcrumbs are preserved through `studio-status-on-start.sh` and `$studio-status` until Codex exposes a real custom footer item.
+- Per-agent Bash fences, per-skill model routing, `maxTurns`, and automatic
+  worktree isolation have no exact verified Codex equivalents. The port uses
+  instructions, rules, hooks, session model selection, and explicit worktree
+  workflows and labels those mappings partial.

@@ -10,7 +10,7 @@
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.codex/agents/qa-lead.md` frontmatter:
+Verified by parsing the agent's `.codex/agents/qa-lead.toml` fields and developer instructions:
 
 - [ ] `description:` field is present and domain-specific (references test strategy, story readiness, coverage, bug triage — not generic)
 - [ ] `allowed-tools:` list is read-focused; may include Read for story files, test files, and coding-standards; Bash only if running test commands is required

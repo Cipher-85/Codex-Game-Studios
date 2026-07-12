@@ -4,6 +4,12 @@ Phase 2 status: complete.
 
 This review compares `PLAN.md` against the Phase 1 upstream inventory, the pinned upstream clone at `/private/tmp/ccgs-upstream-phase1`, local Codex CLI behavior, and current official Codex documentation.
 
+> Shipped-architecture correction (2026-07-12): recommendations below to use
+> nested `AGENTS.md` files predate the implemented root-router architecture.
+> Root `AGENTS.md` now routes to `.codex/instructions/path-rules/*.md`; this is
+> documented as advisory partial parity because Codex's nested instruction chain
+> is selected from the session CWD, not dynamically per edited file.
+
 ## Executive Verdict
 
 Verdict: usable with corrections.

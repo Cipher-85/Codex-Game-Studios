@@ -13,3 +13,22 @@ jobs:
           fetch-depth: 0
       - name: Validate release versioning
         run: ./.codex/audit.sh release --root "$PWD"
+
+  integrity-advisory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run static package audit
+        continue-on-error: true
+        run: ./.codex/audit.sh all --root "$PWD"
+      - name: Run temporary-target installer matrix
+        continue-on-error: true
+        run: ./.codex/audit.sh coexistence --root "$PWD" --integration
+
+  headless-smoke-advisory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run headless workflow smoke
+        continue-on-error: true
+        run: ./.codex/audit.sh smoke-headless --root "$PWD"

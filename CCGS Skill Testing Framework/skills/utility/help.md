@@ -18,7 +18,7 @@ navigator, suggesting 2-3 next skills based on the current project state.
 
 Verified automatically by `$skill-test static` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: HELP COMPLETE
 - [ ] Does NOT contain "May I write" language (skill is read-only)

@@ -4,6 +4,7 @@ set -euo pipefail
 ccgs_install_root="${CCGS_INSTALL_ROOT:-$(pwd)}"
 ccgs_source_root="${CCGS_SOURCE_ROOT:-$ccgs_install_root}"
 ccgs_dry_run="${CCGS_DRY_RUN:-0}"
+ccgs_replace_modified="${CCGS_REPLACE_MODIFIED:-0}"
 ccgs_marker_start="<!-- BEGIN CCGS CODEX PORT -->"
 ccgs_marker_end="<!-- END CCGS CODEX PORT -->"
 ccgs_migrated_start="<!-- BEGIN CCGS MIGRATED LEGACY INSTRUCTIONS -->"
@@ -12,6 +13,7 @@ ccgs_gitignore_start="# BEGIN CCGS CODEX PORT GITIGNORE"
 ccgs_gitignore_end="# END CCGS CODEX PORT GITIGNORE"
 ccgs_install_state_rel=".codex/manifest/install-state.json"
 ccgs_install_state_schema_version=2
+ccgs_transaction_dir=""
 
 ccgs_refuse_claude_path() {
   local path="$1"
@@ -101,6 +103,112 @@ ccgs_package_commit() {
   fi
 }
 
+ccgs_obsolete_paths() {
+  # Historical package paths may be removed only when valid install state also
+  # proves ownership. Keeping this allowlist explicit prevents arbitrary state
+  # entries from becoming filesystem mutation targets.
+  cat <<'EOF'
+assets/data/AGENTS.md
+assets/shaders/AGENTS.md
+design/AGENTS.md
+design/gdd/AGENTS.md
+design/narrative/AGENTS.md
+docs/AGENTS.md
+prototypes/AGENTS.md
+src/AGENTS.md
+src/ai/AGENTS.md
+src/core/AGENTS.md
+src/gameplay/AGENTS.md
+src/networking/AGENTS.md
+src/ui/AGENTS.md
+tests/AGENTS.md
+tools/AGENTS.md
+production/session-logs/agents-start.jsonl
+production/session-logs/agents-stop.jsonl
+production/session-logs/asset-validation-last.json
+production/session-logs/post-compact-last.json
+production/session-logs/pre-compact-last.json
+production/session-logs/session-start.json
+production/session-logs/session-stop.json
+production/session-logs/skill-change-last.json
+EOF
+}
+
+ccgs_install_state_valid() {
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  [ -f "$state_file" ] || return 1
+
+  local known_paths status
+  known_paths="$(mktemp "${TMPDIR:-/tmp}/ccgs-known-package-paths.XXXXXX")"
+  { ccgs_manifest_paths; ccgs_obsolete_paths; } | sort -u > "$known_paths"
+  if python3 - "$state_file" "$ccgs_install_state_schema_version" "$known_paths" <<'PY'
+import json
+import re
+import sys
+from pathlib import Path, PurePosixPath
+
+state_path = Path(sys.argv[1])
+schema = int(sys.argv[2])
+known = set(Path(sys.argv[3]).read_text(encoding="utf-8").splitlines())
+try:
+    data = json.loads(state_path.read_text(encoding="utf-8"))
+except Exception:
+    raise SystemExit(1)
+
+def safe_path(value: object) -> bool:
+    if not isinstance(value, str) or not value or "\\" in value or "\x00" in value:
+        return False
+    path = PurePosixPath(value)
+    return (
+        not path.is_absolute()
+        and str(path) == value
+        and all(part not in {"", ".", ".."} for part in path.parts)
+        and value in known
+    )
+
+def path_list(name: str) -> list[str]:
+    value = data.get(name, [])
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise SystemExit(1)
+    if len(value) != len(set(value)) or not all(safe_path(item) for item in value):
+        raise SystemExit(1)
+    return value
+
+if not isinstance(data, dict) or data.get("schema_version") != schema:
+    raise SystemExit(1)
+if data.get("detected_mode") not in {"codex_only", "claude_present_no_ccgs", "claude_ccgs_coexist"}:
+    raise SystemExit(1)
+
+hashes = data.get("installed_file_hashes")
+marker_hashes = data.get("marker_block_hashes", {})
+if not isinstance(hashes, dict) or not isinstance(marker_hashes, dict):
+    raise SystemExit(1)
+hash_pattern = re.compile(r"[0-9a-f]{64}")
+for mapping in (hashes, marker_hashes):
+    if not all(safe_path(path) and isinstance(value, str) and hash_pattern.fullmatch(value) for path, value in mapping.items()):
+        raise SystemExit(1)
+if not set(marker_hashes).issubset(hashes):
+    raise SystemExit(1)
+
+created = set(path_list("shared_paths_created_by_codex"))
+preserved = set(path_list("shared_paths_preserved_preexisting"))
+if created & preserved or not created.issubset(hashes):
+    raise SystemExit(1)
+
+if "package_owned_paths" in data:
+    owned = set(path_list("package_owned_paths"))
+    if not owned.issubset(hashes) or owned & preserved:
+        raise SystemExit(1)
+PY
+  then
+    status=0
+  else
+    status=$?
+  fi
+  rm -f "$known_paths"
+  return "$status"
+}
+
 ccgs_install_state_schema() {
   local state_file="$ccgs_install_root/$ccgs_install_state_rel"
   [ -f "$state_file" ] || return 1
@@ -112,6 +220,100 @@ try:
 except Exception:
     raise SystemExit(1)
 PY
+}
+
+ccgs_state_owned_paths() {
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid || return 0
+  python3 - "$state_file" <<'PY'
+import json, sys
+from pathlib import Path
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+if "package_owned_paths" in data:
+    owned = set(data["package_owned_paths"])
+else:
+    owned = set(data.get("installed_file_hashes", {})) - set(data.get("shared_paths_preserved_preexisting", []))
+for path in sorted(owned):
+    print(path)
+PY
+}
+
+ccgs_state_owns_path() {
+  local needle="$1"
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid || return 1
+  python3 - "$state_file" "$needle" <<'PY'
+import json, sys
+from pathlib import Path
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+if "package_owned_paths" in data:
+    owned = set(data["package_owned_paths"])
+else:
+    owned = set(data.get("installed_file_hashes", {})) - set(data.get("shared_paths_preserved_preexisting", []))
+raise SystemExit(0 if sys.argv[2] in owned else 1)
+PY
+}
+
+ccgs_target_matches_state() {
+  local path="$1"
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  local target_file="$ccgs_install_root/$path"
+  [ -f "$target_file" ] || return 1
+  [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid || return 1
+  python3 - "$state_file" "$target_file" "$path" "$ccgs_install_state_schema_version" "$ccgs_marker_start" "$ccgs_marker_end" <<'PY'
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+state_path = Path(sys.argv[1])
+target_path = Path(sys.argv[2])
+rel = sys.argv[3]
+schema = int(sys.argv[4])
+marker_start = sys.argv[5]
+marker_end = sys.argv[6]
+try:
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+except Exception:
+    raise SystemExit(1)
+if state.get("schema_version") != schema:
+    raise SystemExit(1)
+
+if not rel.startswith(".codex/tests/") and (rel == "AGENTS.md" or rel.endswith("/AGENTS.md")):
+    expected = state.get("marker_block_hashes", {}).get(rel)
+    if not expected:
+        raise SystemExit(1)
+    text = target_path.read_text(encoding="utf-8")
+    start = text.find(marker_start)
+    end = text.find(marker_end)
+    if start == -1 or end == -1 or end < start:
+        raise SystemExit(1)
+    end += len(marker_end)
+    actual = hashlib.sha256(text[start:end].encode("utf-8")).hexdigest()
+else:
+    expected = state.get("installed_file_hashes", {}).get(rel)
+    if not expected:
+        raise SystemExit(1)
+    actual = hashlib.sha256(target_path.read_bytes()).hexdigest()
+raise SystemExit(0 if actual == expected else 1)
+PY
+}
+
+ccgs_target_has_marker() {
+  local path="$1"
+  local target_file="$ccgs_install_root/$path"
+  [ -f "$target_file" ] || return 1
+  grep -qF "$ccgs_marker_start" "$target_file" && grep -qF "$ccgs_marker_end" "$target_file"
+}
+
+ccgs_target_path_has_symlink() {
+  local path="$1"
+  local candidate="$path"
+  while [ "$candidate" != "." ] && [ "$candidate" != "/" ]; do
+    [ -L "$ccgs_install_root/$candidate" ] && return 0
+    candidate="$(dirname "$candidate")"
+  done
+  return 1
 }
 
 ccgs_select_patch_mode() {
@@ -145,7 +347,7 @@ ccgs_select_patch_mode() {
 ccgs_install_mode() {
   if [ -n "${CCGS_INSTALL_MODE:-}" ]; then
     printf '%s\n' "$CCGS_INSTALL_MODE"
-  elif [ -f "$ccgs_install_root/$ccgs_install_state_rel" ]; then
+  elif [ -f "$ccgs_install_root/$ccgs_install_state_rel" ] && { [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid; }; then
     local mode
     mode="$(python3 - "$ccgs_install_root/$ccgs_install_state_rel" <<'PY'
 import json, sys
@@ -180,14 +382,11 @@ ccgs_shared_manifest_path() {
 
 ccgs_state_created_shared_paths() {
   local state_file="$ccgs_install_root/$ccgs_install_state_rel"
-  [ -f "$state_file" ] || return 0
+  [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid || return 0
   python3 - "$state_file" <<'PY'
 import json, sys
 from pathlib import Path
-try:
-    data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-except Exception:
-    raise SystemExit(0)
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 for path in data.get("shared_paths_created_by_codex", []):
     print(path)
 PY
@@ -195,10 +394,14 @@ PY
 
 ccgs_path_in_state_created_shared() {
   local needle="$1"
-  while IFS= read -r path; do
-    [ "$path" = "$needle" ] && return 0
-  done < <(ccgs_state_created_shared_paths)
-  return 1
+  local state_file="$ccgs_install_root/$ccgs_install_state_rel"
+  [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" = "1" ] || ccgs_install_state_valid || return 1
+  python3 - "$state_file" "$needle" <<'PY'
+import json, sys
+from pathlib import Path
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+raise SystemExit(0 if sys.argv[2] in data.get("shared_paths_created_by_codex", []) else 1)
+PY
 }
 
 ccgs_capture_install_state() {
@@ -217,8 +420,12 @@ ccgs_capture_install_state() {
 
   while IFS= read -r path; do
     ccgs_shared_manifest_path "$path" || continue
-    if [ "$mode" = "claude_ccgs_coexist" ] && [ -e "$ccgs_install_root/$path" ]; then
-      printf '%s\n' "$path" >> "$temp_dir/preserved"
+    if [ -e "$ccgs_install_root/$path" ]; then
+      if ccgs_state_owns_path "$path" || ccgs_path_in_state_created_shared "$path"; then
+        printf '%s\n' "$path" >> "$temp_dir/created"
+      else
+        printf '%s\n' "$path" >> "$temp_dir/preserved"
+      fi
     elif [ ! -e "$ccgs_install_root/$path" ]; then
       printf '%s\n' "$path" >> "$temp_dir/created"
     fi
@@ -260,7 +467,10 @@ def marker_block(text: str, rel: str) -> str:
 
 installed_file_hashes = {}
 marker_block_hashes = {}
+preserved_paths = set(lines(preserved))
 for rel in lines(deploy_paths):
+    if rel in preserved_paths:
+        continue
     source_file = source_root / rel
     if not source_file.is_file():
         continue
@@ -283,6 +493,7 @@ data = {
     "shared_ccgs_asset_signatures_found": lines(signatures),
     "shared_paths_created_by_codex": lines(created),
     "shared_paths_preserved_preexisting": lines(preserved),
+    "package_owned_paths": sorted(installed_file_hashes),
     "installed_file_hashes": installed_file_hashes,
     "marker_block_hashes": marker_block_hashes,
 }
@@ -299,6 +510,10 @@ ccgs_write_install_state() {
   local captured_state="$1"
   local state_file
   state_file="$(ccgs_install_state_file)"
+  if [ "${CCGS_TEST_FAILPOINT:-}" = "state-write" ]; then
+    printf 'installer test failpoint: state-write\n' >&2
+    return 97
+  fi
   mkdir -p "$(dirname "$state_file")"
   cp "$captured_state" "$state_file"
 }
@@ -335,9 +550,174 @@ PY
 
 ccgs_deploy_paths() {
   ccgs_manifest_paths
-  if [ -d "$ccgs_source_root/.codex/tests" ]; then
-    (cd "$ccgs_source_root" && find .codex/tests -type f -print)
+}
+
+ccgs_state_obsolete_paths() {
+  local manifest_file
+  manifest_file="$(mktemp "${TMPDIR:-/tmp}/ccgs-manifest-paths.XXXXXX")"
+  ccgs_manifest_paths | sort -u > "$manifest_file"
+  local state_path
+  while IFS= read -r state_path; do
+    grep -Fxq "$state_path" "$manifest_file" || printf '%s\n' "$state_path"
+  done < <(ccgs_state_owned_paths)
+  rm -f "$manifest_file"
+}
+
+ccgs_preflight_install_path() {
+  local path="$1"
+  local source_file="$ccgs_source_root/$path"
+  local target_file="$ccgs_install_root/$path"
+  local mode
+  mode="$(ccgs_install_mode)"
+  ccgs_refuse_claude_path "$path"
+
+  if ccgs_target_path_has_symlink "$path"; then
+    printf 'install conflict: refusing symlinked target path or parent: %s\n' "$path" >&2
+    return 1
   fi
+
+  if [ ! -f "$source_file" ]; then
+    printf 'install conflict: missing package source %s\n' "$path" >&2
+    return 1
+  fi
+  if [ ! -e "$target_file" ]; then
+    return 0
+  fi
+  if [ ! -f "$target_file" ]; then
+    printf 'install conflict: target path is not a regular file: %s\n' "$path" >&2
+    return 1
+  fi
+  case "$path" in
+    .codex/tests/*)
+      ;;
+    AGENTS.md|*/AGENTS.md)
+      if ! ccgs_target_has_marker "$path"; then
+        return 0
+      fi
+      ;;
+  esac
+
+  if ccgs_state_owns_path "$path"; then
+    if ccgs_target_matches_state "$path" || cmp -s "$source_file" "$target_file"; then
+      return 0
+    fi
+    if [ "$ccgs_replace_modified" = "1" ]; then
+      [ "$ccgs_dry_run" = "1" ] && printf 'would backup and replace modified package-owned %s\n' "$path"
+      return 0
+    fi
+    printf 'install conflict: modified package-owned path %s; rerun with --replace-modified after review\n' "$path" >&2
+    return 1
+  fi
+
+  if [ "$mode" = "claude_ccgs_coexist" ] && ccgs_shared_manifest_path "$path"; then
+    return 0
+  fi
+
+  printf 'install conflict: refusing to overwrite unowned path %s\n' "$path" >&2
+  return 1
+}
+
+ccgs_install_preflight() {
+  local failed=0
+  local install_path
+  while IFS= read -r install_path; do
+    ccgs_preflight_install_path "$install_path" || failed=1
+  done < <(ccgs_deploy_paths | sort -u)
+  for install_path in ".gitignore" "$ccgs_install_state_rel"; do
+    if ccgs_target_path_has_symlink "$install_path"; then
+      printf 'install conflict: refusing symlinked target path or parent: %s\n' "$install_path" >&2
+      failed=1
+    fi
+  done
+  while IFS= read -r install_path; do
+    if ccgs_target_path_has_symlink "$install_path"; then
+      printf 'install conflict: refusing symlinked obsolete target path or parent: %s\n' "$install_path" >&2
+      failed=1
+    fi
+  done < <(ccgs_state_obsolete_paths)
+  return "$failed"
+}
+
+ccgs_transaction_record() {
+  local path="$1"
+  [ -n "$ccgs_transaction_dir" ] || return 1
+  grep -Fxq "$path" "$ccgs_transaction_dir/seen" 2>/dev/null && return 0
+
+  local parent
+  parent="$(dirname "$path")"
+  local parents=()
+  while [ "$parent" != "." ] && [ "$parent" != "/" ]; do
+    parents+=("$parent")
+    parent="$(dirname "$parent")"
+  done
+  local index
+  for ((index=${#parents[@]}-1; index>=0; index--)); do
+    parent="${parents[$index]}"
+    if [ ! -d "$ccgs_install_root/$parent" ] && ! grep -Fxq "D	$parent" "$ccgs_transaction_dir/records" 2>/dev/null; then
+      printf 'D\t%s\n' "$parent" >> "$ccgs_transaction_dir/records"
+    fi
+  done
+
+  printf '%s\n' "$path" >> "$ccgs_transaction_dir/seen"
+  if [ -f "$ccgs_install_root/$path" ]; then
+    mkdir -p "$ccgs_transaction_dir/files/$(dirname "$path")"
+    cp -p "$ccgs_install_root/$path" "$ccgs_transaction_dir/files/$path"
+    printf 'F\t%s\n' "$path" >> "$ccgs_transaction_dir/records"
+  else
+    printf 'M\t%s\n' "$path" >> "$ccgs_transaction_dir/records"
+  fi
+}
+
+ccgs_transaction_prepare_install() {
+  ccgs_transaction_dir="$(mktemp -d "${TMPDIR:-/tmp}/ccgs-install-transaction.XXXXXX")"
+  : > "$ccgs_transaction_dir/records"
+  : > "$ccgs_transaction_dir/seen"
+  local transaction_path
+  while IFS= read -r transaction_path; do
+    ccgs_transaction_record "$transaction_path"
+  done < <(ccgs_deploy_paths | sort -u)
+  ccgs_transaction_record ".gitignore"
+  ccgs_transaction_record "$ccgs_install_state_rel"
+  while IFS= read -r transaction_path; do
+    ccgs_transaction_record "$transaction_path"
+  done < <(ccgs_state_obsolete_paths)
+  export CCGS_TRANSACTION_DIR="$ccgs_transaction_dir"
+}
+
+ccgs_transaction_restore() {
+  [ -n "$ccgs_transaction_dir" ] && [ -f "$ccgs_transaction_dir/records" ] || return 0
+  local kind path
+  while IFS=$'\t' read -r kind path; do
+    case "$kind" in
+      F)
+        mkdir -p "$ccgs_install_root/$(dirname "$path")"
+        cp -p "$ccgs_transaction_dir/files/$path" "$ccgs_install_root/$path"
+        ;;
+      M)
+        rm -f "$ccgs_install_root/$path"
+        ;;
+      D)
+        rmdir "$ccgs_install_root/$path" 2>/dev/null || true
+        ;;
+    esac
+  done < <(python3 - "$ccgs_transaction_dir/records" <<'PY'
+import sys
+from pathlib import Path
+lines = Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+for line in reversed(lines):
+    print(line)
+PY
+)
+  printf 'Install failed; restored the pre-install target state. Durable backups were retained.\n' >&2
+  rm -rf "$ccgs_transaction_dir"
+  ccgs_transaction_dir=""
+  export CCGS_TRANSACTION_DIR=""
+}
+
+ccgs_transaction_commit() {
+  [ -n "$ccgs_transaction_dir" ] && rm -rf "$ccgs_transaction_dir"
+  ccgs_transaction_dir=""
+  export CCGS_TRANSACTION_DIR=""
 }
 
 ccgs_project_owned_allowlist_paths() {
@@ -501,34 +881,6 @@ ccgs_remove_gitignore_allowlist() {
   set -e
   [ "$status" -eq 3 ] && return 0
   return "$status"
-}
-
-ccgs_obsolete_paths() {
-  cat <<'EOF'
-assets/data/AGENTS.md
-assets/shaders/AGENTS.md
-design/AGENTS.md
-design/gdd/AGENTS.md
-design/narrative/AGENTS.md
-docs/AGENTS.md
-prototypes/AGENTS.md
-src/AGENTS.md
-src/ai/AGENTS.md
-src/core/AGENTS.md
-src/gameplay/AGENTS.md
-src/networking/AGENTS.md
-src/ui/AGENTS.md
-tests/AGENTS.md
-tools/AGENTS.md
-production/session-logs/agents-start.jsonl
-production/session-logs/agents-stop.jsonl
-production/session-logs/asset-validation-last.json
-production/session-logs/post-compact-last.json
-production/session-logs/pre-compact-last.json
-production/session-logs/session-start.json
-production/session-logs/session-stop.json
-production/session-logs/skill-change-last.json
-EOF
 }
 
 ccgs_verify_manifest_paths() {
@@ -721,6 +1073,7 @@ ccgs_incremental_source_unchanged() {
   local path="$1"
   [ "${CCGS_PATCH_MODE:-}" = "incremental" ] || return 1
   [ -e "$ccgs_install_root/$path" ] || return 1
+  ccgs_target_matches_state "$path" || return 1
   local state_file
   state_file="$(ccgs_install_state_file)"
   [ -f "$state_file" ] || return 1
@@ -781,11 +1134,16 @@ ccgs_install_file() {
     return 0
   fi
 
-  if [ "$mode" = "claude_ccgs_coexist" ] && ccgs_shared_manifest_path "$path" && [ -e "$target_file" ]; then
+  if [ "$mode" = "claude_ccgs_coexist" ] && ccgs_shared_manifest_path "$path" && [ -e "$target_file" ] && ! ccgs_state_owns_path "$path"; then
     if [ "$ccgs_dry_run" = "1" ]; then
       printf 'would preserve preexisting shared %s\n' "$path"
     fi
     return 0
+  fi
+
+  if [ "${CCGS_TEST_FAILPOINT:-}" = "copy" ] && [ "$path" = ".codex/README.md" ]; then
+    printf 'installer test failpoint: copy\n' >&2
+    return 97
   fi
 
   case "$path" in
@@ -844,7 +1202,6 @@ ccgs_install_assets() {
     ccgs_install_file "$path" || failed=1
   done < <(ccgs_deploy_paths | sort -u)
   ccgs_remove_obsolete_assets || failed=1
-  ccgs_prune_empty_dirs
   return "$failed"
 }
 
@@ -870,20 +1227,28 @@ ccgs_uninstall_file() {
   fi
 
   if [ "$ccgs_dry_run" = "1" ]; then
-    printf 'would remove %s\n' "$path"
+    if ccgs_state_owns_path "$path"; then
+      printf 'would remove package-owned %s\n' "$path"
+    else
+      printf 'would preserve unproven path %s\n' "$path"
+    fi
     return 0
   fi
 
   case "$path" in
     .codex/tests/*)
-      ccgs_backup_if_modified_before_remove "$path"
-      rm -f "$target_file"
+      if ccgs_state_owns_path "$path"; then
+        ccgs_target_matches_state "$path" || ccgs_backup_file "$path"
+        rm -f "$target_file"
+      else
+        printf 'leaving unproven package path unchanged: %s\n' "$path"
+      fi
       ;;
     AGENTS.md|*/AGENTS.md)
       local source_file="$ccgs_source_root/$path"
-      if [ "$ccgs_source_root" != "$ccgs_install_root" ] && [ -f "$source_file" ] && cmp -s "$source_file" "$target_file"; then
+      if ccgs_state_owns_path "$path" && [ "$ccgs_source_root" != "$ccgs_install_root" ] && [ -f "$source_file" ] && cmp -s "$source_file" "$target_file"; then
         rm -f "$target_file"
-      else
+      elif ccgs_state_owns_path "$path"; then
         local changed=0
         ccgs_remove_marker_block "$target_file"
         local status=$?
@@ -907,26 +1272,24 @@ ccgs_uninstall_file() {
         if [ "$path" = "AGENTS.md" ]; then
           ccgs_remove_agents_stub_if_empty "$target_file"
         fi
+      else
+        printf 'leaving unowned instruction file unchanged: %s\n' "$path"
       fi
       ;;
     *)
-      ccgs_backup_if_modified_before_remove "$path"
-      rm -f "$target_file"
+      if ccgs_state_owns_path "$path"; then
+        ccgs_target_matches_state "$path" || ccgs_backup_file "$path"
+        rm -f "$target_file"
+      else
+        printf 'leaving unproven package path unchanged: %s\n' "$path"
+      fi
       ;;
   esac
 }
 
 ccgs_prune_empty_dirs() {
   [ "$ccgs_dry_run" = "1" ] && return 0
-  local mode
-  mode="$(ccgs_install_mode)"
-  if [ -d "$ccgs_install_root/.codex" ]; then
-    find "$ccgs_install_root/.codex" -type d -name __pycache__ -prune -exec rm -rf {} + 2>/dev/null || true
-  fi
-  local dirs=(".codex" ".agents" "CCGS Skill Testing Framework" "assets" "design" "production" "prototypes" "src" "tests" "tools")
-  if [ "$mode" = "claude_ccgs_coexist" ]; then
-    dirs=(".codex" ".agents")
-  fi
+  local dirs=(".codex" ".agents")
   for dir in "${dirs[@]}"; do
     if [ -d "$ccgs_install_root/$dir" ]; then
       local changed=1
@@ -947,46 +1310,75 @@ ccgs_remove_obsolete_assets() {
     local target_file="$ccgs_install_root/$path"
     [ -e "$target_file" ] || continue
 
+    if ! ccgs_state_owns_path "$path"; then
+      printf 'preserving obsolete path without package ownership state: %s\n' "$path"
+      continue
+    fi
+
     if [ "$ccgs_dry_run" = "1" ]; then
-      printf 'would remove obsolete %s\n' "$path"
+      if ccgs_target_matches_state "$path"; then
+        printf 'would remove state-owned obsolete %s\n' "$path"
+      else
+        printf 'would preserve modified obsolete %s\n' "$path"
+      fi
       continue
     fi
 
     case "$path" in
       */AGENTS.md|AGENTS.md)
-        ccgs_remove_marker_block "$target_file"
-        local status=$?
-        if [ "$status" -eq 3 ] && [ "$(tr -d '\n\r\t ' < "$target_file")" = "#CodexGameStudiosInstructions" ]; then
-          rm -f "$target_file"
-        elif [ "$status" -ne 0 ] && [ "$status" -ne 3 ]; then
-          failed=1
+        if ccgs_target_matches_state "$path"; then
+          ccgs_remove_marker_block "$target_file"
+          local status=$?
+          if [ "$status" -ne 0 ] && [ "$status" -ne 3 ]; then
+            failed=1
+          fi
+        else
+          printf 'preserving modified obsolete marker path: %s\n' "$path"
         fi
         ;;
       *)
-        if [ ! -s "$target_file" ] || grep -q '"hook_event_name"' "$target_file" 2>/dev/null; then
+        if ccgs_target_matches_state "$path"; then
           rm -f "$target_file"
+        else
+          printf 'preserving modified obsolete path: %s\n' "$path"
         fi
         ;;
     esac
-  done < <(ccgs_obsolete_paths)
+  done < <(ccgs_state_obsolete_paths)
   return "$failed"
 }
 
 ccgs_uninstall_assets() {
   local failed=0
+  local state_file paths_file
+  state_file="$(ccgs_install_state_file)"
+  paths_file="$(mktemp "${TMPDIR:-/tmp}/ccgs-uninstall-paths.XXXXXX")"
+  if [ "${CCGS_INSTALL_STATE_VALIDATED:-0}" != "1" ] && ! ccgs_install_state_valid; then
+    rm -f "$paths_file"
+    printf 'uninstall: valid install state is required to prove package ownership\n' >&2
+    return 1
+  fi
+  ccgs_state_owned_paths | sort -r -u > "$paths_file"
+  while IFS= read -r path; do
+    if ccgs_target_path_has_symlink "$path"; then
+      printf 'uninstall conflict: refusing symlinked package path or parent: %s\n' "$path" >&2
+      rm -f "$paths_file"
+      return 1
+    fi
+  done < "$paths_file"
   while IFS= read -r path; do
     ccgs_uninstall_file "$path" || failed=1
-  done < <(ccgs_deploy_paths | sort -r -u)
-  local state_file
-  state_file="$(ccgs_install_state_file)"
+  done < "$paths_file"
+  rm -f "$paths_file"
   if [ -e "$state_file" ]; then
     if [ "$ccgs_dry_run" = "1" ]; then
       printf 'would remove %s\n' "$ccgs_install_state_rel"
+    elif [ "$failed" != "0" ]; then
+      printf 'retaining %s because uninstall did not complete cleanly\n' "$ccgs_install_state_rel" >&2
     else
       rm -f "$state_file"
     fi
   fi
-  ccgs_remove_obsolete_assets || failed=1
   ccgs_prune_empty_dirs
   return "$failed"
 }

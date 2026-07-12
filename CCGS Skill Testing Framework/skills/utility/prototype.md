@@ -20,7 +20,7 @@ documented) or PROTOTYPE ABANDONED (mechanic found to be unworkable).
 
 Verified automatically by `$skill-test static` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: PROTOTYPE COMPLETE, PROTOTYPE ABANDONED
 - [ ] Contains "May I write" language before creating prototype files

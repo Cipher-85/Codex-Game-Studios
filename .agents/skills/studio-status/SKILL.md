@@ -28,3 +28,7 @@ context, current-directory, and git footer items remain configured separately
 through `[tui].status_line` when project config is installed. A real footer
 `Stage:` item is blocked until Codex documents support for project custom footer
 items; do not add an unverified fake status-line entry.
+
+## Ported metadata
+
+This is a Codex-native support skill. It has no upstream Claude skill equivalent.

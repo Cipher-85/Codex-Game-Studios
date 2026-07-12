@@ -15,7 +15,7 @@ CONCERNS, or OUT OF BALANCE.
 
 Verified automatically by `$skill-test static` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: BALANCED, CONCERNS, OUT OF BALANCE
 - [ ] Contains "May I write" language (optional report write)

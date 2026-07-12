@@ -10,7 +10,7 @@
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.codex/agents/technical-director.md` frontmatter:
+Verified by parsing the agent's `.codex/agents/technical-director.toml` fields and developer instructions:
 
 - [ ] `description:` field is present and domain-specific (references architecture, feasibility, ADR — not generic)
 - [ ] `allowed-tools:` list may include Read for architecture documents; Bash only if required for technical checks

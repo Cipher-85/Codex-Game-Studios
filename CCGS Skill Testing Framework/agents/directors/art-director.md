@@ -10,7 +10,7 @@
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.codex/agents/art-director.md` frontmatter:
+Verified by parsing the agent's `.codex/agents/art-director.toml` fields and developer instructions:
 
 - [ ] `description:` field is present and domain-specific (references visual identity, art bible, asset standards — not generic)
 - [ ] `allowed-tools:` list is read-focused; image review capability if supported; no Bash unless asset pipeline checks are justified

@@ -1177,6 +1177,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/role-activation-evidence.json"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/tests/fixtures/shared-state-dirty/design/registry/entities.yaml"
   },
   {

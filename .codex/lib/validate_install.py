@@ -17,7 +17,7 @@ ALLOWED_CLAUDE_TEST_FIXTURES = {
     ".codex/tests/fixtures/claude-existing/.claude/settings.json",
     ".codex/tests/fixtures/claude-existing/CLAUDE.md",
 }
-EXPECTED_INSTALLED_FILE_COUNT = 509
+EXPECTED_INSTALLED_FILE_COUNT = 510
 
 
 def run_command(command: list[str], cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:

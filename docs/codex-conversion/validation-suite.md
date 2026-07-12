@@ -43,7 +43,8 @@ These files are part of the future implementation plan, not Phase 4 edits:
 | `./.codex/audit.sh hooks --root "$PWD"` | yes | Run hook schema and stdin fixture checks. |
 | `./.codex/audit.sh coexistence --fixture .codex/tests/fixtures/coexistence` | yes | Install/uninstall with `.claude/**` and `CLAUDE.md` present. |
 | `./.codex/audit.sh smoke-headless --root "$PWD"` | yes | Static workflow smoke without model calls. |
-| `./.codex/audit.sh smoke-interactive --root "$PWD"` | no | Optional Codex CLI smoke requiring trust/auth/approval. |
+| `./.codex/audit.sh smoke-interactive --root "$PWD"` | no | Reports `skipped` when no live evidence is supplied. |
+| `./.codex/audit.sh smoke-interactive --root "$PWD" --evidence /path/to/evidence.json` | no | Cross-checks raw parent, child, and hook JSONL for a recorded CLI or desktop activation; never launches a model in CI. |
 | `codex --strict-config -C "$fixture" debug prompt-input "noop"` | optional | Confirm model-visible `AGENTS.md` layering in a trusted fixture. |
 | `codex debug models > "$tmp/models.json"` | optional | Validate configured model slugs against the current local model catalog. |
 
@@ -274,12 +275,44 @@ Headless static smoke:
 Interactive smoke, optional:
 - Run Codex in a trusted fixture and invoke `start`.
 - Trigger a subagent delegation from a team skill.
+- Require hook or transcript evidence that the exact custom role profile loaded;
+  a task path plus `agent_type: default` is a failed role-agent smoke. A task
+  name, agent path, nickname, or child self-identification is not activation
+  proof.
+- Record the client surface and point the evidence file at the raw parent
+  rollout, child rollout, and SubagentStart log. The validator derives the
+  runtime version, selected role, configured child model and effort, role
+  instruction canary, and V2 fork mode from those sources plus the authoritative
+  role TOML.
 - Trigger a hook-protected git command in a fixture.
 - Confirm prompt-input includes root `AGENTS.md` content with no Claude runtime dependency; separately verify the router names every shipped path rule.
 
 Acceptance:
 - `audit smoke-headless` must pass in CI.
-- `audit smoke-interactive` is a documented manual/release gate and may be skipped in CI with an explicit reason.
+- `audit smoke-interactive` must report `skipped`, not `pass`, when no trusted
+  model-running evidence was executed. CI may skip it with an explicit reason.
+- `audit smoke-interactive --evidence <json>` must fail closed on default/null
+  roles, generic instructions, model/effort mismatches, self-report-only
+  evidence, and incompatible V2 full-history forks.
+
+Role-activation evidence uses this shape:
+
+```json
+{
+  "surface": "desktop",
+  "requested_role": "producer",
+  "task_name": "desktop_producer_activation_probe",
+  "parent_session_log": "/path/to/parent-rollout.jsonl",
+  "child_session_log": "/path/to/child-rollout.jsonl",
+  "hook_log": "/path/to/agents-start.jsonl"
+}
+```
+
+Relative evidence paths resolve from the evidence JSON location. A passing
+record requires one matching raw `spawn_agent` call, parent start event,
+SubagentStart hook payload, child session identity, role metadata, configured
+model/effort, and developer-instruction canary. Summary booleans, task paths,
+and child self-identification are not accepted as substitutes.
 
 ## Required Reports
 

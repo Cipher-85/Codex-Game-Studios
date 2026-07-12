@@ -227,6 +227,14 @@ CLOSEOUT_FORBIDDEN_PHRASES = (
     "numbered choice set",
 )
 
+ROLE_DELEGATION_EVIDENCE_PHRASES = (
+    "agent_type: default",
+    "agent_role: null",
+    'fork_turns: "none"',
+    "A task name, agent path, nickname",
+    "do not simulate the specialist verdict",
+)
+
 PLAYTEST_FOCUS_CONTRACT = {
     "AGENTS.md": (
         "user-owned playtest",
@@ -989,6 +997,12 @@ def validate_agent_startup_roster(root: Path, agent_names: set[str]) -> list[str
 
     if len(agent_names) != 49 and "49 coordinated Codex subagents" in text:
         errors.append("AGENTS.md: stale 49-agent claim remains for project-local agent set")
+
+    for phrase in ROLE_DELEGATION_EVIDENCE_PHRASES:
+        if phrase not in text:
+            errors.append(
+                f"AGENTS.md: missing runtime role-delegation evidence boundary {phrase!r}"
+            )
 
     return errors
 

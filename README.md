@@ -1,10 +1,10 @@
 # Codex Game Studios
 
 Codex Game Studios turns a game repository into a Codex-native indie studio
-workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
+workflow: 49 declared role profiles, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.5.0`.
+Current package version: `0.6.0`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -14,7 +14,7 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## What Is Included
 
-- 49 Codex custom agents in `.codex/agents/*.toml`
+- 49 Codex custom-agent profiles in `.codex/agents/*.toml`
 - 77 repo-local Codex skills in `.agents/skills/*/SKILL.md`
   - 73 upstream workflow skills ported to Codex
   - 4 Codex support skills: `studio-status`, `studio-next`, `handoff`, and
@@ -29,7 +29,18 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.5.0`. It includes:
+The current release line is `v0.6.0`. It includes:
+
+- Verified custom-role activation through `gpt-5.5` V1 and the experimental
+  Sol V2 user workaround in both CLI and desktop, with `fork_turns: "none"`
+  and authoritative metadata checks kept fail closed.
+- Interactive smoke validation that cross-checks raw parent, child, and
+  SubagentStart JSONL against the selected role TOML instead of accepting
+  task names, self-identification, or summary assertions as proof.
+- Remote-aware release validation that compares installable changes against
+  origin tags and fails closed when tag or diff truth is unavailable.
+
+The `v0.5.0` release also includes:
 
 - Strict root and nested `.env*` filesystem protection with validator coverage
   and documented template-name compatibility.
@@ -136,6 +147,15 @@ that every Claude enforcement primitive exists in Codex:
   sessions.
 - Project hooks, rules, and config require project trust and normally a new
   Codex session after installation.
+- Current Codex documentation supports project custom-agent TOML files. On
+  Codex CLI `0.144.1`, `gpt-5.6-sol` selects MultiAgent V2 and its stock tool
+  schema hides custom-role selection, producing `agent_type: default` with
+  generic child instructions. A `gpt-5.5` V1 parent is the verified fallback.
+  Sol can expose role selection with the experimental user-level
+  `[features.multi_agent_v2]` override documented below, but V2 custom roles
+  must use `fork_turns: "none"`. CCGS blocks role-dependent gates unless runtime
+  metadata, role instructions, model, and reasoning effort all confirm the
+  matching custom profile loaded.
 
 ## Install
 
@@ -256,15 +276,38 @@ Run the static, release, and headless checks:
 ./.codex/audit.sh smoke-headless --root "$PWD"
 ```
 
-The optional interactive smoke command exists as a Codex environment check, not
-as a CCGS workflow:
+The optional interactive smoke command is a non-mutating reminder, not proof of
+a live model-running check:
 
 ```bash
 ./.codex/audit.sh smoke-interactive --root "$PWD"
 ```
 
-It may intentionally skip when the current Codex session lacks project trust,
-auth, approvals, or model access.
+It reports `status: skipped` until a trusted session is run and recorded
+separately. The current CLI and desktop role-selection evidence is in the
+[source-repository trusted-session report](https://github.com/Cipher-85/Codex-Game-Studios/blob/main/docs/codex-conversion/trusted-session-smoke-2026-07-12.md).
+
+Validate a separately captured role-activation record with:
+
+```bash
+./.codex/audit.sh smoke-interactive --root "$PWD" \
+  --evidence /path/to/role-activation-evidence.json
+```
+
+For CLI-only Sol probes, pass ephemeral overrides rather than modifying project
+configuration:
+
+```bash
+codex exec --strict-config -s read-only -m gpt-5.6-sol \
+  -c 'features.multi_agent_v2.hide_spawn_agent_metadata=false' \
+  -c 'features.multi_agent_v2.tool_namespace="agents"' \
+  '<request a custom role with fork_turns set to none>'
+```
+
+These nested V2 keys are recognized by Codex `0.144.x` but are not documented
+in the public configuration reference. Do not ship them in project
+`.codex/config.toml`; treat them as a temporary user-level workaround and
+re-verify them after every Codex update.
 
 ## Coexistence With Claude Code
 

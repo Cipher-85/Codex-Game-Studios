@@ -3,8 +3,8 @@
 <!-- BEGIN CCGS CODEX PORT -->
 ## Codex Game Studios
 
-Codex Game Studios coordinates indie game development through 49 Codex role
-agents with strict domain ownership, user-owned design decisions, and
+Codex Game Studios defines 49 Codex role profiles for indie game development
+with strict domain ownership, user-owned design decisions, and
 verification-first implementation.
 
 ## Startup Contract
@@ -159,6 +159,17 @@ declared by `.codex/docs/director-gates.md`. `solo` skips all director gates;
 immediately when the workflow reaches them. If the subagent tool is unavailable
 or a hard runtime gate prevents a declared spawn, report the missing delegation
 as skipped or blocked and do not simulate specialist or director verdicts.
+
+A spawned task path or requested name is not proof that the matching custom
+role profile loaded. Before accepting a role-agent result, require runtime
+evidence that the child received the matching role instructions or was spawned
+as the exact custom agent type. A task name, agent path, nickname, or child
+self-identification is non-authoritative. For MultiAgent V2 custom-role spawns,
+pass `fork_turns: "none"`; the current full-history default rejects role/model
+overrides. If the selector is absent from the model-visible tool schema, or the
+payload reports `agent_type: default`, `agent_role: null`, mismatched configured
+model/effort, or only generic base instructions, report role delegation as
+blocked and do not simulate the specialist verdict.
 
 ## Low-Friction Decision Prompts
 

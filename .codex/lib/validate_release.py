@@ -110,55 +110,51 @@ def validate_readme_versions(root: Path, version: str) -> list[str]:
     return errors
 
 
-def tag_commit(root: Path, tag: str) -> str | None:
-    result = run_git(root, "rev-list", "-n", "1", tag)
+def origin_release_tags(root: Path) -> list[tuple[tuple[int, int, int], str, str]]:
+    result = run_git(root, "ls-remote", "--tags", "origin")
     if result.returncode != 0:
-        return None
-    return result.stdout.strip() or None
+        detail = result.stderr.strip() or "unknown git ls-remote failure"
+        raise ValidationError(f"could not query origin release tags: {detail}")
 
-
-def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
-    result = run_git(root, "merge-base", "--is-ancestor", ancestor, descendant)
-    return result.returncode == 0
-
-
-def codex_release_tags(root: Path) -> list[tuple[tuple[int, int, int], str]]:
-    result = run_git(root, "tag", "--list", f"{CODEX_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*")
-    tags: list[tuple[tuple[int, int, int], str]] = []
-    baseline_commit = tag_commit(root, LEGACY_BASELINE_TAG)
-    if baseline_commit:
-        tags.append(((0, 1, 0), LEGACY_BASELINE_TAG))
-    if result.returncode != 0:
-        return tags
-    for tag in result.stdout.splitlines():
-        raw = tag.removeprefix(CODEX_TAG_PREFIX)
-        try:
-            parsed = parse_semver(raw)
-        except ValidationError:
+    discovered: dict[str, tuple[tuple[int, int, int], str]] = {}
+    for line in result.stdout.splitlines():
+        parts = line.split()
+        if len(parts) != 2 or not parts[1].startswith("refs/tags/"):
             continue
-        if baseline_commit and parsed == (0, 1, 0):
-            commit = tag_commit(root, tag)
-            if commit and commit != baseline_commit:
+        commit, ref = parts
+        tag = ref.removeprefix("refs/tags/")
+        peeled = tag.endswith("^{}")
+        if peeled:
+            tag = tag[:-3]
+        if tag == LEGACY_BASELINE_TAG:
+            parsed = (0, 1, 0)
+        elif tag.startswith(CODEX_TAG_PREFIX):
+            try:
+                parsed = parse_semver(tag.removeprefix(CODEX_TAG_PREFIX))
+            except ValidationError:
                 continue
-        elif baseline_commit:
-            commit = tag_commit(root, tag)
-            if commit and not is_ancestor(root, baseline_commit, commit):
-                continue
-        if any(existing == parsed for existing, _ in tags):
+        else:
             continue
-        tags.append((parsed, tag))
-    return sorted(tags)
+        existing = discovered.get(tag)
+        if existing is None or peeled:
+            discovered[tag] = (parsed, commit)
+    return sorted((parsed, tag, commit) for tag, (parsed, commit) in discovered.items())
 
 
-def changed_paths_since(root: Path, tag: str, watched_paths: list[str]) -> list[str]:
+def changed_paths_since(root: Path, base_ref: str, watched_paths: list[str]) -> list[str]:
     existing = [path for path in watched_paths if (root / path).exists()]
     if not existing:
         return []
-    result = run_git(root, "diff", "--name-only", tag, "--", *existing)
-    changed = set(result.stdout.splitlines()) if result.returncode == 0 else set()
+    result = run_git(root, "diff", "--name-only", base_ref, "--", *existing)
+    if result.returncode != 0:
+        detail = result.stderr.strip() or "unknown git diff failure"
+        raise ValidationError(f"could not compare release files against {base_ref}: {detail}")
+    changed = set(result.stdout.splitlines())
     untracked = run_git(root, "ls-files", "--others", "--exclude-standard", "--", *existing)
-    if untracked.returncode == 0:
-        changed.update(untracked.stdout.splitlines())
+    if untracked.returncode != 0:
+        detail = untracked.stderr.strip() or "unknown git ls-files failure"
+        raise ValidationError(f"could not inspect untracked release files: {detail}")
+    changed.update(untracked.stdout.splitlines())
     return sorted(path for path in changed if path in set(watched_paths))
 
 
@@ -177,17 +173,25 @@ def validate_release(root: Path) -> tuple[list[str], list[str]]:
         errors.append(f"CHANGELOG.md is missing a section for v{version}")
     errors.extend(validate_readme_versions(root, version))
 
-    tags = codex_release_tags(root)
+    try:
+        tags = origin_release_tags(root)
+    except ValidationError as exc:
+        errors.append(str(exc))
+        return errors, warnings
     if not tags:
-        warnings.append("no codex-vX.Y.Z git tags or legacy v0.1.0 baseline found; skipping tag-diff version-bump check")
+        errors.append("origin has no codex-vX.Y.Z release tags or legacy v0.1.0 baseline")
         return errors, warnings
 
-    latest_tuple, latest_tag = tags[-1]
+    latest_tuple, latest_tag, latest_commit = tags[-1]
     if version_tuple < latest_tuple:
         errors.append(f".codex/VERSION {version} is older than latest tag {latest_tag}")
         return errors, warnings
 
-    changed = changed_paths_since(root, latest_tag, watched_paths)
+    try:
+        changed = changed_paths_since(root, latest_commit, watched_paths)
+    except ValidationError as exc:
+        errors.append(str(exc))
+        return errors, warnings
     if version_tuple == latest_tuple and changed:
         errors.append(
             "installable or release files changed since "

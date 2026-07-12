@@ -1,8 +1,19 @@
 # Changelog
 
-## Unreleased
+## v0.6.0 - 2026-07-12
 
-- Nothing yet.
+- Made `audit smoke-interactive` report an explicit skipped result instead of a
+  false pass when no trusted model-running smoke occurred, and added raw parent,
+  child, and SubagentStart evidence validation for recorded role activation.
+- Verified existing custom-role profiles under a `gpt-5.5` V1 parent and the
+  experimental Sol V2 user override in both CLI and desktop; documented
+  `fork_turns: "none"`, authoritative metadata requirements, and the stock Sol
+  limitation without renaming or re-registering role files.
+- Added live trust, filesystem, hook, skill, model-route, footer, and
+  custom-role evidence with fail-closed regression fixtures.
+- Made release validation query origin tags read-only and fail closed when
+  remote tag truth or the release diff cannot be established.
+- Expanded `audit all` to include the shipped skill and custom-agent validators.
 
 ## v0.5.0 - 2026-07-12
 

@@ -14,16 +14,29 @@ Optional interactive smoke:
 
 ```bash
 ./.codex/audit.sh smoke-interactive --root "$PWD"
+./.codex/audit.sh smoke-interactive --root "$PWD" \
+  --evidence /path/to/role-activation-evidence.json
 ```
 
-Interactive smoke can depend on project trust, auth, approvals, and model access, so it is not required for the default acceptance gate.
+Without evidence, this command reports `status: skipped`; it does not claim
+that a model-running smoke occurred. With evidence, it parses the raw parent
+rollout, child rollout, and SubagentStart JSONL and cross-checks role metadata,
+instructions, model, effort, child identity, and V2 fork mode against the
+authoritative role TOML. Interactive smoke depends on project trust, auth,
+approvals, and model access, so it is recorded separately from the default
+acceptance gate. A trusted run should verify project skill discovery, strict config,
+ordinary-file controls, `.env*` read/write denial, SessionStart/PreToolUse/
+PostToolUse/SubagentStart/SubagentStop hooks, configured model routes, footer
+items, and authoritative custom-agent type/instruction evidence. MultiAgent V2
+custom-role evidence requires `fork_turns: "none"`.
 
 Validator policy:
 
 - Python validators use only the standard library.
 - Release validation is non-mutating. It verifies `.codex/VERSION`,
-  `CHANGELOG.md`, `codex-vX.Y.Z` package tags, and changed installable files,
-  but it does not create tags, edit files, publish, or bump versions. The
+  `CHANGELOG.md`, origin's `codex-vX.Y.Z` package tags, and changed installable
+  files through read-only `git ls-remote`; unavailable remote tag truth fails
+  closed. It does not create tags, edit files, publish, or bump versions. The
   legacy `v0.1.0` tag is accepted only as the initial Codex-port baseline;
   inherited upstream Claude tags such as plain `v0.2.0`, `v0.3.0`, and
   `v1.0.0` are ignored.

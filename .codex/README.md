@@ -12,7 +12,10 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.5.0`.
+- The package version is `v0.6.0`.
+- `v0.6.0` adds verified CLI/desktop custom-role activation guidance, raw
+  parent/child/hook evidence validation, V2 no-fork enforcement, and
+  remote-aware fail-closed release checks.
 - `v0.5.0` adds strict `.env*` protection, fail-closed manifest ownership and
   installer transactions, backward-compatible uninstall parsing, Codex-native
   skill QA, and documented path-rule enforcement limitations.
@@ -27,9 +30,10 @@ Current status:
   state, and default patch-aware installs.
 - `v0.3.0` documents the latest root workflow alignment and the hook parser fix
   for current Codex `apply_patch` JSON payloads and legacy raw patch payloads.
-- Release validation compares against `codex-vX.Y.Z` tags, plus the legacy
-  `v0.1.0` initial Codex-port baseline, not upstream Claude release tags
-  inherited through the pinned source history.
+- Release validation compares against origin's `codex-vX.Y.Z` tags through a
+  read-only remote query, plus the legacy `v0.1.0` initial Codex-port baseline,
+  not stale local refs or upstream Claude release tags inherited through the
+  pinned source history.
 
 Coexistence rules:
 - Do not write to `.claude/`.
@@ -57,6 +61,16 @@ Install and release notes:
   contents when state is missing or stale.
 - Installer success is static package verification, not proof that project
   trust, hooks, rules, or config are active in the current Codex session.
+- Standalone custom-agent files are validated as supported Codex profiles, but
+  an exact role name, task path, nickname, or child self-identification is not
+  accepted as activation proof. Codex `0.144.x` Sol parents select MultiAgent
+  V2 and may hide the custom-role selector; use the verified `gpt-5.5` V1
+  fallback or a separately verified user-level V2 workaround. V2 custom roles
+  require `fork_turns: "none"`, and results remain blocked unless role metadata,
+  instructions, model, and reasoning effort all match the selected profile.
+- `audit.sh smoke-interactive` reports `skipped`; trusted model-running evidence
+  must be recorded separately or supplied with `--evidence`; task-path-only or
+  default-role evidence fails closed.
 - `audit.sh release` validates `.codex/VERSION`, `CHANGELOG.md`, release tags,
   and changed installable files without mutating the checkout.
 - Package publishing is `bump -> edit changelog/docs -> check -> commit/push ->

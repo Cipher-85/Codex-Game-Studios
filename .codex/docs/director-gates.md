@@ -102,10 +102,21 @@ with internal simulated verdicts. The skill invocation is already authorization
 for declared gates that survived review-mode filtering; do not ask a second
 confirmation before spawning them.
 
+Before spawning, confirm that the model-visible delegation tool can select the
+exact custom role. For MultiAgent V2, set `fork_turns: "none"`; full-history
+forks currently reject custom role, model, or reasoning overrides. Treat the
+requested task name, agent path, nickname, and child self-identification as
+labels rather than activation evidence. Accept the gate result only when
+authoritative metadata identifies the requested role, the matching role
+instructions loaded, and the configured model and reasoning effort were
+applied. Otherwise mark the gate blocked and do not simulate its verdict.
+
 ```
 # Apply mode check, then:
 Spawn `[agent-name]` via Codex subagent delegation:
 - Gate: [GATE-ID] (see .codex/docs/director-gates.md)
+- Custom role: [agent-name]
+- Fork mode: `none` when using MultiAgent V2
 - Context: [fields listed under that gate]
 - Await the verdict before proceeding.
 ```

@@ -15,6 +15,8 @@ case "$cmd" in
   all)
     run validate_manifest.py "$@"
     run validate_runtime.py "$@"
+    run validate_runtime.py --kind skills "$@"
+    run validate_runtime.py --kind agents "$@"
     run validate_hooks.py "$@"
     run validate_rules.py "$@"
     run validate_install.py "$@"

@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 role agents, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.4.7`.
+Current package version: `0.5.0`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,7 +29,21 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.4.7`. It includes:
+The current release line is `v0.5.0`. It includes:
+
+- Strict root and nested `.env*` filesystem protection with validator coverage
+  and documented template-name compatibility.
+- Fail-closed, manifest-owned install and uninstall behavior, including all 38
+  test assets, conflict preflight, explicit backup-first replacement, and
+  state-proven cleanup.
+- Transaction rollback, trust and activation reporting, backward-compatible
+  uninstall dry-run parsing, and temporary-target integration coverage.
+- Codex-native skill QA across all 77 shipped skills without restoring
+  unsupported Claude frontmatter or delegation vocabulary.
+- A canonical advisory path-rule router with user-visible runtime enforcement
+  limitations.
+
+The `v0.4.7` release also includes:
 
 - A hard `$resume-from-handoff` selection boundary: focus arguments only bias
   ranking, multi-lane choices prefer structured input, single-lane choices wait

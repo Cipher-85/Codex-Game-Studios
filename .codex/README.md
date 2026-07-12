@@ -12,7 +12,10 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.4.7`.
+- The package version is `v0.5.0`.
+- `v0.5.0` adds strict `.env*` protection, fail-closed manifest ownership and
+  installer transactions, backward-compatible uninstall parsing, Codex-native
+  skill QA, and documented path-rule enforcement limitations.
 - `v0.4.7` hardens resume lane selection, validates Codex-native optional
   `gen-asset` cores and ACTIVE/STUB profiles, and keeps that project-local skill
   trackable without adding it to package ownership.

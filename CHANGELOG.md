@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Nothing yet.
+
+## v0.5.0 - 2026-07-12
+
 - Added strict root and nested `.env*` filesystem denies with regression
   validation and documented template-name compatibility.
 - Made install and uninstall manifest-owned and fail closed: all 38 test assets

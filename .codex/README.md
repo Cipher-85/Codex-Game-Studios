@@ -12,7 +12,10 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.6.0`.
+- The package version is `v0.6.1`.
+- `v0.6.1` hardens `$handoff` push routing, verifies the authenticated GitHub
+  destination and repository permission in the same turn, and fails closed on
+  policy denial without alternate-command retries.
 - `v0.6.0` adds verified CLI/desktop custom-role activation guidance, raw
   parent/child/hook evidence validation, V2 no-fork enforcement, and
   remote-aware fail-closed release checks.

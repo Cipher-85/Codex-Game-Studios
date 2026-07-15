@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 declared role profiles, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.6.0`.
+Current package version: `0.6.1`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,7 +29,16 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.6.0`. It includes:
+The current release line is `v0.6.1`. It includes:
+
+- Upstream-aware `$handoff` push routing: existing-upstream branches use plain
+  `git push`, while only branches without an upstream set one through origin.
+- Same-turn GitHub authentication, destination, and repository-permission
+  verification before a handoff push is attempted.
+- Scoped `git push` approval requests with fail-closed policy-denial handling
+  and no alternate-command retries or workarounds.
+
+The `v0.6.0` release also includes:
 
 - Verified custom-role activation through `gpt-5.5` V1 and the experimental
   Sol V2 user workaround in both CLI and desktop, with `fork_turns: "none"`

@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6.1 - 2026-07-16
+
+- Hardened `$handoff` push routing so existing-upstream branches use plain
+  `git push`, while only branches without an upstream use
+  `git push -u origin <branch>`.
+- Added same-turn GitHub account, destination, and repository-permission checks
+  before handoff pushes, avoiding false authentication conclusions from
+  network-restricted sandbox failures.
+- Scoped push escalation to `["git", "push"]` and made policy denials fail
+  closed without alternate-command retries or workarounds.
+
 ## v0.6.0 - 2026-07-12
 
 - Made `audit smoke-interactive` report an explicit skipped result instead of a

@@ -228,16 +228,61 @@ Never use `--no-verify`. Never amend as a workaround for a failed hook.
 
 ## Phase 4: Push Handoff
 
-Determine the branch:
+Determine the branch and configured upstream:
 
 ```bash
 git rev-parse --abbrev-ref HEAD
+git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
 ```
 
-Push only if the handoff trigger or user instruction authorizes it. If the
-branch has no upstream, use `git push -u origin <branch>`. Explicit `$handoff`
-invocation is normal push authorization for the standard handoff commit. Never
-force-push.
+Treat a non-zero upstream lookup as the expected no-upstream case, not as a
+Phase failure. Do not substitute a different branch. If an upstream exists,
+derive its remote name from the returned `<remote>/<branch>` value and verify
+that remote's push URL. If no upstream exists, verify `origin` because it is the
+only remote authorized for the setup push:
+
+```bash
+git remote get-url --push <upstream-remote>
+git remote get-url --push origin
+```
+
+Run only the command that matches the detected upstream state. Halt if the
+required push remote is missing.
+
+When the push remote is on `github.com`, establish destination evidence in this
+same handoff turn immediately before the push:
+
+```bash
+gh auth status -h github.com
+gh api user --jq .login
+gh repo view <owner>/<repo> --json viewerPermission --jq .viewerPermission
+```
+
+Derive `<owner>/<repo>` from the verified remote URL. Run these read-only GitHub
+checks with the network access they require; a failure from a network-restricted
+sandbox is not evidence that the stored credential is invalid. Never request or
+display a token. Continue only when the authenticated account and a `WRITE`,
+`MAINTAIN`, or `ADMIN` permission establish that the destination is authorized.
+Otherwise halt and report the exact failed check.
+
+Push only if the handoff trigger or user instruction authorizes it. Use exactly
+one of these command shapes:
+
+- Existing upstream: `git push`.
+- No upstream: `git push -u origin <branch>`.
+
+Request the required escalation with the scoped approval prefix
+`["git", "push"]`. The justification must state that this is the explicitly
+authorized, non-force handoff push; name the verified remote, authenticated
+account and permission; and identify the current branch/upstream. Explicit
+`$handoff` invocation is normal push authorization for the standard handoff
+commit. Never force-push.
+
+If policy or automatic approval review rejects the push, halt Phase 4. Report
+the exact rejection and do not retry with another command shape, indirect
+execution, or workaround. When the current Codex surface supports it, direct
+the user to `/approve` and the denied action for the documented single-action
+retry; otherwise ask the user to perform the push directly.
 
 ## Phase 5: Report And Stop
 

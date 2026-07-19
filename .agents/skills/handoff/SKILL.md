@@ -54,6 +54,25 @@ indirect command workaround. Do not tell the user to switch `/permissions`
 modes: approval routing cannot repair a filesystem rule already resolved for the
 session.
 
+## Push Approval Capability Gate
+
+Before Phase 0, inspect the active session permission instructions. The active
+approval policy must permit sandbox escalation because the `game_studios`
+profile intentionally keeps outbound network access restricted until the
+authorized handoff push. The installed project config declares
+`approval_policy = "on-request"`; a session started before that config became
+active can still report `approval_policy = "never"` and explicitly forbid
+`sandbox_permissions`.
+
+If the active policy is `never`, the permission instructions forbid
+`sandbox_permissions`, or the command tool cannot request escalation, halt
+before Phase 0. Report a stale-session approval-policy configuration mismatch
+and direct the user to start one new session with the installed project config.
+Do not begin the review gate, update continuity files, stage, commit, issue an
+un-escalated `git push`, or ask the user to switch `/permissions` modes. A new
+session is required only to load the corrected project policy; routine handoffs
+must not require manual permission-mode switching.
+
 ## Phase 0: Review Gate
 
 Before rotating continuity files or committing, run this mandatory two-round
@@ -143,7 +162,8 @@ Run Round 2 only when Round 1 caused a fix.
   quotations, user-cleared findings, and any stopped pass.
 - The gate passes only when every finding is fixed and verified, explicitly
   deferred as out of scope, or cleared by the user, with nothing blocking on
-  user input. Only then proceed to Phase 1.
+  user input. Only then proceed to Phase 1 and record the review gate verdict as
+  `PASS`.
 
 ## Phase 1: Choose The Label
 
@@ -222,7 +242,8 @@ before continuing.
 Overwrite `production/session-state/active.md` with a short pointer stub to
 `production/session-handoff.md`. It is gitignored scratch state in many
 projects; keep it coherent but do not stage it unless the repo explicitly tracks
-it.
+it. This is a derived checkpoint authorized by explicit `$handoff` invocation.
+Do not ask a separate "May I write?" for this file.
 
 ## Phase 3: Commit Handoff
 
@@ -304,6 +325,13 @@ current branch/upstream. Do not claim an authenticated account or repository
 permission unless it was actually verified. Explicit `$handoff` invocation is
 normal push authorization for the standard handoff commit. Never force-push.
 
+The first and only push attempt must call the command tool directly with
+`sandbox_permissions` set to `"require_escalated"` and `prefix_rule` set to
+`["git", "push"]`. Do not issue `git push` without escalation first and do not
+run an un-escalated probe. If the tool surface rejects or omits the requested
+escalation, treat that as a policy failure and do not let the command fall back
+to the network-restricted sandbox.
+
 The actual `git push` is the authoritative network and Git-authentication check.
 If it fails, report Git's exact error and do not reinterpret a preceding GitHub
 CLI result as proof of the cause.
@@ -315,6 +343,16 @@ the user to `/approve` and the denied action for the documented single-action
 retry; otherwise ask the user to perform the push directly.
 
 ## Phase 5: Report And Stop
+
+Before reporting, read or refresh the `## Session Worklist` and `## Phase Guard`
+in `production/session-state/active.md` when present. If the scratchpad is only
+a pointer stub, use the handoff document's recorded next action. Surface any
+owed verification and finish with exactly one numbered recommendation:
+
+```text
+Next action:
+1. (Recommended) [action label] - [brief reason / command]
+```
 
 Report in 15 lines or fewer:
 

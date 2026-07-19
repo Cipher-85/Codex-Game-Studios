@@ -13,9 +13,11 @@ Current package version:
 
 Current status:
 - The package version is `v0.6.1`.
-- `v0.6.1` hardens `$handoff` push routing, verifies the authenticated GitHub
-  destination and repository permission in the same turn, and fails closed on
-  policy denial without alternate-command retries.
+- Post-`v0.6.1` hardening keeps Git metadata writable, sets project approval
+  routing to `on-request`, and requires `$handoff` to use one scoped escalated
+  push instead of falling into a network-restricted DNS failure.
+- `v0.6.1` hardens `$handoff` push routing and fails closed on policy denial
+  without alternate-command retries.
 - `v0.6.0` adds verified CLI/desktop custom-role activation guidance, raw
   parent/child/hook evidence validation, V2 no-fork enforcement, and
   remote-aware fail-closed release checks.

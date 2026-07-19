@@ -357,6 +357,18 @@ HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES = (
     "Do not tell the user to switch `/permissions` modes",
 )
 
+HANDOFF_PUSH_APPROVAL_REQUIRED_PHRASES = (
+    "## Push Approval Capability Gate",
+    "approval_policy = \"on-request\"",
+    "approval_policy = \"never\"",
+    "forbid `sandbox_permissions`",
+    "halt before Phase 0",
+    "stale-session approval-policy configuration mismatch",
+    "Do not begin the review gate",
+    "issue an un-escalated `git push`",
+    "routine handoffs must not require manual permission-mode switching",
+)
+
 HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES = (
     "stage only the relevant paths by name",
     "Run staging without requesting escalation",
@@ -374,6 +386,11 @@ HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES = (
     "Do not claim an authenticated account or repository permission unless it was actually verified",
     "The actual `git push` is the authoritative network and Git-authentication check",
     "report Git's exact error",
+    "first and only push attempt",
+    "`sandbox_permissions` set to `\"require_escalated\"`",
+    "`prefix_rule` set to `[\"git\", \"push\"]`",
+    "Do not issue `git push` without escalation first",
+    "do not run an un-escalated probe",
 )
 
 HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES = (
@@ -781,6 +798,17 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
                 + ", ".join(missing)
             )
 
+        missing = [
+            phrase
+            for phrase in HANDOFF_PUSH_APPROVAL_REQUIRED_PHRASES
+            if not contains_phrase(skill_text, phrase)
+        ]
+        if missing:
+            errors.append(
+                f"{skill_rel}: missing handoff push-approval capability phrase(s): "
+                + ", ".join(missing)
+            )
+
         phase3_match = re.search(
             r"(?ms)^## Phase 3: Commit Handoff\s*$\n(.*?)(?=^## Phase 4: Push Handoff\s*$)",
             skill_text,
@@ -822,10 +850,20 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
                 if phrase in phase4_text:
                     errors.append(f"{skill_rel}: Phase 4 {message}: {phrase!r}")
 
+        review_gate_match = re.search(
+            r"(?ms)^## Phase 0: Review Gate\s*$\n(.*?)(?=^## Phase 1: Choose The Label\s*$)",
+            skill_text,
+        )
         for pattern, message in HANDOFF_REVIEW_FORBIDDEN_PATTERNS:
-            match = pattern.search(skill_text)
+            if message == "external-review escalation token" and review_gate_match:
+                search_text = review_gate_match.group(1)
+                search_offset = review_gate_match.start(1)
+            else:
+                search_text = skill_text
+                search_offset = 0
+            match = pattern.search(search_text)
             if match:
-                line_number = skill_text.count("\n", 0, match.start()) + 1
+                line_number = skill_text.count("\n", 0, search_offset + match.start()) + 1
                 errors.append(f"{skill_rel}:{line_number}: {message}")
     return errors
 

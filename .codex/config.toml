@@ -1,3 +1,4 @@
+approval_policy = "on-request"
 default_permissions = "game_studios"
 
 [permissions.game_studios]

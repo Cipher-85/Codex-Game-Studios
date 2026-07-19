@@ -285,9 +285,11 @@ Permissions:
     carve-outs are not parity.
   - Deny sensitive env paths.
   - Network disabled by default unless a user explicitly enables it.
-- Do not force a project-local `approval_policy`. Approval routing is
-  user/session-owned; local staging and commits must work without escalation,
-  while networked pushes follow the active session policy.
+  - `approval_policy = "on-request"` so the network-restricted profile can
+    request the explicitly authorized handoff push without a manual mode switch.
+- Keep normal network access disabled. The project approval override permits a
+  scoped escalation request; it does not grant blanket outbound access. Local
+  staging and commits must continue to work without escalation.
 - Do not set `sandbox_mode` in the same distributable config when permission profiles are used.
 
 Command rules:

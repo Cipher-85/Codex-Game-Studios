@@ -241,13 +241,16 @@ remain in `.codex/rules/settings.rules` and the validation hooks.
 
 The project-local `default_permissions` setting is why `/permissions` displays
 `game_studios`; it does not edit the user's global `~/.codex/config.toml`.
-Approval modes control escalation separately and are not a repair mechanism for
-filesystem rules. `$handoff` checks Git metadata access before its review gate,
-then stages and commits without escalation; a networked push follows the active
-session's approval policy. It does not block an authorized push on inconclusive
-GitHub CLI authentication checks. If the initial Git check fails, install the
-current CCGS profile and start a new session so Codex resolves it. Do not switch
-approval modes, run `chmod`, or delete lock files as a workaround.
+The project also sets `approval_policy = "on-request"` so the network-restricted
+profile can request the explicitly authorized `$handoff` push through the
+active reviewer. It does not enable blanket network access and does not require
+manual `/permissions` switching. `$handoff` checks both Git metadata access and
+push-escalation capability before its review gate, then stages and commits
+without escalation and makes one escalated push attempt. It does not block that
+push on inconclusive GitHub CLI authentication checks. If either capability
+check fails, install the current CCGS profile and start one new session so Codex
+resolves it. Do not switch approval modes, run `chmod`, or delete lock files as
+a workaround.
 
 The distributable profile does not mix permission profiles with legacy
 `sandbox_mode`. After changing `.codex/config.toml`, start a new session before

@@ -25,6 +25,8 @@ REQUIRED_WORKSPACE_RULES = {
     "**/.env*": "deny",
 }
 
+REQUIRED_APPROVAL_POLICY = "on-request"
+
 REQUIRED_FORBIDDEN_COMMAND_EXAMPLES = (
     "rm -rf",
     "git reset --hard",
@@ -78,6 +80,11 @@ def main() -> int:
             errors.append(".codex/config.toml: do not mix sandbox_mode with permission profiles")
         if "notify" in data:
             errors.append(".codex/config.toml: project config must not set user-level notify")
+        if data.get("approval_policy") != REQUIRED_APPROVAL_POLICY:
+            errors.append(
+                ".codex/config.toml: approval_policy must be 'on-request' so the "
+                "network-restricted handoff workflow can request its authorized push escalation"
+            )
         permissions = data.get("permissions")
         profile = permissions.get("game_studios") if isinstance(permissions, dict) else None
         filesystem = profile.get("filesystem") if isinstance(profile, dict) else None

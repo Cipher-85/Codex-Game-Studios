@@ -345,36 +345,32 @@ HANDOFF_REVIEW_REQUIRED_PHRASES = {
 }
 
 HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES = (
-    "## Git Metadata Capability Gate",
+    "## Git And Remote Capability Gate",
     "Before Phase 0",
     "git rev-parse --absolute-git-dir",
     "test -w '<absolute-git-dir>'",
-    "Do not request escalation for this check",
-    "permission-profile configuration mismatch",
-    "start a new session",
-    "Do not begin the review gate",
-    "normal workspace writes to `.agents/` and `.codex/`",
-    "Do not tell the user to switch `/permissions` modes",
-)
-
-HANDOFF_PUSH_APPROVAL_REQUIRED_PHRASES = (
-    "## Push Approval Capability Gate",
-    "approval_policy = \"on-request\"",
-    "approval_policy = \"never\"",
-    "forbid `sandbox_permissions`",
-    "halt before Phase 0",
-    "stale-session approval-policy configuration mismatch",
-    "Do not begin the review gate",
-    "issue an un-escalated `git push`",
-    "routine handoffs must not require manual permission-mode switching",
+    "using the user's active session permissions",
+    "repeat that exact check once",
+    "`sandbox_permissions` set to `\"require_escalated\"`",
+    "git ls-remote --heads",
+    "An exit code of zero with no matching ref",
+    "active context explicitly reports network access as unavailable",
+    "`prefix_rule` set to `[\"git\", \"ls-remote\"]`",
+    "Could not resolve host",
+    "retry that same command once",
+    "Never display embedded credentials",
+    "selects the complete `game_studios` profile but does not override",
+    "must not instruct the user to switch `/permissions` modes",
 )
 
 HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES = (
     "stage only the relevant paths by name",
-    "Run staging without requesting escalation",
-    "active `game_studios` profile grants Git metadata writes",
-    "Commit with the standard handoff subject without requesting escalation",
-    "without retrying through a different command shape",
+    "using the user's active session permissions",
+    "repeat the exact `git add` command once",
+    "`prefix_rule` set to `[\"git\", \"add\"]`",
+    "repeat that exact `git commit` command once",
+    "`prefix_rule` set to `[\"git\", \"commit\"]`",
+    "Do not broaden the path set",
 )
 
 HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES = (
@@ -386,11 +382,15 @@ HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES = (
     "Do not claim an authenticated account or repository permission unless it was actually verified",
     "The actual `git push` is the authoritative network and Git-authentication check",
     "report Git's exact error",
-    "first and only push attempt",
+    "active context explicitly reports network access as unavailable",
     "`sandbox_permissions` set to `\"require_escalated\"`",
     "`prefix_rule` set to `[\"git\", \"push\"]`",
-    "Do not issue `git push` without escalation first",
-    "do not run an un-escalated probe",
+    "repeat the exact push command once",
+    "Could not resolve host",
+    "retry that exact push command once",
+    "name resolution failed before the remote could be contacted",
+    "Do not retry authentication, authorization",
+    "Do not instruct the user to change the whole session's permission mode",
 )
 
 HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES = (
@@ -795,17 +795,6 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
         if missing:
             errors.append(
                 f"{skill_rel}: missing handoff Git capability phrase(s): "
-                + ", ".join(missing)
-            )
-
-        missing = [
-            phrase
-            for phrase in HANDOFF_PUSH_APPROVAL_REQUIRED_PHRASES
-            if not contains_phrase(skill_text, phrase)
-        ]
-        if missing:
-            errors.append(
-                f"{skill_rel}: missing handoff push-approval capability phrase(s): "
                 + ", ".join(missing)
             )
 

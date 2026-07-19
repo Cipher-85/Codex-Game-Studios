@@ -17,6 +17,14 @@ LEGACY_STATUS_LINE_ITEMS = {
     "git_branch": "git-branch",
 }
 
+PROJECT_PERMISSION_KEYS = {
+    "approval_policy",
+    "sandbox_mode",
+    "sandbox_workspace_write",
+}
+
+REQUIRED_DEFAULT_PERMISSIONS = "game_studios"
+
 REQUIRED_WORKSPACE_RULES = {
     ".git": "write",
     ".agents": "write",
@@ -25,7 +33,9 @@ REQUIRED_WORKSPACE_RULES = {
     "**/.env*": "deny",
 }
 
-REQUIRED_APPROVAL_POLICY = "on-request"
+REQUIRED_NETWORK_DOMAINS = {
+    "github.com": "allow",
+}
 
 REQUIRED_FORBIDDEN_COMMAND_EXAMPLES = (
     "rm -rf",
@@ -76,33 +86,56 @@ def main() -> int:
             data = {}
         if "prefix_rules" in text:
             errors.append(".codex/config.toml: prefix_rules belongs in .codex/rules/*.rules")
-        if "sandbox_mode" in data and ("default_permissions" in data or "permissions" in data):
-            errors.append(".codex/config.toml: do not mix sandbox_mode with permission profiles")
         if "notify" in data:
             errors.append(".codex/config.toml: project config must not set user-level notify")
-        if data.get("approval_policy") != REQUIRED_APPROVAL_POLICY:
+        configured_permission_keys = sorted(PROJECT_PERMISSION_KEYS & data.keys())
+        if configured_permission_keys:
             errors.append(
-                ".codex/config.toml: approval_policy must be 'on-request' so the "
-                "network-restricted handoff workflow can request its authorized push escalation"
+                ".codex/config.toml: the CCGS profile must not override approval policy or use "
+                "legacy sandbox selection. Remove: "
+                + ", ".join(configured_permission_keys)
+            )
+        if data.get("default_permissions") != REQUIRED_DEFAULT_PERMISSIONS:
+            errors.append(
+                ".codex/config.toml: default_permissions must select the complete "
+                f"{REQUIRED_DEFAULT_PERMISSIONS!r} profile"
             )
         permissions = data.get("permissions")
         profile = permissions.get("game_studios") if isinstance(permissions, dict) else None
-        filesystem = profile.get("filesystem") if isinstance(profile, dict) else None
-        workspace_rules = filesystem.get(":workspace_roots") if isinstance(filesystem, dict) else None
-        if not isinstance(workspace_rules, dict):
-            errors.append(
-                '.codex/config.toml: missing [permissions.game_studios.filesystem.":workspace_roots"]'
-            )
+        if not isinstance(profile, dict):
+            errors.append(".codex/config.toml: missing [permissions.game_studios] profile")
         else:
-            incorrect_workspace_rules = sorted(
-                f"{path}={workspace_rules.get(path)!r} (expected {access!r})"
-                for path, access in REQUIRED_WORKSPACE_RULES.items()
-                if workspace_rules.get(path) != access
-            )
-            if incorrect_workspace_rules:
+            if profile.get("extends") != ":workspace":
                 errors.append(
-                    ".codex/config.toml: incorrect game_studios workspace rule(s): "
-                    + ", ".join(incorrect_workspace_rules)
+                    ".codex/config.toml: game_studios profile must extend ':workspace'"
+                )
+            filesystem = profile.get("filesystem")
+            workspace_rules = filesystem.get(":workspace_roots") if isinstance(filesystem, dict) else None
+            if not isinstance(workspace_rules, dict):
+                errors.append(
+                    '.codex/config.toml: missing [permissions.game_studios.filesystem.":workspace_roots"]'
+                )
+            else:
+                incorrect_workspace_rules = sorted(
+                    f"{path}={workspace_rules.get(path)!r} (expected {access!r})"
+                    for path, access in REQUIRED_WORKSPACE_RULES.items()
+                    if workspace_rules.get(path) != access
+                )
+                if incorrect_workspace_rules:
+                    errors.append(
+                        ".codex/config.toml: incorrect game_studios workspace rule(s): "
+                        + ", ".join(incorrect_workspace_rules)
+                    )
+            network = profile.get("network")
+            if not isinstance(network, dict) or network.get("enabled") is not True:
+                errors.append(
+                    ".codex/config.toml: game_studios profile must enable its bounded network policy"
+                )
+            domains = network.get("domains") if isinstance(network, dict) else None
+            if domains != REQUIRED_NETWORK_DOMAINS:
+                errors.append(
+                    ".codex/config.toml: game_studios network domains must be exactly "
+                    + repr(REQUIRED_NETWORK_DOMAINS)
                 )
         tui = data.get("tui")
         if isinstance(tui, dict) and "status_line" in tui:

@@ -29,9 +29,11 @@ pair for `$resume-from-handoff`.
   amend workarounds.
 - Use evidence from the current turn for every status, count, and verification
   claim.
-- If a command fails, halt the current phase and report the exact failure.
+- If a command fails, use only the permission fallback or DNS retry declared
+  below. If that exact fallback also fails, halt the current phase and report
+  the exact final failure.
 
-## Git Metadata Capability Gate
+## Git And Remote Capability Gate
 
 Before Phase 0, resolve the repository's actual Git metadata directory:
 
@@ -39,39 +41,52 @@ Before Phase 0, resolve the repository's actual Git metadata directory:
 git rev-parse --absolute-git-dir
 ```
 
-Run `test -w '<absolute-git-dir>'` against the exact returned path, shell-quoted.
-Do not request escalation for this check. The `game_studios` permission profile
-must make Git metadata writable. The same profile preserves normal workspace
-writes to `.agents/` and `.codex/` so CCGS's own maintenance workflows remain
-usable; only the declared secret paths stay denied.
+Run `test -w '<absolute-git-dir>'` against the exact returned path, shell-quoted,
+using the user's active session permissions. If it is not writable because of
+the sandbox and scoped escalation is available, repeat that exact check once
+with `sandbox_permissions` set to `"require_escalated"`. If the active context
+already reports the Git directory as read-only, request that scoped escalation
+on the first attempt. This capability check must not run `chmod`, create a probe
+file, delete lock files, or change command shape.
 
-If the lookup fails or the check reports the Git directory is not writable,
-halt before Phase 0. Report the exact path and result as a permission-profile
-configuration mismatch. Direct the user to install the current CCGS permission
-profile and start a new session so that profile becomes active. Do not begin the
-review gate, rotate continuity files, run `chmod`, delete lock files, or try an
-indirect command workaround. Do not tell the user to switch `/permissions`
-modes: approval routing cannot repair a filesystem rule already resolved for the
-session.
+Also resolve the current branch, configured upstream, and exact push URL before
+Phase 0:
 
-## Push Approval Capability Gate
+```bash
+git rev-parse --abbrev-ref HEAD
+git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
+git remote get-url --push <upstream-remote>
+git remote get-url --push origin
+```
 
-Before Phase 0, inspect the active session permission instructions. The active
-approval policy must permit sandbox escalation because the `game_studios`
-profile intentionally keeps outbound network access restricted until the
-authorized handoff push. The installed project config declares
-`approval_policy = "on-request"`; a session started before that config became
-active can still report `approval_policy = "never"` and explicitly forbid
-`sandbox_permissions`.
+Treat a non-zero upstream lookup as the expected no-upstream case. Use the
+upstream remote when present; otherwise use `origin`. Halt if the required
+remote or push URL is missing. Never display embedded credentials; redact them
+if the configured URL contains any.
 
-If the active policy is `never`, the permission instructions forbid
-`sandbox_permissions`, or the command tool cannot request escalation, halt
-before Phase 0. Report a stale-session approval-policy configuration mismatch
-and direct the user to start one new session with the installed project config.
-Do not begin the review gate, update continuity files, stage, commit, issue an
-un-escalated `git push`, or ask the user to switch `/permissions` modes. A new
-session is required only to load the corrected project policy; routine handoffs
-must not require manual permission-mode switching.
+Test the exact destination before review or continuity writes:
+
+```bash
+git ls-remote --heads '<verified-push-url>' 'refs/heads/<current-branch>'
+```
+
+An exit code of zero with no matching ref is valid for a new remote branch. Use
+the user's active session permissions. If the active context explicitly reports
+network access as unavailable, request scoped escalation on the first attempt
+with `prefix_rule` set to `["git", "ls-remote"]`; otherwise run normally first.
+If that normal attempt fails solely because sandboxed network access is
+unavailable, repeat the exact command once with `sandbox_permissions` set to
+`"require_escalated"`.
+If the network-capable attempt returns the exact pre-contact DNS error
+`Could not resolve host`, retry that same command once with the same permission
+mode. Do not retry authentication, authorization, transport, or other errors.
+
+If the Git metadata check or remote check still fails, halt before Phase 0 and
+report the exact path, destination, command result, and permission fallback
+attempted. Do not begin the review gate or rotate continuity files. The shipped
+CCGS config selects the complete `game_studios` profile but does not override
+the user's approval policy. The skill must not instruct the user to switch
+`/permissions` modes.
 
 ## Phase 0: Review Gate
 
@@ -259,10 +274,11 @@ If there are no relevant uncommitted changes, skip the commit and say why.
 
 Otherwise stage only the relevant paths by name. Avoid broad staging unless the
 user explicitly asked for it. `$handoff` invocation is commit authorization for
-the relevant handoff work. Run staging without requesting escalation; the
-active `game_studios` profile grants Git metadata writes. If staging cannot
-write the Git index, halt Phase 3 and report the exact failure without retrying
-through a different command shape.
+the relevant handoff work. Run staging using the user's active session
+permissions. If it fails solely because the sandbox denies Git metadata writes,
+repeat the exact `git add` command once with `sandbox_permissions` set to
+`"require_escalated"` and `prefix_rule` set to `["git", "add"]`. Do not broaden
+the path set or use a different staging command.
 
 Before committing, verify:
 
@@ -270,16 +286,18 @@ Before committing, verify:
 git diff --cached --name-status
 ```
 
-Commit with the standard handoff subject without requesting escalation. Include
-a Codex co-author trailer only if that is normal for this repo. If the commit
-cannot write Git metadata, halt Phase 3 and report the exact failure without
-retrying through a different command shape.
+Commit with the standard handoff subject using the active session permissions.
+If it fails solely because the sandbox denies Git metadata writes, repeat that
+exact `git commit` command once with `sandbox_permissions` set to
+`"require_escalated"` and `prefix_rule` set to `["git", "commit"]`. Include a
+Codex co-author trailer only if that is normal for this repo. Halt on any other
+failure or if the exact permission fallback fails.
 
 Never use `--no-verify`. Never amend as a workaround for a failed hook.
 
 ## Phase 4: Push Handoff
 
-Determine the branch and configured upstream:
+Recheck the branch and configured upstream:
 
 ```bash
 git rev-parse --abbrev-ref HEAD
@@ -287,17 +305,16 @@ git rev-parse --abbrev-ref --symbolic-full-name '@{u}'
 ```
 
 Treat a non-zero upstream lookup as the expected no-upstream case, not as a
-Phase failure. Do not substitute a different branch. If an upstream exists,
-derive its remote name from the returned `<remote>/<branch>` value and verify
-that remote's push URL. If no upstream exists, verify `origin` because it is the
-only remote authorized for the setup push:
+Phase failure. Do not substitute a different branch. Verify that the branch,
+upstream state, remote, and push URL still match the destination that passed the
+preflight. If any changed, halt instead of pushing to an untested destination:
 
 ```bash
 git remote get-url --push <upstream-remote>
 git remote get-url --push origin
 ```
 
-Run only the command that matches the detected upstream state. Halt if the
+Run only the lookup that matches the detected upstream state. Halt if the
 required push remote is missing.
 
 Treat the resolved push URL, current branch/upstream, and explicit `$handoff`
@@ -318,19 +335,23 @@ one of these command shapes:
 - Existing upstream: `git push`.
 - No upstream: `git push -u origin <branch>`.
 
-Request the required escalation with the scoped approval prefix
-`["git", "push"]`. The justification must state that this is the explicitly
-authorized, non-force handoff push; name the verified push URL; and identify the
-current branch/upstream. Do not claim an authenticated account or repository
-permission unless it was actually verified. Explicit `$handoff` invocation is
-normal push authorization for the standard handoff commit. Never force-push.
+Use the user's active session permissions. If the active context explicitly
+reports network access as unavailable, request scoped escalation on the first
+push attempt with `sandbox_permissions` set to `"require_escalated"` and
+`prefix_rule` set to `["git", "push"]`; otherwise run the matching push command
+normally first. If that normal attempt fails solely because sandboxed network
+access is unavailable, repeat the exact push command once with the same scoped
+escalation. The justification must state that this is the explicitly authorized,
+non-force handoff push; name the verified push URL; and identify the current
+branch/upstream. Do not claim an authenticated account or repository permission
+unless it was actually verified. Explicit `$handoff` invocation is normal push
+authorization for the standard handoff commit. Never force-push.
 
-The first and only push attempt must call the command tool directly with
-`sandbox_permissions` set to `"require_escalated"` and `prefix_rule` set to
-`["git", "push"]`. Do not issue `git push` without escalation first and do not
-run an un-escalated probe. If the tool surface rejects or omits the requested
-escalation, treat that as a policy failure and do not let the command fall back
-to the network-restricted sandbox.
+If the network-capable push attempt returns the exact pre-contact DNS error
+`Could not resolve host`, retry that exact push command once with the same
+permission mode. This retry is safe because name resolution failed before the
+remote could be contacted. Do not retry authentication, authorization,
+transport, hook, or ambiguous failures, and never change the push command.
 
 The actual `git push` is the authoritative network and Git-authentication check.
 If it fails, report Git's exact error and do not reinterpret a preceding GitHub
@@ -338,9 +359,8 @@ CLI result as proof of the cause.
 
 If policy or automatic approval review rejects the push, halt Phase 4. Report
 the exact rejection and do not retry with another command shape, indirect
-execution, or workaround. When the current Codex surface supports it, direct
-the user to `/approve` and the denied action for the documented single-action
-retry; otherwise ask the user to perform the push directly.
+execution, or workaround. Do not instruct the user to change the whole session's
+permission mode; report the denied scoped action instead.
 
 ## Phase 5: Report And Stop
 

@@ -255,9 +255,9 @@ Tasks:
 - Split blocking and advisory checks correctly: use `PreToolUse` where feasible, `PostToolUse` for after-the-fact advisories.
 - Store hook logs under `production/session-logs/**`.
 - Implement `.codex/rules/settings.rules` for command policy. Do not put `prefix_rules` in config.
-- Use permission profiles in `.codex/config.toml`; do not mix with `sandbox_mode`.
-- Set project-local `approval_policy = "on-request"` so the restricted handoff
-  push can request scoped escalation without enabling blanket network access.
+- Select the complete `game_studios` permission profile through project-local
+  `default_permissions`. Do not set project-local `approval_policy` or legacy
+  sandbox settings; normal workflows must fit the profile without escalation.
 - Do not set project-local `notify`, provider, auth, or secrets. Project config may set `[tui].status_line` because it is not on the verified project-config ignore list; merge/refuse safely if an existing project already owns that setting.
 
 Verification commands:
@@ -268,14 +268,17 @@ Verification commands:
 Acceptance criteria:
 - Hooks JSON parses and contains no `Notification`.
 - All hook scripts exist, are executable, and pass payload fixtures.
-- Config parses and does not mix permission profiles with `sandbox_mode`.
+- Config parses, selects `game_studios`, and contains no project-level approval
+  or legacy sandbox override.
 - The `game_studios` profile explicitly grants write access to `.git`,
-  `.agents`, and `.codex`, retains both `.env*` deny patterns, and sets
-  project-local `approval_policy = "on-request"`.
-- A fresh trusted session resolves those three runtime paths as writable;
-  parser success alone is not permission-parity evidence.
-- A fresh trusted session reports `approval_policy = "on-request"`, and
-  `$handoff` makes its first and only push attempt with scoped escalation.
+  `.agents`, and `.codex`, retains both `.env*` deny patterns, enables its
+  bounded network policy, and allows exactly `github.com`.
+- A fresh trusted session proves CCGS selected `game_studios` without replacing
+  the user's approval policy, resolves the three runtime paths as writable,
+  `.env*` as denied, and GitHub as reachable. Parser success alone is not
+  permission-parity evidence.
+- `$handoff` preflights the exact destination before continuity writes and uses
+  only its declared scoped fallback or safe pre-contact DNS retry.
 - If `[tui].status_line` is installed, all item IDs are Codex-supported built-ins and the project config parses under `--strict-config`.
 - Rules file passes positive/negative command examples.
 

@@ -13,9 +13,11 @@ Current package version:
 
 Current status:
 - The package version is `v0.6.1`.
-- Post-`v0.6.1` hardening keeps Git metadata writable, sets project approval
-  routing to `on-request`, and requires `$handoff` to use one scoped escalated
-  push instead of falling into a network-restricted DNS failure.
+- Post-`v0.6.1` correction completes the default `game_studios` profile with
+  Git/runtime writes, `.env*` denials, and exact `github.com` access without a
+  project approval-policy override. `$handoff` now preflights Git and the exact
+  remote, uses scoped permission fallback only when needed, and retries once
+  only for a pre-contact DNS failure.
 - `v0.6.1` hardens `$handoff` push routing and fails closed on policy denial
   without alternate-command retries.
 - `v0.6.0` adds verified CLI/desktop custom-role activation guidance, raw
@@ -47,9 +49,9 @@ Coexistence rules:
 - Keep optional `.agents/skills/gen-asset/**` content project-owned; the
   installer only makes that subtree trackable and never adds it to the package
   manifest.
-- The default permission profile denies all access to root and nested `.env*`
-  files. Non-secret templates that Codex should edit must use a different name,
-  such as `config.example`.
+- The default `game_studios` profile denies all access to root and nested
+  `.env*` files. Non-secret templates that Codex should edit must use a
+  different name, such as `config.example`.
 
 Install and release notes:
 - Fresh targets receive a full install. Existing targets without ownership state

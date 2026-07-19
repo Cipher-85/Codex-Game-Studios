@@ -172,11 +172,12 @@ Acceptance:
 Config checks:
 - `.codex/config.toml` is absent, installer-owned, or safely merged. Existing unowned config must cause installer refusal by default.
 - If generated, `.codex/config.toml` parses as TOML.
-- It does not mix `default_permissions`/`[permissions.*]` with legacy `sandbox_mode`.
+- It sets `default_permissions = "game_studios"` and contains no project-local
+  `approval_policy`, `sandbox_mode`, or `sandbox_workspace_write` override.
 - It does not contain command `prefix_rules`.
 - It does not set project-local `notify`.
-- It sets project-local `approval_policy = "on-request"` so the restricted
-  handoff push can request escalation.
+- It defines a complete `game_studios` profile with exact Git/runtime writes,
+  `.env*` denials, network enabled, and only `github.com` allowed.
 - If it sets `[tui].status_line`, every item is a supported Codex built-in footer item for the installed Codex version.
 - It does not write provider/auth secrets.
 
@@ -192,8 +193,9 @@ Rules checks:
 - Rules are tested with positive and negative command examples stored beside the rules file.
 
 Acceptance:
-- `audit config` exits 0 when TOML parse, permission-model, required
-  `on-request` approval routing, rules-file, and command-example checks pass.
+- `audit config` exits 0 when TOML parse, complete-profile boundaries,
+  approval/sandbox-override prohibition, rules-file, and command-example checks
+  pass.
 
 ## Hook Validation
 

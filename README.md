@@ -37,8 +37,9 @@ The current release line is `v0.6.1`. It includes:
   branch/upstream. GitHub CLI identity checks are advisory because Git and `gh`
   can use different credentials; the authorized `git push` is the definitive
   network and Git-authentication check.
-- Scoped `git push` approval requests with fail-closed policy-denial handling
-  and no alternate-command retries or workarounds.
+- Permission-mode-neutral `$handoff` routing with early Git/remote capability
+  checks, exact scoped permission fallbacks, and one safe retry only for a
+  pre-contact DNS-resolution failure.
 
 The `v0.6.0` release also includes:
 
@@ -239,23 +240,24 @@ upstream CCGS behavior required by Git handoff and skill/runtime maintenance
 while retaining the narrower `.env*` denials. Destructive command protections
 remain in `.codex/rules/settings.rules` and the validation hooks.
 
-The project-local `default_permissions` setting is why `/permissions` displays
-`game_studios`; it does not edit the user's global `~/.codex/config.toml`.
-The project also sets `approval_policy = "on-request"` so the network-restricted
-profile can request the explicitly authorized `$handoff` push through the
-active reviewer. It does not enable blanket network access and does not require
-manual `/permissions` switching. `$handoff` checks both Git metadata access and
-push-escalation capability before its review gate, then stages and commits
-without escalation and makes one escalated push attempt. It does not block that
-push on inconclusive GitHub CLI authentication checks. If either capability
-check fails, install the current CCGS profile and start one new session so Codex
-resolves it. Do not switch approval modes, run `chmod`, or delete lock files as
-a workaround.
+CCGS sets project-local `default_permissions = "game_studios"` so its Git,
+runtime-maintenance, secret-file, and GitHub boundaries load together without a
+manual `/permissions` switch. It does not set project-local `approval_policy` or
+legacy sandbox keys. The completed profile makes `.git`, `.agents`, and `.codex`
+writable, denies `.env*`, and enables exactly `github.com`, which is enough for
+ordinary HTTPS GitHub fetch/push while retaining a destination allowlist.
 
-The distributable profile does not mix permission profiles with legacy
-`sandbox_mode`. After changing `.codex/config.toml`, start a new session before
-judging the resolved profile because active sessions retain their launch-time
-filesystem rules.
+`$handoff` checks Git metadata access and the exact push destination before its
+review gate. It uses the active permission mode, requests the same command
+through scoped escalation only when the sandbox blocks the required capability,
+and retries once only for the exact `Could not resolve host` error because that
+failure occurs before remote contact. It does not block an authorized push on
+inconclusive GitHub CLI authentication checks. Do not run `chmod`, delete lock
+files, broaden the destination, or change the whole session's permission mode
+as a workaround.
+
+After changing `.codex/config.toml`, start a new session before judging the
+resolved permissions because active sessions retain their launch-time rules.
 
 Default install behavior is patch-aware: a fresh target receives a full install,
 while a target with valid schema-v2 install state receives an incremental patch

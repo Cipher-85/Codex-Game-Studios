@@ -276,21 +276,22 @@ Hooks:
 - Claude's `Notification` hook is not installed as a Codex hook because Codex has no matching lifecycle hook event. Preserve the behavior through documentation for native Codex notifications: user-level `notify`, `[tui].notifications`, `[tui].notification_method`, and `[tui].notification_condition`.
 
 Permissions:
-- Use Codex permission profiles as the primary config model.
+- Use one complete Codex permission profile as the native project posture.
 - `.codex/config.toml` should define:
-  - `default_permissions = "game_studios"` only when safe to set in an owned config.
+  - `default_permissions = "game_studios"`.
   - `[permissions.game_studios] extends = ":workspace"`.
   - Explicit write rules for `.git`, `.agents`, and `.codex`; upstream permits
     ordinary Git and runtime-maintenance workflows, so inherited read-only
     carve-outs are not parity.
   - Deny sensitive env paths.
-  - Network disabled by default unless a user explicitly enables it.
-  - `approval_policy = "on-request"` so the network-restricted profile can
-    request the explicitly authorized handoff push without a manual mode switch.
-- Keep normal network access disabled. The project approval override permits a
-  scoped escalation request; it does not grant blanket outbound access. Local
-  staging and commits must continue to work without escalation.
-- Do not set `sandbox_mode` in the same distributable config when permission profiles are used.
+  - Enable a bounded network policy with exactly `github.com` allowed so the
+    profile remains usable for ordinary GitHub handoffs when selected.
+- Do not set project-local `approval_policy`, `sandbox_mode`, or
+  `sandbox_workspace_write`. The profile must contain the filesystem and network
+  capabilities required by normal CCGS workflows rather than relying on
+  escalation to compensate for an incomplete policy.
+- `$handoff` must adapt to the active mode and use exact scoped permission
+  fallback only when the current sandbox blocks Git metadata or remote access.
 
 Command rules:
 - Use `.codex/rules/settings.rules` for allow/prompt/forbidden command prefix rules.

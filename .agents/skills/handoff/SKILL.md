@@ -31,6 +31,29 @@ pair for `$resume-from-handoff`.
   claim.
 - If a command fails, halt the current phase and report the exact failure.
 
+## Git Metadata Capability Gate
+
+Before Phase 0, resolve the repository's actual Git metadata directory:
+
+```bash
+git rev-parse --absolute-git-dir
+```
+
+Run `test -w '<absolute-git-dir>'` against the exact returned path, shell-quoted.
+Do not request escalation for this check. The `game_studios` permission profile
+must make Git metadata writable. The same profile preserves normal workspace
+writes to `.agents/` and `.codex/` so CCGS's own maintenance workflows remain
+usable; only the declared secret paths stay denied.
+
+If the lookup fails or the check reports the Git directory is not writable,
+halt before Phase 0. Report the exact path and result as a permission-profile
+configuration mismatch. Direct the user to install the current CCGS permission
+profile and start a new session so that profile becomes active. Do not begin the
+review gate, rotate continuity files, run `chmod`, delete lock files, or try an
+indirect command workaround. Do not tell the user to switch `/permissions`
+modes: approval routing cannot repair a filesystem rule already resolved for the
+session.
+
 ## Phase 0: Review Gate
 
 Before rotating continuity files or committing, run this mandatory two-round
@@ -215,14 +238,21 @@ If there are no relevant uncommitted changes, skip the commit and say why.
 
 Otherwise stage only the relevant paths by name. Avoid broad staging unless the
 user explicitly asked for it. `$handoff` invocation is commit authorization for
-the relevant handoff work. Before committing, verify:
+the relevant handoff work. Run staging without requesting escalation; the
+active `game_studios` profile grants Git metadata writes. If staging cannot
+write the Git index, halt Phase 3 and report the exact failure without retrying
+through a different command shape.
+
+Before committing, verify:
 
 ```bash
 git diff --cached --name-status
 ```
 
-Commit with the standard handoff subject. Include a Codex co-author trailer only
-if that is normal for this repo.
+Commit with the standard handoff subject without requesting escalation. Include
+a Codex co-author trailer only if that is normal for this repo. If the commit
+cannot write Git metadata, halt Phase 3 and report the exact failure without
+retrying through a different command shape.
 
 Never use `--no-verify`. Never amend as a workaround for a failed hook.
 
@@ -249,21 +279,17 @@ git remote get-url --push origin
 Run only the command that matches the detected upstream state. Halt if the
 required push remote is missing.
 
-When the push remote is on `github.com`, establish destination evidence in this
-same handoff turn immediately before the push:
+Treat the resolved push URL, current branch/upstream, and explicit `$handoff`
+invocation as the destination and user-authorization evidence. Show the push URL
+and branch in commentary immediately before requesting the push. Do not require
+`gh auth status`, `gh api user`, or `gh repo view` as push preconditions. Git and
+GitHub CLI may use different credentials. A `gh auth status` failure under
+network restriction is not evidence that the Git credential is invalid.
 
-```bash
-gh auth status -h github.com
-gh api user --jq .login
-gh repo view <owner>/<repo> --json viewerPermission --jq .viewerPermission
-```
-
-Derive `<owner>/<repo>` from the verified remote URL. Run these read-only GitHub
-checks with the network access they require; a failure from a network-restricted
-sandbox is not evidence that the stored credential is invalid. Never request or
-display a token. Continue only when the authenticated account and a `WRITE`,
-`MAINTAIN`, or `ADMIN` permission establish that the destination is authorized.
-Otherwise halt and report the exact failed check.
+Optional GitHub CLI checks must be read-only, run with the network access they
+require, and remain advisory. Never request or display a token. Do not halt
+before the authorized push solely because a GitHub CLI check is unavailable,
+network-blocked, unauthenticated, or inconclusive.
 
 Push only if the handoff trigger or user instruction authorizes it. Use exactly
 one of these command shapes:
@@ -273,10 +299,14 @@ one of these command shapes:
 
 Request the required escalation with the scoped approval prefix
 `["git", "push"]`. The justification must state that this is the explicitly
-authorized, non-force handoff push; name the verified remote, authenticated
-account and permission; and identify the current branch/upstream. Explicit
-`$handoff` invocation is normal push authorization for the standard handoff
-commit. Never force-push.
+authorized, non-force handoff push; name the verified push URL; and identify the
+current branch/upstream. Do not claim an authenticated account or repository
+permission unless it was actually verified. Explicit `$handoff` invocation is
+normal push authorization for the standard handoff commit. Never force-push.
+
+The actual `git push` is the authoritative network and Git-authentication check.
+If it fails, report Git's exact error and do not reinterpret a preceding GitHub
+CLI result as proof of the cause.
 
 If policy or automatic approval review rejects the push, halt Phase 4. Report
 the exact rejection and do not retry with another command shape, indirect

@@ -344,6 +344,49 @@ HANDOFF_REVIEW_REQUIRED_PHRASES = {
     ),
 }
 
+HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES = (
+    "## Git Metadata Capability Gate",
+    "Before Phase 0",
+    "git rev-parse --absolute-git-dir",
+    "test -w '<absolute-git-dir>'",
+    "Do not request escalation for this check",
+    "permission-profile configuration mismatch",
+    "start a new session",
+    "Do not begin the review gate",
+    "normal workspace writes to `.agents/` and `.codex/`",
+    "Do not tell the user to switch `/permissions` modes",
+)
+
+HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES = (
+    "stage only the relevant paths by name",
+    "Run staging without requesting escalation",
+    "active `game_studios` profile grants Git metadata writes",
+    "Commit with the standard handoff subject without requesting escalation",
+    "without retrying through a different command shape",
+)
+
+HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES = (
+    "Treat the resolved push URL, current branch/upstream, and explicit `$handoff` invocation",
+    "Do not require `gh auth status`, `gh api user`, or `gh repo view` as push preconditions",
+    "Git and GitHub CLI may use different credentials",
+    "Do not halt before the authorized push solely because a GitHub CLI check",
+    "name the verified push URL",
+    "Do not claim an authenticated account or repository permission unless it was actually verified",
+    "The actual `git push` is the authoritative network and Git-authentication check",
+    "report Git's exact error",
+)
+
+HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES = (
+    (
+        "Continue only when the authenticated account",
+        "mandatory GitHub CLI identity gate blocks the actual authorized Git push",
+    ),
+    (
+        "Otherwise halt and report the exact failed check",
+        "mandatory GitHub CLI precheck failure still halts before Git push",
+    ),
+)
+
 HANDOFF_REVIEW_FORBIDDEN_PATTERNS = (
     (
         re.compile(r"(?im)^\s*(?:\$\s*)?codex\s+(?:review|exec)\b"),
@@ -727,6 +770,58 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
     skill_path = root / skill_rel
     if skill_path.exists():
         skill_text = skill_path.read_text(encoding="utf-8")
+        missing = [
+            phrase
+            for phrase in HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES
+            if not contains_phrase(skill_text, phrase)
+        ]
+        if missing:
+            errors.append(
+                f"{skill_rel}: missing handoff Git capability phrase(s): "
+                + ", ".join(missing)
+            )
+
+        phase3_match = re.search(
+            r"(?ms)^## Phase 3: Commit Handoff\s*$\n(.*?)(?=^## Phase 4: Push Handoff\s*$)",
+            skill_text,
+        )
+        if not phase3_match:
+            errors.append(f"{skill_rel}: missing bounded Phase 3 commit section")
+        else:
+            phase3_text = phase3_match.group(1)
+            missing = [
+                phrase
+                for phrase in HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES
+                if not contains_phrase(phase3_text, phrase)
+            ]
+            if missing:
+                errors.append(
+                    f"{skill_rel}: Phase 3 missing direct Git-write phrase(s): "
+                    + ", ".join(missing)
+                )
+
+        phase4_match = re.search(
+            r"(?ms)^## Phase 4: Push Handoff\s*$\n(.*?)(?=^## Phase 5: Report And Stop\s*$)",
+            skill_text,
+        )
+        if not phase4_match:
+            errors.append(f"{skill_rel}: missing bounded Phase 4 push section")
+        else:
+            phase4_text = phase4_match.group(1)
+            missing = [
+                phrase
+                for phrase in HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES
+                if not contains_phrase(phase4_text, phrase)
+            ]
+            if missing:
+                errors.append(
+                    f"{skill_rel}: Phase 4 missing direct push phrase(s): "
+                    + ", ".join(missing)
+                )
+            for phrase, message in HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES:
+                if phrase in phase4_text:
+                    errors.append(f"{skill_rel}: Phase 4 {message}: {phrase!r}")
+
         for pattern, message in HANDOFF_REVIEW_FORBIDDEN_PATTERNS:
             match = pattern.search(skill_text)
             if match:

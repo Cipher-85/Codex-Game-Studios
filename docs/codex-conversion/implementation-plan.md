@@ -267,6 +267,11 @@ Acceptance criteria:
 - Hooks JSON parses and contains no `Notification`.
 - All hook scripts exist, are executable, and pass payload fixtures.
 - Config parses and does not mix permission profiles with `sandbox_mode`.
+- The `game_studios` profile explicitly grants write access to `.git`,
+  `.agents`, and `.codex`, retains both `.env*` deny patterns, and does not set a
+  project-local approval policy.
+- A fresh trusted session resolves those three runtime paths as writable;
+  parser success alone is not permission-parity evidence.
 - If `[tui].status_line` is installed, all item IDs are Codex-supported built-ins and the project config parses under `--strict-config`.
 - Rules file passes positive/negative command examples.
 

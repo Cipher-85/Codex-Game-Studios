@@ -33,8 +33,10 @@ The current release line is `v0.6.1`. It includes:
 
 - Upstream-aware `$handoff` push routing: existing-upstream branches use plain
   `git push`, while only branches without an upstream set one through origin.
-- Same-turn GitHub authentication, destination, and repository-permission
-  verification before a handoff push is attempted.
+- Same-turn destination verification from the configured push URL and
+  branch/upstream. GitHub CLI identity checks are advisory because Git and `gh`
+  can use different credentials; the authorized `git push` is the definitive
+  network and Git-authentication check.
 - Scoped `git push` approval requests with fail-closed policy-denial handling
   and no alternate-command retries or workarounds.
 
@@ -230,6 +232,27 @@ nested `.env*` files. This protects secrets through Codex filesystem access as
 well as through the existing command rules and hooks, but it can also prevent
 Codex from creating or editing files such as `.env.example`. Use an
 agent-editable name such as `config.example` for non-secret templates.
+
+The profile extends Codex's built-in `:workspace` profile but explicitly
+restores write access to `.git/`, `.agents/`, and `.codex/`. This preserves the
+upstream CCGS behavior required by Git handoff and skill/runtime maintenance
+while retaining the narrower `.env*` denials. Destructive command protections
+remain in `.codex/rules/settings.rules` and the validation hooks.
+
+The project-local `default_permissions` setting is why `/permissions` displays
+`game_studios`; it does not edit the user's global `~/.codex/config.toml`.
+Approval modes control escalation separately and are not a repair mechanism for
+filesystem rules. `$handoff` checks Git metadata access before its review gate,
+then stages and commits without escalation; a networked push follows the active
+session's approval policy. It does not block an authorized push on inconclusive
+GitHub CLI authentication checks. If the initial Git check fails, install the
+current CCGS profile and start a new session so Codex resolves it. Do not switch
+approval modes, run `chmod`, or delete lock files as a workaround.
+
+The distributable profile does not mix permission profiles with legacy
+`sandbox_mode`. After changing `.codex/config.toml`, start a new session before
+judging the resolved profile because active sessions retain their launch-time
+filesystem rules.
 
 Default install behavior is patch-aware: a fresh target receives a full install,
 while a target with valid schema-v2 install state receives an incremental patch

@@ -17,9 +17,12 @@ LEGACY_STATUS_LINE_ITEMS = {
     "git_branch": "git-branch",
 }
 
-REQUIRED_ENV_DENY_PATTERNS = {
-    ".env*",
-    "**/.env*",
+REQUIRED_WORKSPACE_RULES = {
+    ".git": "write",
+    ".agents": "write",
+    ".codex": "write",
+    ".env*": "deny",
+    "**/.env*": "deny",
 }
 
 REQUIRED_FORBIDDEN_COMMAND_EXAMPLES = (
@@ -84,15 +87,15 @@ def main() -> int:
                 '.codex/config.toml: missing [permissions.game_studios.filesystem.":workspace_roots"]'
             )
         else:
-            missing_env_denies = sorted(
-                pattern
-                for pattern in REQUIRED_ENV_DENY_PATTERNS
-                if workspace_rules.get(pattern) != "deny"
+            incorrect_workspace_rules = sorted(
+                f"{path}={workspace_rules.get(path)!r} (expected {access!r})"
+                for path, access in REQUIRED_WORKSPACE_RULES.items()
+                if workspace_rules.get(path) != access
             )
-            if missing_env_denies:
+            if incorrect_workspace_rules:
                 errors.append(
-                    ".codex/config.toml: missing strict workspace .env deny pattern(s): "
-                    + ", ".join(missing_env_denies)
+                    ".codex/config.toml: incorrect game_studios workspace rule(s): "
+                    + ", ".join(incorrect_workspace_rules)
                 )
         tui = data.get("tui")
         if isinstance(tui, dict) and "status_line" in tui:

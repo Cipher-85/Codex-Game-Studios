@@ -4,6 +4,9 @@ default_permissions = "game_studios"
 extends = ":workspace"
 
 [permissions.game_studios.filesystem.":workspace_roots"]
+".git" = "write"
+".agents" = "write"
+".codex" = "write"
 ".env*" = "deny"
 "**/.env*" = "deny"
 

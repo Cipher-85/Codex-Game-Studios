@@ -280,9 +280,14 @@ Permissions:
 - `.codex/config.toml` should define:
   - `default_permissions = "game_studios"` only when safe to set in an owned config.
   - `[permissions.game_studios] extends = ":workspace"`.
+  - Explicit write rules for `.git`, `.agents`, and `.codex`; upstream permits
+    ordinary Git and runtime-maintenance workflows, so inherited read-only
+    carve-outs are not parity.
   - Deny sensitive env paths.
   - Network disabled by default unless a user explicitly enables it.
-  - `approval_policy = "on-request"` or documented granular equivalent.
+- Do not force a project-local `approval_policy`. Approval routing is
+  user/session-owned; local staging and commits must work without escalation,
+  while networked pushes follow the active session policy.
 - Do not set `sandbox_mode` in the same distributable config when permission profiles are used.
 
 Command rules:

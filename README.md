@@ -4,7 +4,7 @@ Codex Game Studios turns a game repository into a Codex-native indie studio
 workflow: 49 declared role profiles, 77 repo-local skills, verification-first handoffs, and
 Godot-first production guidance for small teams building playable slices.
 
-Current package version: `0.6.1`.
+Current package version: `0.7.0`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -29,7 +29,19 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.6.1`. It includes:
+The current release line is `v0.7.0`. It includes:
+
+- A complete default `game_studios` profile with writable Git and Codex runtime
+  directories, strict `.env*` denials, and network access limited to
+  `github.com` without a project approval-policy override.
+- Permission-mode-neutral `$handoff` routing with early Git/remote capability
+  checks, exact scoped permission fallbacks, and one safe retry only for a
+  pre-contact DNS-resolution failure.
+- Config and runtime validation for the permission and handoff contracts, plus
+  a successful fresh-session downstream handoff without manual permission-mode
+  switching.
+
+The `v0.6.1` release also includes:
 
 - Upstream-aware `$handoff` push routing: existing-upstream branches use plain
   `git push`, while only branches without an upstream set one through origin.
@@ -37,9 +49,6 @@ The current release line is `v0.6.1`. It includes:
   branch/upstream. GitHub CLI identity checks are advisory because Git and `gh`
   can use different credentials; the authorized `git push` is the definitive
   network and Git-authentication check.
-- Permission-mode-neutral `$handoff` routing with early Git/remote capability
-  checks, exact scoped permission fallbacks, and one safe retry only for a
-  pre-contact DNS-resolution failure.
 
 The `v0.6.0` release also includes:
 

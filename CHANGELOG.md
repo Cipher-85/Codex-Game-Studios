@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.7.0 - 2026-07-20
+
+- Completed the default `game_studios` permission profile with writable Git and
+  Codex runtime directories, strict root and nested `.env*` denials, and network
+  access limited to `github.com` without overriding the user's approval policy.
+- Updated `$handoff` to preflight Git metadata and the exact push destination,
+  use scoped permission fallbacks only when the active session needs them, and
+  retry once only for a pre-contact DNS-resolution failure.
+- Added config and runtime validation for the complete profile and handoff
+  contract, then verified the workflow in a fresh Stillcurrent session that
+  committed and pushed without a manual permission-mode switch.
+
 ## v0.6.1 - 2026-07-16
 
 - Hardened `$handoff` push routing so existing-upstream branches use plain

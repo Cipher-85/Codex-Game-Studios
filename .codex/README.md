@@ -12,8 +12,8 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.6.1`.
-- Post-`v0.6.1` correction completes the default `game_studios` profile with
+- The package version is `v0.7.0`.
+- `v0.7.0` completes the default `game_studios` profile with
   Git/runtime writes, `.env*` denials, and exact `github.com` access without a
   project approval-policy override. `$handoff` now preflights Git and the exact
   remote, uses scoped permission fallback only when needed, and retries once

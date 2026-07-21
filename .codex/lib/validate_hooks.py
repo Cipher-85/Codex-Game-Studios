@@ -75,6 +75,49 @@ def git_init(tmp_root: Path) -> None:
     subprocess.run(["git", "-C", str(tmp_root), "init", "-q"], check=True, capture_output=True, text=True)
 
 
+def git_commit_fixture(tmp_root: Path) -> str:
+    subprocess.run(["git", "-C", str(tmp_root), "config", "user.name", "CCGS Fixture"], check=True)
+    subprocess.run(["git", "-C", str(tmp_root), "config", "user.email", "fixture@example.invalid"], check=True)
+    marker = tmp_root / ".fixture"
+    marker.write_text("fixture\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(tmp_root), "add", ".fixture"], check=True)
+    subprocess.run(["git", "-C", str(tmp_root), "commit", "-qm", "fixture baseline"], check=True)
+    return subprocess.run(
+        ["git", "-C", str(tmp_root), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+
+def write_handoff(tmp_root: Path, marker: str = "HANDOFF FIXTURE") -> Path:
+    path = tmp_root / "production" / "session-handoff.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        f"# Session Handoff\n\nCurrent Stage: production\nNext Action: {marker}\n",
+        encoding="utf-8",
+    )
+    return path
+
+
+def write_active(tmp_root: Path, marker: str = "ACTIVE FIXTURE", pointer_only: bool = False) -> Path:
+    path = tmp_root / "production" / "session-state" / "active.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if pointer_only:
+        text = "# Active Session State\n\nSource: production/session-handoff.md\n"
+    else:
+        text = (
+            "# Active Session State\n\n"
+            "Source: production/session-handoff.md\n\n"
+            "## Current Focus\n"
+            f"- Task: {marker}\n\n"
+            "## Session Worklist\n"
+            "1. (Recommended) Fixture lane\n"
+        )
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
 def make_temp_project() -> tempfile.TemporaryDirectory[str]:
     return tempfile.TemporaryDirectory(prefix="ccgs-hook-fixture-")
 
@@ -99,6 +142,15 @@ def assert_result(
         errors.append(f"{label}: stderr missing {stderr_contains!r}; stderr={result.stderr!r}")
     if stderr_absent and stderr_absent in result.stderr:
         errors.append(f"{label}: stderr unexpectedly contained {stderr_absent!r}; stderr={result.stderr!r}")
+
+
+def assert_stdout_order(errors: list[str], label: str, result: subprocess.CompletedProcess[str], first: str, second: str) -> None:
+    first_at = result.stdout.find(first)
+    second_at = result.stdout.find(second)
+    if first_at < 0 or second_at < 0 or first_at >= second_at:
+        errors.append(
+            f"{label}: expected {first!r} before {second!r}; stdout={result.stdout!r}"
+        )
 
 
 def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warnings: list[str]) -> None:
@@ -210,14 +262,57 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
     with make_temp_project() as tmp:
         tmp_root = Path(tmp)
         git_init(tmp_root)
-        active = tmp_root / "production" / "session-state" / "active.md"
-        active.parent.mkdir(parents=True, exist_ok=True)
-        active.write_text("# Active\nCurrent task fixture\n", encoding="utf-8")
+        expected_head = git_commit_fixture(tmp_root)
+        write_handoff(tmp_root)
+        write_active(tmp_root)
         src_keep = tmp_root / "src" / ".gitkeep"
         src_keep.parent.mkdir(parents=True, exist_ok=True)
         src_keep.write_text("", encoding="utf-8")
         result = run_hook(root, tmp_root, "session-start.sh", load_payload(fixtures, "session-start.json"))
         assert_result(errors, "session-start visible context", result, 0, stdout_contains="ACTIVE SESSION STATE DETECTED")
+        assert_stdout_order(errors, "session-start handoff precedence", result, "HANDOFF FIXTURE", "ACTIVE FIXTURE")
+        if "$resume-from-handoff" not in result.stdout:
+            errors.append("session-start handoff preview did not recommend $resume-from-handoff")
+        baseline_path = tmp_root / "production" / "session-logs" / "session-baseline.json"
+        try:
+            baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"session-start did not write valid session baseline JSON: {exc}")
+        else:
+            if baseline.get("start_head") != expected_head or not baseline.get("branch") or not baseline.get("started_at"):
+                errors.append(f"session-start baseline missing branch/HEAD/timestamp: {baseline!r}")
+
+    with make_temp_project() as tmp:
+        tmp_root = Path(tmp)
+        git_init(tmp_root)
+        git_commit_fixture(tmp_root)
+        write_handoff(tmp_root, "HANDOFF ONLY")
+        result = run_hook(root, tmp_root, "session-start.sh", load_payload(fixtures, "session-start.json"))
+        assert_result(errors, "session-start handoff-only fresh clone", result, 0, stdout_contains="HANDOFF ONLY")
+        if "ACTIVE SESSION STATE DETECTED" in result.stdout:
+            errors.append("session-start handoff-only fixture invented substantive active state")
+
+    with make_temp_project() as tmp:
+        tmp_root = Path(tmp)
+        git_init(tmp_root)
+        git_commit_fixture(tmp_root)
+        write_handoff(tmp_root, "HANDOFF POINTER PRIMARY")
+        write_active(tmp_root, pointer_only=True)
+        result = run_hook(root, tmp_root, "session-start.sh", load_payload(fixtures, "session-start.json"))
+        assert_result(
+            errors,
+            "session-start pointer-only active state",
+            result,
+            0,
+            stdout_contains="POINTER-ONLY ACTIVE STATE DETECTED",
+        )
+        assert_stdout_order(
+            errors,
+            "session-start pointer handoff precedence",
+            result,
+            "HANDOFF POINTER PRIMARY",
+            "POINTER-ONLY ACTIVE STATE DETECTED",
+        )
 
     with make_temp_project() as tmp:
         tmp_root = Path(tmp)
@@ -229,13 +324,38 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
     with make_temp_project() as tmp:
         tmp_root = Path(tmp)
         git_init(tmp_root)
-        active = tmp_root / "production" / "session-state" / "active.md"
-        active.parent.mkdir(parents=True, exist_ok=True)
-        active.write_text("# Active\nCurrent task fixture\n", encoding="utf-8")
+        write_handoff(tmp_root, "COMPACT HANDOFF FALLBACK")
+        write_active(tmp_root, "COMPACT ACTIVE PRIMARY")
         result = run_hook(root, tmp_root, "pre-compact.sh", load_payload(fixtures, "pre-compact.json"))
         assert_result(errors, "pre-compact visible recovery", result, 0, stdout_contains="SESSION STATE BEFORE COMPACTION")
+        assert_stdout_order(
+            errors,
+            "pre-compact active precedence",
+            result,
+            "COMPACT ACTIVE PRIMARY",
+            "COMPACT HANDOFF FALLBACK",
+        )
         result = run_hook(root, tmp_root, "post-compact.sh", load_payload(fixtures, "post-compact.json"))
         assert_result(errors, "post-compact visible recovery", result, 0, stdout_contains="Context Restored After Compaction")
+        assert_stdout_order(
+            errors,
+            "post-compact active precedence",
+            result,
+            "COMPACT ACTIVE PRIMARY",
+            "COMPACT HANDOFF FALLBACK",
+        )
+
+    with make_temp_project() as tmp:
+        tmp_root = Path(tmp)
+        git_init(tmp_root)
+        write_handoff(tmp_root, "COMPACT HANDOFF ELEVATED")
+        write_active(tmp_root, pointer_only=True)
+        result = run_hook(root, tmp_root, "pre-compact.sh", load_payload(fixtures, "pre-compact.json"))
+        assert_result(errors, "pre-compact pointer recovery", result, 0, stdout_contains="Canonical Handoff Recovery (elevated)")
+        assert_stdout_order(errors, "pre-compact pointer precedence", result, "COMPACT HANDOFF ELEVATED", "Pointer-Only Active State")
+        result = run_hook(root, tmp_root, "post-compact.sh", load_payload(fixtures, "post-compact.json"))
+        assert_result(errors, "post-compact pointer recovery", result, 0, stdout_contains="Canonical Handoff Recovery (elevated)")
+        assert_stdout_order(errors, "post-compact pointer precedence", result, "COMPACT HANDOFF ELEVATED", "Pointer-Only Active State")
 
     with make_temp_project() as tmp:
         tmp_root = Path(tmp)

@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Use when the user wants to stop, pause, checkpoint, switch machines, or preserve current session state for a future Codex session.
+description: Use only for an explicit $handoff invocation or an equally explicit request to review, commit, and push a durable session handoff.
 ---
 
 # Handoff
@@ -12,13 +12,18 @@ pair for `$resume-from-handoff`.
 
 - Respect the current branch. Never switch branches during handoff.
 - Do not edit Claude-owned runtime files or legacy Claude instruction surfaces.
-- Explicit invocation of `$handoff` authorizes this skill's declared handoff
-  workflow without a second approval confirmation: update continuity files, stage
+- Explicit invocation of `$handoff`, or an equally explicit instruction to
+  commit and push this handoff, authorizes this skill's declared workflow
+  without a second approval confirmation: update continuity files, stage
   relevant uncommitted changes by path, create the standard handoff commit, and
   push the current branch.
+- Generic requests to pause, stop, checkpoint, switch machines, or resume later
+  are a recommendation to invoke `$handoff`; they are not commit or push
+  authority. Do not infer full-transaction authorization from this skill's
+  discovery description or from ordinary wrap-up wording.
 - Declared continuity files:
-  `production/session-handoff.md`, `production/session-archive.md`, and
-  `production/session-state/active.md`.
+  `production/session-handoff.md`, `production/session-archive.md`,
+  `production/resume-index.md`, and `production/session-state/active.md`.
 - Show the user the intended handoff label and concise update summary, then
   run the declared handoff workflow directly. Do not pause between the summary,
   continuity writes, commit, and push unless the work would leave the declared
@@ -32,6 +37,20 @@ pair for `$resume-from-handoff`.
 - If a command fails, use only the permission fallback or DNS retry declared
   below. If that exact fallback also fails, halt the current phase and report
   the exact final failure.
+
+## Context Capacity Gate
+
+Before the Git capability gate or Phase 0, read the active reported context
+percentage supplied by the current runtime. Estimate the additional percentage
+cost of the complete review, continuity update, commit, and push transaction
+from the observed scope. Do not use fixed token-window math or a hardcoded
+percentage threshold.
+
+Proceed only when the reported remaining capacity can safely contain the full
+transaction. If it cannot, halt before Phase 0, report the active percentage and
+estimated additional percentage cost, and recommend starting a fresh session
+with an explicit `$handoff`. If the active percentage is unavailable, say so
+explicitly and make a conservative scope-based judgment; never invent a value.
 
 ## Git And Remote Capability Gate
 
@@ -101,6 +120,44 @@ its authoring conclusions and re-reading the deliverables with a reviewer lens.
 Never invoke `codex review`, `codex exec`, `codex-companion`, the Claude
 companion plugin, a subprocess reviewer, a subagent reviewer, or another model
 service. Do not create an external data-egress approval path for this gate.
+
+### Prove The Review Scope
+
+Read the gitignored
+`production/session-logs/session-baseline.json` written by the session-start
+hook. It must contain the current branch, the starting HEAD, and the session
+start timestamp. Resolve the current branch and HEAD again, then require all of
+the following before claiming complete review coverage:
+
+- The baseline exists and contains a valid starting HEAD.
+- The baseline branch equals the current branch.
+- `git merge-base --is-ancestor <starting-head> HEAD` succeeds.
+
+If the baseline is missing, the branch changed, or the starting HEAD is not an
+ancestor, stop before Phase 1 and request explicit review-scope confirmation.
+Do not silently substitute conversation memory or the current diff.
+
+Enumerate the review scope as the union of:
+
+```bash
+git diff --name-only <starting-head>..HEAD
+git diff --cached --name-only
+git diff --name-only
+git ls-files --others --exclude-standard
+```
+
+Also read `production/session-state/active.md` when present and include all
+files it records as touched or in progress. Deduplicate the union, record the
+starting HEAD and enumerated paths in the review audit trail, and re-read every
+scoped file end-to-end. The cross-check is a fresh same-session reasoning pass,
+not an independent reviewer.
+
+For every newly introduced directory containing multiple files, compare the
+filesystem file count, `git ls-files -- <directory>` tracked count, and
+`git diff --cached --name-only -- <directory>` staged count. Enumerate any
+filesystem file absent from both tracked and staged output and diagnose it with
+`git check-ignore -v -- <path>`. An unexplained count mismatch or ignored file
+that the deliverable depends on blocks a complete-review claim.
 
 ### Pure Design/Process-Document Exemption
 
@@ -198,6 +255,7 @@ Read these before editing when they exist:
 
 - `production/session-handoff.md`
 - `production/session-archive.md`
+- `production/resume-index.md`
 - `production/session-state/active.md`
 
 Create `production/session-handoff.md` if it does not exist. Create
@@ -241,6 +299,31 @@ Update only the live sections that changed:
 If approved content exists only in conversation, stop and surface it. Do not hide
 an approved-but-unpersisted state.
 
+### Refresh The Resume Index
+
+Create or update the tracked `production/resume-index.md` as a derived,
+disposable accelerator. The handoff remains canonical. The index must contain:
+
+- Generated date and source HEAD.
+- Slice-source relative path and a SHA-256 content hash, or an explicit
+  unavailable/undeclared state.
+- Stage, milestone, sprint, and slice label.
+- Last reported or verified boot/playtest with provenance.
+- Owed verification.
+- One recommended lane and two alternative lanes, each in its own field; use
+  `None available` when fewer than two real alternatives exist rather than
+  inventing work.
+- Blockers/gates and concise evidence pointers.
+
+Do not copy archival narrative into the index. Run:
+
+```bash
+wc -c production/resume-index.md
+```
+
+The index must be at most 10 KB. If it exceeds that cap, reduce duplicated prose
+and evidence detail before continuing.
+
 ### Size Check
 
 Run:
@@ -255,10 +338,11 @@ before continuing.
 ## Phase 2.5: Refresh Local Scratchpad
 
 Overwrite `production/session-state/active.md` with a short pointer stub to
-`production/session-handoff.md`. It is gitignored scratch state in many
+`production/session-handoff.md` and `production/resume-index.md`. It is
+gitignored scratch state in many
 projects; keep it coherent but do not stage it unless the repo explicitly tracks
-it. This is a derived checkpoint authorized by explicit `$handoff` invocation.
-Do not ask a separate "May I write?" for this file.
+it. This is a derived checkpoint authorized by the explicit transaction
+instruction above. Do not ask a separate "May I write?" for this file.
 
 ## Phase 3: Commit Handoff
 
@@ -272,8 +356,9 @@ git log -5 --oneline
 
 If there are no relevant uncommitted changes, skip the commit and say why.
 
-Otherwise stage only the relevant paths by name. Avoid broad staging unless the
-user explicitly asked for it. `$handoff` invocation is commit authorization for
+Otherwise stage only the relevant paths by name, including the refreshed resume
+index when it changed. Avoid broad staging unless the user explicitly asked for
+it. The explicit transaction authorization above is commit authorization for
 the relevant handoff work. Run staging using the user's active session
 permissions. If it fails solely because the sandbox denies Git metadata writes,
 repeat the exact `git add` command once with `sandbox_permissions` set to
@@ -318,7 +403,8 @@ Run only the lookup that matches the detected upstream state. Halt if the
 required push remote is missing.
 
 Treat the resolved push URL, current branch/upstream, and explicit `$handoff`
-invocation as the destination and user-authorization evidence. Show the push URL
+invocation or equally explicit commit-and-push instruction as the destination
+and user-authorization evidence. Show the push URL
 and branch in commentary immediately before requesting the push. Do not require
 `gh auth status`, `gh api user`, or `gh repo view` as push preconditions. Git and
 GitHub CLI may use different credentials. A `gh auth status` failure under
@@ -329,8 +415,9 @@ require, and remain advisory. Never request or display a token. Do not halt
 before the authorized push solely because a GitHub CLI check is unavailable,
 network-blocked, unauthenticated, or inconclusive.
 
-Push only if the handoff trigger or user instruction authorizes it. Use exactly
-one of these command shapes:
+Push only when that explicit authorization boundary is satisfied. Generic
+pause, stop, checkpoint, or resume-later wording is never sufficient. Use
+exactly one of these command shapes:
 
 - Existing upstream: `git push`.
 - No upstream: `git push -u origin <branch>`.
@@ -344,8 +431,9 @@ access is unavailable, repeat the exact push command once with the same scoped
 escalation. The justification must state that this is the explicitly authorized,
 non-force handoff push; name the verified push URL; and identify the current
 branch/upstream. Do not claim an authenticated account or repository permission
-unless it was actually verified. Explicit `$handoff` invocation is normal push
-authorization for the standard handoff commit. Never force-push.
+unless it was actually verified. Explicit `$handoff` invocation or the equally
+explicit commit-and-push instruction is normal push authorization for the
+standard handoff commit. Never force-push.
 
 If the network-capable push attempt returns the exact pre-contact DNS error
 `Could not resolve host`, retry that exact push command once with the same
@@ -383,9 +471,12 @@ Report in 15 lines or fewer:
 - Handoff doc next action.
 - Playable/slice source path, or `Not declared`.
 - Open blockers or deferred items.
+- Resume-index path and size, or why no index was written.
 
 After reporting, stop. Do not start new feature work in the same turn.
 
 ## Ported metadata
 
-This is a Codex-native support skill. It has no upstream Claude skill equivalent.
+This is a Codex-native support skill and Codex-native adaptation. Stillcurrent
+has a project-local Claude analogue; this workflow has no legacy Claude runtime
+dependency.

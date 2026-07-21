@@ -35,9 +35,11 @@ or new design/architecture/balance decision still requires its normal explicit
 approval.
 
 `$resume-from-handoff` compiles `## Session Worklist` and `## Phase Guard` at
-session entry from the canonical handoff, sprint status, stage file, workflow
-catalog, and slice state. Post-work closeouts should read or refresh those
-sections instead of running a separate continuity router.
+session entry from the canonical handoff, compact `production/resume-index.md`,
+sprint status, stage file, workflow catalog, and a bounded current slice
+section. It also records `## Source Freshness` and reads the written cache back.
+Only explicit `deep` mode reads full slice history. Post-work closeouts should
+read or refresh those sections instead of running a separate continuity router.
 
 ### Status Line Block (Production+ only)
 
@@ -121,7 +123,8 @@ conversation history is secondary.
 If a session dies ("prompt too long") or you start a new session to continue work:
 
 1. Read `production/session-handoff.md` if it exists and is relevant
-2. Read `production/session-state/active.md` if it exists
+2. Read a substantive `production/session-state/active.md` if it exists; when it
+   is missing or pointer-only, elevate the canonical handoff
 3. Read the partially-completed file(s) listed in the state
 4. Continue from the next incomplete section or task
 5. Use `/clear` before unrelated implementation work when saved files already

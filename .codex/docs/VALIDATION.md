@@ -47,8 +47,14 @@ Validator policy:
   Release branch metadata.
 - Runtime files must not depend on Claude-owned paths.
 - `$resume-from-handoff` validation enforces the lane-selection pause, FIRST
-  verification, structured follow-up forks, dynamic slice pointer, stage/catalog
-  guards, and one-file session-cache boundary.
+  verification, structured follow-up forks, bounded-by-default slice reads,
+  explicit deep mode, source precedence/freshness, cache readback, dynamic slice
+  pointer, stage/catalog guards, and one-file session-cache boundary.
+- `$handoff` validation enforces explicit transaction authorization, a reported
+  context-capacity gate, session-baseline scope proof, bulk-directory
+  trackability checks, and the compact resume-index contract.
+- Hook fixtures cover handoff-only recovery, handoff plus substantive active
+  state, pointer-only active state, compaction ordering, and baseline JSON.
 - If an optional project-local `$gen-asset` skill exists, validation rejects
   nested Codex CLI generation, legacy runtime paths, API/CLI fallbacks, and
   unbounded newest-image discovery. ACTIVE profiles require the full semantic

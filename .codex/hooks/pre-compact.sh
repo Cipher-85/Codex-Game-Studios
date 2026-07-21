@@ -11,20 +11,33 @@ echo "=== SESSION STATE BEFORE COMPACTION ==="
 echo "Timestamp: $(date)"
 
 state_file="$ccgs_root/production/session-state/active.md"
-if [ -f "$state_file" ]; then
+handoff_file="$ccgs_root/production/session-handoff.md"
+state_kind="$(ccgs_active_state_kind "$state_file")"
+
+if [ "$state_kind" = "substantive" ]; then
   echo ""
   echo "## Active Session State (from production/session-state/active.md)"
-  state_lines="$(wc -l < "$state_file" 2>/dev/null | tr -d ' ' || echo 0)"
-  if [ "${state_lines:-0}" -gt 100 ] 2>/dev/null; then
-    head -n 100 "$state_file"
-    echo "... (truncated - $state_lines total lines, showing first 100)"
-  else
-    cat "$state_file"
+  ccgs_preview_bounded "$state_file" 100
+  if [ -f "$handoff_file" ]; then
+    echo ""
+    echo "## Canonical Handoff Fallback"
+    ccgs_preview_bounded "$handoff_file" 60
   fi
 else
   echo ""
-  echo "## No active session state file found"
-  echo "Consider maintaining production/session-state/active.md for better recovery."
+  if [ -f "$handoff_file" ]; then
+    echo "## Canonical Handoff Recovery (elevated)"
+    ccgs_preview_bounded "$handoff_file" 60
+  else
+    echo "## No canonical handoff found"
+  fi
+  if [ "$state_kind" = "pointer" ]; then
+    echo ""
+    echo "## Pointer-Only Active State"
+    ccgs_preview_bounded "$state_file" 20
+  else
+    echo "No active session state file found."
+  fi
 fi
 
 echo ""
@@ -75,7 +88,8 @@ echo "Context compaction occurred at $(date)." >> "$log_dir/compaction-log.txt" 
 
 echo ""
 echo "## Recovery Instructions"
-echo "After compaction, read production/session-state/active.md to recover full working context."
+echo "After compaction, read substantive production/session-state/active.md first."
+echo "Use production/session-handoff.md as the canonical fallback; elevate it when active.md is missing or pointer-only."
 echo "Then read any files listed above that are being actively worked on."
 echo "=== END SESSION STATE ==="
 exit 0

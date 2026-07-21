@@ -13,11 +13,15 @@ history. Prefer small, current, file-backed state over broad transcripts.
   separate write-approval prompt.
 - `production/session-handoff.md`: canonical resume narrative when a session has
   enough state that another session should continue from it.
+- `production/resume-index.md`: tracked accelerator derived by `$handoff`, capped
+  at 10 KB, and disposable. Its slice hash may speed ordinary resume, but it
+  never outranks the handoff, stage/sprint state, or current slice section.
 - `production/session-archive.md`: historical record only. Do not read by default
   unless the user asks for older context or the handoff points there.
 - `src/README.md`: slice history and real-versus-stubbed status when present.
-  Use bounded reads for ordinary routing; deep history is for explicit resume or
-  audit work.
+  Use a handoff-declared path rather than assuming this filename. Ordinary
+  resume reads at most the current 200-line/32-KiB section; only explicit
+  `$resume-from-handoff deep [focus]` reads full slice history.
 
 Missing files are unset state. Do not create continuity files unless the task or
 skill calls for it.
@@ -69,16 +73,22 @@ decision, blocker, or true stop point.
 6. Suggest `$handoff [short-label]` when installed and the next session would
    otherwise need to reconstruct context.
 
+Generic pause, stop, checkpoint, or resume-later wording authorizes this
+recommendation only. The review-through-push transaction requires explicit
+`$handoff` invocation or an equally explicit instruction to commit and push the
+handoff.
+
 ## Resume Procedure
 
 On resume:
 
-1. Read `production/session-handoff.md` if present.
+1. Read `production/session-handoff.md` in full if present, then the compact
+   `production/resume-index.md` when available.
 2. Run the `$resume-from-handoff` workflow once to compile
    `production/session-state/active.md` from the handoff, sprint status, stage,
    workflow catalog, and slice state.
-3. Read only the bounded files named by the handoff unless a deep audit is
-   needed.
+3. Check the index slice path/hash and read only the bounded current slice
+   section named by the handoff unless explicit `deep` mode is active.
 4. Verify drift-prone claims cheaply before acting on them.
 5. Continue from the saved `## Session Worklist` unless there is a real
    inconsistency.
@@ -90,6 +100,12 @@ On resume:
    follow-up workflow fork as a new structured decision. Resume selection
    authorizes entering the selected workflow only; it grants no additional
    mutation authority.
+8. Write `## Source Freshness` to `active.md`, then read the cache back and
+   verify its source, phase guard, owed verification, and recommended lane.
+
+Resolve conflicts in this order: handoff narrative and decisions; stage and
+sprint anchors; fresh current slice facts; fresh resume index; same-session
+`active.md`. Surface disagreement rather than normalizing it silently.
 
 ## Optional Asset-Generation Continuity
 

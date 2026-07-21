@@ -1167,6 +1167,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".codex/tests/fixtures/invalid-handoff-contract/.agents/skills/handoff/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".codex/tests/fixtures/invalid-resume-contract/.agents/skills/resume-from-handoff/SKILL.md"
   },
   {

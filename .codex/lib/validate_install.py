@@ -17,7 +17,7 @@ ALLOWED_CLAUDE_TEST_FIXTURES = {
     ".codex/tests/fixtures/claude-existing/.claude/settings.json",
     ".codex/tests/fixtures/claude-existing/CLAUDE.md",
 }
-EXPECTED_INSTALLED_FILE_COUNT = 510
+EXPECTED_INSTALLED_FILE_COUNT = 511
 
 
 def run_command(command: list[str], cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -81,6 +81,9 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         project_profile = target / ".agents" / "skills" / "gen-asset" / "profiles" / "custom.md"
         project_profile.parent.mkdir(parents=True, exist_ok=True)
         project_profile.write_text("project-owned\n", encoding="utf-8")
+        resume_index = target / "production" / "resume-index.md"
+        resume_index.parent.mkdir(parents=True, exist_ok=True)
+        resume_index.write_text("# Project-owned resume index\n", encoding="utf-8")
         user_log = target / "production" / "session-logs" / "session-start.json"
         user_log.parent.mkdir(parents=True, exist_ok=True)
         user_log.write_text('{"hook_event_name":"user-data"}\n', encoding="utf-8")
@@ -94,6 +97,8 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
             errors.append(f"uninstall failed: {command_failure(result)}")
         if not project_profile.exists():
             errors.append("uninstall removed project-owned gen-asset content")
+        if not resume_index.exists():
+            errors.append("uninstall removed the project-owned resume index")
         if not user_log.exists():
             errors.append("uninstall removed unowned session-log content")
 
@@ -418,6 +423,7 @@ def validate_gitignore_allowlist(root: Path, errors: list[str]) -> None:
         "!.agents/skills/gen-asset/",
         "!design/registry/entities.yaml",
         "!docs/WORKFLOW-GUIDE.md",
+        "!production/resume-index.md",
         "!production/session-state/.gitkeep",
         "!src/.gitkeep",
     ):
@@ -487,6 +493,8 @@ def main() -> int:
                     errors.append(f"installed-files must not own Claude path {path}")
                 if path == ".agents/skills/gen-asset" or path.startswith(".agents/skills/gen-asset/"):
                     errors.append(f"installed-files must not own project-local gen-asset path {path}")
+                if path == "production/resume-index.md":
+                    errors.append("installed-files must not own the project-created resume index")
                 if not (root / path).exists():
                     errors.append(f"installed-files path missing on disk: {path}")
             if len(rows) != EXPECTED_INSTALLED_FILE_COUNT:

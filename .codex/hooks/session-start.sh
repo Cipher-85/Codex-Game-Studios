@@ -11,6 +11,9 @@ printf '%s\n' "$payload" > "$log_dir/session-start.json"
 echo "=== Codex Game Studios - Session Context ==="
 
 branch="$(git -C "$ccgs_root" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+start_head="$(git -C "$ccgs_root" rev-parse HEAD 2>/dev/null || true)"
+started_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+ccgs_write_session_baseline "$branch" "$start_head" "$started_at" "$log_dir/session-baseline.json"
 if [ -n "$branch" ]; then
   echo "Branch: $branch"
   echo ""
@@ -51,20 +54,34 @@ if [ -d "$ccgs_root/src" ]; then
   fi
 fi
 
+handoff_file="$ccgs_root/production/session-handoff.md"
 state_file="$ccgs_root/production/session-state/active.md"
-if [ -f "$state_file" ]; then
+state_kind="$(ccgs_active_state_kind "$state_file")"
+
+if [ -f "$handoff_file" ]; then
+  echo ""
+  echo "=== CANONICAL HANDOFF DETECTED ==="
+  echo "Bounded preview of production/session-handoff.md:"
+  ccgs_preview_bounded "$handoff_file" 60
+  echo "Run \$resume-from-handoff to compile a fresh session worklist before selecting a lane."
+  echo "=== END CANONICAL HANDOFF PREVIEW ==="
+fi
+
+if [ "$state_kind" = "substantive" ]; then
   echo ""
   echo "=== ACTIVE SESSION STATE DETECTED ==="
   echo "A previous session left state at: production/session-state/active.md"
-  echo "Read this file to recover context and continue where you left off."
+  echo "The canonical handoff above outranks this same-session cache when both exist."
   echo ""
-  echo "Quick summary (last 20 lines):"
-  tail -20 "$state_file" 2>/dev/null || true
-  total_lines="$(wc -l < "$state_file" 2>/dev/null | tr -d ' ' || echo 0)"
-  if [ "${total_lines:-0}" -gt 20 ] 2>/dev/null; then
-    echo "  ... ($total_lines total lines - read the full file to continue)"
-  fi
+  echo "Bounded active-state preview:"
+  ccgs_preview_bounded "$state_file" 60
   echo "=== END SESSION STATE PREVIEW ==="
+elif [ "$state_kind" = "pointer" ]; then
+  echo ""
+  echo "=== POINTER-ONLY ACTIVE STATE DETECTED ==="
+  echo "production/session-state/active.md is not a substantive worklist; use the canonical handoff."
+  ccgs_preview_bounded "$state_file" 20
+  echo "=== END POINTER STATE PREVIEW ==="
 fi
 
 echo "==================================="

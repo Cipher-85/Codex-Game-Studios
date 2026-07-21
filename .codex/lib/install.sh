@@ -721,9 +721,11 @@ ccgs_transaction_commit() {
 }
 
 ccgs_project_owned_allowlist_paths() {
-  # Sentinel only: this makes the optional project-local subtree trackable.
-  # It is deliberately absent from deploy paths and installed-files ownership.
+  # Sentinels only: these make project-owned continuity/extension paths
+  # trackable. They are deliberately absent from deploy paths and
+  # installed-files ownership.
   printf '%s\n' ".agents/skills/gen-asset/SKILL.md"
+  printf '%s\n' "production/resume-index.md"
 }
 
 ccgs_gitignore_allowlist_paths() {

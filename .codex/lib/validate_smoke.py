@@ -367,7 +367,20 @@ def main() -> int:
         "stale-claude-reference": (validate_forbidden_references, ()),
         "invalid-resume-contract": (
             lambda p: getattr(runtime, "validate_resume_contract", lambda _: [])(p),
-            ("automatic lane startup",),
+            (
+                "unbounded default slice read",
+                "automatic lane startup",
+                "cache readback contract",
+            ),
+        ),
+        "invalid-handoff-contract": (
+            lambda p: getattr(runtime, "validate_handoff_review_contract", lambda _: [])(p),
+            (
+                "explicit invocation boundary",
+                "context capacity gate",
+                "review scope baseline contract",
+                "compact resume-index contract",
+            ),
         ),
         "invalid-gen-asset-contract": (
             lambda p: getattr(runtime, "validate_gen_asset_contract", lambda _: [])(p),

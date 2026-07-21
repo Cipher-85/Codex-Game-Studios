@@ -11,8 +11,9 @@ Projects may also provide optional local extensions. They are not part of the
 |---------|---------|
 | `$start` | First-time onboarding — asks where you are, then guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
-| `$handoff` | Preserve current session state in the canonical handoff for future resume |
-| `$resume-from-handoff` | Start a fresh session by reading the canonical handoff and compiling `active.md` Session Worklist |
+| `$handoff` | Explicit review -> continuity/index -> commit -> push transaction; generic pause wording only recommends it |
+| `$resume-from-handoff [focus]` | Bounded fresh-session compile from handoff/index/current slice into the `active.md` worklist |
+| `$resume-from-handoff deep [focus]` | Same selection boundary with an explicitly requested full slice-history read |
 | `$studio-next` | Deprecated manual continuity reference; normal routing reads `active.md` Session Worklist |
 | `$studio-status` | Show stage, review mode, and active-session breadcrumb from shared project state |
 | `$project-stage-detect` | Full project audit — detect phase, identify existence gaps, recommend next steps |

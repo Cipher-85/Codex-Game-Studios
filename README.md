@@ -265,6 +265,19 @@ inconclusive GitHub CLI authentication checks. Do not run `chmod`, delete lock
 files, broaden the destination, or change the whole session's permission mode
 as a workaround.
 
+The full handoff transaction requires explicit `$handoff` invocation or an
+equally explicit request to commit and push the handoff; generic pause/stop
+wording only recommends it. Session start records a local branch/HEAD baseline
+so review scope includes intermediate commits, dirty files, untracked files,
+and paths named by active state. Handoff also refreshes a tracked, derived
+`production/resume-index.md` capped at 10 KB.
+
+Ordinary `$resume-from-handoff [focus]` reads the canonical handoff, validates
+the compact index, and caps the current slice-source section at 200 lines or
+32 KiB. `$resume-from-handoff deep [focus]` is the explicit full-history mode.
+Both modes compile and read back `active.md`, record source freshness, and stop
+at lane selection.
+
 After changing `.codex/config.toml`, start a new session before judging the
 resolved permissions because active sessions retain their launch-time rules.
 

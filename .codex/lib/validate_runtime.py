@@ -344,6 +344,53 @@ HANDOFF_REVIEW_REQUIRED_PHRASES = {
     ),
 }
 
+HANDOFF_AUTHORIZATION_REQUIRED_PHRASES = {
+    ".agents/skills/handoff/SKILL.md": (
+        "equally explicit instruction to commit and push this handoff",
+        "Generic requests to pause, stop, checkpoint",
+        "they are not commit or push authority",
+    ),
+    "AGENTS.md": (
+        "equally explicit instruction to commit and push the handoff",
+        "Generic pause/stop wording does not",
+    ),
+}
+
+HANDOFF_CAPACITY_REQUIRED_PHRASES = (
+    "## Context Capacity Gate",
+    "active reported context percentage",
+    "estimated additional percentage cost",
+    "hardcoded percentage threshold",
+    "If the active percentage is unavailable",
+)
+
+HANDOFF_SCOPE_REQUIRED_PHRASES = (
+    "production/session-logs/session-baseline.json",
+    "starting HEAD",
+    "git merge-base --is-ancestor <starting-head> HEAD",
+    "git diff --name-only <starting-head>..HEAD",
+    "git diff --cached --name-only",
+    "git ls-files --others --exclude-standard",
+    "files it records as touched or in progress",
+    "filesystem file count",
+    "tracked count",
+    "staged count",
+    "git check-ignore -v -- <path>",
+    "not an independent reviewer",
+)
+
+HANDOFF_INDEX_REQUIRED_PHRASES = (
+    "production/resume-index.md",
+    "derived, disposable accelerator",
+    "Generated date and source HEAD",
+    "SHA-256 content hash",
+    "Last reported or verified boot/playtest with provenance",
+    "Owed verification",
+    "two alternative lanes",
+    "Blockers/gates",
+    "at most 10 KB",
+)
+
 HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES = (
     "## Git And Remote Capability Gate",
     "Before Phase 0",
@@ -513,6 +560,38 @@ RESUME_REQUIRED_PHRASES = (
     "production/session-state/active.md",
 )
 
+RESUME_BOUNDED_REQUIRED_PHRASES = (
+    "$resume-from-handoff deep [focus]",
+    "bounded current section",
+    "at most 200 lines or 32 KiB",
+    "Default resume must not read the entire slice source",
+    "Missing or stale index state never activates deep mode automatically",
+    "production/resume-index.md",
+    "Mark an oversized index `oversized`",
+    "SHA-256 content hash",
+    "Compute the hash locally without loading the whole source into model context",
+    "stale-hash",
+)
+
+RESUME_READBACK_REQUIRED_PHRASES = (
+    "read `production/session-state/active.md` back in full",
+    "## Source Freshness",
+    "## Owed Before Starting",
+    "recommended `## Session Worklist` lane",
+    "Do not claim the session cache was updated until this readback passes",
+)
+
+RESUME_PRECEDENCE_REQUIRED_PHRASES = (
+    "Use this source precedence",
+    "durable narrative, decisions, blockers",
+    "for current stage",
+    "for story status",
+    "fresh bounded current section",
+    "derived accelerator",
+    "lowest-priority same-session cache",
+    "Surface conflicts; never silently normalize them",
+)
+
 GEN_ASSET_SKILL_PATH = Path(".agents/skills/gen-asset/SKILL.md")
 GEN_ASSET_REQUIRED_PHRASES = (
     "Invoke the built-in `image_gen` tool directly",
@@ -605,7 +684,13 @@ def ported_metadata(text: str) -> tuple[dict[str, str], bool]:
         fields[field_match.group(1)] = field_match.group(2).strip()
     is_native_support = (
         "Codex-native support skill" in section
-        and "no upstream Claude skill equivalent" in section
+        and (
+            "no upstream Claude skill equivalent" in section
+            or (
+                "Codex-native adaptation" in section
+                and "project-local Claude analogue" in section
+            )
+        )
     )
     return fields, is_native_support
 
@@ -783,10 +868,41 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
         if missing:
             errors.append(f"{rel}: missing handoff review contract phrase(s): {', '.join(missing)}")
 
+    for rel, required_phrases in HANDOFF_AUTHORIZATION_REQUIRED_PHRASES.items():
+        path = root / rel
+        if not path.exists():
+            errors.append(f"{rel}: missing explicit handoff invocation boundary surface")
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+        if missing:
+            errors.append(
+                f"{rel}: missing explicit handoff invocation boundary phrase(s): "
+                + ", ".join(missing)
+            )
+
     skill_rel = ".agents/skills/handoff/SKILL.md"
     skill_path = root / skill_rel
     if skill_path.exists():
         skill_text = skill_path.read_text(encoding="utf-8")
+        description = frontmatter(skill_text).get("description", "")
+        if any(word in description.lower() for word in ("pause", "stop", "checkpoint", "resume later")):
+            errors.append(
+                f"{skill_rel}: explicit invocation boundary is ambiguous in frontmatter description"
+            )
+
+        for label, required_phrases in (
+            ("context capacity gate", HANDOFF_CAPACITY_REQUIRED_PHRASES),
+            ("review scope baseline contract", HANDOFF_SCOPE_REQUIRED_PHRASES),
+            ("compact resume-index contract", HANDOFF_INDEX_REQUIRED_PHRASES),
+        ):
+            missing = [phrase for phrase in required_phrases if not contains_phrase(skill_text, phrase)]
+            if missing:
+                errors.append(
+                    f"{skill_rel}: missing handoff {label} phrase(s): "
+                    + ", ".join(missing)
+                )
+
         missing = [
             phrase
             for phrase in HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES
@@ -871,6 +987,18 @@ def validate_resume_contract(root: Path) -> list[str]:
             + ", ".join(missing)
         )
 
+    for label, required_phrases in (
+        ("bounded default slice-read contract", RESUME_BOUNDED_REQUIRED_PHRASES),
+        ("cache readback contract", RESUME_READBACK_REQUIRED_PHRASES),
+        ("source precedence contract", RESUME_PRECEDENCE_REQUIRED_PHRASES),
+    ):
+        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+        if missing:
+            errors.append(
+                f"{RESUME_SKILL_PATH}: missing resume {label} phrase(s): "
+                + ", ".join(missing)
+            )
+
     for line_number, line in enumerate(text.splitlines(), start=1):
         lower = line.lower()
         starts_lane = re.search(r"\b(?:start|begin|enter)\b", lower)
@@ -885,6 +1013,20 @@ def validate_resume_contract(root: Path) -> list[str]:
             errors.append(
                 f"{RESUME_SKILL_PATH}:{line_number}: automatic lane startup is forbidden; "
                 "pause for the required selection boundary"
+            )
+        reads_full_slice = (
+            re.search(r"\bread\b.*\b(?:entire|full|all)\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b", lower)
+            or re.search(r"\bread\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b.*\b(?:entire|full|all)\b", lower)
+            or re.search(r"\b(?:entire|full|all)\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b.*\bread\b", lower)
+        )
+        deep_only = "deep" in lower
+        explicitly_bounded = any(
+            phrase in lower for phrase in ("do not", "must not", "never", "only explicit", "only in")
+        )
+        if reads_full_slice and not deep_only and not explicitly_bounded:
+            errors.append(
+                f"{RESUME_SKILL_PATH}:{line_number}: unbounded default slice read is forbidden; "
+                "reserve the full slice history for explicit deep mode"
             )
     return errors
 

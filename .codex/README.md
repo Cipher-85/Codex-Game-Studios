@@ -12,7 +12,11 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.7.0`.
+- The package version is `v0.7.1`.
+- `v0.7.1` hardens handoff authorization and review scope with a fresh-context
+  explorer and mutation snapshots, adds a tracked compact resume index with
+  bounded/deep resume modes and freshness checks, and expands lifecycle hooks,
+  validators, and fixtures for fail-closed continuity.
 - `v0.7.0` completes the default `game_studios` profile with
   Git/runtime writes, `.env*` denials, and exact `github.com` access without a
   project approval-policy override. `$handoff` now preflights Git and the exact

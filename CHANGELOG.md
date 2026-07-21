@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.7.1 - 2026-07-22
+
+- Hardened `$handoff` authorization and review coverage with explicit
+  transaction triggers, session-baseline scope proof, fresh-context explorer
+  review, and before/after mutation snapshots for mixed or executable work.
+- Added a tracked compact resume index, bounded default slice reads, explicit
+  deep-history mode, source freshness checks, and active-cache readback.
+- Expanded lifecycle hooks, continuity documentation, validators, and fixtures
+  for compaction lineage, source precedence, resume-index preservation, and
+  fail-closed reviewer contracts.
+
 ## v0.7.0 - 2026-07-20
 
 - Completed the default `game_studios` permission profile with writable Git and

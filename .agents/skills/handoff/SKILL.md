@@ -114,12 +114,19 @@ gate over every file created or materially changed in this session. The gate can
 halt the skill: if triage requires user direction, stop before Phase 1 and do
 not rotate, commit, or push.
 
-The review stays inside the current Codex session. A native cross-check is a
-distinct native Codex review pass performed by this session after setting aside
-its authoring conclusions and re-reading the deliverables with a reviewer lens.
-Never invoke `codex review`, `codex exec`, `codex-companion`, the Claude
-companion plugin, a subprocess reviewer, a subagent reviewer, or another model
-service. Do not create an external data-egress approval path for this gate.
+The parent session always performs the self-review. Unless the pure-document
+exemption below applies, it must also spawn exactly one built-in `explorer` as a
+fresh-context integrity reviewer for each required reviewer pass, with
+`fork_turns: "none"`. This generic reviewer is not a director or lead gate and
+is not filtered by project review mode. Explicit `$handoff` invocation or the
+equally explicit full-transaction instruction authorizes these declared
+reviewer spawns without a duplicate confirmation.
+
+The reviewer stays inside the active Codex runtime but outside the author's
+conversation history. Never invoke `codex review`, `codex exec`,
+`codex-companion`, the Claude companion plugin, a subprocess reviewer, or
+another model service. Do not create an external data-egress approval path for
+this gate.
 
 ### Prove The Review Scope
 
@@ -149,8 +156,7 @@ git ls-files --others --exclude-standard
 Also read `production/session-state/active.md` when present and include all
 files it records as touched or in progress. Deduplicate the union, record the
 starting HEAD and enumerated paths in the review audit trail, and re-read every
-scoped file end-to-end. The cross-check is a fresh same-session reasoning pass,
-not an independent reviewer.
+scoped file end-to-end.
 
 For every newly introduced directory containing multiple files, compare the
 filesystem file count, `git ls-files -- <directory>` tracked count, and
@@ -159,21 +165,74 @@ filesystem file absent from both tracked and staged output and diagnose it with
 `git check-ignore -v -- <path>`. An unexplained count mismatch or ignored file
 that the deliverable depends on blocks a complete-review claim.
 
+### Fresh-Context Reviewer Contract
+
+Before each reviewer spawn, prepare a bounded reviewer packet containing only:
+
+- The exact deduplicated review path list, starting HEAD, and current HEAD.
+- The selected review tier: `STANDARD` or `ADVERSARIAL`.
+- The user-approved behavioral contract and acceptance criteria.
+- Applicable project rules, ADRs, GDDs, and other governing evidence.
+- Verification evidence already produced by the parent session.
+
+Do not pass authoring conclusions, implementation rationale, suspected
+findings, or a summary that tells the reviewer what verdict to reach. The
+reviewer must independently read the enumerated files and relevant governing
+evidence from the repository.
+
+The reviewer is instruction-read-only: it may read and analyze files but must
+not edit or write files, run builds or tests, change Git or index state, commit,
+push, switch branches, use network or external tools, spawn another agent, or
+make design, architecture, game-feel, balance, or scope decisions. The parent
+session owns every fix and verification command.
+
+Because this is an instruction-level read-only boundary rather than a separate
+filesystem sandbox, capture a mutation snapshot immediately before the spawn:
+
+```bash
+git status --porcelain=v2 --untracked-files=all
+git diff --binary --no-ext-diff
+git diff --cached --binary --no-ext-diff
+```
+
+Record a SHA-256 digest of each complete command result plus a SHA-256 content
+hash for every existing scoped file and every untracked file named by the
+status snapshot. Immediately after the reviewer returns, repeat the same three
+commands and content hashes and compare the before and after results exactly.
+Any unexplained mutation blocks the gate: stop before Phase 1, surface the
+changed paths and snapshot mismatch, and do not auto-restore or continue.
+
+The reviewer returns exactly one of:
+
+- `CLEAN`.
+- Findings labeled `HIGH`, `MEDIUM`, or `LOW`, each with an exact `path:line`,
+  the violated contract or concrete risk, and a recommended correction.
+
+The reviewer must also identify any missing or unreadable scoped path. A
+missing path, unreadable path, malformed result, failed reviewer, unavailable
+delegation tool, absent built-in `explorer` selector, inability to use or prove
+`fork_turns: "none"`, or mutation-snapshot mismatch blocks the handoff. Stop
+before Phase 1 and do not simulate or silently replace the reviewer with a
+same-session pass. The user may explicitly waive the independent reviewer and
+accept a disclosed same-session downgrade; `$handoff` invocation by itself is
+not that waiver.
+
 ### Pure Design/Process-Document Exemption
 
 If the entire session changed only pure design/process-document content,
-self-review is sufficient and the native cross-check is skipped. This exemption
-covers instruction/rule files, skills, `AGENTS.md`, ADRs with no runtime impact,
-`design/gdd/**`, and memory files. Mixed code-and-document changes are not
-exempt. Executable specifications, CI configuration, tools, tests, public API
-contracts, and ADRs with runtime-behavioral requirements are not pure documents.
+self-review is sufficient and the fresh-context reviewer is skipped unless the
+user explicitly requests it. This exemption covers instruction/rule files,
+skills, `AGENTS.md`, ADRs with no runtime impact, `design/gdd/**`, and memory
+files. Mixed code-and-document changes are not exempt. Executable
+specifications, CI configuration, tools, tests, public API contracts, and ADRs
+with runtime-behavioral requirements are not pure documents.
 
 ### Round 1
 
 1. Self-review every touched file end-to-end, not just the diff. Check the
    applicable ADRs, GDDs, project rules, naming, test standards, design gates,
    verification claims, and recorded caveats.
-2. Unless the pure-document exemption applies, select exactly one native tier:
+2. Unless the pure-document exemption applies, select exactly one review tier:
    - `STANDARD` is the default for routine session work: individual ADR
      amendments, tool / lint additions, tests, GDD system authoring, doc edits,
      and CI tweaks.
@@ -183,17 +242,16 @@ contracts, and ADRs with runtime-behavioral requirements are not pure documents.
      release candidates / gold masters, or explicit user `red-team / challenge`
      language.
    - If uncertain whether the work meets a major trigger, use `STANDARD`.
-3. Perform the selected cross-check as a fresh reasoning pass by the current
-   Codex session. Inspect the complete touched files and their relevant
-   contracts. Report each finding as `HIGH`, `MEDIUM`, or `LOW` with an exact
-   `path:line` reference, the violated contract or risk, and a concrete
-   recommendation. If there are no findings, report `CLEAN`.
+3. Spawn the built-in `explorer` with `fork_turns: "none"`, the selected tier,
+   and the bounded packet above. Require the instruction-read-only result and
+   verify the before and after mutation snapshot before accepting `CLEAN` or
+   triaging findings.
 4. Triage every finding:
    - Agree and confident that the fix preserves approved intent: apply it only
      within files already created or materially modified during this session,
      then run the narrowest meaningful verification.
    - Agree but out of scope: do not apply it; record it in the handoff Deferred
-     section with the native finding quoted verbatim.
+     section with the reviewer finding quoted verbatim.
    - Disagree, uncertain, disputed, design-changing, architectural,
      game-feel/balance-changing, or scope-changing: halt and surface the finding
      plus analysis to the user. Do not proceed to rotation or commit.
@@ -204,13 +262,16 @@ Run Round 2 only when Round 1 caused a fix.
 
 1. Always self-review the complete Round 1 fix set against the original
    finding, surrounding behavior, and verification evidence.
-2. Run a second native cross-check only when Round 1 included at least one
-   `HIGH` finding or the fix changed cross-cutting executable behavior. This
-   includes shared helpers, CI configuration, determinism-critical paths such
-   as `src/core/sim/**`, public APIs, or ADR executable specifications. Use the
+2. Run another fresh reviewer pass only when Round 1 included at least one
+   `HIGH` finding or the fix changed cross-cutting executable behavior. Spawn a
+   new built-in `explorer` with `fork_turns: "none"`; do not reuse the first
+   reviewer. Provide the exact original finding, the exact fix scope, the
+   original behavioral contract, governing evidence, and verification results,
+   but no authoring conclusions or narrative defending the fix. This includes
+   shared helpers, CI configuration, determinism-critical paths such as
+   `src/core/sim/**`, public APIs, or ADR executable specifications. Use the
    same `STANDARD` or `ADVERSARIAL` tier selected in Round 1. Pure
-   design/process-document fixes remain exempt from the second native
-   cross-check.
+   design/process-document fixes remain exempt from the second fresh reviewer.
 3. Triage Round 2 with a stop bias because a new finding means the first fix was
    incomplete:
    - Trivial and confidently intent-preserving only: fix a typo, document-text
@@ -223,15 +284,16 @@ Run Round 2 only when Round 1 caused a fix.
 
 ### Pass Cap And Audit Trail
 
-- Cap the gate at three native review passes total, counting Round 1, a
-  conditional Round 2 cross-check, and any user-directed rerun after a scope
-  extension. A fourth native review pass requires explicit user approval. When
-  asking, report the active reported context percentage and the estimated
+- Cap the gate at three reviewer invocations total, counting Round 1, a
+  conditional Round 2 reviewer, and any user-directed rerun after a scope
+  extension. A fourth reviewer invocation requires explicit user approval.
+  When asking, report the active reported context percentage and the estimated
   additional percentage cost; never substitute fixed token-window or time
   estimates. If the active percentage is unavailable, say so explicitly.
 - Record the review audit trail in `production/session-handoff.md`: exemption or
-  tier, `CLEAN` or findings, fixes applied and verified, findings deferred with
-  quotations, user-cleared findings, and any stopped pass.
+  tier, reviewer type, `fork_turns` mode, `CLEAN` or findings, the mutation
+  snapshot outcome, fixes applied and verified, findings deferred with
+  quotations, user-cleared findings, an explicit waiver, and any stopped pass.
 - The gate passes only when every finding is fixed and verified, explicitly
   deferred as out of scope, or cleared by the user, with nothing blocking on
   user input. Only then proceed to Phase 1 and record the review gate verdict as

@@ -105,13 +105,15 @@ Question -> Options -> Decision -> Draft -> Approval.
   updates, source edits, commits, pushes, branch changes, builds, boot smoke,
   mutating `gh`, or writes to any path other than
   `production/session-state/active.md`.
-- `$handoff` exception: explicit invocation of the Codex-native `$handoff` skill,
-  or an equally explicit instruction to commit and push the handoff, counts as
-  user approval for that skill's declared review gate and handoff workflow only.
-  Generic pause/stop wording does not. The review must stay inside the active
-  Codex session; it must not launch a subprocess reviewer, subagent reviewer,
-  companion plugin, or
-  another model service, and must not create an external data-egress approval.
+- `$handoff` or an equally explicit instruction to commit and push the handoff
+  authorizes review-through-push. Generic pause/stop wording does not. Each pass
+  gets one built-in `explorer` spawn with `fork_turns: "none"`. This
+  instruction-read-only reviewer gets evidence without the author's conclusions
+  and a before-and-after repository mutation snapshot. No subprocess, companion,
+  nested Codex CLI, other model service, or external data-egress approval.
+- It is not a custom/director/lead role. If review or its snapshot fails, stop
+  mixed/executable handoff unless the user explicitly waives the independent
+  reviewer and accepts a disclosed same-session downgrade.
 - The exception authorizes confident, intent-preserving review fixes only in
   files already created or materially modified during the session. Those fixes
   may not introduce new intent, architecture, game-feel, balance, or scope

@@ -272,6 +272,17 @@ so review scope includes intermediate commits, dirty files, untracked files,
 and paths named by active state. Handoff also refreshes a tracked, derived
 `production/resume-index.md` capped at 10 KB.
 
+Mixed or executable handoffs pair the parent's full self-review with one fresh
+built-in `explorer` reviewer spawned using `fork_turns: "none"`. The reviewer
+receives exact scope, contract, governing evidence, and verification results
+without the author's conclusions; it is instruction-read-only and guarded by a
+before-and-after Git/index/worktree mutation snapshot. Pure design/process-only
+sessions remain self-review-only unless a reviewer is requested. If fresh
+delegation or the mutation check fails, handoff stops before continuity
+rotation unless the user explicitly accepts a disclosed same-session downgrade.
+This reviewer stays within the Codex runtime; it does not launch a companion,
+nested Codex CLI, or external model service.
+
 Ordinary `$resume-from-handoff [focus]` reads the canonical handoff, validates
 the compact index, and caps the current slice-source section at 200 lines or
 32 KiB. `$resume-from-handoff deep [focus]` is the explicit full-history mode.

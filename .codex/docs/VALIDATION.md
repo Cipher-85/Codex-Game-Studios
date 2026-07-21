@@ -52,7 +52,10 @@ Validator policy:
   pointer, stage/catalog guards, and one-file session-cache boundary.
 - `$handoff` validation enforces explicit transaction authorization, a reported
   context-capacity gate, session-baseline scope proof, bulk-directory
-  trackability checks, and the compact resume-index contract.
+  trackability checks, the compact resume-index contract, and the fresh
+  built-in `explorer` reviewer contract. It rejects full-history reviewer
+  forks, same-session substitution, silent fallback when delegation is blocked,
+  missing before-and-after mutation evidence, and unbounded reviewer packets.
 - Hook fixtures cover handoff-only recovery, handoff plus substantive active
   state, pointer-only active state, compaction ordering, and baseline JSON.
 - If an optional project-local `$gen-asset` skill exists, validation rejects

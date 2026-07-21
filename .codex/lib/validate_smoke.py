@@ -379,7 +379,11 @@ def main() -> int:
                 "explicit invocation boundary",
                 "context capacity gate",
                 "review scope baseline contract",
+                "fresh-context reviewer contract",
                 "compact resume-index contract",
+                "same-session reviewer substitution",
+                "full-history reviewer fork",
+                "silent reviewer fallback",
             ),
         ),
         "invalid-gen-asset-contract": (

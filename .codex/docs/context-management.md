@@ -98,7 +98,11 @@ Subagents run in their own context window and return only summaries:
 - **Use subagents** when investigating across multiple files, exploring unfamiliar code,
   or doing research that would consume >5k tokens of file reads
 - **Use direct reads** when you know exactly which 1-2 files to check
-- Subagents do not inherit conversation history — provide full context in the prompt
+- Context inheritance depends on the spawn contract. Use `fork_turns: "none"`
+  when a clean context is required, then provide the bounded task context in the
+  prompt. `$handoff` uses this mode for its fresh integrity reviewer and omits
+  the author's conclusions so the reviewer independently evaluates the scoped
+  files and contract.
 
 ## Compaction Instructions
 

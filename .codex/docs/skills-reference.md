@@ -11,7 +11,7 @@ Projects may also provide optional local extensions. They are not part of the
 |---------|---------|
 | `$start` | First-time onboarding — asks where you are, then guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
-| `$handoff` | Explicit review -> continuity/index -> commit -> push transaction; generic pause wording only recommends it |
+| `$handoff` | Explicit self-review plus fresh-context integrity review for mixed/executable scope -> continuity/index -> commit -> push; generic pause wording only recommends it |
 | `$resume-from-handoff [focus]` | Bounded fresh-session compile from handoff/index/current slice into the `active.md` worklist |
 | `$resume-from-handoff deep [focus]` | Same selection boundary with an explicitly requested full slice-history read |
 | `$studio-next` | Deprecated manual continuity reference; normal routing reads `active.md` Session Worklist |

@@ -311,24 +311,24 @@ HANDOFF_REVIEW_REQUIRED_PHRASES = {
         "`ADVERSARIAL`",
         "Foundation ADR cluster closure",
         "pure design/process-document",
-        "self-review is sufficient and the native cross-check is skipped",
+        "self-review is sufficient and the fresh-context reviewer is skipped",
         "Mixed code-and-document changes are not exempt",
-        "distinct native Codex review pass",
-        "current Codex session",
+        "built-in `explorer`",
+        '`fork_turns: "none"`',
         "`HIGH`, `MEDIUM`, or `LOW`",
         "`CLEAN`",
         "`path:line`",
         "If uncertain whether the work meets a major trigger, use `STANDARD`",
         "quoted verbatim",
         "stop before Phase 1",
-        "second native cross-check",
+        "another fresh reviewer pass",
         "`HIGH` finding",
         "cross-cutting executable behavior",
         "Trivial and confidently intent-preserving only",
         "Any non-trivial fix",
         "Do not run a third pass",
-        "three native review passes",
-        "fourth native review pass",
+        "three reviewer invocations",
+        "fourth reviewer invocation",
         "active reported context percentage",
         "review audit trail",
         "every finding",
@@ -337,7 +337,9 @@ HANDOFF_REVIEW_REQUIRED_PHRASES = {
     "AGENTS.md": (
         "files already created or materially modified during the session",
         "intent-preserving review fixes",
-        "active Codex session",
+        "built-in `explorer`",
+        '`fork_turns: "none"`',
+        "before-and-after repository mutation snapshot",
         "Round-two non-trivial findings",
         "external data-egress approval",
         "new intent, architecture, game-feel, balance, or scope decisions",
@@ -376,8 +378,71 @@ HANDOFF_SCOPE_REQUIRED_PHRASES = (
     "tracked count",
     "staged count",
     "git check-ignore -v -- <path>",
-    "not an independent reviewer",
 )
+
+HANDOFF_FRESH_REVIEWER_REQUIRED_PHRASES = (
+    "## Fresh-Context Reviewer Contract",
+    "exact deduplicated review path list",
+    "starting HEAD",
+    "current HEAD",
+    "user-approved behavioral contract and acceptance criteria",
+    "Applicable project rules, ADRs, GDDs",
+    "Verification evidence already produced",
+    "Do not pass authoring conclusions",
+    "instruction-read-only",
+    "must not edit or write files",
+    "git status --porcelain=v2 --untracked-files=all",
+    "git diff --binary --no-ext-diff",
+    "git diff --cached --binary --no-ext-diff",
+    "SHA-256 content hash",
+    "before and after results exactly",
+    "Any unexplained mutation blocks the gate",
+    "unavailable delegation tool",
+    "absent built-in `explorer` selector",
+    'inability to use or prove `fork_turns: "none"`',
+    "do not simulate or silently replace the reviewer",
+    "explicitly waive the independent reviewer",
+    "another fresh reviewer pass",
+    "do not reuse the first reviewer",
+    "no authoring conclusions or narrative defending the fix",
+    "reviewer type",
+    "mutation snapshot outcome",
+)
+
+HANDOFF_FRESH_REVIEWER_SURFACES = {
+    "AGENTS.md": (
+        "one built-in `explorer` spawn",
+        '`fork_turns: "none"`',
+        "instruction-read-only",
+        "without the author's conclusions",
+        "before-and-after repository mutation snapshot",
+        "explicitly waives the independent reviewer",
+    ),
+    ".codex/docs/coordination-rules.md": (
+        "## Handoff Integrity Reviewer",
+        "built-in `explorer`",
+        '`fork_turns: "none"`',
+        "not a custom role agent, director gate, or lead gate",
+        "Do not simulate a reviewer or silently substitute a same-session pass",
+    ),
+    ".codex/docs/context-management.md": (
+        '`fork_turns: "none"`',
+        "fresh integrity reviewer",
+        "omits the author's conclusions",
+    ),
+    ".codex/docs/session-continuity.md": (
+        "fresh built-in `explorer` integrity review",
+        '`fork_turns: "none"`',
+        "before-and-after mutation snapshot",
+        "explicit user waiver",
+    ),
+    ".codex/docs/VALIDATION.md": (
+        "fresh built-in `explorer` reviewer contract",
+        "full-history reviewer forks",
+        "same-session substitution",
+        "missing before-and-after mutation evidence",
+    ),
+}
 
 HANDOFF_INDEX_REQUIRED_PHRASES = (
     "production/resume-index.md",
@@ -512,6 +577,24 @@ HANDOFF_REVIEW_FORBIDDEN_PATTERNS = (
     (
         re.compile(r"(?i)\bescalat(?:e|ed|ion)\b[^.\n]{0,120}\bexternal review\b"),
         "escalated external-review instruction",
+    ),
+    (
+        re.compile(
+            r"(?i)fresh same-session reasoning pass,\s*not an independent reviewer"
+        ),
+        "same-session reviewer substitution",
+    ),
+    (
+        re.compile(r"(?i)fork_turns\s*:\s*['\"]all['\"]"),
+        "full-history reviewer fork",
+    ),
+    (
+        re.compile(
+            r"(?i)if the (?:reviewer|delegation)[^.\n]{0,80}"
+            r"(?:unavailable|blocked|fails?)[^.\n]{0,80}"
+            r"(?:continue|proceed)[^.\n]{0,80}same-session"
+        ),
+        "silent reviewer fallback",
     ),
 )
 
@@ -894,6 +977,7 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
         for label, required_phrases in (
             ("context capacity gate", HANDOFF_CAPACITY_REQUIRED_PHRASES),
             ("review scope baseline contract", HANDOFF_SCOPE_REQUIRED_PHRASES),
+            ("fresh-context reviewer contract", HANDOFF_FRESH_REVIEWER_REQUIRED_PHRASES),
             ("compact resume-index contract", HANDOFF_INDEX_REQUIRED_PHRASES),
         ):
             missing = [phrase for phrase in required_phrases if not contains_phrase(skill_text, phrase)]
@@ -970,6 +1054,19 @@ def validate_handoff_review_contract(root: Path) -> list[str]:
             if match:
                 line_number = skill_text.count("\n", 0, search_offset + match.start()) + 1
                 errors.append(f"{skill_rel}:{line_number}: {message}")
+
+    for rel, required_phrases in HANDOFF_FRESH_REVIEWER_SURFACES.items():
+        path = root / rel
+        if not path.exists():
+            errors.append(f"{rel}: missing fresh-context reviewer contract surface")
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+        if missing:
+            errors.append(
+                f"{rel}: missing fresh-context reviewer contract phrase(s): "
+                + ", ".join(missing)
+            )
     return errors
 
 

@@ -78,6 +78,16 @@ recommendation only. The review-through-push transaction requires explicit
 `$handoff` invocation or an equally explicit instruction to commit and push the
 handoff.
 
+For mixed or executable changes, that explicit transaction includes a fresh
+built-in `explorer` integrity review with `fork_turns: "none"` after the
+parent's self-review. The reviewer is instruction-read-only, receives bounded
+scope and contract evidence without the author's conclusions, and is guarded
+by a before-and-after mutation snapshot. If fresh delegation or the no-mutation
+check fails, stop before continuity rotation; never silently replace it with a
+same-session review. Pure design/process-document sessions are exempt unless
+the user requests the reviewer, and an explicit user waiver is required for a
+disclosed same-session downgrade.
+
 ## Resume Procedure
 
 On resume:

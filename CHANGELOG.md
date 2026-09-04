@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.7.2 - 2026-09-04
+
+- Removed the repo-local `$handoff` and `$resume-from-handoff` skill copies so
+  installed projects use Agent Bindery's newer global continuity pair without
+  same-name shadowing.
+- Added `.agent-continuity.toml` plus CCGS-specific orientation, lane,
+  reporting-integrity, and review-tier modules under `production/handoff/`.
+- Updated package ownership, upgrade cleanup, runtime validation, and current
+  documentation for the 75-skill distribution and external continuity owner.
+
 ## v0.7.1 - 2026-07-22
 
 - Hardened `$handoff` authorization and review coverage with explicit

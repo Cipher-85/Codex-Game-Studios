@@ -16,9 +16,9 @@ tool: stage plus catalog plus the first incomplete required step.
 
 For post-task continuity after a discrete unit of work, read or silently refresh the
 `## Session Worklist` in `production/session-state/active.md`. That worklist is
-compiled by `$resume-from-handoff` at session entry and refreshed by closeout
-workflows. `production/session-handoff.md` remains the durable cross-session
-source of truth.
+compiled by Agent Bindery's global `$resume-from-handoff` at session entry and
+refreshed by closeout workflows. `production/session-handoff.md` remains the
+durable cross-session source of truth.
 
 ---
 
@@ -197,8 +197,8 @@ Verdict: **COMPLETE** — next steps identified.
 If the user just completed a work unit and needs the best next action across
 handoff, sprint, QA, gate, or slice lanes, read the `## Session Worklist` from
 `active.md`, surface owed verification, and recommend the top valid lane. If the
-worklist is missing or stale, say so and recommend `$resume-from-handoff` only
-for a new session entry, not as a mid-session loop.
+worklist is missing or stale, say so and recommend Agent Bindery's global
+`$resume-from-handoff` only for a new session entry, not as a mid-session loop.
 
 ## Closeout Contract
 

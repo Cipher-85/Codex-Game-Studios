@@ -12,7 +12,11 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.7.1`.
+- The package version is `v0.7.2`.
+- `v0.7.2` removes the repo-local handoff pair. Agent Bindery supplies the
+  global skills; CCGS installs `.agent-continuity.toml` and the project modules
+  under `production/handoff/` that configure its paths and studio-specific
+  routing.
 - `v0.7.1` hardens handoff authorization and review scope with a fresh-context
   explorer and mutation snapshots, adds a tracked compact resume index with
   bounded/deep resume modes and freshness checks, and expands lifecycle hooks,

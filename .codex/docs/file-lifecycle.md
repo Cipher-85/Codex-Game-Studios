@@ -10,12 +10,15 @@ instructions compact and keep large rationale in docs.
   creating or editing matching paths.
 - `.codex/docs/` reference material that explains procedures, rationale, and
   lookup tables.
+- `.agent-continuity.toml` and `production/handoff/*.md`; these are the tracked
+  CCGS configuration surface for Agent Bindery's global continuity skills.
 - Design, architecture, production, QA, and sprint artifacts that represent
   project decisions.
 - Review logs and handoffs when a skill explicitly asks for them.
-- `production/resume-index.md` when `$handoff` derives it from canonical state;
-  keep it compact, tracked, and disposable. The installer allowlists this path
-  for tracking but does not ship, own, or remove the project-created file.
+- `production/resume-index.md` when Agent Bindery's `$handoff` derives it from
+  canonical state; keep it compact, tracked, and disposable. The installer
+  allowlists this path for tracking but does not ship, own, or remove the
+  project-created file.
 
 ## Ignore Or Keep Local
 
@@ -28,6 +31,9 @@ instructions compact and keep large rationale in docs.
 - Legacy Claude runtime files as Codex dependencies. They may exist for
   coexistence or migration history, but Codex instructions must not depend on
   them at runtime.
+- Repo-local `.agents/skills/handoff/` or
+  `.agents/skills/resume-from-handoff/` copies. The global Agent Bindery pair is
+  the implementation owner; a local copy creates a shadowing collision.
 
 ## Anti-Redundancy Policy
 

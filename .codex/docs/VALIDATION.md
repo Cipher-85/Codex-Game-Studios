@@ -46,16 +46,14 @@ Validator policy:
   commits against the actual previous release tag ref, not mutable GitHub
   Release branch metadata.
 - Runtime files must not depend on Claude-owned paths.
-- `$resume-from-handoff` validation enforces the lane-selection pause, FIRST
-  verification, structured follow-up forks, bounded-by-default slice reads,
-  explicit deep mode, source precedence/freshness, cache readback, dynamic slice
-  pointer, stage/catalog guards, and one-file session-cache boundary.
-- `$handoff` validation enforces explicit transaction authorization, a reported
-  context-capacity gate, session-baseline scope proof, bulk-directory
-  trackability checks, the compact resume-index contract, and the fresh
-  built-in `explorer` reviewer contract. It rejects full-history reviewer
-  forks, same-session substitution, silent fallback when delegation is blocked,
-  missing before-and-after mutation evidence, and unbounded reviewer packets.
+- CCGS does not validate Agent Bindery's global skill implementation. Runtime
+  validation instead rejects repo-local copies of `handoff` and
+  `resume-from-handoff`, validates `.agent-continuity.toml`, and checks that its
+  four project modules preserve the CCGS phase/slice, lane, integrity, and
+  review-tier contracts.
+- Agent Bindery owns continuity bootstrap, freshness, review, rotation, commit,
+  and push behavior. Validate that implementation in the Agent Bindery
+  repository; CCGS audits only its integration surface.
 - Hook fixtures cover handoff-only recovery, handoff plus substantive active
   state, pointer-only active state, compaction ordering, and baseline JSON.
 - If an optional project-local `$gen-asset` skill exists, validation rejects

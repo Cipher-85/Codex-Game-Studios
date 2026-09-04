@@ -1,10 +1,11 @@
 # Codex Game Studios
 
 Codex Game Studios turns a game repository into a Codex-native indie studio
-workflow: 49 declared role profiles, 77 repo-local skills, verification-first handoffs, and
-Godot-first production guidance for small teams building playable slices.
+workflow: 49 declared role profiles, 75 repo-local skills, Agent Bindery-backed
+continuity, and Godot-first production guidance for small teams building
+playable slices.
 
-Current package version: `0.7.1`.
+Current package version: `0.7.2`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -15,10 +16,11 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 ## What Is Included
 
 - 49 Codex custom-agent profiles in `.codex/agents/*.toml`
-- 77 repo-local Codex skills in `.agents/skills/*/SKILL.md`
+- 75 repo-local Codex skills in `.agents/skills/*/SKILL.md`
   - 73 upstream workflow skills ported to Codex
-  - 4 Codex support skills: `studio-status`, `studio-next`, `handoff`, and
-    `resume-from-handoff`
+  - 2 Codex support skills: `studio-status` and `studio-next`
+- `.agent-continuity.toml` and CCGS modules under `production/handoff/` for the
+  globally installed Agent Bindery `handoff` / `resume-from-handoff` pair
 - Root `AGENTS.md` startup instructions and hidden path rules under `.codex/`
 - Codex hooks, command rules, config, installer, uninstaller, and validators
 - Manual release tooling in `.codex/release.sh` with CI-backed consistency
@@ -29,7 +31,16 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.7.1`. It includes:
+The current release line is `v0.7.2`. It includes:
+
+- Removed the repo-local `handoff` and `resume-from-handoff` copies so they no
+  longer shadow Agent Bindery's newer global pair.
+- Added a portable continuity manifest and four CCGS-specific modules for phase,
+  slice, sprint, gate, review-tier, and verification-integrity behavior.
+- Updated install ownership and validation so upgrades remove the obsolete
+  package copies and reject their accidental reintroduction.
+
+The `v0.7.1` release also includes:
 
 - Explicit `$handoff` transaction boundaries, session-baseline scope proof,
   and a fresh-context explorer review protected by before/after mutation
@@ -247,6 +258,11 @@ Optional project-local extensions such as `.agents/skills/gen-asset/**` are
 allowlisted for tracking but are never copied, owned, or deleted by the CCGS
 installer or uninstaller.
 
+The continuity pair is supplied separately by Agent Bindery. CCGS deliberately
+does not install, own, or remove global skills. Install or deploy Agent Bindery
+before using `$handoff` or `$resume-from-handoff`; CCGS supplies only
+`.agent-continuity.toml` and the project-specific modules those skills read.
+
 The default `game_studios` permission profile denies all access to root and
 nested `.env*` files. This protects secrets through Codex filesystem access as
 well as through the existing command rules and hooks, but it can also prevent
@@ -266,38 +282,22 @@ legacy sandbox keys. The completed profile makes `.git`, `.agents`, and `.codex`
 writable, denies `.env*`, and enables exactly `github.com`, which is enough for
 ordinary HTTPS GitHub fetch/push while retaining a destination allowlist.
 
-`$handoff` checks Git metadata access and the exact push destination before its
-review gate. It uses the active permission mode, requests the same command
-through scoped escalation only when the sandbox blocks the required capability,
-and retries once only for the exact `Could not resolve host` error because that
-failure occurs before remote contact. It does not block an authorized push on
-inconclusive GitHub CLI authentication checks. Do not run `chmod`, delete lock
-files, broaden the destination, or change the whole session's permission mode
-as a workaround.
+Agent Bindery owns the portable skill implementation, reviewer ladder, Git and
+push preflight, rotation, index freshness, bootstrap, and lane-selection
+contract. CCGS owns only its project shape:
 
-The full handoff transaction requires explicit `$handoff` invocation or an
-equally explicit request to commit and push the handoff; generic pause/stop
-wording only recommends it. Session start records a local branch/HEAD baseline
-so review scope includes intermediate commits, dirty files, untracked files,
-and paths named by active state. Handoff also refreshes a tracked, derived
-`production/resume-index.md` capped at 10 KB.
+- `.agent-continuity.toml` declares the `production/` continuity paths, commit
+  subject, reviewer, and size limits.
+- `production/handoff/orientation.md` supplies the phase guard and playable-slice
+  forcing function.
+- `production/handoff/lanes.md` supplies sprint and gate routing.
+- `production/handoff/integrity.md` supplies current-turn verification rules.
+- `production/handoff/review-tiers.md` classifies review cost.
 
-Mixed or executable handoffs pair the parent's full self-review with one fresh
-built-in `explorer` reviewer spawned using `fork_turns: "none"`. The reviewer
-receives exact scope, contract, governing evidence, and verification results
-without the author's conclusions; it is instruction-read-only and guarded by a
-before-and-after Git/index/worktree mutation snapshot. Pure design/process-only
-sessions remain self-review-only unless a reviewer is requested. If fresh
-delegation or the mutation check fails, handoff stops before continuity
-rotation unless the user explicitly accepts a disclosed same-session downgrade.
-This reviewer stays within the Codex runtime; it does not launch a companion,
-nested Codex CLI, or external model service.
-
-Ordinary `$resume-from-handoff [focus]` reads the canonical handoff, validates
-the compact index, and caps the current slice-source section at 200 lines or
-32 KiB. `$resume-from-handoff deep [focus]` is the explicit full-history mode.
-Both modes compile and read back `active.md`, record source freshness, and stop
-at lane selection.
+An explicit `$handoff` invocation remains required for the reviewed
+commit-and-push transaction. Generic pause wording only recommends it. Resume
+still stops at lane selection, and selecting a lane does not authorize its later
+writes, builds, decisions, commits, or pushes.
 
 After changing `.codex/config.toml`, start a new session before judging the
 resolved permissions because active sessions retain their launch-time rules.

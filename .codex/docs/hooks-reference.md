@@ -12,7 +12,7 @@ fields.
 | `validate-commit.sh` | PreToolUse (Bash) | `git commit` commands | Validates design doc sections, JSON data files, hardcoded values, TODO format |
 | `validate-push.sh` | PreToolUse (Bash) | `git push` commands | Warns on pushes to protected branches (`develop`, `main`, `master`) |
 | `validate-assets.sh` | PostToolUse (`apply_patch`) | Asset file changes | Checks naming conventions and JSON validity for files in `assets/`; feedback is after the edit and does not roll back side effects |
-| `session-start.sh` | SessionStart | Session begins | Records a local branch/HEAD/timestamp review baseline; previews the bounded canonical handoff before active state; recommends `$resume-from-handoff` |
+| `session-start.sh` | SessionStart | Session begins | Records a local branch/HEAD/timestamp review baseline; previews the bounded canonical handoff before active state; recommends Agent Bindery's global `$resume-from-handoff` |
 | `detect-gaps.sh` | SessionStart | Session begins | Detects fresh projects (suggests $start) and missing documentation when code/prototypes exist, suggests $reverse-document or $project-stage-detect |
 | `pre-compact.sh` | PreCompact | Context compression | Shows substantive `active.md` first with a bounded handoff fallback; elevates handoff when active state is missing or pointer-only |
 | `post-compact.sh` | PostCompact | After compaction | Restores the same active-first/handoff-fallback order and elevates canonical handoff when needed |

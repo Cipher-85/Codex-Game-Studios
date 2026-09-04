@@ -4,6 +4,10 @@ This is the Codex-native port of Claude Code Game Studios.
 
 Use repo-local skills by their upstream names, for example `$start`, `$prototype`, and `$gate-check`. Custom role agents keep upstream names such as `producer`, `writer`, and `game-designer`.
 
+`$handoff` and `$resume-from-handoff` are supplied globally by Agent Bindery,
+not by this repo. `.agent-continuity.toml` and `production/handoff/*.md`
+configure that pair for CCGS projects.
+
 Core commands:
 
 ```bash

@@ -66,21 +66,16 @@ blocked, then continue only where the workflow allows a partial result.
 
 ### Handoff Integrity Reviewer
 
-For mixed or executable `$handoff` scope, the declared reviewer is one built-in
-`explorer` spawned with `fork_turns: "none"`. It is a generic integrity
-reviewer, not a custom role agent, director gate, or lead gate, and review mode
-does not filter it. The parent supplies the exact review paths, Git baseline,
-tier, approved behavioral contract, governing evidence, and verification
-results, but no authoring conclusions.
+Agent Bindery's global `$handoff` owns the reviewer ladder, bounded evidence
+packet, mutation safeguards, stop conditions, and waiver rules. Its
+`handoff-reviewer` is not one of the 49 CCGS role agents, so director-gate review
+mode and the CCGS role-delegation contract above do not alter that workflow.
 
-The reviewer is instruction-read-only. The parent compares before-and-after
-Git/index/worktree snapshots and scoped content hashes, owns all fixes, and
-records the outcome. If the reviewer cannot run fresh, cannot be proven to use
-`fork_turns: "none"`, fails, or changes repository state, the handoff stops
-before continuity rotation. Do not simulate a reviewer or silently substitute
-a same-session pass. A same-session downgrade requires an explicit user waiver.
-Pure design/process-document sessions remain exempt unless the user requests a
-reviewer.
+`.agent-continuity.toml` selects the reviewer, while
+`production/handoff/review-tiers.md` classifies CCGS work as `STANDARD`,
+`ADVERSARIAL`, or `PURE-DOCUMENT`. Do not substitute a CCGS director, lead,
+generic explorer, nested CLI, or same-session review for the reviewer route
+selected by the loaded Agent Bindery skill.
 
 ### Parallel Codex Sessions (manual escalation)
 Multiple independent Codex sessions can be coordinated manually through tracked

@@ -1,0 +1,33 @@
+# Codex Game Studios integration for the Agent Bindery handoff pair.
+# The skills are installed globally; this repository owns only its project shape.
+
+[paths]
+handoff    = "production/session-handoff.md"
+archive    = "production/session-archive.md"
+index      = "production/resume-index.md"
+scratchpad = "production/session-state/active.md"
+baseline   = "production/session-logs/session-baseline.json"
+
+[commit]
+subject = "WIP: {label} - CONTEXT HANDOFF"
+trailer = ""
+push    = true
+
+[gate]
+required = true
+reviewer = "handoff-reviewer"
+tiers    = "production/handoff/review-tiers.md"
+
+[modules]
+orientation = ["production/handoff/orientation.md"]
+lanes       = ["production/handoff/lanes.md"]
+integrity   = ["production/handoff/integrity.md"]
+
+[handoff]
+live_heading    = "## Most Recent Session"
+archive_heading = "## Session Narratives"
+
+[limits]
+handoff_kb     = 25
+handoff_max_kb = 64
+index_kb       = 10

@@ -27,6 +27,11 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
+    "path": ".agent-continuity.toml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
     "path": ".github/CODEOWNERS"
   },
   {
@@ -1167,16 +1172,6 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
-    "path": ".codex/tests/fixtures/invalid-handoff-contract/.agents/skills/handoff/SKILL.md"
-  },
-  {
-    "mode": "file",
-    "owner": "codex-game-studios",
-    "path": ".codex/tests/fixtures/invalid-resume-contract/.agents/skills/resume-from-handoff/SKILL.md"
-  },
-  {
-    "mode": "file",
-    "owner": "codex-game-studios",
     "path": ".codex/tests/fixtures/invalid-skill/.agents/skills/bad/SKILL.md"
   },
   {
@@ -1332,11 +1327,6 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
-    "path": ".agents/skills/handoff/SKILL.md"
-  },
-  {
-    "mode": "file",
-    "owner": "codex-game-studios",
     "path": ".agents/skills/help/SKILL.md"
   },
   {
@@ -1428,11 +1418,6 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": ".agents/skills/reverse-document/SKILL.md"
-  },
-  {
-    "mode": "file",
-    "owner": "codex-game-studios",
-    "path": ".agents/skills/resume-from-handoff/SKILL.md"
   },
   {
     "mode": "file",
@@ -2538,6 +2523,26 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": "docs/registry/architecture.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/integrity.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/lanes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/orientation.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/review-tiers.md"
   },
   {
     "mode": "file",

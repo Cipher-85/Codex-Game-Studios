@@ -11,6 +11,12 @@ This port maps upstream workflows to Codex-native surfaces:
 - Hooks live under `.codex/hooks/*.sh` and are wired by `.codex/hooks.json`.
 - Command policy lives in `.codex/rules/settings.rules`.
 
+The continuity pair is the deliberate exception to repo-local skill ownership.
+Agent Bindery supplies the global `handoff`, `resume-from-handoff`, and
+`handoff-reviewer` assets. CCGS ships `.agent-continuity.toml` plus the
+project-specific modules under `production/handoff/`; do not recreate the two
+skills under `.agents/skills/`.
+
 Optional project-local skills are migrated separately from the CCGS package.
 For `gen-asset`, place the Codex-native direct-image-generation core at
 `.agents/skills/gen-asset/SKILL.md` and copy the project's profile files

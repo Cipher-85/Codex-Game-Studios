@@ -91,7 +91,6 @@ REQUIRED_CORE_SKILLS = {
     "dev-story",
     "estimate",
     "gate-check",
-    "handoff",
     "help",
     "hotfix",
     "launch-checklist",
@@ -111,7 +110,6 @@ REQUIRED_CORE_SKILLS = {
     "release-checklist",
     "retrospective",
     "reverse-document",
-    "resume-from-handoff",
     "review-all-gdds",
     "scope-check",
     "security-audit",
@@ -303,301 +301,6 @@ BUG_LIFECYCLE_FORBIDDEN_PHRASES = (
     ),
 )
 
-HANDOFF_REVIEW_REQUIRED_PHRASES = {
-    ".agents/skills/handoff/SKILL.md": (
-        "## Round 1",
-        "## Round 2",
-        "`STANDARD`",
-        "`ADVERSARIAL`",
-        "Foundation ADR cluster closure",
-        "pure design/process-document",
-        "self-review is sufficient and the fresh-context reviewer is skipped",
-        "Mixed code-and-document changes are not exempt",
-        "built-in `explorer`",
-        '`fork_turns: "none"`',
-        "`HIGH`, `MEDIUM`, or `LOW`",
-        "`CLEAN`",
-        "`path:line`",
-        "If uncertain whether the work meets a major trigger, use `STANDARD`",
-        "quoted verbatim",
-        "stop before Phase 1",
-        "another fresh reviewer pass",
-        "`HIGH` finding",
-        "cross-cutting executable behavior",
-        "Trivial and confidently intent-preserving only",
-        "Any non-trivial fix",
-        "Do not run a third pass",
-        "three reviewer invocations",
-        "fourth reviewer invocation",
-        "active reported context percentage",
-        "review audit trail",
-        "every finding",
-        "Only then proceed to Phase 1",
-    ),
-    "AGENTS.md": (
-        "files already created or materially modified during the session",
-        "intent-preserving review fixes",
-        "built-in `explorer`",
-        '`fork_turns: "none"`',
-        "before-and-after repository mutation snapshot",
-        "Round-two non-trivial findings",
-        "external data-egress approval",
-        "new intent, architecture, game-feel, balance, or scope decisions",
-    ),
-}
-
-HANDOFF_AUTHORIZATION_REQUIRED_PHRASES = {
-    ".agents/skills/handoff/SKILL.md": (
-        "equally explicit instruction to commit and push this handoff",
-        "Generic requests to pause, stop, checkpoint",
-        "they are not commit or push authority",
-    ),
-    "AGENTS.md": (
-        "equally explicit instruction to commit and push the handoff",
-        "Generic pause/stop wording does not",
-    ),
-}
-
-HANDOFF_CAPACITY_REQUIRED_PHRASES = (
-    "## Context Capacity Gate",
-    "active reported context percentage",
-    "estimated additional percentage cost",
-    "hardcoded percentage threshold",
-    "If the active percentage is unavailable",
-)
-
-HANDOFF_SCOPE_REQUIRED_PHRASES = (
-    "production/session-logs/session-baseline.json",
-    "starting HEAD",
-    "git merge-base --is-ancestor <starting-head> HEAD",
-    "git diff --name-only <starting-head>..HEAD",
-    "git diff --cached --name-only",
-    "git ls-files --others --exclude-standard",
-    "files it records as touched or in progress",
-    "filesystem file count",
-    "tracked count",
-    "staged count",
-    "git check-ignore -v -- <path>",
-)
-
-HANDOFF_FRESH_REVIEWER_REQUIRED_PHRASES = (
-    "## Fresh-Context Reviewer Contract",
-    "exact deduplicated review path list",
-    "starting HEAD",
-    "current HEAD",
-    "user-approved behavioral contract and acceptance criteria",
-    "Applicable project rules, ADRs, GDDs",
-    "Verification evidence already produced",
-    "Do not pass authoring conclusions",
-    "instruction-read-only",
-    "must not edit or write files",
-    "git status --porcelain=v2 --untracked-files=all",
-    "git diff --binary --no-ext-diff",
-    "git diff --cached --binary --no-ext-diff",
-    "SHA-256 content hash",
-    "before and after results exactly",
-    "Any unexplained mutation blocks the gate",
-    "unavailable delegation tool",
-    "absent built-in `explorer` selector",
-    'inability to use or prove `fork_turns: "none"`',
-    "do not simulate or silently replace the reviewer",
-    "explicitly waive the independent reviewer",
-    "another fresh reviewer pass",
-    "do not reuse the first reviewer",
-    "no authoring conclusions or narrative defending the fix",
-    "reviewer type",
-    "mutation snapshot outcome",
-)
-
-HANDOFF_FRESH_REVIEWER_SURFACES = {
-    "AGENTS.md": (
-        "one built-in `explorer` spawn",
-        '`fork_turns: "none"`',
-        "instruction-read-only",
-        "without the author's conclusions",
-        "before-and-after repository mutation snapshot",
-        "explicitly waives the independent reviewer",
-    ),
-    ".codex/docs/coordination-rules.md": (
-        "## Handoff Integrity Reviewer",
-        "built-in `explorer`",
-        '`fork_turns: "none"`',
-        "not a custom role agent, director gate, or lead gate",
-        "Do not simulate a reviewer or silently substitute a same-session pass",
-    ),
-    ".codex/docs/context-management.md": (
-        '`fork_turns: "none"`',
-        "fresh integrity reviewer",
-        "omits the author's conclusions",
-    ),
-    ".codex/docs/session-continuity.md": (
-        "fresh built-in `explorer` integrity review",
-        '`fork_turns: "none"`',
-        "before-and-after mutation snapshot",
-        "explicit user waiver",
-    ),
-    ".codex/docs/VALIDATION.md": (
-        "fresh built-in `explorer` reviewer contract",
-        "full-history reviewer forks",
-        "same-session substitution",
-        "missing before-and-after mutation evidence",
-    ),
-}
-
-HANDOFF_INDEX_REQUIRED_PHRASES = (
-    "production/resume-index.md",
-    "derived, disposable accelerator",
-    "Generated date and source HEAD",
-    "SHA-256 content hash",
-    "Last reported or verified boot/playtest with provenance",
-    "Owed verification",
-    "two alternative lanes",
-    "Blockers/gates",
-    "at most 10 KB",
-)
-
-HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES = (
-    "## Git And Remote Capability Gate",
-    "Before Phase 0",
-    "git rev-parse --absolute-git-dir",
-    "test -w '<absolute-git-dir>'",
-    "using the user's active session permissions",
-    "repeat that exact check once",
-    "`sandbox_permissions` set to `\"require_escalated\"`",
-    "git ls-remote --heads",
-    "An exit code of zero with no matching ref",
-    "active context explicitly reports network access as unavailable",
-    "`prefix_rule` set to `[\"git\", \"ls-remote\"]`",
-    "Could not resolve host",
-    "retry that same command once",
-    "Never display embedded credentials",
-    "selects the complete `game_studios` profile but does not override",
-    "must not instruct the user to switch `/permissions` modes",
-)
-
-HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES = (
-    "stage only the relevant paths by name",
-    "using the user's active session permissions",
-    "repeat the exact `git add` command once",
-    "`prefix_rule` set to `[\"git\", \"add\"]`",
-    "repeat that exact `git commit` command once",
-    "`prefix_rule` set to `[\"git\", \"commit\"]`",
-    "Do not broaden the path set",
-)
-
-HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES = (
-    "Treat the resolved push URL, current branch/upstream, and explicit `$handoff` invocation",
-    "Do not require `gh auth status`, `gh api user`, or `gh repo view` as push preconditions",
-    "Git and GitHub CLI may use different credentials",
-    "Do not halt before the authorized push solely because a GitHub CLI check",
-    "name the verified push URL",
-    "Do not claim an authenticated account or repository permission unless it was actually verified",
-    "The actual `git push` is the authoritative network and Git-authentication check",
-    "report Git's exact error",
-    "active context explicitly reports network access as unavailable",
-    "`sandbox_permissions` set to `\"require_escalated\"`",
-    "`prefix_rule` set to `[\"git\", \"push\"]`",
-    "repeat the exact push command once",
-    "Could not resolve host",
-    "retry that exact push command once",
-    "name resolution failed before the remote could be contacted",
-    "Do not retry authentication, authorization",
-    "Do not instruct the user to change the whole session's permission mode",
-)
-
-HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES = (
-    (
-        "Continue only when the authenticated account",
-        "mandatory GitHub CLI identity gate blocks the actual authorized Git push",
-    ),
-    (
-        "Otherwise halt and report the exact failed check",
-        "mandatory GitHub CLI precheck failure still halts before Git push",
-    ),
-)
-
-HANDOFF_REVIEW_FORBIDDEN_PATTERNS = (
-    (
-        re.compile(r"(?im)^\s*(?:\$\s*)?codex\s+(?:review|exec)\b"),
-        "executable nested Codex CLI review command",
-    ),
-    (
-        re.compile(r"(?im)^\s*(?:\$\s*)?node\s+[^\n]*codex-companion(?:\.mjs)?\b"),
-        "executable codex-companion command",
-    ),
-    (
-        re.compile(
-            r"(?im)^\s*(?:export\s+)?[A-Z_][A-Z0-9_]*\s*=\s*[^\n]*"
-            r"codex-companion(?:\.mjs)?\b"
-        ),
-        "executable codex-companion path assignment",
-    ),
-    (
-        re.compile(
-            r"(?i)(?<!never )(?<!do not )(?<!must not )"
-            r"\b(?:call|run|use|invoke|launch|execute)\s+`?codex\s+(?:review|exec)\b"
-        ),
-        "instruction to launch a nested Codex CLI reviewer",
-    ),
-    (
-        re.compile(
-            r"(?i)(?<!never )(?<!do not )(?<!must not )"
-            r"\b(?:call|run|use|invoke|launch|execute)\b[^.\n]{0,100}"
-            r"\bcodex-companion(?:\.mjs)?\b"
-        ),
-        "instruction to launch codex-companion",
-    ),
-    (
-        re.compile(
-            r"(?i)(?<!never )(?<!do not )(?<!must not )"
-            r"\b(?:call|run|use|invoke|launch|execute)\b[^.\n]{0,100}"
-            r"\bClaude companion plugin\b"
-        ),
-        "instruction to launch the Claude companion plugin",
-    ),
-    (
-        re.compile(
-            r"(?i)(?<!never )(?<!do not )(?<!must not )"
-            r"\b(?:call|use|invoke|launch)\b[^.\n]{0,120}"
-            r"\banother model service\b"
-        ),
-        "instruction to launch another model service",
-    ),
-    (
-        re.compile(r"(?i)\b(?:sandbox_permissions|require_escalated)\b"),
-        "external-review escalation token",
-    ),
-    (
-        re.compile(
-            r"(?i)\b(?:request|seek)\s+(?:user\s+)?approval\b"
-            r"[^.\n]{0,120}\bexternal review\b"
-        ),
-        "external-review approval instruction",
-    ),
-    (
-        re.compile(r"(?i)\bescalat(?:e|ed|ion)\b[^.\n]{0,120}\bexternal review\b"),
-        "escalated external-review instruction",
-    ),
-    (
-        re.compile(
-            r"(?i)fresh same-session reasoning pass,\s*not an independent reviewer"
-        ),
-        "same-session reviewer substitution",
-    ),
-    (
-        re.compile(r"(?i)fork_turns\s*:\s*['\"]all['\"]"),
-        "full-history reviewer fork",
-    ),
-    (
-        re.compile(
-            r"(?i)if the (?:reviewer|delegation)[^.\n]{0,80}"
-            r"(?:unavailable|blocked|fails?)[^.\n]{0,80}"
-            r"(?:continue|proceed)[^.\n]{0,80}same-session"
-        ),
-        "silent reviewer fallback",
-    ),
-)
-
 INTERNAL_READONLY_CLOSEOUT_PATTERNS = (
     (re.compile(r"\bself[- ]check\b", re.IGNORECASE), "Self-Check"),
     (re.compile(r"\bregistry (?:candidate )?scan\b", re.IGNORECASE), "registry scan"),
@@ -622,58 +325,53 @@ ACTIVE_STATE_CHECKPOINT_REQUIRED_PHRASES = (
     "derived checkpoint",
     'Do not ask a separate "May I write?" for this file',
 )
-ACTIVE_STATE_NAMED_EXCEPTIONS = {
-    "handoff",
-    "resume-from-handoff",
+ACTIVE_STATE_NAMED_EXCEPTIONS: set[str] = set()
+
+CONTINUITY_MANIFEST_PATH = Path(".agent-continuity.toml")
+LOCAL_CONTINUITY_SKILL_PATHS = (
+    Path(".agents/skills/handoff/SKILL.md"),
+    Path(".agents/skills/resume-from-handoff/SKILL.md"),
+)
+CONTINUITY_PATHS = {
+    "handoff": "production/session-handoff.md",
+    "archive": "production/session-archive.md",
+    "index": "production/resume-index.md",
+    "scratchpad": "production/session-state/active.md",
+    "baseline": "production/session-logs/session-baseline.json",
 }
-
-RESUME_SKILL_PATH = Path(".agents/skills/resume-from-handoff/SKILL.md")
-RESUME_REQUIRED_PHRASES = (
-    "A focus argument biases ranking; it does not select a lane.",
-    "Never start an unselected lane.",
-    "recommendation as the first option",
-    "wait for the user to reply `1`",
-    "Resume selection authorizes entering only the selected workflow",
-    "FIRST verification cannot be waived by choosing another lane",
-    "Follow-up fork",
-    "request_user_input",
-    "Playable/Slice State Source",
-    "production/stage.txt",
-    ".codex/docs/workflow-catalog.yaml",
-    "production/session-state/active.md",
-)
-
-RESUME_BOUNDED_REQUIRED_PHRASES = (
-    "$resume-from-handoff deep [focus]",
-    "bounded current section",
-    "at most 200 lines or 32 KiB",
-    "Default resume must not read the entire slice source",
-    "Missing or stale index state never activates deep mode automatically",
-    "production/resume-index.md",
-    "Mark an oversized index `oversized`",
-    "SHA-256 content hash",
-    "Compute the hash locally without loading the whole source into model context",
-    "stale-hash",
-)
-
-RESUME_READBACK_REQUIRED_PHRASES = (
-    "read `production/session-state/active.md` back in full",
-    "## Source Freshness",
-    "## Owed Before Starting",
-    "recommended `## Session Worklist` lane",
-    "Do not claim the session cache was updated until this readback passes",
-)
-
-RESUME_PRECEDENCE_REQUIRED_PHRASES = (
-    "Use this source precedence",
-    "durable narrative, decisions, blockers",
-    "for current stage",
-    "for story status",
-    "fresh bounded current section",
-    "derived accelerator",
-    "lowest-priority same-session cache",
-    "Surface conflicts; never silently normalize them",
-)
+CONTINUITY_MODULES = {
+    "orientation": ["production/handoff/orientation.md"],
+    "lanes": ["production/handoff/lanes.md"],
+    "integrity": ["production/handoff/integrity.md"],
+}
+CONTINUITY_MODULE_REQUIRED_PHRASES = {
+    "production/handoff/orientation.md": (
+        "Vertical-slice forcing function",
+        "production/stage.txt",
+        ".codex/docs/workflow-catalog.yaml",
+        "`extend`",
+        "`feed`",
+        "`carve-out`",
+    ),
+    "production/handoff/lanes.md": (
+        "production/sprint-status.yaml",
+        ".codex/docs/director-gates.md",
+        "production/review-mode.txt",
+        "A lane selection only",
+    ),
+    "production/handoff/integrity.md": (
+        "historical claims",
+        "Only a check run in the current turn",
+        "Playtest focus:",
+        "deferred reviewer findings verbatim",
+    ),
+    "production/handoff/review-tiers.md": (
+        "`STANDARD`",
+        "`ADVERSARIAL`",
+        "`PURE-DOCUMENT`",
+        "Mixed scope is never exempt",
+    ),
+}
 
 GEN_ASSET_SKILL_PATH = Path(".agents/skills/gen-asset/SKILL.md")
 GEN_ASSET_REQUIRED_PHRASES = (
@@ -939,192 +637,96 @@ def validate_bug_lifecycle_contract(root: Path) -> list[str]:
     return errors
 
 
-def validate_handoff_review_contract(root: Path) -> list[str]:
+def validate_continuity_integration(root: Path) -> list[str]:
     errors: list[str] = []
-    for rel, required_phrases in HANDOFF_REVIEW_REQUIRED_PHRASES.items():
-        path = root / rel
-        if not path.exists():
-            errors.append(f"{rel}: missing handoff review contract surface")
-            continue
-        text = path.read_text(encoding="utf-8")
-        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
-        if missing:
-            errors.append(f"{rel}: missing handoff review contract phrase(s): {', '.join(missing)}")
 
-    for rel, required_phrases in HANDOFF_AUTHORIZATION_REQUIRED_PHRASES.items():
-        path = root / rel
-        if not path.exists():
-            errors.append(f"{rel}: missing explicit handoff invocation boundary surface")
-            continue
-        text = path.read_text(encoding="utf-8")
-        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
-        if missing:
+    for rel in LOCAL_CONTINUITY_SKILL_PATHS:
+        if (root / rel).exists():
             errors.append(
-                f"{rel}: missing explicit handoff invocation boundary phrase(s): "
-                + ", ".join(missing)
+                f"{rel}: repo-local continuity skill shadows the Agent Bindery global skill"
             )
 
-    skill_rel = ".agents/skills/handoff/SKILL.md"
-    skill_path = root / skill_rel
-    if skill_path.exists():
-        skill_text = skill_path.read_text(encoding="utf-8")
-        description = frontmatter(skill_text).get("description", "")
-        if any(word in description.lower() for word in ("pause", "stop", "checkpoint", "resume later")):
-            errors.append(
-                f"{skill_rel}: explicit invocation boundary is ambiguous in frontmatter description"
-            )
-
-        for label, required_phrases in (
-            ("context capacity gate", HANDOFF_CAPACITY_REQUIRED_PHRASES),
-            ("review scope baseline contract", HANDOFF_SCOPE_REQUIRED_PHRASES),
-            ("fresh-context reviewer contract", HANDOFF_FRESH_REVIEWER_REQUIRED_PHRASES),
-            ("compact resume-index contract", HANDOFF_INDEX_REQUIRED_PHRASES),
-        ):
-            missing = [phrase for phrase in required_phrases if not contains_phrase(skill_text, phrase)]
-            if missing:
-                errors.append(
-                    f"{skill_rel}: missing handoff {label} phrase(s): "
-                    + ", ".join(missing)
-                )
-
-        missing = [
-            phrase
-            for phrase in HANDOFF_GIT_CAPABILITY_REQUIRED_PHRASES
-            if not contains_phrase(skill_text, phrase)
-        ]
-        if missing:
-            errors.append(
-                f"{skill_rel}: missing handoff Git capability phrase(s): "
-                + ", ".join(missing)
-            )
-
-        phase3_match = re.search(
-            r"(?ms)^## Phase 3: Commit Handoff\s*$\n(.*?)(?=^## Phase 4: Push Handoff\s*$)",
-            skill_text,
-        )
-        if not phase3_match:
-            errors.append(f"{skill_rel}: missing bounded Phase 3 commit section")
-        else:
-            phase3_text = phase3_match.group(1)
-            missing = [
-                phrase
-                for phrase in HANDOFF_PHASE3_GIT_WRITE_REQUIRED_PHRASES
-                if not contains_phrase(phase3_text, phrase)
-            ]
-            if missing:
-                errors.append(
-                    f"{skill_rel}: Phase 3 missing direct Git-write phrase(s): "
-                    + ", ".join(missing)
-                )
-
-        phase4_match = re.search(
-            r"(?ms)^## Phase 4: Push Handoff\s*$\n(.*?)(?=^## Phase 5: Report And Stop\s*$)",
-            skill_text,
-        )
-        if not phase4_match:
-            errors.append(f"{skill_rel}: missing bounded Phase 4 push section")
-        else:
-            phase4_text = phase4_match.group(1)
-            missing = [
-                phrase
-                for phrase in HANDOFF_PHASE4_PUSH_REQUIRED_PHRASES
-                if not contains_phrase(phase4_text, phrase)
-            ]
-            if missing:
-                errors.append(
-                    f"{skill_rel}: Phase 4 missing direct push phrase(s): "
-                    + ", ".join(missing)
-                )
-            for phrase, message in HANDOFF_PHASE4_PUSH_FORBIDDEN_PHRASES:
-                if phrase in phase4_text:
-                    errors.append(f"{skill_rel}: Phase 4 {message}: {phrase!r}")
-
-        review_gate_match = re.search(
-            r"(?ms)^## Phase 0: Review Gate\s*$\n(.*?)(?=^## Phase 1: Choose The Label\s*$)",
-            skill_text,
-        )
-        for pattern, message in HANDOFF_REVIEW_FORBIDDEN_PATTERNS:
-            if message == "external-review escalation token" and review_gate_match:
-                search_text = review_gate_match.group(1)
-                search_offset = review_gate_match.start(1)
-            else:
-                search_text = skill_text
-                search_offset = 0
-            match = pattern.search(search_text)
-            if match:
-                line_number = skill_text.count("\n", 0, search_offset + match.start()) + 1
-                errors.append(f"{skill_rel}:{line_number}: {message}")
-
-    for rel, required_phrases in HANDOFF_FRESH_REVIEWER_SURFACES.items():
-        path = root / rel
-        if not path.exists():
-            errors.append(f"{rel}: missing fresh-context reviewer contract surface")
-            continue
-        text = path.read_text(encoding="utf-8")
-        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
-        if missing:
-            errors.append(
-                f"{rel}: missing fresh-context reviewer contract phrase(s): "
-                + ", ".join(missing)
-            )
-    return errors
-
-
-def validate_resume_contract(root: Path) -> list[str]:
-    path = root / RESUME_SKILL_PATH
+    path = root / CONTINUITY_MANIFEST_PATH
     if not path.exists():
-        return [f"{RESUME_SKILL_PATH}: missing resume selection contract surface"]
+        return errors + [
+            f"{CONTINUITY_MANIFEST_PATH}: missing Agent Bindery continuity integration"
+        ]
 
-    text = path.read_text(encoding="utf-8")
-    errors: list[str] = []
-    missing = [phrase for phrase in RESUME_REQUIRED_PHRASES if not contains_phrase(text, phrase)]
-    if missing:
-        errors.append(
-            f"{RESUME_SKILL_PATH}: missing resume selection contract phrase(s): "
-            + ", ".join(missing)
-        )
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        return errors + [f"{CONTINUITY_MANIFEST_PATH}: invalid TOML: {exc}"]
 
-    for label, required_phrases in (
-        ("bounded default slice-read contract", RESUME_BOUNDED_REQUIRED_PHRASES),
-        ("cache readback contract", RESUME_READBACK_REQUIRED_PHRASES),
-        ("source precedence contract", RESUME_PRECEDENCE_REQUIRED_PHRASES),
-    ):
-        missing = [phrase for phrase in required_phrases if not contains_phrase(text, phrase)]
+    paths = data.get("paths")
+    if not isinstance(paths, dict):
+        errors.append(f"{CONTINUITY_MANIFEST_PATH}: missing [paths] table")
+    else:
+        for key, expected in CONTINUITY_PATHS.items():
+            if paths.get(key) != expected:
+                errors.append(
+                    f"{CONTINUITY_MANIFEST_PATH}: paths.{key} must be {expected!r}"
+                )
+
+    commit = data.get("commit")
+    if not isinstance(commit, dict):
+        errors.append(f"{CONTINUITY_MANIFEST_PATH}: missing [commit] table")
+    else:
+        if commit.get("subject") != "WIP: {label} - CONTEXT HANDOFF":
+            errors.append(
+                f"{CONTINUITY_MANIFEST_PATH}: commit.subject must preserve the CCGS handoff subject"
+            )
+        if commit.get("push") is not True:
+            errors.append(f"{CONTINUITY_MANIFEST_PATH}: commit.push must be true")
+
+    gate = data.get("gate")
+    if not isinstance(gate, dict):
+        errors.append(f"{CONTINUITY_MANIFEST_PATH}: missing [gate] table")
+    else:
+        if gate.get("required") is not True:
+            errors.append(f"{CONTINUITY_MANIFEST_PATH}: gate.required must be true")
+        if gate.get("reviewer") != "handoff-reviewer":
+            errors.append(
+                f"{CONTINUITY_MANIFEST_PATH}: gate.reviewer must be 'handoff-reviewer'"
+            )
+        if gate.get("tiers") != "production/handoff/review-tiers.md":
+            errors.append(
+                f"{CONTINUITY_MANIFEST_PATH}: gate.tiers must name the CCGS review module"
+            )
+
+    modules = data.get("modules")
+    if not isinstance(modules, dict):
+        errors.append(f"{CONTINUITY_MANIFEST_PATH}: missing [modules] table")
+    else:
+        for key, expected in CONTINUITY_MODULES.items():
+            if modules.get(key) != expected:
+                errors.append(
+                    f"{CONTINUITY_MANIFEST_PATH}: modules.{key} must be {expected!r}"
+                )
+
+    limits = data.get("limits")
+    expected_limits = {"handoff_kb": 25, "handoff_max_kb": 64, "index_kb": 10}
+    if not isinstance(limits, dict):
+        errors.append(f"{CONTINUITY_MANIFEST_PATH}: missing [limits] table")
+    else:
+        for key, expected in expected_limits.items():
+            if limits.get(key) != expected:
+                errors.append(
+                    f"{CONTINUITY_MANIFEST_PATH}: limits.{key} must be {expected}"
+                )
+
+    for rel, phrases in CONTINUITY_MODULE_REQUIRED_PHRASES.items():
+        module_path = root / rel
+        if not module_path.exists():
+            errors.append(f"{rel}: missing CCGS continuity module")
+            continue
+        text = module_path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in phrases if not contains_phrase(text, phrase)]
         if missing:
             errors.append(
-                f"{RESUME_SKILL_PATH}: missing resume {label} phrase(s): "
+                f"{rel}: missing continuity integration phrase(s): "
                 + ", ".join(missing)
             )
 
-    for line_number, line in enumerate(text.splitlines(), start=1):
-        lower = line.lower()
-        starts_lane = re.search(r"\b(?:start|begin|enter)\b", lower)
-        bypasses_selection = any(
-            phrase in lower
-            for phrase in ("automatically", "immediately", "without waiting", "without selection")
-        )
-        explicitly_forbidden = any(
-            phrase in lower for phrase in ("do not", "don't", "never", "must not", "cannot")
-        )
-        if starts_lane and bypasses_selection and not explicitly_forbidden:
-            errors.append(
-                f"{RESUME_SKILL_PATH}:{line_number}: automatic lane startup is forbidden; "
-                "pause for the required selection boundary"
-            )
-        reads_full_slice = (
-            re.search(r"\bread\b.*\b(?:entire|full|all)\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b", lower)
-            or re.search(r"\bread\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b.*\b(?:entire|full|all)\b", lower)
-            or re.search(r"\b(?:entire|full|all)\b.*\b(?:slice|playable)[ -]?(?:source|history)?\b.*\bread\b", lower)
-        )
-        deep_only = "deep" in lower
-        explicitly_bounded = any(
-            phrase in lower for phrase in ("do not", "must not", "never", "only explicit", "only in")
-        )
-        if reads_full_slice and not deep_only and not explicitly_bounded:
-            errors.append(
-                f"{RESUME_SKILL_PATH}:{line_number}: unbounded default slice read is forbidden; "
-                "reserve the full slice history for explicit deep mode"
-            )
     return errors
 
 
@@ -1456,8 +1058,7 @@ def main() -> int:
         warnings.extend(budget_warnings)
         errors.extend(validate_playtest_focus_contract(root))
     if args.kind in {"runtime", "skills"}:
-        errors.extend(validate_handoff_review_contract(root))
-        errors.extend(validate_resume_contract(root))
+        errors.extend(validate_continuity_integration(root))
         errors.extend(validate_gen_asset_contract(root))
     if args.kind == "skills":
         errors.extend(validate_skills(root, args.require_present))

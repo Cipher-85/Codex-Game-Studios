@@ -22,8 +22,9 @@ verification-first implementation.
 ## Resume And Wrap-Up Routing
 
 - When the user asks to resume, catch up, pick up where they left off, find the
-  current state, or choose the next work item from saved state, use
-  `$resume-from-handoff` if `production/session-handoff.md` exists.
+  current state, or choose the next work item from saved state, use Agent
+  Bindery's globally installed `$resume-from-handoff` if
+  `production/session-handoff.md` exists.
 - Use `$resume-from-handoff deep [focus]` only when the user explicitly requests
   full slice-history context; ordinary resume keeps slice-source reads bounded.
 - If no handoff exists, do not infer one from another doc. Route first-session
@@ -35,8 +36,8 @@ verification-first implementation.
   when the current state should be durable for a future session.
 - Generic requests to pause, stop, or resume later authorize only that
   recommendation. The review, continuity, commit, and push transaction requires
-  explicit `$handoff` invocation or an equally explicit instruction to commit
-  and push the handoff.
+  explicit invocation of Agent Bindery's `$handoff` or an equally explicit
+  instruction to commit and push the handoff.
 - Do not close out or ask for a user-selected next action while an invoked
   workflow still has automatic read-only phases remaining. Readbacks, scans,
   self-checks, candidate discovery, context gathering, and validation summaries
@@ -105,44 +106,18 @@ Question -> Options -> Decision -> Draft -> Approval.
   updates, source edits, commits, pushes, branch changes, builds, boot smoke,
   mutating `gh`, or writes to any path other than
   `production/session-state/active.md`.
-- `$handoff` or an equally explicit instruction to commit and push the handoff
-  authorizes review-through-push. Generic pause/stop wording does not. Each pass
-  gets one built-in `explorer` spawn with `fork_turns: "none"`. This
-  instruction-read-only reviewer gets evidence without the author's conclusions
-  and a before-and-after repository mutation snapshot. No subprocess, companion,
-  nested Codex CLI, other model service, or external data-egress approval.
-- It is not a custom/director/lead role. If review or its snapshot fails, stop
-  mixed/executable handoff unless the user explicitly waives the independent
-  reviewer and accepts a disclosed same-session downgrade.
-- The exception authorizes confident, intent-preserving review fixes only in
-  files already created or materially modified during the session. Those fixes
-  may not introduce new intent, architecture, game-feel, balance, or scope
-  decisions. Unrelated files and new work remain unauthorized.
-- Round-two non-trivial findings, uncertain or disputed findings, and findings
-  that require design, architecture, game-feel, balance, or scope decisions must
-  stop for user direction before continuity rotation, commit, or push.
-- Once the review gate passes, the exception authorizes updating
-  `production/session-handoff.md`, `production/session-archive.md`, and
-  `production/resume-index.md`, plus `production/session-state/active.md`;
-  staging relevant uncommitted changes by path; creating the standard handoff
-  commit; and pushing the current branch.
-- The `$handoff` exception does not authorize unrelated source edits, writes to
-  undeclared files, branch switching, force-pushes, or `--no-verify` / amend
-  workarounds.
-- `$resume-from-handoff` exception: explicit invocation of the Codex-native
-  `$resume-from-handoff` skill counts as user approval to write or overwrite
-  only `production/session-state/active.md` with the current session routing
-  cache. Do not pause mid-flow to ask for that file write.
-- The `$resume-from-handoff` exception does not authorize edits to handoff,
-  archive, source, design, or docs files; commits; pushes; branch changes;
-  builds; boot smoke; mutating `gh`; or additional file writes.
-- A `$resume-from-handoff` focus argument only biases ranking. Resume must pause
-  for lane selection, and that selection authorizes entering only the selected
-  workflow. It does not grant any write, build, smoke, `gh`, commit, push,
-  branch, design, game-feel, balance, or other mutation authority that the
-  selected workflow does not already declare.
-- The `deep` argument authorizes a full slice-history read only; it does not
-  select a lane or broaden mutation authority.
+- CCGS does not ship repo-local `handoff` or `resume-from-handoff` skills.
+  Agent Bindery supplies the global pair; `.agent-continuity.toml` and the
+  modules under `production/handoff/` configure them for this project. Do not
+  recreate local copies or substitute a CCGS-specific fallback.
+- Follow the authority boundary, reviewer ladder, bootstrap behavior, and stop
+  conditions in the loaded Agent Bindery skill. Explicit invocation of
+  `$handoff` is the user instruction for that declared transaction; generic
+  pause/stop wording is not. It never authorizes unrelated changes, branch
+  switching, force-pushes, bypassing hooks, or design/game-feel/balance choices.
+- Explicit `$resume-from-handoff` invocation may write only the manifest-declared
+  scratchpad as a routing cache. Resume still pauses for lane selection; focus
+  and `deep` arguments do not select work or authorize later mutations.
 - `$gen-asset` exception: explicit invocation authorizes direct built-in image
   generation and scratch writes only under `tmp/gen-asset/**`. Before any
   durable placement, present one contact sheet with per-candidate verdicts,
@@ -183,6 +158,9 @@ overrides. If the selector is absent from the model-visible tool schema, or the
 payload reports `agent_type: default`, `agent_role: null`, mismatched configured
 model/effort, or only generic base instructions, report role delegation as
 blocked and do not simulate the specialist verdict.
+
+Agent Bindery's `handoff-reviewer` and its reviewer ladder are governed by the
+global `$handoff` skill, not by the CCGS role-agent delegation contract above.
 
 ## Low-Friction Decision Prompts
 
@@ -279,9 +257,11 @@ For code, tests, and tools:
   cache. It may be regenerated or overwritten by declared workflows and should
   not be treated as the durable project record.
 - Preserve session continuity in `production/session-handoff.md`; archive only
-  when the continuity docs call for it.
+  through the Agent Bindery continuity workflow configured by
+  `.agent-continuity.toml`.
 - Treat `production/resume-index.md` as a tracked, disposable accelerator
-  derived from the handoff and current slice state, never as canonical truth.
+  derived by that workflow from the handoff and current slice state, never as
+  canonical truth.
 - Keep generated caches, local-only logs, and transient evidence out of tracked
   runtime instructions unless a doc explicitly says otherwise.
 - Full rules: `.codex/docs/file-lifecycle.md`.
@@ -297,7 +277,8 @@ After each discrete work unit, apply this mentally using
    session, sprint, stage, workflow, and slice state.
 4. Present the top valid lane as a numbered next-action prompt with exactly one
    `(Recommended)` option, even when only one real lane remains.
-5. Suggest `$handoff` when installed and session state should be preserved.
+5. Suggest Agent Bindery's `$handoff` when installed and session state should be
+   preserved.
 
 Read `.codex/docs/session-continuity.md` and
 `.codex/docs/context-management.md` for full pause/resume guidance.

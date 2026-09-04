@@ -17,7 +17,12 @@ parsing and validation are not reliable until Python is installed.
 
 | Tool | Used By | Purpose | Install |
 | ---- | ---- | ---- | ---- |
+| **Agent Bindery** | `$handoff`, `$resume-from-handoff` | Global reviewed continuity pair and handoff reviewer | Deploy through the Agent Bindery repository |
 | **jq** | Manual debugging only | Optional JSON inspection while troubleshooting hook payloads | See below |
+
+CCGS remains usable without Agent Bindery, but the two continuity commands are
+unavailable. The CCGS installer writes their project manifest and modules; it
+does not install global skills or modify the user's Agent Bindery deployment.
 
 ### Installing jq
 

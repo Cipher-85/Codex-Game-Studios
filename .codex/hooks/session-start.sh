@@ -63,7 +63,7 @@ if [ -f "$handoff_file" ]; then
   echo "=== CANONICAL HANDOFF DETECTED ==="
   echo "Bounded preview of production/session-handoff.md:"
   ccgs_preview_bounded "$handoff_file" 60
-  echo "Run \$resume-from-handoff to compile a fresh session worklist before selecting a lane."
+  echo "Run Agent Bindery's global \$resume-from-handoff to compile a fresh session worklist before selecting a lane."
   echo "=== END CANONICAL HANDOFF PREVIEW ==="
 fi
 

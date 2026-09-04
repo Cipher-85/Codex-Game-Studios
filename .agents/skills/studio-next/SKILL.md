@@ -13,10 +13,10 @@ contract now lives in `production/session-state/active.md`:
 - `## Phase Guard` - stage file, workflow-catalog phase, first incomplete
   required step, next gate, and phase mismatch notes.
 
-`$resume-from-handoff` is the one-time session-entry compiler that creates or
-refreshes those sections. Later closeouts should read or silently refresh that
-saved worklist directly, surface owed verification, and recommend the top valid
-lane.
+Agent Bindery's global `$resume-from-handoff` is the one-time session-entry
+compiler that creates or refreshes those sections. Later closeouts should read
+or silently refresh that saved worklist directly, surface owed verification,
+and recommend the top valid lane.
 
 This file remains only as a compatibility reference for old handoffs or explicit
 user requests for `$studio-next`.
@@ -26,7 +26,7 @@ user requests for `$studio-next`.
 - `$help` remains the phase router. It reads the workflow catalog and identifies
   the first required phase step.
 - `$project-stage-detect` remains the full artifact audit.
-- `$resume-from-handoff` compiles the live backlog into
+- Agent Bindery's `$resume-from-handoff` compiles the live backlog into
   `production/session-state/active.md` when a canonical handoff exists.
 - `$story-done` remains the story closure verifier.
 - `producer` remains an escalation path for scope, milestone, production
@@ -41,7 +41,8 @@ handoff points here:
 2. If `## Session Worklist` exists, surface owed verification and recommend the
    top valid lane.
 3. If the worklist is missing, stale, or conflicts with the handoff, say so.
-   Recommend `$resume-from-handoff` only for a fresh session-entry compile.
+   Recommend Agent Bindery's `$resume-from-handoff` only for a fresh
+   session-entry compile.
 4. If there is one obvious valid lane, state the exact start command. If
    multiple lanes are genuinely viable, use a compact numbered prompt with
    exactly one `(Recommended)` option.

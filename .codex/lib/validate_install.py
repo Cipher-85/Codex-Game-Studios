@@ -17,7 +17,7 @@ ALLOWED_CLAUDE_TEST_FIXTURES = {
     ".codex/tests/fixtures/claude-existing/.claude/settings.json",
     ".codex/tests/fixtures/claude-existing/CLAUDE.md",
 }
-EXPECTED_INSTALLED_FILE_COUNT = 511
+EXPECTED_INSTALLED_FILE_COUNT = 512
 
 
 def run_command(command: list[str], cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -329,18 +329,70 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         if result.returncode != 0:
             errors.append(f"obsolete-owned setup install failed: {command_failure(result)}")
         else:
-            obsolete = target / "production" / "session-logs" / "session-start.json"
-            obsolete.parent.mkdir(parents=True, exist_ok=True)
-            obsolete.write_text("old-package-log\n", encoding="utf-8")
+            obsolete_paths = (
+                "production/session-logs/session-start.json",
+                ".agents/skills/handoff/SKILL.md",
+                ".agents/skills/resume-from-handoff/SKILL.md",
+                ".codex/tests/fixtures/invalid-handoff-contract/.agents/skills/handoff/SKILL.md",
+                ".codex/tests/fixtures/invalid-resume-contract/.agents/skills/resume-from-handoff/SKILL.md",
+            )
             state_path = target / ".codex" / "manifest" / "install-state.json"
             state = json.loads(state_path.read_text(encoding="utf-8"))
-            rel = "production/session-logs/session-start.json"
-            state["installed_file_hashes"][rel] = hashlib.sha256(obsolete.read_bytes()).hexdigest()
-            state["package_owned_paths"].append(rel)
+            for rel in obsolete_paths:
+                obsolete = target / rel
+                obsolete.parent.mkdir(parents=True, exist_ok=True)
+                obsolete.write_text(f"old-package-path: {rel}\n", encoding="utf-8")
+                state["installed_file_hashes"][rel] = hashlib.sha256(
+                    obsolete.read_bytes()
+                ).hexdigest()
+                state["package_owned_paths"].append(rel)
             state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
             result = run_command([str(install), str(target)], root)
-            if result.returncode != 0 or obsolete.exists():
-                errors.append("state-proven known obsolete asset was not removed safely")
+            remaining = [rel for rel in obsolete_paths if (target / rel).exists()]
+            if result.returncode != 0 or remaining:
+                errors.append(
+                    "state-proven known obsolete assets were not removed safely: "
+                    + ", ".join(remaining)
+                )
+
+    with tempfile.TemporaryDirectory(prefix="ccgs-install-unowned-continuity-shadow-") as temp:
+        target = Path(temp)
+        shadow = target / ".agents" / "skills" / "handoff" / "SKILL.md"
+        shadow.parent.mkdir(parents=True)
+        shadow.write_text("user-owned continuity skill\n", encoding="utf-8")
+        result = run_command([str(install), str(target)], root)
+        if (
+            result.returncode == 0
+            or "repo-local continuity skill shadows" not in result.stderr
+            or shadow.read_text(encoding="utf-8") != "user-owned continuity skill\n"
+        ):
+            errors.append("install did not fail closed on an unowned continuity shadow")
+
+    with tempfile.TemporaryDirectory(prefix="ccgs-install-modified-continuity-shadow-") as temp:
+        target = Path(temp)
+        result = run_command([str(install), str(target)], root)
+        if result.returncode != 0:
+            errors.append(f"modified continuity shadow setup failed: {command_failure(result)}")
+        else:
+            rel = ".agents/skills/resume-from-handoff/SKILL.md"
+            shadow = target / rel
+            shadow.parent.mkdir(parents=True, exist_ok=True)
+            shadow.write_text("former package content\n", encoding="utf-8")
+            state_path = target / ".codex" / "manifest" / "install-state.json"
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            state["installed_file_hashes"][rel] = hashlib.sha256(
+                shadow.read_bytes()
+            ).hexdigest()
+            state["package_owned_paths"].append(rel)
+            state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            shadow.write_text("locally modified continuity skill\n", encoding="utf-8")
+            result = run_command([str(install), str(target)], root)
+            if (
+                result.returncode == 0
+                or "repo-local continuity skill shadows" not in result.stderr
+                or shadow.read_text(encoding="utf-8") != "locally modified continuity skill\n"
+            ):
+                errors.append("install did not fail closed on a modified continuity shadow")
 
     with tempfile.TemporaryDirectory(prefix="ccgs-uninstall-gitignore-symlink-") as temp:
         base = Path(temp)

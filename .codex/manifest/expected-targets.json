@@ -49,6 +49,41 @@
     "source": "UPGRADING.md"
   },
   {
+    "category": "codex_continuity",
+    "owner": "codex-game-studios",
+    "path": ".agent-continuity.toml",
+    "rationale": "Project-shape manifest for the globally installed Agent Bindery handoff pair.",
+    "source": "Agent Bindery portable continuity manifest"
+  },
+  {
+    "category": "codex_continuity",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/orientation.md",
+    "rationale": "CCGS phase and vertical-slice orientation module for global continuity skills.",
+    "source": "Codex continuity routing contract"
+  },
+  {
+    "category": "codex_continuity",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/lanes.md",
+    "rationale": "CCGS sprint and gate lane module for global continuity skills.",
+    "source": "Codex continuity routing contract"
+  },
+  {
+    "category": "codex_continuity",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/integrity.md",
+    "rationale": "CCGS verification-integrity module for global continuity skills.",
+    "source": "Codex verification integrity contract"
+  },
+  {
+    "category": "codex_continuity",
+    "owner": "codex-game-studios",
+    "path": "production/handoff/review-tiers.md",
+    "rationale": "CCGS review classification module for the Agent Bindery handoff gate.",
+    "source": "Codex handoff review contract"
+  },
+  {
     "category": "codex_agent_memory",
     "owner": "codex-game-studios",
     "path": ".codex/agent-memory/art-director/MEMORY.md",
@@ -894,20 +929,6 @@
     "path": ".agents/skills/studio-next/SKILL.md",
     "rationale": "Codex-native continuity router for post-task next-action selection.",
     "source": "Codex continuity orchestrator plan"
-  },
-  {
-    "category": "codex_skills_new",
-    "owner": "codex-game-studios",
-    "path": ".agents/skills/handoff/SKILL.md",
-    "rationale": "Codex-native session handoff writer paired with resume-from-handoff.",
-    "source": "Codex continuity handoff plan"
-  },
-  {
-    "category": "codex_skills_new",
-    "owner": "codex-game-studios",
-    "path": ".agents/skills/resume-from-handoff/SKILL.md",
-    "rationale": "Codex-native session resume reader for canonical handoff state.",
-    "source": "Codex continuity handoff plan"
   },
   {
     "category": "codex_skills_ported",

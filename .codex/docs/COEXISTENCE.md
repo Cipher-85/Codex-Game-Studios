@@ -11,6 +11,9 @@ Rules:
 - Workflow-created shared folders such as `assets/`, `tests/`, `tools/`, and
   `prototypes/` are created lazily when needed.
 - Package ownership is tracked in `.codex/manifest/installed-files.json`.
+- Agent Bindery owns the global `handoff` / `resume-from-handoff` pair. CCGS
+  owns only `.agent-continuity.toml` and `production/handoff/*.md`, avoiding a
+  same-name personal/project skill collision.
 - The optional `.agents/skills/gen-asset/**` subtree is project-owned. The
   installer allowlists it so its core and profiles are trackable, but it is
   deliberately absent from `installed-files.json`; install and uninstall never
@@ -81,4 +84,7 @@ After install, trust the target project and start a new Codex session. Static
 installation success does not prove that project hooks, rules, or config are
 active.
 
-Skill and agent names intentionally preserve upstream names for workflow ergonomics. If another active skill or custom agent has the same name, the audit/installer should report the exact competing path and require a manual decision rather than silently renaming this port.
+Skill and agent names intentionally preserve upstream names for workflow
+ergonomics. The handoff pair is intentionally global and must not have a
+repo-local duplicate. Other same-name collisions should be reported with exact
+paths and resolved manually rather than silently renaming this port.

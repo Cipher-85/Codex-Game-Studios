@@ -365,27 +365,6 @@ def main() -> int:
         "invalid-skill": (lambda p: validate_skills(p, require_present=True), ()),
         "invalid-agent": (lambda p: validate_agents(p, require_present=True), ()),
         "stale-claude-reference": (validate_forbidden_references, ()),
-        "invalid-resume-contract": (
-            lambda p: getattr(runtime, "validate_resume_contract", lambda _: [])(p),
-            (
-                "unbounded default slice read",
-                "automatic lane startup",
-                "cache readback contract",
-            ),
-        ),
-        "invalid-handoff-contract": (
-            lambda p: getattr(runtime, "validate_handoff_review_contract", lambda _: [])(p),
-            (
-                "explicit invocation boundary",
-                "context capacity gate",
-                "review scope baseline contract",
-                "fresh-context reviewer contract",
-                "compact resume-index contract",
-                "same-session reviewer substitution",
-                "full-history reviewer fork",
-                "silent reviewer fallback",
-            ),
-        ),
         "invalid-gen-asset-contract": (
             lambda p: getattr(runtime, "validate_gen_asset_contract", lambda _: [])(p),
             (

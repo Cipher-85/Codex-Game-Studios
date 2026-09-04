@@ -34,12 +34,11 @@ artifact edit, registry/index/status update, source edit, commit, push, build,
 or new design/architecture/balance decision still requires its normal explicit
 approval.
 
-`$resume-from-handoff` compiles `## Session Worklist` and `## Phase Guard` at
-session entry from the canonical handoff, compact `production/resume-index.md`,
-sprint status, stage file, workflow catalog, and a bounded current slice
-section. It also records `## Source Freshness` and reads the written cache back.
-Only explicit `deep` mode reads full slice history. Post-work closeouts should
-read or refresh those sections instead of running a separate continuity router.
+Agent Bindery's global `$resume-from-handoff` compiles `## Session Worklist` and
+`## Phase Guard` at session entry. `.agent-continuity.toml` maps it to the CCGS
+handoff, index, scratchpad, baseline, and project modules. Only explicit `deep`
+mode expands the slice-history read. Post-work closeouts should read or refresh
+the saved worklist instead of running a separate continuity router.
 
 ### Status Line Block (Production+ only)
 
@@ -100,9 +99,8 @@ Subagents run in their own context window and return only summaries:
 - **Use direct reads** when you know exactly which 1-2 files to check
 - Context inheritance depends on the spawn contract. Use `fork_turns: "none"`
   when a clean context is required, then provide the bounded task context in the
-  prompt. `$handoff` uses this mode for its fresh integrity reviewer and omits
-  the author's conclusions so the reviewer independently evaluates the scoped
-  files and contract.
+  prompt. Agent Bindery's `$handoff` owns its own reviewer ladder and bounded
+  evidence packet; CCGS does not duplicate that implementation here.
 
 ## Compaction Instructions
 
@@ -126,10 +124,11 @@ conversation history is secondary.
 
 If a session dies ("prompt too long") or you start a new session to continue work:
 
-1. Read `production/session-handoff.md` if it exists and is relevant
-2. Read a substantive `production/session-state/active.md` if it exists; when it
-   is missing or pointer-only, elevate the canonical handoff
-3. Read the partially-completed file(s) listed in the state
-4. Continue from the next incomplete section or task
-5. Use `/clear` before unrelated implementation work when saved files already
-   contain the needed state
+1. Invoke Agent Bindery's `$resume-from-handoff` when
+   `production/session-handoff.md` exists.
+2. Let the global skill validate the manifest, index freshness, and scratchpad
+   before it reads project modules or recommends work.
+3. Read the partially completed files named by the selected lane only after the
+   user selects it.
+4. Use `/clear` before unrelated implementation work when saved files already
+   contain the needed state.

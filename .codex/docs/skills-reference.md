@@ -1,9 +1,10 @@
 # Available Skills (Slash Commands)
 
-77 core skills organized by phase. Invoke them from Codex with the `$skill-name` form when available.
+75 core skills organized by phase. Invoke them from Codex with the `$skill-name`
+form when available.
 
 Projects may also provide optional local extensions. They are not part of the
-77 shipped skills and remain owned by the game project rather than CCGS.
+75 shipped skills and remain owned by the game project rather than CCGS.
 
 ## Onboarding & Navigation
 
@@ -11,14 +12,23 @@ Projects may also provide optional local extensions. They are not part of the
 |---------|---------|
 | `$start` | First-time onboarding — asks where you are, then guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
-| `$handoff` | Explicit self-review plus fresh-context integrity review for mixed/executable scope -> continuity/index -> commit -> push; generic pause wording only recommends it |
-| `$resume-from-handoff [focus]` | Bounded fresh-session compile from handoff/index/current slice into the `active.md` worklist |
-| `$resume-from-handoff deep [focus]` | Same selection boundary with an explicitly requested full slice-history read |
 | `$studio-next` | Deprecated manual continuity reference; normal routing reads `active.md` Session Worklist |
 | `$studio-status` | Show stage, review mode, and active-session breadcrumb from shared project state |
 | `$project-stage-detect` | Full project audit — detect phase, identify existence gaps, recommend next steps |
 | `$setup-engine` | Configure engine + version, detect knowledge gaps, populate version-aware reference docs |
 | `$adopt` | Brownfield format audit — checks internal structure of existing GDDs/ADRs/stories, produces migration plan |
+
+## External Continuity Skills
+
+Agent Bindery supplies these global skills. They are not among the 75 CCGS
+repo-local skills and must not be copied into `.agents/skills/`. CCGS configures
+them through `.agent-continuity.toml` and `production/handoff/*.md`.
+
+| Command | Purpose |
+|---------|---------|
+| `$handoff` | Reviewed continuity rotation, scoped commit, and push under Agent Bindery's explicit invocation contract |
+| `$resume-from-handoff [focus]` | Fresh-session briefing and ranked lane selection from the configured continuity sources |
+| `$resume-from-handoff deep [focus]` | Same selection boundary with an explicitly requested full slice-history read |
 
 ## Game Design
 
@@ -46,7 +56,7 @@ Optional project-local extension:
 | `$gen-asset` | Generate profiled raster candidates with built-in image generation, stage them under `tmp/gen-asset/**`, and wait for one contact-sheet approval before placement |
 
 CCGS validates a present `.agents/skills/gen-asset/` core and its profiles but
-does not ship, install, uninstall, or count it among the 77 core skills. ACTIVE
+does not ship, install, uninstall, or count it among the 75 core skills. ACTIVE
 profiles must define the full generation/placement schema; minimal STUB
 profiles are valid and refuse generation.
 

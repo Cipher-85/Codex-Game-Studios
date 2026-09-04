@@ -10,6 +10,9 @@ project or updating this distribution repository.
 3. Confirm whether the target project also has legacy Claude Game Studios files.
    Codex Game Studios must not edit `.claude/**` or legacy Claude instruction
    files.
+4. Confirm Agent Bindery has deployed the global `handoff`,
+   `resume-from-handoff`, and `handoff-reviewer` assets if the project uses
+   session continuity. CCGS no longer ships repo-local copies of that pair.
 
 ## Upgrade an Installed Project
 
@@ -59,6 +62,13 @@ mode, explicit package-owned paths, file hashes, preserved shared paths, and
 marker-block hashes in
 `.codex/manifest/install-state.json`.
 
+Upgrading from `v0.7.1` removes the two former repo-local continuity skills and
+their obsolete contract fixtures only when modern install state proves CCGS
+owns their unchanged paths. Modified or unowned copies still fail closed. The
+upgrade then installs
+`.agent-continuity.toml` and `production/handoff/*.md`; it does not install or
+modify Agent Bindery's global skills.
+
 ## Upgrade This Distribution
 
 Package versioning is manual and lives in `.codex/VERSION`.
@@ -98,6 +108,8 @@ a new Codex session before verifying hooks, rules, permissions, and agents.
 ## Compatibility Notes
 
 - Repo-local Codex files are the active runtime.
+- The `handoff` and `resume-from-handoff` commands are the global Agent Bindery
+  skills configured by the repo-local `.agent-continuity.toml` manifest.
 - `.claude/**` and legacy Claude instruction files are preserved but not used by
   this port.
 - Project-specific stage, review mode, and active session state remain in

@@ -123,6 +123,10 @@ src/networking/AGENTS.md
 src/ui/AGENTS.md
 tests/AGENTS.md
 tools/AGENTS.md
+.agents/skills/handoff/SKILL.md
+.agents/skills/resume-from-handoff/SKILL.md
+.codex/tests/fixtures/invalid-handoff-contract/.agents/skills/handoff/SKILL.md
+.codex/tests/fixtures/invalid-resume-contract/.agents/skills/resume-from-handoff/SKILL.md
 production/session-logs/agents-start.jsonl
 production/session-logs/agents-stop.jsonl
 production/session-logs/asset-validation-last.json
@@ -132,6 +136,11 @@ production/session-logs/session-start.json
 production/session-logs/session-stop.json
 production/session-logs/skill-change-last.json
 EOF
+}
+
+ccgs_forbidden_continuity_shadow_paths() {
+  printf '%s\n' ".agents/skills/handoff/SKILL.md"
+  printf '%s\n' ".agents/skills/resume-from-handoff/SKILL.md"
 }
 
 ccgs_install_state_valid() {
@@ -635,6 +644,20 @@ ccgs_install_preflight() {
       failed=1
     fi
   done < <(ccgs_state_obsolete_paths)
+  while IFS= read -r install_path; do
+    local target_file="$ccgs_install_root/$install_path"
+    [ -e "$target_file" ] || continue
+    if ccgs_target_path_has_symlink "$install_path"; then
+      printf 'install conflict: refusing symlinked continuity shadow path or parent: %s\n' "$install_path" >&2
+      failed=1
+      continue
+    fi
+    if ccgs_state_owns_path "$install_path" && ccgs_target_matches_state "$install_path"; then
+      continue
+    fi
+    printf 'install conflict: repo-local continuity skill shadows the Agent Bindery global skill: %s\n' "$install_path" >&2
+    failed=1
+  done < <(ccgs_forbidden_continuity_shadow_paths)
   return "$failed"
 }
 

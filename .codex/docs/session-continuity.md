@@ -3,8 +3,15 @@
 Continuity keeps the next Codex session focused without depending on long chat
 history. Prefer small, current, file-backed state over broad transcripts.
 
+Agent Bindery owns the global `$handoff` and `$resume-from-handoff` skills and
+their portable implementation. CCGS owns only `.agent-continuity.toml` and the
+project modules under `production/handoff/`. Repo-local copies of either skill
+are forbidden because they shadow the newer global pair.
+
 ## File Roles
 
+- `.agent-continuity.toml`: authoritative mapping from Agent Bindery's generic
+  continuity workflow to the CCGS paths and modules below.
 - `production/session-state/active.md`: live working checkpoint and current
   session routing cache. Use for current task, progress checklist, decisions,
   files touched, open questions, owed verification, `## Session Worklist`, and
@@ -13,15 +20,20 @@ history. Prefer small, current, file-backed state over broad transcripts.
   separate write-approval prompt.
 - `production/session-handoff.md`: canonical resume narrative when a session has
   enough state that another session should continue from it.
-- `production/resume-index.md`: tracked accelerator derived by `$handoff`, capped
-  at 10 KB, and disposable. Its slice hash may speed ordinary resume, but it
-  never outranks the handoff, stage/sprint state, or current slice section.
+- `production/resume-index.md`: tracked accelerator derived by Agent Bindery's
+  `$handoff`, capped at 10 KB, and disposable. Its slice hash may speed ordinary
+  resume, but it never outranks the handoff, stage/sprint state, or current
+  slice section.
 - `production/session-archive.md`: historical record only. Do not read by default
   unless the user asks for older context or the handoff points there.
 - `src/README.md`: slice history and real-versus-stubbed status when present.
   Use a handoff-declared path rather than assuming this filename. Ordinary
   resume reads at most the current 200-line/32-KiB section; only explicit
   `$resume-from-handoff deep [focus]` reads full slice history.
+- `production/handoff/*.md`: project-specific phase/slice orientation, work
+  lanes, verification integrity, and review-tier classification loaded through
+  the manifest. These files configure the global skills; they do not implement
+  them.
 
 Missing files are unset state. Do not create continuity files unless the task or
 skill calls for it.
@@ -70,52 +82,40 @@ decision, blocker, or true stop point.
    focus:` brief before the next-action prompt.
 4. Preserve exact next commands only when they are known to be useful.
 5. Keep local-only notes out of tracked docs unless they are project state.
-6. Suggest `$handoff [short-label]` when installed and the next session would
-   otherwise need to reconstruct context.
+6. Suggest Agent Bindery's `$handoff [short-label]` when installed and the next
+   session would otherwise need to reconstruct context.
 
 Generic pause, stop, checkpoint, or resume-later wording authorizes this
 recommendation only. The review-through-push transaction requires explicit
 `$handoff` invocation or an equally explicit instruction to commit and push the
 handoff.
 
-For mixed or executable changes, that explicit transaction includes a fresh
-built-in `explorer` integrity review with `fork_turns: "none"` after the
-parent's self-review. The reviewer is instruction-read-only, receives bounded
-scope and contract evidence without the author's conclusions, and is guarded
-by a before-and-after mutation snapshot. If fresh delegation or the no-mutation
-check fails, stop before continuity rotation; never silently replace it with a
-same-session review. Pure design/process-document sessions are exempt unless
-the user requests the reviewer, and an explicit user waiver is required for a
-disclosed same-session downgrade.
+The loaded Agent Bindery skill is authoritative for transaction scope,
+preflight, review route, reviewer ladder, finding triage, rotation, staging,
+commit, and push. The CCGS `production/handoff/review-tiers.md` module supplies
+only the project-specific classification rules. Do not reproduce or override
+the global workflow in project instructions.
 
 ## Resume Procedure
 
 On resume:
 
-1. Read `production/session-handoff.md` in full if present, then the compact
-   `production/resume-index.md` when available.
-2. Run the `$resume-from-handoff` workflow once to compile
-   `production/session-state/active.md` from the handoff, sprint status, stage,
-   workflow catalog, and slice state.
-3. Check the index slice path/hash and read only the bounded current slice
-   section named by the handoff unless explicit `deep` mode is active.
-4. Verify drift-prone claims cheaply before acting on them.
-5. Continue from the saved `## Session Worklist` unless there is a real
-   inconsistency.
-6. Stop at lane selection. A focus argument changes ranking but does not select
-   work. For multiple viable lanes, use `request_user_input` when available and
-   put the recommendation first. For one valid lane, show the numeric
-   `Next action:` fallback and wait for `1`. Never start an unselected lane.
-7. Treat FIRST verification as mandatory across every lane, and treat each
-   follow-up workflow fork as a new structured decision. Resume selection
-   authorizes entering the selected workflow only; it grants no additional
-   mutation authority.
-8. Write `## Source Freshness` to `active.md`, then read the cache back and
-   verify its source, phase guard, owed verification, and recommended lane.
+1. Run Agent Bindery's `$resume-from-handoff` once. It resolves
+   `.agent-continuity.toml`, validates index freshness, and loads the configured
+   CCGS modules.
+2. Treat `production/session-handoff.md` as canonical and
+   `production/resume-index.md` plus `production/session-state/active.md` as
+   derived aids. Surface disagreement rather than normalizing it silently.
+3. Keep the default slice read bounded; only explicit `deep` mode expands the
+   slice-history read.
+4. Preserve owed verification and the CCGS phase/slice guard before ranking.
+5. Stop at lane selection. A focus argument changes ranking but does not select
+   work, and selecting a lane authorizes no later mutation.
+6. When the manifest-declared scratchpad is written, require the global skill's
+   readback before reporting it updated.
 
-Resolve conflicts in this order: handoff narrative and decisions; stage and
-sprint anchors; fresh current slice facts; fresh resume index; same-session
-`active.md`. Surface disagreement rather than normalizing it silently.
+The detailed freshness states, source-read order, and cache format belong to the
+global skill and may evolve independently of CCGS.
 
 ## Optional Asset-Generation Continuity
 

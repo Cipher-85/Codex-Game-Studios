@@ -12,7 +12,10 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.7.2`.
+- The package version is `v0.7.3`.
+- `v0.7.3` routes leadership to Astra/xhigh, department leads to Astra/high,
+  specialists to Sol/high, and the two support roles to Luna/max; model defaults,
+  role metadata, documentation, and synthetic role-activation fixtures agree.
 - `v0.7.2` removes the repo-local handoff pair. Agent Bindery supplies the
   global skills; CCGS installs `.agent-continuity.toml` and the project modules
   under `production/handoff/` that configure its paths and studio-specific

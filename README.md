@@ -5,7 +5,7 @@ workflow: 49 declared role profiles, 75 repo-local skills, Agent Bindery-backed
 continuity, and Godot-first production guidance for small teams building
 playable slices.
 
-Current package version: `0.7.2`.
+Current package version: `0.7.3`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -31,7 +31,14 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.7.2`. It includes:
+The current release line is `v0.7.3`. It includes:
+
+- Explicit role-tier routing: 3 leadership profiles on Astra/xhigh, 8 department
+  leads on Astra/high, 36 specialists on Sol/high, and 2 support roles on Luna/max.
+- Synchronized model defaults, profile metadata, tier documentation, and
+  synthetic role-activation test expectations.
+
+The `v0.7.2` release also includes:
 
 - Removed the repo-local `handoff` and `resume-from-handoff` copies so they no
   longer shadow Agent Bindery's newer global pair.

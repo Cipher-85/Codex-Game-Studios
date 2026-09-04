@@ -5,22 +5,30 @@ The following agents are available. Each has a dedicated definition file in
 spans multiple domains, the coordinating agent (usually `producer` or the
 domain lead) should delegate to specialists.
 
-Model labels below are upstream Claude tier labels retained for parity. The
-active Codex model and reasoning mapping is defined in `.codex/agents/*.toml`.
+Role tiers determine the active Codex model and reasoning effort. Defaults are
+recorded in `.codex/models.toml`; each `.codex/agents/*.toml` profile sets its
+model and effort explicitly. Upstream model labels below are historical metadata.
+
+| Role tier | Roles | Model | Reasoning effort |
+| --- | --- | --- | --- |
+| Tier 1 | 3 leadership agents | `gpt-6-astra` | `xhigh` |
+| Tier 2 | 8 department leads | `gpt-6-astra` | `high` |
+| Tier 3 | 36 specialists, including all engine agents | `gpt-5.6-sol` | `high` |
+| Tier 3 support | `community-manager`, `devops-engineer` | `gpt-5.6-luna` | `max` |
 
 Some upstream roles declared `disallowedTools: Bash`. Codex custom-agent TOML
 does not support that field, so those roles carry an explicit instruction-level
 boundary instead: they must not run shell commands and should ask the parent
 session for command evidence.
 
-## Tier 1 -- Leadership Agents (Upstream Opus Tier)
+## Tier 1 -- Leadership Agents
 | Agent | Domain | When to Use |
 |-------|--------|-------------|
 | `creative-director` | High-level vision | Major creative decisions, pillar conflicts, tone/direction |
 | `technical-director` | Technical vision | Architecture decisions, tech stack choices, performance strategy |
 | `producer` | Production management | Sprint planning, milestone tracking, risk management, coordination |
 
-## Tier 2 -- Department Lead Agents (Upstream Sonnet Tier)
+## Tier 2 -- Department Lead Agents
 | Agent | Domain | When to Use |
 |-------|--------|-------------|
 | `game-designer` | Game design | Mechanics, systems, progression, economy, balancing |
@@ -32,7 +40,7 @@ session for command evidence.
 | `release-manager` | Release pipeline | Build management, versioning, changelogs, deployment, rollbacks |
 | `localization-lead` | Internationalization | String externalization, translation pipeline, locale testing |
 
-## Tier 3 -- Specialist Agents (Upstream Sonnet or Haiku Tier)
+## Tier 3 -- Specialist Agents
 | Agent | Domain | Upstream Tier | When to Use |
 |-------|--------|-------|-------------|
 | `systems-designer` | Systems design | Upstream Sonnet | Specific mechanic implementation, formula design, loops |
@@ -59,7 +67,7 @@ session for command evidence.
 | `live-ops-designer` | Live operations | Upstream Sonnet | Seasons, events, battle passes, retention, live economy |
 | `community-manager` | Community | Upstream Haiku | Patch notes, player feedback, crisis comms, community health |
 
-## Engine-Specific Agents (use the set matching your engine)
+## Tier 3 -- Engine-Specific Agents (use the set matching your engine)
 
 ### Engine Leads
 

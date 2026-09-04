@@ -1,11 +1,18 @@
-[tiers.opus]
-model = "gpt-5.5"
+# Role tiers follow .codex/docs/agent-roster.md, not upstream model labels.
+# Keep these defaults synchronized with .codex/agents/*.toml.
+[tiers.tier1]
+model = "gpt-6-astra"
+reasoning_effort = "xhigh"
+
+[tiers.tier2]
+model = "gpt-6-astra"
 reasoning_effort = "high"
 
-[tiers.sonnet]
-model = "gpt-5.4"
-reasoning_effort = "medium"
+[tiers.tier3]
+model = "gpt-5.6-sol"
+reasoning_effort = "high"
 
-[tiers.haiku]
-model = "gpt-5.4-mini"
-reasoning_effort = "low"
+# community-manager and devops-engineer retain the support-role mapping.
+[tiers.tier3_support]
+model = "gpt-5.6-luna"
+reasoning_effort = "max"

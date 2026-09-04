@@ -12,11 +12,11 @@
       ],
       "child_records": [
         {"type": "session_meta", "payload": {"id": "child-v1", "parent_thread_id": "parent-v1", "cli_version": "0.144.1", "source": {"subagent": {"thread_spawn": {"agent_role": "producer"}}}}},
-        {"type": "turn_context", "payload": {"model": "gpt-5.5", "effort": "high", "multi_agent_version": "v1"}},
+        {"type": "turn_context", "payload": {"model": "gpt-6-astra", "effort": "xhigh", "multi_agent_version": "v1"}},
         {"type": "response_item", "payload": {"type": "message", "role": "developer", "content": [{"type": "input_text", "text": "You are the `producer` custom agent for the Codex-native Game Studios port."}]}}
       ],
       "hook_records": [
-        {"hook_event_name": "SubagentStart", "agent_id": "child-v1", "agent_type": "producer", "model": "gpt-5.5"}
+        {"hook_event_name": "SubagentStart", "agent_id": "child-v1", "agent_type": "producer", "model": "gpt-6-astra"}
       ]
     },
     {
@@ -31,11 +31,11 @@
       ],
       "child_records": [
         {"type": "session_meta", "payload": {"id": "child-v2", "parent_thread_id": "parent-v2", "cli_version": "0.144.0-alpha.4", "source": {"subagent": {"thread_spawn": {"agent_role": "producer"}}}}},
-        {"type": "turn_context", "payload": {"model": "gpt-5.5", "effort": "high", "multi_agent_version": "v2"}},
+        {"type": "turn_context", "payload": {"model": "gpt-6-astra", "effort": "xhigh", "multi_agent_version": "v2"}},
         {"type": "response_item", "payload": {"type": "message", "role": "developer", "content": [{"type": "input_text", "text": "You are the `producer` custom agent for the Codex-native Game Studios port."}]}}
       ],
       "hook_records": [
-        {"hook_event_name": "SubagentStart", "agent_id": "child-v2", "agent_type": "producer", "model": "gpt-5.5"}
+        {"hook_event_name": "SubagentStart", "agent_id": "child-v2", "agent_type": "producer", "model": "gpt-6-astra"}
       ]
     },
     {
@@ -76,11 +76,11 @@
       ],
       "child_records": [
         {"type": "session_meta", "payload": {"id": "child-claim", "parent_thread_id": "parent-claim", "cli_version": "0.144.1", "source": {"subagent": {"thread_spawn": {"agent_role": "producer"}}}}},
-        {"type": "turn_context", "payload": {"model": "gpt-5.5", "effort": "high", "multi_agent_version": "v2"}},
+        {"type": "turn_context", "payload": {"model": "gpt-6-astra", "effort": "xhigh", "multi_agent_version": "v2"}},
         {"type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": "I am the producer."}]}}
       ],
       "hook_records": [
-        {"hook_event_name": "SubagentStart", "agent_id": "child-claim", "agent_type": "producer", "model": "gpt-5.5"}
+        {"hook_event_name": "SubagentStart", "agent_id": "child-claim", "agent_type": "producer", "model": "gpt-6-astra"}
       ]
     },
     {
@@ -96,11 +96,11 @@
       ],
       "child_records": [
         {"type": "session_meta", "payload": {"id": "child-full", "parent_thread_id": "parent-full", "cli_version": "0.144.1", "source": {"subagent": {"thread_spawn": {"agent_role": "producer"}}}}},
-        {"type": "turn_context", "payload": {"model": "gpt-5.5", "effort": "high", "multi_agent_version": "v2"}},
+        {"type": "turn_context", "payload": {"model": "gpt-6-astra", "effort": "xhigh", "multi_agent_version": "v2"}},
         {"type": "response_item", "payload": {"type": "message", "role": "developer", "content": [{"type": "input_text", "text": "You are the `producer` custom agent for the Codex-native Game Studios port."}]}}
       ],
       "hook_records": [
-        {"hook_event_name": "SubagentStart", "agent_id": "child-full", "agent_type": "producer", "model": "gpt-5.5"}
+        {"hook_event_name": "SubagentStart", "agent_id": "child-full", "agent_type": "producer", "model": "gpt-6-astra"}
       ]
     },
     {
@@ -120,7 +120,7 @@
       ],
       "child_records": [
         {"type": "session_meta", "payload": {"id": "child-mismatch", "parent_thread_id": "parent-mismatch", "cli_version": "0.144.1", "source": {"subagent": {"thread_spawn": {"agent_role": "producer"}}}}},
-        {"type": "turn_context", "payload": {"model": "gpt-5.6-sol", "effort": "xhigh", "multi_agent_version": "v2"}},
+        {"type": "turn_context", "payload": {"model": "gpt-5.6-sol", "effort": "high", "multi_agent_version": "v2"}},
         {"type": "response_item", "payload": {"type": "message", "role": "developer", "content": [{"type": "input_text", "text": "You are the `producer` custom agent for the Codex-native Game Studios port."}]}}
       ],
       "hook_records": [

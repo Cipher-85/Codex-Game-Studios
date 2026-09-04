@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.7.3 - 2026-09-05
+
+- Updated role routing: leadership uses `gpt-6-astra` with `xhigh` effort;
+  department leads use `gpt-6-astra` with `high` effort; specialists use
+  `gpt-5.6-sol` with `high` effort; `community-manager` and `devops-engineer`
+  use `gpt-5.6-luna` with `max` effort.
+- Replaced upstream model-label defaults with explicit role-tier mappings and
+  synchronized all 49 profiles, their metadata, and the tier documentation.
+- Updated synthetic role-activation fixtures for the new leadership model and
+  effort while retaining model/effort mismatch coverage.
+
 ## v0.7.2 - 2026-09-04
 
 - Removed the repo-local `$handoff` and `$resume-from-handoff` skill copies so

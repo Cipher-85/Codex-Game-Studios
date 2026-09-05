@@ -5,8 +5,8 @@
 
 ## Engine & Language
 
-- **Engine**: Godot 4.6
-- **Language**: GDScript
+- **Engine**: [TO BE CONFIGURED]
+- **Language**: [TO BE CONFIGURED]
 - **Rendering**: [TO BE CONFIGURED]
 - **Physics**: [TO BE CONFIGURED]
 
@@ -64,12 +64,12 @@
 <!-- Read by $code-review, $architecture-decision, $architecture-review, and team skills -->
 <!-- to know which specialist to spawn for engine-specific validation. -->
 
-- **Primary**: `godot-specialist`
-- **Language/Code Specialist**: `godot-gdscript-specialist`
-- **Shader Specialist**: `godot-shader-specialist`
-- **UI Specialist**: route Godot UI work through `godot-specialist` plus `ux-designer` or `ui-programmer` as needed.
-- **Additional Specialists**: `godot-csharp-specialist`, `godot-gdextension-specialist` only when those languages or extension layers are explicitly introduced.
-- **Routing Notes**: Stillcurrent is currently Godot 4.6/GDScript. Check `docs/engine-reference/godot/` before relying on engine API signatures.
+- **Primary**: [TO BE CONFIGURED]
+- **Language/Code Specialist**: [TO BE CONFIGURED]
+- **Shader Specialist**: [TO BE CONFIGURED]
+- **UI Specialist**: [TO BE CONFIGURED]
+- **Additional Specialists**: [TO BE CONFIGURED]
+- **Routing Notes**: Run `$setup-engine` to select the engine, language, and matching specialists. Read the selected engine's reference before relying on API signatures.
 
 ### File Extension Routing
 
@@ -78,9 +78,9 @@
 
 | File Extension / Type | Specialist to Spawn |
 |-----------------------|---------------------|
-| Game code (primary language) | `godot-gdscript-specialist` |
-| Shader / material files | `godot-shader-specialist` |
-| UI / screen files | `godot-specialist`, `ux-designer`, `ui-programmer` |
-| Scene / prefab / level files | `godot-specialist` |
-| Native extension / plugin files | `godot-gdextension-specialist` |
-| General architecture review | `godot-specialist` |
+| Game code (primary language) | [TO BE CONFIGURED] |
+| Shader / material files | [TO BE CONFIGURED] |
+| UI / screen files | [TO BE CONFIGURED] |
+| Scene / prefab / level files | [TO BE CONFIGURED] |
+| Native extension / plugin files | [TO BE CONFIGURED] |
+| General architecture review | [TO BE CONFIGURED] |

@@ -12,7 +12,10 @@ Current package version:
   explicit publish operations.
 
 Current status:
-- The package version is `v0.7.3`.
+- The package version is `v0.7.4`.
+- `v0.7.4` backs up instruction files before uninstall, separates downstream
+  runtime CI from maintainer release checks, safely retires unchanged installed
+  release workflows, and resets project preferences to unconfigured values.
 - `v0.7.3` routes leadership to Astra/xhigh, department leads to Astra/high,
   specialists to Sol/high, and the two support roles to Luna/max; model defaults,
   role metadata, documentation, and synthetic role-activation fixtures agree.
@@ -77,6 +80,14 @@ Install and release notes:
   package ownership.
 - Uninstall requires valid install state and never infers ownership from file
   contents when state is missing or stale.
+- Before removing managed or migrated instruction blocks, uninstall backs up
+  the complete file to a unique directory under `.codex/backups/` and reports
+  the path. Backup failure leaves that file and install state in place and
+  returns failure; dry-run only previews the backup.
+- Installed game projects run `.github/workflows/ccgs-runtime-check.yml`.
+  The maintainer `release-check.yml` is excluded from installation; upgrades
+  remove a formerly owned copy only when it is unchanged. Edited owned copies
+  block upgrade before mutation, while unowned workflows remain untouched.
 - Installer success is static package verification, not proof that project
   trust, hooks, rules, or config are active in the current Codex session.
 - Standalone custom-agent files are validated as supported Codex profiles, but
@@ -90,7 +101,8 @@ Install and release notes:
   must be recorded separately or supplied with `--evidence`; task-path-only or
   default-role evidence fails closed.
 - `audit.sh release` validates `.codex/VERSION`, `CHANGELOG.md`, release tags,
-  and changed installable files without mutating the checkout.
+  and changed installable files without mutating the checkout. This is a
+  distribution-maintainer check; installed game projects use `audit.sh all`.
 - Package publishing is `bump -> edit changelog/docs -> check -> commit/push ->
   publish`. The `bump` command never publishes, and GitHub Actions remain
   validation-only.

@@ -57,7 +57,7 @@
   {
     "mode": "file",
     "owner": "codex-game-studios",
-    "path": ".github/workflows/release-check.yml"
+    "path": ".github/workflows/ccgs-runtime-check.yml"
   },
   {
     "mode": "file",

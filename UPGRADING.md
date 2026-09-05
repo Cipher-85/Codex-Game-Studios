@@ -5,7 +5,7 @@ project or updating this distribution repository.
 
 ## Before You Upgrade
 
-1. Review `CHANGELOG.md` for behavior changes.
+1. Review the distribution's `CHANGELOG.md` for behavior changes.
 2. Commit or stash user-owned game project work.
 3. Confirm whether the target project also has legacy Claude Game Studios files.
    Codex Game Studios must not edit `.claude/**` or legacy Claude instruction
@@ -69,6 +69,31 @@ upgrade then installs
 `.agent-continuity.toml` and `production/handoff/*.md`; it does not install or
 modify Agent Bindery's global skills.
 
+### Upgrading to v0.7.4
+
+Game projects now receive `.github/workflows/ccgs-runtime-check.yml`, which
+runs the runtime audit without requiring CCGS release tags or a package
+changelog. The distribution's `.github/workflows/release-check.yml` is no
+longer installed.
+
+An old release workflow is retired only when valid install state proves
+ownership and the file matches its recorded hash. If an owned copy was edited,
+upgrade stops before mutation, even with `--replace-modified`. Review and move
+project-specific jobs into a project-owned workflow, then remove or restore
+the retired package file before retrying. An unowned workflow is preserved.
+Dry-run reports removal of an unchanged owned workflow. Rollback restores it
+if a later installation step fails.
+
+Uninstall now backs up complete instruction files before removing managed or
+migrated blocks. It prints the unique `.codex/backups/<timestamp>.<suffix>/`
+location. A failed backup prevents removal of that instruction file, retains
+install state, and returns failure. Dry-run previews the backup without writing.
+
+Fresh installs start with unconfigured engine, language, and specialist
+preferences. Existing customized settings still follow the ordinary modified
+package-file conflict rules above; this patch does not migrate them to project
+ownership.
+
 ## Upgrade This Distribution
 
 Package versioning is manual and lives in `.codex/VERSION`.
@@ -95,9 +120,12 @@ Run from the upgraded project:
 
 ```bash
 python3 .codex/lib/validate_manifest.py --root "$PWD"
-./.codex/audit.sh release --root "$PWD"
 ./.codex/audit.sh all --root "$PWD"
 ```
+
+When updating the distribution itself, also run
+`./.codex/audit.sh release --root "$PWD"` and
+`./.codex/audit.sh coexistence --root "$PWD" --integration`.
 
 If verification is blocked, keep the exact failing command and output with the
 upgrade notes.

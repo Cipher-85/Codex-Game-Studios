@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -35,6 +36,143 @@ def command_failure(result: subprocess.CompletedProcess[str]) -> str:
     return (result.stderr.strip() or result.stdout.strip() or f"exit {result.returncode}")[-1200:]
 
 
+def write_owned_fixture_state(target: Path, paths: list[str], marker_hashes: dict[str, str] | None = None) -> Path:
+    state_path = target / ".codex" / "manifest" / "install-state.json"
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps({
+            "schema_version": 2,
+            "detected_mode": "codex_only",
+            "installed_file_hashes": {
+                rel: hashlib.sha256((target / rel).read_bytes()).hexdigest() for rel in paths
+            },
+            "marker_block_hashes": marker_hashes or {},
+            "package_owned_paths": paths,
+            "shared_paths_created_by_codex": [],
+            "shared_paths_preserved_preexisting": [],
+        }) + "\n",
+        encoding="utf-8",
+    )
+    return state_path
+
+
+def validate_instruction_backups(root: Path, errors: list[str]) -> None:
+    original = (root / "AGENTS.md").read_text(encoding="utf-8")
+    marker_start = "<!-- BEGIN CCGS CODEX PORT -->"
+    marker_end = "<!-- END CCGS CODEX PORT -->"
+    marker = original[original.index(marker_start):original.index(marker_end) + len(marker_end)]
+    marker_hashes = {"AGENTS.md": hashlib.sha256(marker.encode("utf-8")).hexdigest()}
+    for scenario in ("success", "mkdir-failure", "copy-failure"):
+        with tempfile.TemporaryDirectory(prefix=f"ccgs-instruction-backup-{scenario}-") as temp:
+            target = Path(temp)
+            agents = target / "AGENTS.md"
+            agents.write_text(original, encoding="utf-8")
+            state_path = write_owned_fixture_state(target, ["AGENTS.md"], marker_hashes)
+            edited = (
+                "Project-owned introduction\n\n"
+                + original.replace("## Technology Stack", "## Technology Stack\n\nCustom engine setting")
+                + "\n<!-- BEGIN CCGS MIGRATED LEGACY INSTRUCTIONS -->\n"
+                + "Locally edited migrated instructions\n"
+                + "<!-- END CCGS MIGRATED LEGACY INSTRUCTIONS -->\n"
+                + "\nProject-owned ending\n"
+            )
+            agents.write_text(edited, encoding="utf-8")
+            dry_run = run_command([str(root / ".codex/uninstall.sh"), "--dry-run", str(target)], root)
+            if dry_run.returncode != 0 or "would backup complete instruction file AGENTS.md" not in dry_run.stdout:
+                errors.append(f"instruction backup dry-run missing or failed: {command_failure(dry_run)}")
+            if agents.read_text(encoding="utf-8") != edited or (target / ".codex/backups").exists():
+                errors.append("instruction backup dry-run mutated the target")
+
+            command = [str(root / ".codex/uninstall.sh"), str(target)]
+            if scenario == "mkdir-failure":
+                (target / ".codex/backups").write_text("backup directory obstruction\n", encoding="utf-8")
+            elif scenario == "copy-failure":
+                command = [
+                    "bash", "-c", 'cp() { return 98; }; export -f cp; exec bash "$1" "$2"',
+                    "ccgs-copy-failure", *command,
+                ]
+            result = run_command(command, root)
+            if scenario != "success":
+                if result.returncode == 0 or not agents.exists() or agents.read_text(encoding="utf-8") != edited:
+                    errors.append(f"{scenario}: failed instruction backup did not prevent removal")
+                if not state_path.exists():
+                    errors.append(f"{scenario}: uninstall discarded ownership state after backup failure")
+                continue
+            if result.returncode != 0:
+                errors.append(f"instruction backup uninstall failed: {command_failure(result)}")
+                continue
+            backups = list((target / ".codex/backups").glob("*/AGENTS.md"))
+            if len(backups) != 1 or backups[0].read_text(encoding="utf-8") != edited:
+                errors.append("instruction uninstall did not preserve the complete edited file in a backup")
+            if agents.read_text(encoding="utf-8") != "Project-owned introduction\n\n# Codex Game Studios Instructions\n\nProject-owned ending\n":
+                errors.append("instruction uninstall did not preserve text outside the generated blocks")
+
+    with tempfile.TemporaryDirectory(prefix="ccgs-backup-collision-") as temp:
+        target = Path(temp)
+        (target / "AGENTS.md").write_text("first backup\n", encoding="utf-8")
+        env = dict(os.environ, CCGS_SOURCE_ROOT=str(root), CCGS_INSTALL_ROOT=str(target))
+        result = run_command([
+            "bash", "-c",
+            'source "$CCGS_SOURCE_ROOT/.codex/lib/install.sh"\n'
+            'date() { printf "20260905T000000Z\\n"; }\n'
+            'ccgs_backup_file AGENTS.md || exit 1\n'
+            'printf "second backup\\n" > "$CCGS_INSTALL_ROOT/AGENTS.md"\n'
+            'ccgs_backup_file AGENTS.md',
+        ], root, env)
+        contents = sorted(p.read_text(encoding="utf-8") for p in (target / ".codex/backups").glob("*/AGENTS.md"))
+        if result.returncode != 0 or contents != ["first backup\n", "second backup\n"]:
+            errors.append("backups created in the same second overwrote prior content")
+
+
+def validate_retired_workflow(root: Path, errors: list[str]) -> None:
+    rel = ".github/workflows/release-check.yml"
+    for scenario in ("unchanged", "modified", "unowned", "rollback"):
+        with tempfile.TemporaryDirectory(prefix=f"ccgs-retired-workflow-{scenario}-") as temp:
+            target = Path(temp)
+            workflow = target / rel
+            workflow.parent.mkdir(parents=True)
+            workflow.write_text("name: Former package release check\n", encoding="utf-8")
+            if scenario != "unowned":
+                write_owned_fixture_state(target, [rel])
+            if scenario == "modified":
+                workflow.write_text("name: Locally edited release check\n", encoding="utf-8")
+            before = {str(p.relative_to(target)): p.read_bytes() for p in target.rglob("*") if p.is_file()}
+            command = [str(root / ".codex/install.sh"), str(target)]
+            dry_run = run_command([*command, "--dry-run"], root)
+            after_dry_run = {str(p.relative_to(target)): p.read_bytes() for p in target.rglob("*") if p.is_file()}
+            if after_dry_run != before:
+                errors.append(f"{scenario}: retired workflow dry-run changed target files")
+            if scenario == "modified":
+                if dry_run.returncode == 0 or "modified package-owned release workflow" not in dry_run.stderr:
+                    errors.append("dry-run did not reject a modified owned release workflow")
+                command.append("--replace-modified")
+            elif dry_run.returncode != 0:
+                errors.append(f"{scenario}: retired workflow dry-run failed: {command_failure(dry_run)}")
+            elif scenario in {"unchanged", "rollback"} and f"would remove state-owned obsolete {rel}" not in dry_run.stdout:
+                errors.append("dry-run did not report retirement of the owned release workflow")
+            env = os.environ.copy()
+            if scenario == "rollback":
+                env["CCGS_TEST_FAILPOINT"] = "after-verify"
+            result = run_command(command, root, env)
+            if scenario in {"modified", "rollback"}:
+                after = {str(p.relative_to(target)): p.read_bytes() for p in target.rglob("*") if p.is_file()}
+                if result.returncode == 0 or after != before:
+                    errors.append(f"{scenario}: failed workflow migration did not preserve target files")
+                continue
+            if result.returncode != 0:
+                errors.append(f"{scenario}: workflow migration failed: {command_failure(result)}")
+                continue
+            if scenario == "unchanged" and workflow.exists():
+                errors.append("upgrade retained the unchanged owned release workflow")
+            if scenario == "unowned" and (not workflow.exists() or workflow.read_bytes() != before[rel]):
+                errors.append("upgrade modified an unowned release workflow")
+            state = json.loads((target / ".codex/manifest/install-state.json").read_text(encoding="utf-8"))
+            if rel in state["package_owned_paths"] or rel in state["installed_file_hashes"]:
+                errors.append("upgrade kept ownership of the retired release workflow")
+            if ".github/workflows/ccgs-runtime-check.yml" not in state["package_owned_paths"]:
+                errors.append("upgrade did not install the runtime-check workflow")
+
+
 def validate_installer_integration(root: Path, errors: list[str]) -> None:
     install = root / ".codex" / "install.sh"
     uninstall = root / ".codex" / "uninstall.sh"
@@ -55,6 +193,37 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
             errors.append("clean install state does not own all manifest paths")
         if len(state.get("package_owned_paths", [])) != EXPECTED_INSTALLED_FILE_COUNT:
             errors.append("clean install state does not explicitly own all manifest paths")
+
+        workflow = target / ".github/workflows/ccgs-runtime-check.yml"
+        if (target / ".github/workflows/release-check.yml").exists() or not workflow.exists():
+            errors.append("clean install did not separate runtime and maintainer release workflows")
+        else:
+            commands = re.findall(r"^\s+run: (.+)$", workflow.read_text(encoding="utf-8"), re.MULTILINE)
+            if not commands:
+                errors.append("installed runtime workflow has no executable check")
+            with tempfile.TemporaryDirectory(prefix="ccgs-empty-game-origin-") as remote:
+                for command in (
+                    ["git", "init", "-q", str(target)],
+                    ["git", "init", "--bare", "-q", remote],
+                    ["git", "-C", str(target), "remote", "add", "origin", remote],
+                ):
+                    result = run_command(command, root)
+                    if result.returncode != 0:
+                        errors.append(f"downstream runtime fixture setup failed: {command_failure(result)}")
+                for command in commands:
+                    result = run_command(["bash", "-c", command], target)
+                    if result.returncode != 0:
+                        errors.append(f"installed runtime CI failed without package releases: {command_failure(result)}")
+        env = dict(os.environ, CCGS_ROOT=str(target))
+        result = run_command([str(target / ".codex/hooks/detect-gaps.sh")], target, env)
+        if result.returncode != 0 or "Run: $start" not in result.stdout:
+            errors.append("fresh install did not recommend $start")
+        preferences = (target / ".codex/docs/technical-preferences.md").read_text(encoding="utf-8")
+        for field in ("Engine", "Language", "Primary", "Language/Code Specialist", "Shader Specialist", "UI Specialist", "Additional Specialists"):
+            if f"- **{field}**: [TO BE CONFIGURED]" not in preferences:
+                errors.append(f"fresh install inherited a configured {field}")
+        if "Stillcurrent" in preferences or "`godot-" in preferences:
+            errors.append("fresh install inherited project-specific routing")
 
         legacy_state = dict(state)
         legacy_state.pop("package_owned_paths", None)
@@ -425,6 +594,9 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
             if leftovers:
                 errors.append(f"installer failpoint {failpoint} left target mutations: {leftovers[:5]}")
 
+    validate_instruction_backups(root, errors)
+    validate_retired_workflow(root, errors)
+
 
 def emit(root: Path, errors: list[str], warnings: list[str]) -> int:
     status = "pass" if not errors else "fail"
@@ -553,6 +725,10 @@ def main() -> int:
                 errors.append(
                     f"installed-files expected {EXPECTED_INSTALLED_FILE_COUNT} rows, found {len(rows)}"
                 )
+            if ".github/workflows/release-check.yml" in seen:
+                errors.append("installed-files must not deploy the maintainer release workflow")
+            if ".github/workflows/ccgs-runtime-check.yml" not in seen:
+                errors.append("installed-files must deploy the runtime-check workflow")
             test_files = {
                 str(path.relative_to(root))
                 for path in (root / ".codex" / "tests").rglob("*")

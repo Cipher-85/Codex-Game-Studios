@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.7.4 - 2026-09-05
+
+- Back up complete instruction files before uninstall removes managed or
+  migrated blocks. A failed backup prevents removal of that instruction file;
+  backups made in the same second use distinct directories.
+- Install a runtime-only CI workflow into game projects. Keep package release
+  validation and the installer integration matrix in the distribution, and
+  make deterministic CI failures fail their workflow runs.
+- Retire an old installed release workflow only when valid ownership state
+  proves it is unchanged. Modified owned copies stop the upgrade before
+  mutation; unowned workflows are preserved.
+- Reset technical preferences and specialist routing to unconfigured template
+  values so fresh projects receive the `$start` recommendation.
+- Add installer regressions for instruction backups and failures, workflow
+  migration and rollback, downstream CI without package releases, and fresh
+  onboarding.
+
 ## v0.7.3 - 2026-09-05
 
 - Updated role routing: leadership uses `gpt-6-astra` with `xhigh` effort;

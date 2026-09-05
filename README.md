@@ -5,7 +5,7 @@ workflow: 49 declared role profiles, 75 repo-local skills, Agent Bindery-backed
 continuity, and Godot-first production guidance for small teams building
 playable slices.
 
-Current package version: `0.7.3`.
+Current package version: `0.7.4`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
@@ -31,7 +31,15 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.7.3`. It includes:
+The current release line is `v0.7.4`. It includes:
+
+- Complete instruction-file backups before uninstall removes managed or
+  migrated blocks, with backup failures preventing removal of that file.
+- A downstream runtime CI workflow independent of CCGS release tags and
+  changelogs, with safe retirement of unchanged package-owned release workflows.
+- Unconfigured engine, language, and specialist preferences for new projects.
+
+The `v0.7.3` release also includes:
 
 - Explicit role-tier routing: 3 leadership profiles on Astra/xhigh, 8 department
   leads on Astra/high, 36 specialists on Sol/high, and 2 support roles on Luna/max.
@@ -256,6 +264,12 @@ Uninstall requires valid `.codex/manifest/install-state.json` ownership data.
 Missing, stale, malformed, path-traversing, or symlinked state fails closed
 without removing project files.
 
+Before removing managed or migrated instruction blocks, uninstall saves the
+complete instruction file under a unique `.codex/backups/<timestamp>.<suffix>/`
+directory and prints its location. This preserves local settings for recovery.
+If that backup fails, the instruction file and install state are retained and
+uninstall reports failure. `--dry-run` previews backups without creating them.
+
 The installer appends a marked Codex Game Studios block to existing `AGENTS.md`
 files instead of replacing project instructions. It preserves `CLAUDE.md`,
 `claude.md`, and `.claude/**` when they exist, and it records installed package
@@ -314,6 +328,13 @@ while a target with valid schema-v2 install state receives an incremental patch
 based on recorded package file hashes. Invalid, unsafe, or stale state aborts
 before mutation instead of being treated as ownership evidence.
 
+Game projects receive `.github/workflows/ccgs-runtime-check.yml`, which runs
+`audit.sh all` without package release metadata. The distribution's
+`release-check.yml` is not installed. On upgrade, a former package-owned copy
+is removed only if its recorded hash still matches; an edited owned copy blocks
+the upgrade before mutation, including with `--replace-modified`. Unowned
+workflows are preserved. See [UPGRADING.md](UPGRADING.md) for migration details.
+
 Installer success proves package deployment and static verification only. Trust
 the target project and start a new Codex session before treating its hooks,
 rules, permission profile, or agents as active.
@@ -348,10 +369,11 @@ branch metadata, and it targets the repository configured as `origin`
 explicitly. Release validation verifies that release metadata, changelog
 entries, Codex package tags, and changed installable files are consistent, but
 it does not create commits, create tags, edit files, publish, or choose release
-numbers. GitHub Actions keep release validation as the required
-release-specific check. Integrity, headless smoke, and temporary-target
-installer regression jobs begin as advisory checks; publishing is always an
-explicit maintainer command.
+numbers. In this distribution, GitHub Actions run release validation and the
+temporary-target installer matrix in `release-check.yml`. Runtime integrity and
+headless smoke run through `ccgs-runtime-check.yml`. These jobs fail their
+workflow runs when validation fails; publishing remains an explicit maintainer
+command. Installed game projects receive only the runtime workflow.
 
 ## Validate This Package
 

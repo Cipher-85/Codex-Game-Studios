@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -11,24 +14,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
       - name: Validate release versioning
         run: ./.codex/audit.sh release --root "$PWD"
 
-  integrity-advisory:
+  installer-integration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run static package audit
-        continue-on-error: true
-        run: ./.codex/audit.sh all --root "$PWD"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
       - name: Run temporary-target installer matrix
-        continue-on-error: true
         run: ./.codex/audit.sh coexistence --root "$PWD" --integration
-
-  headless-smoke-advisory:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run headless workflow smoke
-        continue-on-error: true
-        run: ./.codex/audit.sh smoke-headless --root "$PWD"

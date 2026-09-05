@@ -13,10 +13,14 @@ Core commands:
 ```bash
 ./.codex/audit.sh all --root "$PWD"
 ./.codex/audit.sh smoke-headless --root "$PWD"
-./.codex/audit.sh release --root "$PWD"
 ./.codex/install.sh /path/to/game-project
 ./.codex/uninstall.sh /path/to/game-project
 ```
+
+Distribution maintainers also run `./.codex/audit.sh release --root "$PWD"`.
+That check requires CCGS package release metadata and does not belong in game
+project CI. Installed projects receive `ccgs-runtime-check.yml`, which runs
+`audit.sh all`; `release-check.yml` stays in the distribution.
 
 Use `./.codex/install.sh "$PWD"` inside an installed project as an idempotent
 presence check. Add `--dry-run` to install or uninstall commands to preview
@@ -41,6 +45,15 @@ appended after it; uninstall removes that generated file when no user-owned
 content remains. The original legacy guardrail files and hidden Claude runtime
 directory are preserved even when their text is migrated into `AGENTS.md`.
 
+Uninstall backs up the complete instruction file before removing either
+generated block and prints the backup path. Backup failure prevents removal of
+that instruction file and retains ownership state. Dry-run reports the backup
+without creating it.
+
+An upgrade removes a previously installed `release-check.yml` only when valid
+state proves the file is package-owned and unchanged. An edited owned copy
+blocks upgrade before mutation; unowned workflows are preserved.
+
 Notifications: the upstream notification hook is not installed as a Codex project hook. Users can configure native Codex notifications in user-level settings with `notify`, `[tui].notifications`, `[tui].notification_method`, and `[tui].notification_condition`.
 
 Optional plugin packaging is future work. This repo uses loose project-local Codex files as the base distribution.
@@ -59,7 +72,7 @@ Latest runtime notes:
   Claude tags such as plain `v0.2.0` and `v0.3.0` do not force this port's
   package version.
 - Release publishing is manual through `./.codex/release.sh publish`; GitHub
-  Actions validate release metadata only and do not publish.
+  Actions run runtime, release, and installer checks without publishing.
 - `apply_patch` hooks use the shared parser in `.codex/lib/hooks.sh`, which
   accepts current JSON-argument payloads and legacy raw patch payloads.
 - Root `AGENTS.md` is aligned with the upstream workflow contract while keeping

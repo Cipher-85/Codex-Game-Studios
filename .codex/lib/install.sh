@@ -36,9 +36,16 @@ ccgs_backup_file() {
   [ -f "$target_file" ] || return 0
   local stamp
   stamp="$(date -u +%Y%m%dT%H%M%SZ)"
-  local backup_dir="$ccgs_install_root/.codex/backups/$stamp"
-  mkdir -p "$backup_dir/$(dirname "$path")"
-  cp "$target_file" "$backup_dir/$path"
+  if ccgs_target_path_has_symlink ".codex/backups"; then
+    printf 'backup: refusing symlinked backup directory\n' >&2
+    return 1
+  fi
+  local backup_dir
+  mkdir -p "$ccgs_install_root/.codex/backups" || return 1
+  backup_dir="$(mktemp -d "$ccgs_install_root/.codex/backups/$stamp.XXXXXX")" || return 1
+  mkdir -p "$backup_dir/$(dirname "$path")" || return 1
+  cp -p "$target_file" "$backup_dir/$path" || return 1
+  printf 'Backed up %s to %s\n' "$path" "$backup_dir/$path"
 }
 
 ccgs_backup_if_modified_before_remove() {
@@ -123,6 +130,7 @@ src/networking/AGENTS.md
 src/ui/AGENTS.md
 tests/AGENTS.md
 tools/AGENTS.md
+.github/workflows/release-check.yml
 .agents/skills/handoff/SKILL.md
 .agents/skills/resume-from-handoff/SKILL.md
 .codex/tests/fixtures/invalid-handoff-contract/.agents/skills/handoff/SKILL.md
@@ -641,6 +649,9 @@ ccgs_install_preflight() {
   while IFS= read -r install_path; do
     if ccgs_target_path_has_symlink "$install_path"; then
       printf 'install conflict: refusing symlinked obsolete target path or parent: %s\n' "$install_path" >&2
+      failed=1
+    elif [ "$install_path" = ".github/workflows/release-check.yml" ] && [ -e "$ccgs_install_root/$install_path" ] && ! ccgs_target_matches_state "$install_path"; then
+      printf 'install conflict: modified package-owned release workflow %s; preserve your changes and retire its CCGS release job before retrying\n' "$install_path" >&2
       failed=1
     fi
   done < <(ccgs_state_obsolete_paths)
@@ -1253,6 +1264,12 @@ ccgs_uninstall_file() {
 
   if [ "$ccgs_dry_run" = "1" ]; then
     if ccgs_state_owns_path "$path"; then
+      case "$path" in
+        .codex/tests/*) ;;
+        AGENTS.md|*/AGENTS.md)
+          printf 'would backup complete instruction file %s before removal\n' "$path"
+          ;;
+      esac
       printf 'would remove package-owned %s\n' "$path"
     else
       printf 'would preserve unproven path %s\n' "$path"
@@ -1270,6 +1287,7 @@ ccgs_uninstall_file() {
       fi
       ;;
     AGENTS.md|*/AGENTS.md)
+      ccgs_backup_file "$path" || return 1
       local source_file="$ccgs_source_root/$path"
       if ccgs_state_owns_path "$path" && [ "$ccgs_source_root" != "$ccgs_install_root" ] && [ -f "$source_file" ] && cmp -s "$source_file" "$target_file"; then
         rm -f "$target_file"

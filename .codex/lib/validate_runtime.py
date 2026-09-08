@@ -896,8 +896,6 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
             errors.append(f"{rel}: stale Claude subagent_type delegation vocabulary remains")
         if skill_file.parent.name in {"prototype", "vertical-slice"} and "worktree" not in text.lower():
             errors.append(f"{rel}: missing explicit worktree guidance")
-        if skill_file.parent.name in {"architecture-review", "gate-check", "review-all-gdds"} and "high-reasoning" not in text:
-            errors.append(f"{rel}: missing high-reasoning guidance")
         if folder in REQUIRED_CLOSEOUT_ROUTING_SKILLS and any(marker in text for marker in CLOSEOUT_MARKERS):
             missing_closeout = [phrase for phrase in CLOSEOUT_REQUIRED_PHRASES if phrase not in text]
             if missing_closeout:
@@ -980,7 +978,6 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
         errors.append(f".codex/agents: expected 49 TOML files, found {len(agent_files)}")
 
     agent_names: set[str] = set()
-    model_counts: dict[tuple[str, str], int] = {}
     memory_bound_agents: set[str] = set()
     for agent_file in agent_files:
         rel = agent_file.relative_to(root)
@@ -1000,10 +997,8 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
         for field in ("description", "developer_instructions"):
             if not data.get(field):
                 errors.append(f"{rel}: missing {field}")
-        if "model_reasoning_effort" not in data:
-            errors.append(f"{rel}: missing model_reasoning_effort")
-        model_key = (str(data.get("model", "")), str(data.get("model_reasoning_effort", "")))
-        model_counts[model_key] = model_counts.get(model_key, 0) + 1
+        if not isinstance(data.get("model"), str) or not data["model"].strip():
+            errors.append(f"{rel}: missing model")
         instructions = str(data.get("developer_instructions", ""))
         errors.extend(validate_active_state_checkpoint_text(rel, instructions))
         if "Ported Claude memory scope:" in instructions:

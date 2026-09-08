@@ -93,10 +93,9 @@ def validate_role_activation_records(
         errors.append(f"could not read authoritative role profile {role_path}: {exc}")
         return errors
     expected_model = role_config.get("model")
-    expected_effort = role_config.get("model_reasoning_effort")
     instructions = role_config.get("developer_instructions")
-    if not all(isinstance(value, str) and value.strip() for value in (expected_model, expected_effort, instructions)):
-        errors.append(f"authoritative role profile {role_path} is missing model, effort, or instructions")
+    if not all(isinstance(value, str) and value.strip() for value in (expected_model, instructions)):
+        errors.append(f"authoritative role profile {role_path} is missing model or instructions")
         return errors
     instruction_canary = next((line.strip() for line in instructions.splitlines() if line.strip()), "")
 
@@ -174,8 +173,6 @@ def validate_role_activation_records(
         child_context = {}
     if child_context.get("model") != expected_model:
         errors.append("child model does not match the authoritative role profile")
-    if child_context.get("effort") != expected_effort:
-        errors.append("child reasoning effort does not match the authoritative role profile")
 
     matching_hooks = [
         row
@@ -295,7 +292,7 @@ def validate_role_delegation_contract(root: Path) -> list[str]:
         root / ".codex" / "docs" / "director-gates.md": (
             'fork_turns: "none"',
             "task name, agent path, nickname",
-            "configured model and reasoning effort",
+            "configured model was applied",
             "mark the gate blocked",
         ),
     }

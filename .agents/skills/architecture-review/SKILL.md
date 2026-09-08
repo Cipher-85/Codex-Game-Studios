@@ -688,8 +688,9 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Write, Codex subagent delegation, numbered choice prompt`
 - `agent: technical-director`
-- `model: opus`
 
 ## Codex Model Guidance
 
-This is an upstream high-reasoning workflow. Prefer a high-reasoning model or delegate review work to high-tier role agents such as `creative-director`, `producer`, or `technical-director` when available.
+Suggested model: `gpt-6-astra`. This is guidance only; Codex does not enforce a model from skill frontmatter.
+
+Delegate review work to role agents such as `creative-director`, `producer`, or `technical-director` when available.

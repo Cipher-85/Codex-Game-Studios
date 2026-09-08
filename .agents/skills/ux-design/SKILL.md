@@ -1019,5 +1019,8 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[screen/flow name] or 'hud' or 'patterns'"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Write, Edit, numbered choice prompt, Codex subagent delegation`
-- `model: sonnet`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.
 - `agent: ux-designer`

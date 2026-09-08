@@ -7,8 +7,7 @@ This file is gitignored and will not be committed.
 # Personal Preferences
 
 ## Model Preferences
-- Prefer high reasoning effort for complex design tasks
-- Prefer lower reasoning effort for quick lookups and simple edits
+- Leave reasoning effort to the runtime
 
 ## Workflow Preferences
 - Always run tests after code changes

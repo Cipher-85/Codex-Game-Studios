@@ -108,8 +108,9 @@ forks currently reject custom role, model, or reasoning overrides. Treat the
 requested task name, agent path, nickname, and child self-identification as
 labels rather than activation evidence. Accept the gate result only when
 authoritative metadata identifies the requested role, the matching role
-instructions loaded, and the configured model and reasoning effort were
-applied. Otherwise mark the gate blocked and do not simulate its verdict.
+instructions loaded, and the configured model was applied. Otherwise
+mark the gate blocked and do not simulate its verdict. The package does not
+select reasoning effort.
 
 ```
 # Apply mode check, then:

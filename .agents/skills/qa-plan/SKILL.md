@@ -281,5 +281,8 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[sprint | feature: system-name | story: path]"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Write, numbered choice prompt`
-- `model: sonnet`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.
 - `agent: qa-lead`

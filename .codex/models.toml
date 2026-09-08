@@ -1,18 +1,15 @@
 # Role tiers follow .codex/docs/agent-roster.md, not upstream model labels.
+# Reasoning effort is left to the runtime; this package does not select it.
 # Keep these defaults synchronized with .codex/agents/*.toml.
 [tiers.tier1]
 model = "gpt-6-astra"
-reasoning_effort = "xhigh"
 
 [tiers.tier2]
 model = "gpt-6-astra"
-reasoning_effort = "high"
 
 [tiers.tier3]
 model = "gpt-5.6-sol"
-reasoning_effort = "high"
 
 # community-manager and devops-engineer retain the support-role mapping.
 [tiers.tier3_support]
 model = "gpt-5.6-luna"
-reasoning_effort = "max"

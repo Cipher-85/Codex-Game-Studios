@@ -96,7 +96,8 @@ Install and release notes:
   V2 and may hide the custom-role selector; use the verified `gpt-5.5` V1
   fallback or a separately verified user-level V2 workaround. V2 custom roles
   require `fork_turns: "none"`, and results remain blocked unless role metadata,
-  instructions, model, and reasoning effort all match the selected profile.
+  instructions and model match the selected profile. The package does not
+  select reasoning effort.
 - `audit.sh smoke-interactive` reports `skipped`; trusted model-running evidence
   must be recorded separately or supplied with `--evidence`; task-path-only or
   default-role evidence fails closed.

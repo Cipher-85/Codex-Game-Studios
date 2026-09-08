@@ -5,16 +5,17 @@ The following agents are available. Each has a dedicated definition file in
 spans multiple domains, the coordinating agent (usually `producer` or the
 domain lead) should delegate to specialists.
 
-Role tiers determine the active Codex model and reasoning effort. Defaults are
+Role tiers determine the active Codex model. Defaults are
 recorded in `.codex/models.toml`; each `.codex/agents/*.toml` profile sets its
-model and effort explicitly. Upstream model labels below are historical metadata.
+model explicitly. Reasoning effort is left to the runtime. Upstream model
+labels below are historical metadata.
 
-| Role tier | Roles | Model | Reasoning effort |
-| --- | --- | --- | --- |
-| Tier 1 | 3 leadership agents | `gpt-6-astra` | `xhigh` |
-| Tier 2 | 8 department leads | `gpt-6-astra` | `high` |
-| Tier 3 | 36 specialists, including all engine agents | `gpt-5.6-sol` | `high` |
-| Tier 3 support | `community-manager`, `devops-engineer` | `gpt-5.6-luna` | `max` |
+| Role tier | Roles | Model |
+| --- | --- | --- |
+| Tier 1 | 3 leadership agents | `gpt-6-astra` |
+| Tier 2 | 8 department leads | `gpt-6-astra` |
+| Tier 3 | 36 specialists, including all engine agents | `gpt-5.6-sol` |
+| Tier 3 support | `community-manager`, `devops-engineer` | `gpt-5.6-luna` |
 
 Some upstream roles declared `disallowedTools: Bash`. Codex custom-agent TOML
 does not support that field, so those roles carry an explicit instruction-level

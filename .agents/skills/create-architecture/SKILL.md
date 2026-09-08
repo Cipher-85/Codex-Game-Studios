@@ -472,5 +472,8 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[focus-area: full | layers | data-flow | api-boundaries | adr-audit] [--review full|lean|solo]"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Write, Bash, numbered choice prompt, Codex subagent delegation`
-- `model: sonnet`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.
 - `agent: technical-director`

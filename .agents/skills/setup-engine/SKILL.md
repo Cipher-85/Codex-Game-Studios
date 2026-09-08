@@ -718,4 +718,7 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[engine] | [engine version] | refresh | upgrade [old-version] [new-version] | no args for guided selection"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Write, Edit, WebSearch, WebFetch, Codex subagent delegation, numbered choice prompt`
-- `model: sonnet`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.

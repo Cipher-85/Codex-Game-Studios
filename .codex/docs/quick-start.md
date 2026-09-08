@@ -16,23 +16,23 @@ Flow State, Bartle Player Types). Use whichever engine set matches your project.
 ### 1. Understand the Hierarchy
 
 There are three role tiers. Defaults are recorded in `.codex/models.toml`;
-the active Codex model and reasoning effort are set explicitly in each
-`.codex/agents/*.toml` profile.
+the active Codex model is set explicitly in each
+`.codex/agents/*.toml` profile. Reasoning effort is left to the runtime.
 
-- **Tier 1 (`gpt-6-astra`, `xhigh`)**: Directors who make high-level decisions
+- **Tier 1 (`gpt-6-astra`)**: Directors who make high-level decisions
   - `creative-director` -- vision and creative conflict resolution
   - `technical-director` -- architecture and technology decisions
   - `producer` -- scheduling, coordination, and risk management
 
-- **Tier 2 (`gpt-6-astra`, `high`)**: Department leads who own their domain
+- **Tier 2 (`gpt-6-astra`)**: Department leads who own their domain
   - `game-designer`, `lead-programmer`, `art-director`, `audio-director`,
     `narrative-director`, `qa-lead`, `release-manager`, `localization-lead`
 
-- **Tier 3 (`gpt-5.6-sol`, `high`)**: Specialists who execute within their domain
+- **Tier 3 (`gpt-5.6-sol`)**: Specialists who execute within their domain
   - Designers, programmers, artists, writers, testers, engineers, and all
     engine leads and sub-specialists
   - Support roles `community-manager` and `devops-engineer` use
-    `gpt-5.6-luna` with `max` effort
+    `gpt-5.6-luna`
 
 ### 2. Pick the Right Agent for the Job
 

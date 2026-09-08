@@ -156,7 +156,7 @@ self-identification is non-authoritative. For MultiAgent V2 custom-role spawns,
 pass `fork_turns: "none"`; the current full-history default rejects role/model
 overrides. If the selector is absent from the model-visible tool schema, or the
 payload reports `agent_type: default`, `agent_role: null`, mismatched configured
-model/effort, or only generic base instructions, report role delegation as
+model, or only generic base instructions, report role delegation as
 blocked and do not simulate the specialist verdict.
 
 Agent Bindery's `handoff-reviewer` and its reviewer ladder are governed by the

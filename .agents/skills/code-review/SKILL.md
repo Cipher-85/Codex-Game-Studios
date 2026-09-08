@@ -203,5 +203,8 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[path-to-file-or-directory]"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Bash, Codex subagent delegation, numbered choice prompt`
-- `model: sonnet`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.
 - `agent: lead-programmer`

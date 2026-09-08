@@ -178,4 +178,7 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `allowed-tools: Read, Glob, Grep, Bash, Write`
 - `context: |`
 - `!git tag --list --sort=-v:refname 2>/dev/null | head -5`
-- `model: haiku`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-luna`. This is guidance only; Codex does not enforce a model from skill frontmatter.

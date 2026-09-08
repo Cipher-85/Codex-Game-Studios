@@ -130,4 +130,7 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `argument-hint: "[feature-name or sprint-N]"`
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep, Bash`
-- `model: haiku`
+
+## Codex Model Guidance
+
+Suggested model: `gpt-5.6-luna`. This is guidance only; Codex does not enforce a model from skill frontmatter.

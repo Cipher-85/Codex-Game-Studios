@@ -3,21 +3,51 @@ name: create-architecture
 description: "Guided, section-by-section authoring of the master architecture document for the game. Reads all GDDs, the systems index, existing ADRs, and the engine reference library to produce a complete architecture blueprint before any code is written. Engine-version-aware: flags knowledge gaps and validates decisions against the pinned engine version."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+At project minimal, this artifact is optional: use the brief, source and any existing
+approved decisions when invoked. At standard, author one architecture document
+and identify real Foundation decisions rather than inventing three ADRs. Read
+existing relevant ADRs and engine references at every tier. Optional registries
+and indexes need their own named write approval; do not bootstrap them merely to
+satisfy the full baseline below.
+
+
 # Create Architecture
 
 This skill produces `docs/architecture/architecture.md` — the master architecture
 document that translates all approved GDDs into a concrete technical blueprint.
-It sits between design and implementation, and must exist before sprint planning begins.
+It sits between design and implementation, and is required before standard/full sprint planning; project minimal may use
+the brief instead.
 
 **Distinct from `$architecture-decision`**: ADRs record individual point decisions.
 This skill creates the whole-system blueprint that gives ADRs their context.
 
 Resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
-
-See `.codex/docs/director-gates.md` for the full check pattern.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 **Argument modes:**
 - **No argument / `full`**: Full guided walkthrough — all sections, start to finish
@@ -256,7 +286,7 @@ List all decisions made during this architecture session (Phases 1-4) that do
 not yet have a corresponding ADR, PLUS all uncovered Technical Requirements.
 Group by layer — Foundation first:
 
-**Foundation Layer (must create before any coding):**
+**Foundation Layer (required when the project workflow requires these decisions):**
 - `$architecture-decision [title]` → covers: TR-[id], TR-[id]
 
 **Core Layer:**

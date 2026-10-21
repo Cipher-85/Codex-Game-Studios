@@ -19,6 +19,10 @@ case "$cmd" in
     run validate_runtime.py --kind agents "$@"
     run validate_hooks.py "$@"
     run validate_rules.py "$@"
+    run validate_evidence.py "$@"
+    run validate_artifact_facts.py "$@"
+    run validate_project_config.py "$@"
+    run validate_config_migration.py "$@"
     run validate_install.py "$@"
     run validate_smoke.py headless "$@"
     ;;
@@ -39,6 +43,18 @@ case "$cmd" in
     ;;
   hooks)
     run validate_hooks.py "$@"
+    ;;
+  evidence)
+    run validate_evidence.py "$@"
+    ;;
+  artifact-facts)
+    run validate_artifact_facts.py "$@"
+    ;;
+  project-config)
+    run validate_project_config.py "$@"
+    ;;
+  config-migration)
+    run validate_config_migration.py "$@"
     ;;
   coexistence)
     run validate_install.py "$@"

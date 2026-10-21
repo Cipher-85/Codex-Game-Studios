@@ -7,6 +7,10 @@ paths:
 
 Use this before authoring or editing docs outside more specific rules.
 
+Read `.codex/docs/workflow-modes.md` before declaring an architecture artifact
+required. Its tier rules change which artifacts are needed, not the integrity
+of existing ADRs, references, version checks or write approvals.
+
 ## Architecture Decision Records
 
 Use `.codex/docs/templates/architecture-decision-record.md`.

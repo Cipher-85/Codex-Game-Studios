@@ -3,6 +3,25 @@ name: code-review
 description: "Performs an architectural and quality code review on a specified file or set of files. Checks for coding standard compliance, architectural pattern adherence, SOLID principles, testability, and performance concerns for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
 ## Phase 1: Load Target Files
 
 Read the target file(s) in full. Read AGENTS.md for project coding standards.
@@ -11,7 +30,9 @@ Read the target file(s) in full. Read AGENTS.md for project coding standards.
 
 ## Phase 2: Identify Engine Specialists
 
-Read `.codex/docs/technical-preferences.md`, section `## Engine Specialists`. Note:
+Use the shared technical result and its preserved `Engine Specialists` entries.
+Validate exact registered role names and engine compatibility before selection;
+read remaining custom routing notes in technical-preferences. Note:
 
 - The **Primary** specialist (used for architecture and broad engine concerns)
 - The **Language/Code Specialist** (used when reviewing the project's primary language files)
@@ -23,6 +44,8 @@ If the section reads `[TO BE CONFIGURED]`, no engine is pinned — skip engine s
 ---
 
 ## Phase 3: ADR Compliance Check
+
+$ARGUMENTS examples below use a Godot layout; keep explicit file targets in their actual engine/custom locations.
 
 **Argument:** `$code-review [file(s)]` may optionally include a story file path as the last argument (e.g., `$code-review src/combat/attack.gd production/epics/combat/story-001.md`). If a story path is provided, read it to extract the governing ADR reference.
 

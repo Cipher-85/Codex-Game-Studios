@@ -2910,5 +2910,152 @@
     "path": "CCGS Skill Testing Framework/skills/utility/vertical-slice.md",
     "rationale": "Codex-added testing framework coverage for the inherited upstream vertical-slice spec gap.",
     "source": "Codex-added coverage"
+  },
+  {
+    "category": "codex_path_rules",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/scene-files.md",
+    "rationale": "Engine-native scene/resource integrity rules adapted from upstream v1.2.0.",
+    "source": "Selective upstream v1.2.0 evidence and scene-integrity backport"
+  },
+  {
+    "category": "codex_evidence_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/review-receipts.sh",
+    "rationale": "Read-only portable content receipts for capture freshness; never runtime proof.",
+    "source": "Selective upstream v1.2.0 evidence and scene-integrity backport"
+  },
+  {
+    "category": "codex_evidence_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_evidence.py",
+    "rationale": "Executable receipt regressions and targeted static workflow guards.",
+    "source": "Selective upstream v1.2.0 evidence and scene-integrity backport"
+  },
+  {
+    "category": "codex_config_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/project_config.py",
+    "rationale": "Read-only candidate configuration resolver and change previews.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_config_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_project_config.py",
+    "rationale": "Executable configuration parsing, precedence and no-write regressions.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/config-resolution.md",
+    "rationale": "Codex configuration foundation contract, syntax and activation boundary.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project.yaml",
+    "rationale": "Package-owned template for project-owned candidate settings; never installed at root.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_docs_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project.local.yaml",
+    "rationale": "Template for restricted personal overrides; root settings stay project-owned.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_skills_new",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/settings/SKILL.md",
+    "rationale": "Candidate settings inspection and explicitly approved config staging; activation deferred.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "testing_framework",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/settings.md",
+    "rationale": "Behavioral specification for candidate settings inspection and previews.",
+    "source": "Selective upstream v1.2.0 configuration foundation adaptation"
+  },
+  {
+    "category": "codex_config_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/migrate_project_config.py",
+    "rationale": "Approved project-owned config staging with stale-plan checks, backups and guarded rollback.",
+    "source": "Selective upstream v1.2.0 configuration migration adaptation"
+  },
+  {
+    "category": "codex_config_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_config_migration.py",
+    "rationale": "Temporary-fixture regressions for migration isolation, preservation, failure recovery and rollback.",
+    "source": "Selective upstream v1.2.0 configuration migration adaptation"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/config-migration.md",
+    "rationale": "Configuration staging approval, project ownership and transaction recovery contract.",
+    "source": "Selective upstream v1.2.0 configuration migration adaptation"
+  },
+  {
+    "path": ".codex/docs/workflow-modes.md",
+    "category": "codex_docs_non_templates",
+    "source": "Codex selective upstream v1.2.0 adaptation",
+    "owner": "codex-game-studios",
+    "rationale": "Shared operational workflow, artifact and stage policy."
+  },
+  {
+    "path": ".codex/docs/templates/game-brief.md",
+    "category": "codex_docs_templates",
+    "source": "Codex selective upstream v1.2.0 adaptation",
+    "owner": "codex-game-studios",
+    "rationale": "Minimal workflow brief template; root design artifacts remain project-owned."
+  },
+  {
+    "path": ".codex/docs/qa-policy.md",
+    "owner": "codex-game-studios",
+    "category": "codex_docs_non_templates",
+    "source": "Codex selective upstream v1.2.0 adaptation",
+    "rationale": "Shared qa-policy consumer contract; no implicit action authority."
+  },
+  {
+    "path": ".codex/docs/team-policy.md",
+    "owner": "codex-game-studios",
+    "category": "codex_docs_non_templates",
+    "source": "Codex selective upstream v1.2.0 adaptation",
+    "rationale": "Shared team-policy consumer contract; no implicit action authority."
+  },
+  {
+    "path": ".codex/docs/technical-config.md",
+    "owner": "codex-game-studios",
+    "category": "codex_docs_non_templates",
+    "source": "Codex selective upstream v1.2.0 adaptation",
+    "rationale": "Shared technical-config consumer contract; no implicit action authority."
+  },
+  {
+    "category": "codex_artifact_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/artifact_facts.py",
+    "rationale": "Read-only Codex adaptation of upstream v1.2.0 artifact readers.",
+    "source": "Selective upstream v1.2.0 artifact-reader adaptation"
+  },
+  {
+    "category": "codex_artifact_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_artifact_facts.py",
+    "rationale": "Executable artifact parsing, graph and boundary regression fixtures.",
+    "source": "Selective upstream v1.2.0 artifact-reader adaptation"
+  },
+  {
+    "category": "codex_docs_non_templates",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/artifact-inspection.md",
+    "rationale": "Shared contract separating artifact observations from workflow decisions.",
+    "source": "Selective upstream v1.2.0 artifact-reader adaptation"
   }
 ]

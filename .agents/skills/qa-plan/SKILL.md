@@ -3,6 +3,46 @@ name: qa-plan
 description: "Generate a QA test plan for a sprint or feature. Reads GDDs and story files, classifies stories by test type (Logic/Integration/Visual/UI), and produces a structured test plan covering automated tests required, manual test cases, smoke test scope, and playtest sign-off requirements. Run before sprint begins or when starting a major feature for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+At project minimal read the stories' brief MVP references and concrete criteria; at
+standard read relevant required/present GDD sections. Do not require an optional
+systems index or manufacture absent formulas. Report uncertainty in criteria
+rather than inventing design. QA level is still a candidate setting: preserve
+all current story-type evidence requirements and verification rules.
+
+
 # QA Plan
 
 This skill generates a structured QA plan for a sprint, feature, or individual
@@ -108,6 +148,16 @@ how tests will be allocated.
 
 Assemble the full QA plan document. Use this structure:
 
+Resolve engine-native test roots using `.codex/docs/coding-standards.md` before
+filling paths: the `tests/` examples below are for Godot; Unity tests belong to
+test assemblies under `Assets/`, and Unreal tests to a compiled module under
+`Source/`. Preserve the story's exact Test Evidence paths when valid.
+Plan authoring may proceed with missing execution, but QA entry requires an
+applicable smoke report for the same build, scope, and platform. FAIL or
+NOT ASSESSED blocks execution/sign-off. Include each required manual check with
+PASS / FAIL / NOT ASSESSED / justified N/A and its evidence source; a plan or
+file's existence is not verification.
+
 ````markdown
 # QA Plan: [Sprint/Feature Name]
 **Date**: [date]
@@ -195,7 +245,7 @@ list when running that skill.*
 | [story] | [What question must the session answer?] | [N] | [new player / experienced] |
 
 **Sign-off requirement**: Playtest notes must be written to
-`production/session-logs/playtest-[sprint]-[story-slug].md` and reviewed by
+`production/qa/playtests/playtest-[sprint]-[story-slug].md` and reviewed by
 the [designer / qa-lead] before the story can be marked COMPLETE.
 
 If no stories require playtest validation: *No playtest sessions required for

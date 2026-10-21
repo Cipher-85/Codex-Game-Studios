@@ -217,3 +217,6 @@ system's behaviour anywhere in this document, it must appear here.]
 
 | Question | Owner | Deadline | Resolution |
 |----------|-------|----------|-----------|
+
+<!-- Apply .codex/docs/workflow-modes.md when selecting required sections and
+source documents. Minimal may cite design/game-brief.md. Preserve existing content. -->

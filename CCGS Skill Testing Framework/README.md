@@ -3,9 +3,15 @@
 Quality assurance infrastructure for the **Codex Game Studios** framework.
 Tests the skills and agents themselves — not any game built with them.
 
-> **This folder is self-contained and optional.**
-> Game developers using CCGS don't need it. To remove it entirely:
-> `rm -rf "CCGS Skill Testing Framework"` — nothing in `.codex/` depends on it.
+This is a package-managed set of behavioral specifications. Executing native
+behavioral tests is separate from ordinary game development, but the shipped
+files are part of CCGS manifest and installation validation. Keep them in a
+managed installation; deleting the folder makes those package checks fail.
+
+The current tree has 74 skill specs and 49 role specs. The 76 packaged skills
+include `studio-status` and deprecated `studio-next`, which have no separate
+behavioral specs. Spec presence does not mean a native test has run. See
+[validation and owed native evidence](../.codex/docs/VALIDATION.md#native-acceptance-for-the-selective-update).
 
 ---
 
@@ -15,7 +21,7 @@ Tests the skills and agents themselves — not any game built with them.
 CCGS Skill Testing Framework/
 ├── README.md              ← you are here
 ├── AGENTS.md              ← tells Codex how to use this framework
-├── catalog.yaml           ← master registry: all 73 skills + 49 agents, coverage tracking
+├── catalog.yaml           ← behavioral spec registry and recorded test coverage
 ├── quality-rubric.md      ← category-specific pass/fail metrics for $skill-test category
 │
 ├── skills/                ← behavioral spec files for skills (one per skill)
@@ -33,11 +39,9 @@ CCGS Skill Testing Framework/
 │   ├── directors/         ← creative-director, technical-director, producer, art-director
 │   ├── leads/             ← lead-programmer, narrative-director, audio-director, etc.
 │   ├── specialists/       ← engine/code/shader/UI specialists
-│   ├── godot/             ← Godot-specific specialists
-│   ├── unity/             ← Unity-specific specialists
-│   ├── unreal/            ← Unreal-specific specialists
-│   ├── operations/        ← QA, live-ops, release, localization, etc.
-│   └── creative/          ← writer, world-builder, game-designer, etc.
+│   ├── engine/            ← godot/, unity/ and unreal/ specialists
+│   ├── operations/        ← production and operational roles
+│   └── qa/                ← QA specialists
 │
 ├── templates/             ← spec file templates for writing new specs
 │   ├── skill-test-spec.md ← template for skill behavioral specs
@@ -53,7 +57,7 @@ CCGS Skill Testing Framework/
 Some inherited specs use upstream Claude tier names such as Opus, Sonnet, and
 Haiku. In this Codex port they are historical tier labels only. Runtime agent
 configuration lives in `.codex/agents/*.toml` and maps those tiers to Codex
-models and reasoning effort.
+models; reasoning effort is left to the active runtime unless explicitly configured.
 
 ## How to use it
 
@@ -63,7 +67,7 @@ All testing is driven by two skills already in the framework:
 
 ```
 $skill-test static [skill-name]     # Check one skill (7 checks)
-$skill-test static all              # Check all 73 skills
+$skill-test static all              # Check all packaged skills
 ```
 
 ### Run a behavioral spec test
@@ -99,7 +103,7 @@ $skill-improve gate-check           # Test → diagnose → propose fix → rete
 | Category | Skills | Key metrics |
 |----------|--------|-------------|
 | `gate` | gate-check | Review mode read, full/lean/solo director panel, no auto-advance |
-| `review` | design-review, architecture-review, review-all-gdds | Read-only, 8-section check, correct verdicts |
+| `review` | design-review, architecture-review, review-all-gdds | Tier-aware requirements, evidence, correct verdicts |
 | `authoring` | design-system, quick-design, art-bible, create-architecture, … | Section-by-section May-I-write, skeleton-first |
 | `readiness` | story-readiness, story-done | Blockers surfaced, director gate in full mode |
 | `pipeline` | create-epics, create-stories, dev-story, map-systems, … | Upstream dependency check, handoff path clear |
@@ -110,18 +114,12 @@ $skill-improve gate-check           # Test → diagnose → propose fix → rete
 
 ---
 
-## Agent tiers
+## Role specifications
 
-| Tier | Agents |
-|------|--------|
-| `directors` | creative-director, technical-director, producer, art-director |
-| `leads` | lead-programmer, narrative-director, audio-director, ux-designer, qa-lead, release-manager, localization-lead |
-| `specialists` | gameplay-programmer, engine-programmer, ui-programmer, tools-programmer, network-programmer, ai-programmer, level-designer, sound-designer, technical-artist |
-| `godot` | godot-specialist, godot-gdscript-specialist, godot-csharp-specialist, godot-shader-specialist, godot-gdextension-specialist |
-| `unity` | unity-specialist, unity-ui-specialist, unity-shader-specialist, unity-dots-specialist, unity-addressables-specialist |
-| `unreal` | unreal-specialist, ue-gas-specialist, ue-replication-specialist, ue-umg-specialist, ue-blueprint-specialist |
-| `operations` | devops-engineer, security-engineer, performance-analyst, analytics-engineer, community-manager |
-| `creative` | writer, world-builder, game-designer, economy-designer, systems-designer, prototyper |
+Directories organize test cases; they do not select a model or establish role
+activation. `.codex/agents/*.toml` is authoritative for all 49 role profiles.
+Inherited tier labels are historical. Native results need actual role metadata
+and matching instructions, as described in the validation contract.
 
 ---
 
@@ -144,14 +142,13 @@ $skill-improve gate-check           # Test → diagnose → propose fix → rete
 
 ---
 
-## Removing this framework
+## Package lifecycle
 
-This folder has no hooks into the main project. To remove:
+The upstream v1.2.0 rename to `studio-tests/` is deferred. This package keeps
+`CCGS Skill Testing Framework/` and its recorded ownership paths; see
+[the adoption matrix](../UPGRADING.md#selective-v120-adoption).
 
-```bash
-rm -rf "CCGS Skill Testing Framework"
-```
-
-The skills `$skill-test` and `$skill-improve` will still function — they'll simply
-report that `catalog.yaml` is missing and suggest running `$skill-test audit` to
-initialize it.
+Use the package installer/uninstaller under its normal approval contract for
+managed assets. Manual removal leaves missing manifest paths and does not turn
+an unrun behavioral test into an optional passing check. Project-specific tests
+can live outside these owned files.

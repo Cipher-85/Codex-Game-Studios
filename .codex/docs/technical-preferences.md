@@ -1,5 +1,14 @@
 # Technical Preferences
 
+Typed engine/framework/platform/budget fields are resolved through
+`project_config.py technical` and `.codex/docs/technical-config.md`, including
+explicit project/local YAML overrides. Check conflicts before using them. This
+file still owns custom naming, forbidden patterns, required tests, libraries,
+rendering/physics notes and specialist routing. Configuration is not proof of an
+installed runner or successful engine execution. Setup previews all source-aware
+writes and verifies readback; a package upgrade leaves project choices intact.
+
+
 <!-- Populated by $setup-engine. Updated as the user makes decisions throughout development. -->
 <!-- All agents reference this file for project-specific standards and conventions. -->
 

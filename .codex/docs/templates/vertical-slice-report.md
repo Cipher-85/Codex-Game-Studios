@@ -167,3 +167,6 @@ to test a different concept cheaply before investing in another vertical slice.
 > *Vertical slice code location: `prototypes/[concept-name]-vertical-slice/`*
 > *This code is reference material only. Production implementation is written from scratch.*
 > *Never import or refactor this code into production.*
+
+<!-- Apply .codex/docs/workflow-modes.md when selecting required sections and
+source documents. Minimal may cite design/game-brief.md. Preserve existing content. -->

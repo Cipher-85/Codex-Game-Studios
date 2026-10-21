@@ -3,6 +3,35 @@ name: create-control-manifest
 description: "After architecture is complete, produces a flat actionable rules sheet for programmers — what you must do, what you must never do, per system and per layer. Extracted from all Accepted ADRs, technical preferences, and engine reference docs. More immediately actionable than ADRs (which explain why) for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+This artifact is optional at project minimal and advisory at standard. If explicitly
+requested, derive rules only from actual Accepted ADRs. With no eligible rules,
+report NOT ASSESSED and the missing source rather than generating an empty
+passing manifest. Do not make its creation a prerequisite for a lighter tier.
+
+
 # Create Control Manifest
 
 The Control Manifest is a flat, actionable rules sheet for programmers. It

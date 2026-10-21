@@ -144,3 +144,6 @@ These should be prototyped early regardless of priority tier.]
 - [ ] Run `$design-review` on each completed GDD
 - [ ] Run `$gate-check pre-production` when MVP systems are designed
 - [ ] Validate the highest-risk systems with `$vertical-slice` before committing to Production
+
+<!-- Apply .codex/docs/workflow-modes.md when selecting required sections and
+source documents. Minimal may cite design/game-brief.md. Preserve existing content. -->

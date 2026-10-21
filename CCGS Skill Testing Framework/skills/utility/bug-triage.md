@@ -172,3 +172,22 @@ None. `$bug-triage` is a read-only advisory skill. No director gates apply.
   bug-triage is read-only.
 - The duplicate detection heuristic (title similarity + same system) is
   approximate; exact matching logic is defined in the skill body.
+
+## Phase 5B artifact-reader acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Parser/graph
+fixtures alone do not establish this skill's behavior.
+
+- Keep the workflow's selected scope and call the applicable artifact readers.
+  Verify source paths/lines and read incomplete or ambiguous values as unknown.
+- Exercise absent files, duplicate metadata, code/comment examples, empty
+  sections and nonstandard layouts. Empty discovery cannot establish a PASS,
+  zero open bugs, a ready story or a completed quality review.
+- Apply existing tier and evidence rules after reading facts. Missing optional
+  TR/ADR/GDD artifacts in minimal workflows remain N/A where permitted; named
+  broken references and actual missing evidence keep their existing effect.
+- For ADR graphs retain self-loops, multi-node cycles, missing/duplicate IDs and
+  unknown dependencies. A partial graph yields no complete implementation order.
+- Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
+  and source header status versus evidence/closure status. Counts do not
+  authorize edits, closure, new priorities, stage changes or role dispatch.

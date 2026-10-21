@@ -1,5 +1,19 @@
 # Game Studio Agent Architecture -- Quick Start Guide
 
+
+Workflow requirements are resolved by `.codex/lib/project_config.py workflow`
+and defined in `.codex/docs/workflow-modes.md`. Unconfigured projects preserve
+compatibility; minimal uses a brief/build order, standard a reduced GDD and
+critical architecture set, and full the complete pipeline. The detailed pipeline
+below is the compatibility/full reference where tiers differ. Documentation
+reductions preserve required evidence and all user approvals. Recorded stage
+uses the source-aware `stage` reader in `.codex/docs/config-resolution.md`.
+
+The working package contains 76 skills and 49 role profiles. It selectively
+adapts upstream v1.2.0; see [the adoption matrix](../../UPGRADING.md#selective-v120-adoption)
+for retained and deferred behavior. Package fixtures are not native acceptance.
+The detailed workflow below is subject to the shared contracts above.
+
 ## What Is This?
 
 This is a complete Codex agent architecture for game development. It
@@ -83,6 +97,9 @@ Ask yourself: "What department would handle this in a real studio?"
 |---------|-------------|
 | `$start` | First-time onboarding — asks where you are, guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads your current phase and artifacts |
+| `$settings` | Inspect configuration and preview assignments/migration |
+| `$studio-status` | Show stage, review mode and active-session breadcrumb |
+| `$studio-next` | Deprecated manual continuity reference |
 | `$project-stage-detect` | Analyze project state, detect stage, identify gaps |
 | `$setup-engine` | Configure engine + version, populate reference docs |
 | `$adopt` | Brownfield audit and migration plan for existing projects |
@@ -291,8 +308,22 @@ AGENTS.md                          -- Master config and path-rule router
     directory-structure.md         -- Project directory layout
     workflow-catalog.yaml          -- 7-phase pipeline definition (read by $help)
     setup-requirements.md          -- System prerequisites (Git Bash, Python; jq for debugging)
-    settings-local-template.md     -- Personal settings.local.json guide
+    settings-local-template.md     -- Legacy settings migration reference
+    config-resolution.md          -- Current project/local YAML contract
+    artifact-inspection.md        -- Read-only artifact observations
     templates/                     -- Document templates
 .agents/
   skills/                          -- Workflow skills
 ```
+
+
+## Connected QA, team and technical settings
+
+The shared `project_config.py qa-policy`, `team-policy` and `technical` readers
+apply existing-schema settings without running workflows. See
+`.codex/docs/qa-policy.md`, `team-policy.md` and `technical-config.md` for policy.
+QA levels preserve mandatory evidence; team size changes only optional declared
+participation; technical settings must agree with engine pins and verified
+runners. Performance estimates cannot pass measured checks. Existing prose and
+custom routing remain authoritative; setup/migration still need exact approvals.
+Automation settings and new upstream-only fields remain outside this integration.

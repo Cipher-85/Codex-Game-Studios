@@ -3,6 +3,67 @@ name: dev-story
 description: "Read a story file and implement it. Loads the full context (story, GDD requirement, ADR guidelines, control manifest), routes to the right programmer agent for the system and engine, implements the code and test, and confirms each acceptance criterion. The core implementation skill — run after $story-readiness, before $code-review and $story-done for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py stories`,
+`python3 .codex/lib/artifact_facts.py adrs`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+**Tier-specific context:** At project minimal, read the story's numbered brief feature
+and player goal; absent optional registry/manifest/ADR fields with explicit N/A
+reasons do not block. At standard use the cited GDD section when no registry
+exists; require a governing ADR for critical Foundation decisions. At every
+tier, validate any explicitly named TR/ADR/manifest, preserve existing rules and
+block on missing/Proposed governing ADRs. Omit nonexistent optional inputs from
+the programmer brief and name the omissions. The story, criteria, engine
+verification and story-type test evidence always remain. The full-context table
+and example briefing below apply only to inputs required/present at that tier.
+
+
 # Dev Story
 
 This skill bridges planning and code. It reads a story file in full, assembles
@@ -20,13 +81,14 @@ $story-done [path]        ← verify and close it
 
 **After all sprint stories are done:** run `$team-qa sprint` to execute the full QA cycle and get a sign-off verdict before advancing the project stage.
 
-**Output:** Source code + test file in the project's `src/` and `tests/` directories.
+**Output:** Source and test files in the resolved engine roots from
+`.codex/docs/technical-config.md`, plus the approved story/evidence updates.
 
 Before writing implementation files, read the matching path rule from
-`.codex/instructions/path-rules/`: always `source-code.md` for `src/**`, plus
+`.codex/instructions/path-rules/`: always `source-code.md` for game source, plus
 `gameplay-code.md`, `engine-code.md`, `ai-code.md`, `network-code.md`, or
-`ui-code.md` for the matching source subtree. Read `test-standards.md` before
-creating or editing `tests/**`. Read `data-files.md`, `shader-code.md`, or
+`ui-code.md` for the code's responsibility in the actual engine/custom path. Read `test-standards.md` before
+creating or editing engine test files. Read `scene-files.md` for scenes/resources. Read `data-files.md`, `shader-code.md`, or
 `tool-code.md` before a story writes `assets/data/**`, `assets/shaders/**`, or
 `tools/**`.
 
@@ -49,13 +111,13 @@ If not found, ask: "Which story are we implementing?" Glob
 
 | File | Path | If missing |
 |------|------|------------|
-| TR registry | `docs/architecture/tr-registry.yaml` | **STOP** — "TR registry not found at `docs/architecture/tr-registry.yaml`. Run `$architecture-review` to bootstrap the registry from your GDDs and ADRs." |
-| Governing ADR | path from story's ADR field | **STOP** — "ADR file [path] not found. Run `$architecture-decision` to create it, or correct the filename in the story's ADR field." |
-| Control manifest | `docs/architecture/control-manifest.md` | **WARN and continue** — "Control manifest not found — layer rules cannot be checked. Run `$create-control-manifest`." |
+| TR registry (full/compatibility, or a named TR-ID) | `docs/architecture/tr-registry.yaml` | **STOP** — "TR registry not found at `docs/architecture/tr-registry.yaml`. Run `$architecture-review` to bootstrap the registry from your GDDs and ADRs." |
+| Governing ADR (when named or critical at standard) | path from story's ADR field | **STOP** — "ADR file [path] not found. Run `$architecture-decision` to create it, or correct the filename in the story's ADR field." |
+| Control manifest (optional below full) | `docs/architecture/control-manifest.md` | **WARN and continue** — "Control manifest not found — layer rules cannot be checked. Run `$create-control-manifest`." |
 
-If the TR registry or governing ADR is missing, set the story status to **BLOCKED** in the session state and do not spawn any programmer agent.
+If a required TR registry or governing ADR is missing, set the story status to **BLOCKED** in the session state and do not spawn any programmer agent.
 
-Read all of the following simultaneously — these are independent reads. Do not start implementation until all context is loaded:
+Read the applicable required/present inputs below simultaneously — these are independent reads. Do not start implementation until all context is loaded:
 
 ### The story file
 Extract and hold:
@@ -65,23 +127,24 @@ Extract and hold:
 - **Manifest Version** embedded in story header
 - **Acceptance Criteria** — every checkbox item, verbatim
 - **Implementation Notes** — the ADR guidance section in the story
+- **Files** — planned paths; preserve this list for comparison with actual edits
 - **Out of Scope** boundaries
 - **Test Evidence** — the required test file path
 - **Dependencies** — what must be DONE before this story
 
-### The TR registry
+### The TR registry (when required or explicitly referenced)
 Read `docs/architecture/tr-registry.yaml`. Look up the story's TR-ID.
 Read the current `requirement` text — this is the source of truth for what the
 GDD requires now. Do not rely on any inline text in the story file (may be stale).
 
-### The governing ADR
+### The governing ADR (when named or required)
 Read `docs/architecture/[adr-file].md`. Extract:
 - The full Decision section
 - The Implementation Guidelines section (this is what the programmer follows)
 - The Engine Compatibility section (post-cutoff APIs, known risks)
 - The ADR Dependencies section
 
-### The control manifest
+### The control manifest (when present or explicitly referenced)
 Read `docs/architecture/control-manifest.md`. Extract the rules for this story's layer:
 - Required patterns
 - Forbidden patterns
@@ -178,6 +241,14 @@ assumptions about post-cutoff engine APIs that need expert verification.
 
 ## Phase 4: Implement
 
+Resolve code/test roots using `.codex/docs/coding-standards.md`. Before delegating,
+record the current ref and pre-existing changes in the active checkpoint, and
+confirm the approved source/test paths. Include the story path if updating its
+`## Files` section. Existing implementation approval carries forward only for
+its named scope; ask before an unapproved story/evidence write or scope expansion.
+For older stories without a Files section, propose the list before implementing.
+Do not attribute unrelated working-tree changes to this story.
+
 Spawn the chosen programmer agent(s) via Codex subagent delegation with the full context package:
 
 Brief the agent with file paths and targeted reading instructions — do not serialize document content into the Codex subagent delegation prompt. The agent reads what it needs directly:
@@ -186,13 +257,13 @@ Brief the agent with file paths and targeted reading instructions — do not ser
 2. **GDD requirement**: look up TR-ID `[TR-XXX-NNN]` in `docs/architecture/tr-registry.yaml` — use the `requirement` field as source of truth
 3. **ADR**: `docs/architecture/[adr-file].md` — read the **Decision** and **Implementation Guidelines** sections only
 4. **Control manifest**: `docs/architecture/control-manifest.md` — read rules for the **[layer]** layer only
-5. **Engine preferences**: `.codex/docs/technical-preferences.md` — read naming conventions and performance budgets
+5. **Engine preferences**: resolved technical values and actual pin/runner evidence; read naming conventions and custom rules from `.codex/docs/technical-preferences.md`
 6. **Test file path**: `[path from story's Test Evidence section]` — this file must be created as part of implementation
 7. **Test requirement** (Logic and Integration stories only): The test file MUST be created at `[path from the story's Test Evidence section]`. Write the test alongside the implementation — do not defer it. The story cannot be closed via `$story-done` without this file present. Each acceptance criterion must have at least one test function covering it. Test file naming: `[system]_[feature]_test.[ext]`. Function naming: `test_[scenario]_[expected_outcome]`. No random seeds, no time-dependent assertions, no external I/O.
 8. **Explicit instruction**: implement this story following the ADR guidelines, respect the manifest rules, stay within the story's Out of Scope boundaries. Write clean, doc-commented public APIs.
 
 The agent should:
-- Create or modify files in `src/` following the ADR guidelines
+- Create or modify files only in the resolved engine code/test roots and approved paths
 - Respect all Required and Forbidden patterns from the control manifest
 - Stay within the story's Out of Scope boundaries (do not touch unrelated files)
 - Write clean, doc-commented public APIs
@@ -220,8 +291,8 @@ The test requirement was included in the Phase 4 programmer agent brief (item 7)
 |---|---|---|
 | **Logic** | Automated unit test at path from story's Test Evidence section | BLOCKING — included in Phase 4 agent brief |
 | **Integration** | Integration test OR documented playtest record | BLOCKING — included in Phase 4 agent brief |
-| **Visual/Feel** | Evidence doc at `production/qa/evidence/[slug]-evidence.md` | ADVISORY — note in Phase 6 summary |
-| **UI** | Manual walkthrough doc or interaction test | ADVISORY — note in Phase 6 summary |
+| **Visual/Feel** | Observed run, opened screenshot and sign-off in `production/qa/evidence/` | Required to claim the visual/feel criteria passed |
+| **UI** | Observed walkthrough or interaction test; opened screenshot for visible criteria | Required to claim those criteria passed |
 | **Config/Data** | None — smoke check serves as evidence | N/A |
 
 For Visual/Feel and UI stories, include in the Phase 6 summary: "Manual evidence required at `production/qa/evidence/[slug]-evidence.md` before this story can be fully closed."
@@ -229,6 +300,29 @@ For Visual/Feel and UI stories, include in the Phase 6 summary: "Manual evidence
 ---
 
 ## Phase 6: Collect and Summarise
+
+Verify each claimed artifact exists and inspect the actual diff against the
+approved paths. A blocked, interrupted or incomplete agent result is INCOMPLETE,
+not "Implementation Complete". Name missing outputs and owed actions.
+
+Run the applicable approved engine/test checks using
+`.codex/docs/coding-standards.md`; report their exact commands and results.
+For visible criteria follow `.codex/docs/verification-integrity.md`: launch,
+reach the required state, open retained screenshots, and record criterion-linked
+observations. Build/import success alone is not visual proof. Missing access or
+unrun criteria are NOT ASSESSED. Preserve existing checks and user-owned feel
+judgments; never infer a subjective sign-off.
+
+Include evidence doc, capture and `stamp.json` paths in the approved capture scope.
+Only after a new observed capture run `bash .codex/lib/review-receipts.sh hash`
+with the covered project-relative code/scene/data/asset paths and save its
+successful JSON output to `production/qa/evidence/<story-slug>/stamp.json`.
+Do not stamp an old capture or claim the receipt proves a test passed.
+
+Update the story's `## Files` with verified actual paths only when that write was
+approved. Preserve planned-versus-actual deviations in the summary/checkpoint;
+otherwise report the proposed update without writing. Report missing scope
+information explicitly rather than declaring all changes in scope.
 
 After the programmer agent(s) complete, collect:
 
@@ -241,15 +335,18 @@ After the programmer agent(s) complete, collect:
 Present a concise implementation summary:
 
 ```
-## Implementation Complete: [Story Title]
+## Implementation: [Story Title] — [COMPLETE / INCOMPLETE / BLOCKED]
 
 **Files changed**:
-- `src/[path]` — created / modified ([brief description])
+- `[actual engine/custom source path]` — created / modified ([brief description])
 - `tests/[path]` — test file ([N] test functions)
 
+**Verification**: [command/tool, result, report/capture path; NOT ASSESSED where unrun]
+**Run result**: [OBSERVED / NOT ASSESSED — setup and evidence]
+
 **Acceptance criteria covered**:
-- [x] [criterion] — implemented in [file:function]
-- [x] [criterion] — covered by test [test_name]
+- [ ] [criterion] — implemented in [file:function]; verification still owed
+- [x] [criterion] — verified by [test_name], [current run/report]
 - [ ] [criterion] — DEFERRED: requires playtest (Visual/Feel)
 
 **Deviations from scope**: [None] or [list files touched outside story boundary]
@@ -273,6 +370,8 @@ Do not ask a separate "May I write?" for this file:
 - Story: [story-path] — [story title]
 - Files changed: [comma-separated list]
 - Test written: [path, or "None — Visual/Feel/Config story"]
+- Run result: [OBSERVED / NOT ASSESSED — command/tool, build, scene and evidence paths]
+- Scope: [planned vs actual; pre-existing changes excluded; unknowns named]
 - Blockers: [None, or description]
 - Next: $code-review [files] then $story-done [story-path]
 ```

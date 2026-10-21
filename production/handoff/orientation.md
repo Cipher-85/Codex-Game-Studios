@@ -7,7 +7,8 @@ work.
 
 ## Sources
 
-- `production/stage.txt` for the recorded stage.
+- `project_config.py stage` through `.codex/docs/config-resolution.md` for the
+  recorded stage and provenance; only unset state permits labelled inference.
 - `.codex/docs/workflow-catalog.yaml` for the phase sequence and required steps.
 - The handoff's current-stage and next-action fields.
 - The slice source named by the handoff's `Slice State Source` pointer.
@@ -33,3 +34,7 @@ Owed verification, gates, and blockers come first. Otherwise prefer the
 smallest `extend` candidate, then required `feed` work. Treat an unapproved
 game-feel or balance choice as a blocker rather than choosing it for the user.
 Size work in sessions, not calendar estimates.
+
+Before ranking required work, apply `.codex/docs/workflow-modes.md`. Report its
+tier/source and distinguish optional artifacts from blockers. Bindery still owns
+execution; this module only supplies project routing context.

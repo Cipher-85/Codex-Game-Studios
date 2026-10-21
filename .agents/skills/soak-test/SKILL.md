@@ -3,6 +3,36 @@ name: soak-test
 description: "Generate a soak test protocol for extended play sessions. Defines what to observe, measure, and log during long play sessions to surface slow leaks, fatigue effects, and edge cases that only appear after sustained play. Primarily used in Polish and Release phases for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use `design/game-brief.md` as concept/requirement context at project minimal; otherwise
+use the concept and applicable GDDs. Read optional architecture/art/index inputs
+when present, but their absence alone is not a blocker for the lighter tier.
+Preserve explicit constraints, engine checks, user decisions and actual observed
+playtest/evidence requirements. Route follow-ups using the effective workflow.
+
+
 # Soak Test
 
 A soak test (also called an endurance test) is an extended play session run

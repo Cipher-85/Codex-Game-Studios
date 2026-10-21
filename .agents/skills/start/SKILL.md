@@ -3,9 +3,50 @@ name: start
 description: "First-time onboarding — asks where you are, then guides you to the right workflow. No assumptions for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use the shared stage reader before initialization. Preserve an existing stage;
+for unset stage, show the proposed stage and the reader's exact write_target,
+then follow its approval/readback procedure. Apply workflow to onboarding paths:
+minimal uses brief and engine, standard the reduced design set. Do not create
+root YAML or infer rigor. The template's standard recommendation is not a stored
+selection and this workflow does not implement a general settings writer.
+
+
 # Guided Onboarding
 
-This skill writes one file: `production/review-mode.txt` (review mode config set in Phase 3b).
+This skill can initialize the recorded stage through the shared `stage` contract and, only when review routing
+is unconfigured, `production/review-mode.txt`. Show each proposed write and obtain
+approval; preserve configured review settings from the shared resolver.
 
 This skill is the entry point for new users. It does NOT assume you have a game idea, an engine preference, or any prior experience. It asks first, then routes you to the right workflow.
 
@@ -18,7 +59,8 @@ Before asking anything, silently gather context so you can tailor your guidance.
 Check:
 - **Engine configured?** Read `.codex/docs/technical-preferences.md`. If the Engine field contains `[TO BE CONFIGURED]`, the engine is not set.
 - **Game concept exists?** Check for `design/gdd/game-concept.md`.
-- **Source code exists?** Glob for source files in `src/` (`*.gd`, `*.cs`, `*.cpp`, `*.h`, `*.rs`, `*.py`, `*.js`, `*.ts`).
+- **Source code exists?** Inspect source files in the resolved scope using the project's languages.
+  If unresolved, record NOT ASSESSED and continue onboarding; do not infer an empty project.
 - **Prototypes exist?** Check for subdirectories in `prototypes/`.
 - **Design docs exist?** Count markdown files in `design/gdd/`.
 - **Production artifacts?** Check for files in `production/sprints/` or `production/milestones/`.
@@ -163,9 +205,11 @@ The user needs creative exploration before anything else.
 
 ---
 
-## Phase 3c: Write Initial Stage File
+## Phase 3c: Offer Initial Stage
 
-After confirming the starting path (and before asking about review mode), write the initial stage to `production/stage.txt`. Create the `production/` directory if it does not exist.
+After confirming the starting path, resolve `project_config.py stage`. Preserve
+an existing recorded stage. If unset, propose the mapped initial stage and
+follow the exact-target approval/readback contract in `config-resolution.md`.
 
 Stage mapping:
 - **Path A, B, or C (starting from scratch)**: write `Concept`
@@ -173,34 +217,36 @@ Stage mapping:
 - **Path D, existing project with GDDs but no architecture documents**: write `Systems Design`
 - **Path D, existing project with full architecture (ADRs, architecture doc)**: write `Technical Setup`
 
-Do this silently — no "May I write?" needed for this single-line file.
-
-Say: "I've set `production/stage.txt` to `[stage]` — this anchors your status line and stage detection."
+Show the proposed stage and the resolver's write_target with the exact diff.
+Ask "May I write this to [write_target]?" before initialization. Re-resolve after
+an approved write and name its verified value/source. If declined, continue
+orientation with recorded stage unset; do not claim it was saved.
 
 ---
 
 ## Phase 3b: Set Review Mode
 
-Check if `production/review-mode.txt` already exists.
+Resolve through the shared `review-mode` contract in
+`.codex/docs/director-gates.md`, passing any `--review` flag unchanged.
+If configuration is INVALID/NOT ASSESSED, show the diagnostic and stop review
+routing; do not initialize a fallback file.
 
-**If it exists**: Read it and show the current mode — "Review mode is set to `[current]`." — then proceed to Phase 4. Do not ask again.
+If `configured: true`, show the returned value/source and continue. This includes
+project/local YAML, legacy values, explicit rigor expansion, and per-run flags.
+Preserve those files and skip review setup; a missing legacy file is not a reason
+to create one that could shadow rigor or a YAML setting.
 
-**If it does not exist**: Use `numbered choice prompt`:
+If `configured: false`, explain that the operational default is `lean` and offer:
 
-- **Prompt**: "One setup choice: how much design review would you want as you work through the workflow?"
-- **Options**:
-  - `Full` — Director specialists review at each key workflow step. Best for teams, learning the workflow, or when you want thorough feedback on every decision.
-  - `Lean (recommended)` — Directors only at phase gate transitions ($gate-check). Skips per-skill reviews. Balanced approach for solo devs and small teams.
-  - `Solo` — No director reviews at all. Maximum speed. Best for game jams, prototypes, or if the reviews feel like overhead.
+1. Full — all declared director gates.
+2. (Recommended) Lean — PHASE-GATE directors only.
+3. Solo — no director gates; ordinary pipeline agents keep their declared roles.
 
-Write the choice to `production/review-mode.txt` immediately after the user
-selects — no separate "May I write?" needed, as the write is a direct
-consequence of the selection:
-- `Full` → write `full`
-- `Lean (recommended)` → write `lean`
-- `Solo` → write `solo`
-
-Create the `production/` directory if it does not exist.
+After selection, show the exact single-line value (`full`, `lean`, or `solo`) and
+ask "May I write this to `production/review-mode.txt`?" with `a. yes` / `b. no`.
+Create its parent only after approval. Re-run the shared contract after writing;
+a declined write leaves the validated default in use. Keep YAML assignments as
+`$settings` previews; this setup does not edit YAML or persist a per-run flag.
 
 ---
 
@@ -226,8 +272,8 @@ Verdict: **COMPLETE** — user oriented and handed off to next step.
 ## Edge Cases
 
 - **User picks D but project is empty**: Gently redirect — "It looks like the project is a fresh template with no artifacts yet. Would Path A or B be a better fit?"
-- **User picks A but project has code**: Mention what you found — "I noticed there's already code in `src/`. Did you mean to pick D (existing work)?"
-- **User is returning (engine configured, concept exists)**: Skip onboarding entirely — "It looks like you're already set up! Your engine is [X] and you have a game concept at `design/gdd/game-concept.md`. Review mode: `[read from production/review-mode.txt, or 'lean (default)' if missing]`. Want to pick up where you left off? Try `$sprint-plan` or just tell me what you'd like to work on."
+- **User picks A but project has code**: Mention what you found — "I noticed there's already code in `[actual source path]`. Did you mean to pick D (existing work)?"
+- **User is returning (engine configured, concept exists)**: Skip onboarding entirely — "It looks like you're already set up! Your engine is [X] and you have a game concept at `design/gdd/game-concept.md`. Review mode: `[value and source from the shared review-mode result]`. Want to pick up where you left off? Try `$sprint-plan` or just tell me what you'd like to work on."
 - **User doesn't fit any option**: Let them describe their situation in their own words and adapt.
 
 ---

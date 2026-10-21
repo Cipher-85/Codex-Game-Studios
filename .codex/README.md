@@ -2,8 +2,11 @@
 
 This directory contains the Codex-owned runtime, validation, release, and
 manifest assets for the Codex-native port of
-`Donchitos/Claude-Code-Game-Studios` pinned at upstream commit
-`984023ddac0d5e27624f2baacde6105e45de375f`.
+`Donchitos/Claude-Code-Game-Studios`. The original port baseline remains
+`984023ddac0d5e27624f2baacde6105e45de375f`; the working tree selectively adapts
+v1.2.0 at `05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418`. See
+[`UPGRADING.md`](../UPGRADING.md#selective-v120-adoption) for adopted and deferred
+features. The baseline inventory is historical, not a full-sync claim.
 
 Current package version:
 - `.codex/VERSION` is the source of truth.
@@ -13,6 +16,8 @@ Current package version:
 
 Current status:
 - The package version is `v0.7.4`.
+- The selective update is unreleased. Package audits do not prove publication
+  or native skill, role, or engine acceptance; see `docs/VALIDATION.md`.
 - `v0.7.4` backs up instruction files before uninstall, separates downstream
   runtime CI from maintainer release checks, safely retires unchanged installed
   release workflows, and resets project preferences to unconfigured values.
@@ -90,14 +95,13 @@ Install and release notes:
   block upgrade before mutation, while unowned workflows remain untouched.
 - Installer success is static package verification, not proof that project
   trust, hooks, rules, or config are active in the current Codex session.
-- Standalone custom-agent files are validated as supported Codex profiles, but
-  an exact role name, task path, nickname, or child self-identification is not
-  accepted as activation proof. Codex `0.144.x` Sol parents select MultiAgent
-  V2 and may hide the custom-role selector; use the verified `gpt-5.5` V1
-  fallback or a separately verified user-level V2 workaround. V2 custom roles
-  require `fork_turns: "none"`, and results remain blocked unless role metadata,
-  instructions and model match the selected profile. The package does not
-  select reasoning effort.
+- Standalone custom-agent files are statically validated profiles. Actual
+  activation needs current runtime evidence matching the selected TOML:
+  role metadata, instructions, model and child identity. A task name or child
+  self-identification is insufficient. Prior V1/V2 runtime findings are
+  historical, not permission to select an old fallback. V2 custom roles require
+  `fork_turns: "none"`; unresolved role loading stays blocked. The package does
+  not select reasoning effort.
 - `audit.sh smoke-interactive` reports `skipped`; trusted model-running evidence
   must be recorded separately or supplied with `--evidence`; task-path-only or
   default-role evidence fails closed.
@@ -114,6 +118,10 @@ Install and release notes:
   an inherited `upstream` remote cannot receive release API calls.
 
 Port status notes:
+- Selective upstream artifact readers share `.codex/lib/artifact_facts.py` for
+  story, ADR, GDD and bug observations. See `.codex/docs/artifact-inspection.md`.
+  `audit.sh artifact-facts` runs isolated parser/graph regressions; those checks
+  do not establish native workflow acceptance or artifact quality.
 - `.codex/manifest/upstream-assets.json` is the durable upstream inventory for all 417 pinned upstream files.
 - `.codex/manifest/expected-targets.json` records the generated Codex targets used by the validators.
 - `.claude/hooks/notify.sh` is intentionally replaced by documentation for native Codex notification settings instead of being installed as a project hook.

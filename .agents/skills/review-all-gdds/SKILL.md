@@ -3,6 +3,48 @@ name: review-all-gdds
 description: "Holistic cross-GDD consistency and game design review. Reads all system GDDs simultaneously and checks for contradictions between them, stale references, ownership conflicts, formula incompatibilities, and game design theory violations (dominant strategies, economic imbalance, cognitive overload, pillar drift). Run after all MVP GDDs are written, before architecture begins."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py gdds`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+Preserve the content-hash review scope and receipts below; inspect only the
+selected GDDs. The helper does not expand or approve an incremental review.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Check only applicable requirements and actual references. A minimal brief can
+supply design intent; optional absent GDD/registry/manifest/ADR artifacts are N/A
+with a reason, not errors or proof of success. At standard require critical
+architecture only. Preserve contradictions and broken explicit references as
+findings; with nothing assessable return NOT ASSESSED. Existing document content
+remains subject to consistency review regardless of tier.
+
+
 # Review All GDDs
 
 This skill reads every system GDD simultaneously and performs two complementary

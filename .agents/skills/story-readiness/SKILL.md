@@ -3,6 +3,55 @@ name: story-readiness
 description: "Validate that a story file is implementation-ready. Checks for embedded GDD requirements, ADR references, engine notes, clear acceptance criteria, and no open design questions. Produces READY / NEEDS WORK / BLOCKED verdict with specific gaps. Use when user says 'is this story ready', 'can I start on this story', 'is story X ready to implement' for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py stories`,
+`python3 .codex/lib/artifact_facts.py adrs`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Evaluate each story with its own resolved tier. At project minimal a numbered brief MVP
+reference satisfies design traceability; at standard an exact GDD section can
+replace an absent optional TR registry. Explicit N/A is required for absent
+optional architecture fields. Named but missing/Proposed ADRs and unresolved
+criteria remain blockers. Label inapplicable checks N/A with reasons, not PASS.
+
+
 # Story Readiness
 
 This skill validates that a story file contains everything a developer needs
@@ -20,12 +69,9 @@ gap list for each non-ready story.
 ## Phase 0: Resolve Review Mode
 
 Resolve the review mode once at startup (store for all gate spawns this run):
-
-1. If skill was called with `--review [full|lean|solo]` → use that value
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
-
-See `.codex/docs/director-gates.md` for the full check pattern and mode definitions.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 ---
 
@@ -60,8 +106,8 @@ Before checking any stories, load reference documents once (not per-story):
   Also extract the `Manifest Version:` date from the header block if the file exists.
 - `docs/architecture/tr-registry.yaml` — index all entries by `id`. Used to
   validate TR-IDs in stories. If the file does not exist, note it once; TR-ID
-  checks will auto-pass for all stories (registry predates stories, so missing
-  registry means stories are from before TR tracking was introduced).
+  checks are N/A only for stories without named TR-IDs at a tier that permits
+  omission; named IDs without a registry need source repair.
 - All ADR status fields — for each unique ADR referenced across the stories being
   checked, read the ADR file and note its `Status:` field. Cache these so you
   don't re-read the same ADR for every story.
@@ -77,9 +123,9 @@ items pass or are explicitly marked N/A with a stated reason.
 
 ### Design Completeness
 
-- [ ] **GDD requirement referenced**: The story includes a `design/gdd/` path
-  and quotes or links a specific requirement, acceptance criterion, or rule from
-  that GDD — not just the GDD filename. A link to the document without tracing
+- [ ] **Design requirement referenced**: At project minimal cite `design/game-brief.md`
+  and its numbered MVP feature plus player goal. Otherwise include a `design/gdd/`
+  path and a specific requirement, criterion or rule, not just its filename. A link to the document without tracing
   to a specific requirement does not pass.
 - [ ] **Requirement is self-contained**: The acceptance criteria in the story
   are understandable without opening the GDD. A developer should not need to
@@ -118,7 +164,7 @@ items pass or are explicitly marked N/A with a stated reason.
     Fix: update the story to reference the current requirement ID or remove if no longer applicable.
   - If the ID does not exist in the registry → NEEDS WORK: ID was not registered
     (story may predate registry, or registry needs an `$architecture-review` run).
-  - Auto-pass if the story has no TR-ID reference OR if the registry does not exist.
+  - N/A with a reason when this tier permits an absent registry and the story names no TR-ID. A named ID without its registry needs repair.
 - [ ] **Manifest version is current**: If the story has a `Manifest Version:` date
   in its header AND `docs/architecture/control-manifest.md` exists:
   - If story version matches current manifest `Manifest Version:` → pass.

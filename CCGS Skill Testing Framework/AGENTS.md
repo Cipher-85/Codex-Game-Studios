@@ -12,7 +12,7 @@ framework. It is self-contained and separate from any game project.
 
 | File | Purpose |
 |------|---------|
-| `catalog.yaml` | Master registry for all 73 skills and 49 agents. Contains category, spec path, and last-test tracking fields. Always read this first when running any test command. |
+| `catalog.yaml` | Registry for 74 skill specs and 49 role specs. The package has 76 skills; `studio-status` and deprecated `studio-next` have no separate behavioral specs. Contains category, spec path, and last-test tracking fields. Always read this first when running any test command. |
 | `quality-rubric.md` | Category-specific pass/fail metrics. Read the matching `###` section for the skill's category when running `$skill-test category`. |
 | `skills/[category]/[name].md` | Behavioral spec for a skill — 5 test cases + protocol compliance assertions. |
 | `agents/[tier]/[name].md` | Behavioral spec for an agent — 5 test cases + protocol compliance assertions. |
@@ -91,9 +91,12 @@ written by reading the skills, so they may encode bugs. When a skill misbehaves 
 practice, correct the skill first, then update the spec to match the fixed behavior.
 Treat spec failures as "this needs investigation," not "the skill is definitively wrong."
 
-## This folder is deletable
+## Package lifecycle
 
-Nothing in `.codex/` imports from here. Deleting this folder has no effect on the
-CCGS skills or agents themselves. `$skill-test` and `$skill-improve` will report that
-`catalog.yaml` is missing and guide the user to initialize it.
+This folder is package-managed. Keep it in managed installations: deleting it
+leaves missing manifest paths and fails package validation. Use the guarded
+installer/uninstaller for package changes. Written spec evaluation is separate
+from observed native execution; see
+[`VALIDATION.md`](../.codex/docs/VALIDATION.md#native-acceptance-for-the-selective-update)
+for the required evidence.
 <!-- END CCGS CODEX PORT -->

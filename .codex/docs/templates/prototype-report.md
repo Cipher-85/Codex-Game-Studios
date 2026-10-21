@@ -112,3 +112,6 @@ This report is the deliverable; no further action needed on this concept.]
 
 > *Prototype code location: `prototypes/[concept-name]-concept/`*
 > *This code is throwaway. Never refactor into production.*
+
+<!-- Apply .codex/docs/workflow-modes.md when selecting required sections and
+source documents. Minimal may cite design/game-brief.md. Preserve existing content. -->

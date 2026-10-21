@@ -212,3 +212,85 @@ None. `$adopt` is a brownfield audit utility. No director gates apply.
   that triggers an immediate fix offer before writing the plan; not separately tested.
 - The review-mode.txt prompt (Phase 6b) runs after plan writing if `production/review-mode.txt`
   does not exist; not separately tested here.
+
+## Review routing coverage (Phase 4A)
+
+Use the shared `review-mode` contract in `.codex/docs/director-gates.md`.
+Legacy `production/review-mode.txt` fixtures below remain fallback cases; also
+exercise project/local YAML, explicit rigor, and a per-run `--review` override.
+
+- [ ] Observe actual declared director gates using the returned value/source;
+      the flag wins over local YAML and is not persisted.
+- [ ] Invalid configuration stops director routing with diagnostics. Missing
+      tooling is NOT ASSESSED; neither case silently selects a review mode.
+- [ ] Review settings preserve existing evidence requirements and write approvals.
+
+These are native behavioral assertions. Resolver/hook/static audits alone do not
+establish that this skill or a role agent executed.
+
+- [ ] A configured YAML/legacy/rigor/per-run value skips initialization even when
+      the legacy file is absent. Unconfigured setup previews the exact legacy
+      path/value and obtains write approval, then re-resolves; declining keeps
+      the validated default without creating a file.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Phase 5A source-scope acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Configuration
+fixture results do not prove this workflow's behavior.
+
+- Resolve the source scope before scans/writes and retain its provenance.
+  Test Godot, Unity and Unreal layouts plus an existing custom script folder.
+  Use actual paths; never create `src/` to satisfy an example.
+- Test lowercase `assets/`, missing conventional roots, conflicting engine
+  markers and invalid configuration. Unresolved dependent checks stay
+  NOT ASSESSED; no empty scan, fresh-project inference or clean verdict follows.
+- Keep source and content scope distinct. Inspect native scenes, local packages
+  and plugins where applicable; show scan denominators and exclusions. A
+  resolved directory alone supplies no scan, build, coverage or playtest proof.
+- Preserve engine-native test locations, explicit target paths, custom layout,
+  role ownership and existing write/engine approval gates. A mixed native/custom
+  project must not silently omit a source location or follow an external link.

@@ -213,3 +213,47 @@ NO-GO. Closes with a post-release monitoring plan.
 - The parallel Phase 4 path (localization + performance + analytics simultaneously with Phase 3) is a documented option in the skill ("can run in parallel with Phase 3 if resources available"). Case 4 tests Phase 4 as a sequential gate; the parallel variant is left to the skill's implementation judgment.
 - The `network-programmer` sign-off path for multiplayer is validated as part of Case 3 rather than a separate case, as it follows the same parallel-spawn pattern as security-engineer.
 - The "override NO-GO with documented rationale" path in Case 2 is referenced but not exhaustively tested — it is an escape hatch that the skill must support, and its existence is validated by the numbered choice prompt options assertion in Case 2.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

@@ -1,0 +1,12 @@
+# Candidate personal overrides. Requires a valid root project.yaml.
+# Root project.local.yaml is project-owned; keep it out of version control.
+# This template makes no overrides, so the project's rigor remains observable.
+schema_version: 1
+
+# Allowed keys are reported by: python3 .codex/lib/project_config.py schema
+# Example, after an approved migration:
+# modes:
+#   review_mode: full
+
+# QA/team/technical readers report supported fields and effective constraints.
+# Mandatory evidence, engine pins and installed runners remain independently verified.

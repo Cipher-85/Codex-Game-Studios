@@ -3,6 +3,33 @@ name: content-audit
 description: "Audit GDD-specified content counts against implemented content. Identifies what's planned vs built for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+At project minimal use the brief's MVP list and linked stories as planned scope instead
+of requiring a systems index/GDD. At all tiers separate explicitly specified
+counts from unknown counts; never invent a count to make the comparison pass.
+For a workflow change, report newly required documentation separately from
+implemented-content gaps and preserve existing optional documents.
+
+
 When this skill is invoked:
 
 Parse the argument:
@@ -57,18 +84,21 @@ Before scanning `assets/data/**`, read
 `assets/shaders/**`, read `.codex/instructions/path-rules/shader-code.md`.
 
 For each content type found in Phase 1, scan the relevant directories to count
-what has been implemented. Use Glob and Grep to locate files.
+what has been implemented. Use the verified content roots and any source paths
+that hold content; reconcile them against the project layout first. The
+`assets/` paths below are Godot examples, not fallback roots for every engine.
+Use Glob and Grep to locate files; unresolved content scope is NOT ASSESSED.
 
 **Levels / Areas / Maps:**
 - Glob `assets/**/*.tscn`, `assets/**/*.unity`, `assets/**/*.umap`
-- Glob `src/**/*.tscn`, `src/**/*.unity`
+- Search resolved content/source scopes for `.tscn`, `.unity`, and `.umap` files
 - Look for scene files in subdirectories named `levels/`, `areas/`, `maps/`,
   `worlds/`, `stages/`
 - Count unique files that appear to be level/scene definitions (not UI scenes)
 
 **Enemies / Characters / NPCs:**
 - Glob `assets/data/**/enemies/**`, `assets/data/**/characters/**`
-- Glob `src/**/enemies/**`, `src/**/characters/**`
+- Search resolved content/source scopes for enemy and character definitions
 - Look for `.json`, `.tres`, `.asset`, `.yaml` data files defining entity stats
 - Look for scene/prefab files in character subdirectories
 

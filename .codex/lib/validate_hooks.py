@@ -154,6 +154,86 @@ def assert_stdout_order(errors: list[str], label: str, result: subprocess.Comple
 
 
 def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warnings: list[str]) -> None:
+    # Run the real status hook against isolated inputs, including unavailable tooling.
+    for label, base, local, legacy, helper_kind, expected in (
+        ("default", None, None, None, "present", "lean (default)"),
+        ("legacy", None, None, "full", "present", "full (production/review-mode.txt)"),
+        ("project", "modes:\n  review_mode: solo\n", None, "full", "present", "solo (project.yaml)"),
+        ("local", "modes:\n  review_mode: solo\n", "modes:\n  review_mode: lean\n", "full", "present", "lean (project.local.yaml)"),
+        ("rigor", "modes:\n  rigor: full\n", None, None, "present", "full (rigor:full)"),
+        ("invalid", "modes:\n  review_mode: fulll\n", None, "full", "present", "INVALID"),
+        ("missing helper", None, None, "full", "missing", "NOT ASSESSED"),
+        ("broken helper", None, None, "full", "empty", "NOT ASSESSED"),
+    ):
+        with make_temp_project() as tmp:
+            tmp_root = Path(tmp)
+            production = tmp_root / "production"
+            production.mkdir(exist_ok=True)
+            (production / "stage.txt").write_text("Production\n", encoding="utf-8")
+            if base is not None:
+                (tmp_root / "project.yaml").write_text("schema_version: 1\n" + base, encoding="utf-8")
+            if local is not None:
+                (tmp_root / "project.local.yaml").write_text(local, encoding="utf-8")
+            if legacy is not None:
+                (production / "review-mode.txt").write_text(legacy + "\n", encoding="utf-8")
+            if helper_kind != "missing":
+                helper = tmp_root / ".codex/lib/project_config.py"
+                helper.parent.mkdir(parents=True)
+                helper.write_bytes((root / ".codex/lib/project_config.py").read_bytes() if helper_kind == "present" else b"")
+            before = {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}
+            result = run_hook(root, tmp_root, "studio-status-on-start.sh", "{}")
+            assert_result(errors, "review status " + label, result, 0,
+                          stdout_contains="Stage: " + ("INVALID" if label == "invalid" else "NOT ASSESSED" if helper_kind != "present" else "Production (production/stage.txt)") + " | Review mode: " + expected)
+            if label in ("invalid", "missing helper", "broken helper") and not result.stderr.strip():
+                errors.append("review status " + label + ": missing visible diagnostic")
+            if before != {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}:
+                errors.append("review status " + label + ": status hook changed project files")
+
+    for label, budget, expected in (("invalid literal", "-1", "INVALID"),
+                                     ("unmapped prose", "about 512 MB", "Production (production/stage.txt)")):
+        with make_temp_project() as tmp:
+            tmp_root = Path(tmp)
+            helper = tmp_root / ".codex/lib/project_config.py"
+            helper.parent.mkdir(parents=True)
+            helper.write_bytes((root / ".codex/lib/project_config.py").read_bytes())
+            (tmp_root / "production").mkdir(exist_ok=True)
+            (tmp_root / "production/stage.txt").write_text("Production\n")
+            (tmp_root / ".codex/docs").mkdir()
+            (tmp_root / ".codex/docs/technical-preferences.md").write_text(
+                "## Performance Budgets\n- **Memory Ceiling**: " + budget + "\n")
+            before = {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}
+            result = run_hook(root, tmp_root, "studio-status-on-start.sh", "{}")
+            assert_result(errors, "technical status " + label, result, 0,
+                          stdout_contains="Stage: " + expected + " |")
+            if before != {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}:
+                errors.append("technical status " + label + ": hook changed project files")
+
+    # Stage precedence is observable in the real hook, with no project writes.
+    for label, base, legacy, expected in (
+        ("unset", None, None, "unset (unset)"),
+        ("yaml", "Production", "Concept", "Production (project.yaml)"),
+        ("legacy", None, "Polish", "Polish (production/stage.txt)"),
+        ("alias", "technical-setup", None, "Technical Setup (project.yaml)"),
+        ("terminal", "Live", "Release", "Live (project.yaml)"),
+        ("unknown", "Prodution", "Production", "INVALID"),
+    ):
+        with make_temp_project() as tmp:
+            tmp_root = Path(tmp)
+            helper = tmp_root / ".codex/lib/project_config.py"
+            helper.parent.mkdir(parents=True)
+            helper.write_bytes((root / ".codex/lib/project_config.py").read_bytes())
+            if base is not None:
+                (tmp_root / "project.yaml").write_text("schema_version: 1\nproject:\n  stage: " + base + "\n")
+            if legacy is not None:
+                (tmp_root / "production").mkdir(exist_ok=True)
+                (tmp_root / "production/stage.txt").write_text(legacy + "\n")
+            before = {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}
+            result = run_hook(root, tmp_root, "studio-status-on-start.sh", "{}")
+            assert_result(errors, "stage status " + label, result, 0,
+                          stdout_contains="Stage: " + expected + " |")
+            if before != {p: p.read_bytes() for p in tmp_root.rglob("*") if p.is_file()}:
+                errors.append("stage status " + label + ": hook changed project files")
+
     required = [
         "session-start.json",
         "pre-tool-use-bash-unrelated-push-text.json",

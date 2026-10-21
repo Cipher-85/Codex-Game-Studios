@@ -18,7 +18,7 @@ ALLOWED_CLAUDE_TEST_FIXTURES = {
     ".codex/tests/fixtures/claude-existing/.claude/settings.json",
     ".codex/tests/fixtures/claude-existing/CLAUDE.md",
 }
-EXPECTED_INSTALLED_FILE_COUNT = 512
+EXPECTED_INSTALLED_FILE_COUNT = 533
 
 
 def run_command(command: list[str], cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -174,11 +174,22 @@ def validate_retired_workflow(root: Path, errors: list[str]) -> None:
 
 
 def validate_installer_integration(root: Path, errors: list[str]) -> None:
+    schema = run_command([sys.executable, str(root / ".codex/lib/project_config.py"), "schema"], root)
+    if schema.returncode != 0:
+        errors.append("source configuration schema unavailable")
+        return
+    expected_keys = json.loads(schema.stdout)["operational_keys"]
     install = root / ".codex" / "install.sh"
     uninstall = root / ".codex" / "uninstall.sh"
 
     with tempfile.TemporaryDirectory(prefix="ccgs-install-clean-") as temp:
         target = Path(temp)
+        project_settings = {
+            "project.yaml": b"# Project-owned configuration\nschema_version: 1\nmodes:\n  rigor: full\n",
+            "project.local.yaml": b"# Personal override\nmodes:\n  review_mode: lean\n",
+        }
+        for relative, content in project_settings.items():
+            (target / relative).write_bytes(content)
         result = run_command([str(install), str(target)], root)
         if result.returncode != 0:
             errors.append(f"clean install failed: {command_failure(result)}")
@@ -193,6 +204,11 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
             errors.append("clean install state does not own all manifest paths")
         if len(state.get("package_owned_paths", [])) != EXPECTED_INSTALLED_FILE_COUNT:
             errors.append("clean install state does not explicitly own all manifest paths")
+        for relative, content in project_settings.items():
+            if (target / relative).read_bytes() != content:
+                errors.append(f"install changed project-owned settings: {relative}")
+            if relative in state.get("package_owned_paths", []) or relative in state.get("installed_file_hashes", {}):
+                errors.append(f"install took ownership of project settings: {relative}")
 
         workflow = target / ".github/workflows/ccgs-runtime-check.yml"
         if (target / ".github/workflows/release-check.yml").exists() or not workflow.exists():
@@ -225,6 +241,122 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         if "Stillcurrent" in preferences or "`godot-" in preferences:
             errors.append("fresh install inherited project-specific routing")
 
+        evidence = target / "production/qa/evidence/local-story/stamp.json"
+        evidence.parent.mkdir(parents=True, exist_ok=True)
+        evidence_bytes = b'{"project-owned": "capture evidence"}\n'
+        evidence.write_bytes(evidence_bytes)
+        helper_paths = (
+            ".codex/lib/artifact_facts.py",
+            ".codex/lib/validate_artifact_facts.py",
+            ".codex/docs/artifact-inspection.md",
+            ".codex/lib/review-receipts.sh",
+            ".codex/lib/validate_evidence.py",
+            ".codex/instructions/path-rules/scene-files.md",
+            ".codex/lib/project_config.py",
+            ".codex/lib/validate_project_config.py",
+            ".codex/lib/migrate_project_config.py",
+            ".codex/lib/validate_config_migration.py",
+            ".codex/docs/config-resolution.md",
+            ".codex/docs/config-migration.md",
+            ".codex/docs/workflow-modes.md",
+            ".codex/docs/qa-policy.md",
+            ".codex/docs/team-policy.md",
+            ".codex/docs/technical-config.md",
+            ".codex/docs/templates/game-brief.md",
+            ".codex/docs/director-gates.md",
+            ".codex/lib/state.sh",
+            ".codex/hooks/studio-status-on-start.sh",
+            "production/handoff/lanes.md",
+            ".codex/docs/templates/project.yaml",
+            ".codex/docs/templates/project.local.yaml",
+            ".agents/skills/settings/SKILL.md",
+            "CCGS Skill Testing Framework/skills/utility/settings.md",
+        )
+        for relative in helper_paths:
+            if (target / relative).read_bytes() != (root / relative).read_bytes():
+                errors.append(f"installed package support differs: {relative}")
+        result = run_command(["bash", str(target / ".codex/audit.sh"), "evidence"], target)
+        if result.returncode != 0:
+            errors.append(f"installed evidence audit failed: {command_failure(result)}")
+        result = run_command(["bash", str(target / ".codex/audit.sh"), "artifact-facts", "--root", str(target)], root)
+        if result.returncode != 0:
+            errors.append(f"installed artifact-reader audit failed: {command_failure(result)}")
+        artifact = target / "production/epics/reader-proof/story-001.md"
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact_bytes = b"# Story 001\nStatus: Ready\n\n## Acceptance Criteria\n- [ ] Project-owned criterion\n"
+        artifact.write_bytes(artifact_bytes)
+        result = run_command([sys.executable, str(target / ".codex/lib/artifact_facts.py"),
+                              "--root", str(target), "stories", str(artifact.relative_to(target))], root)
+        observed = json.loads(result.stdout) if result.returncode == 0 else {}
+        if (observed.get("status") != "observed" or observed.get("files_read") != 1 or
+                observed.get("applied") is not False or observed.get("assessment") != "NOT ASSESSED"):
+            errors.append(f"installed artifact observation failed: {command_failure(result)}")
+        if artifact.read_bytes() != artifact_bytes:
+            errors.append("artifact reader modified its input")
+
+        # Existing YAML is operational for connected consumers without a receipt.
+        review_command = [sys.executable, str(target / ".codex/lib/project_config.py"), "review-mode"]
+        for arguments, expected, source in (([], "lean", "project.local.yaml"),
+                                            (["--review", "solo"], "solo", "--review")):
+            result = run_command(review_command + arguments, target)
+            if result.returncode != 0:
+                errors.append(f"installed review consumer failed: {command_failure(result)}")
+                continue
+            review = json.loads(result.stdout)
+            if (review.get("value"), review.get("source")) != (expected, source):
+                errors.append(f"installed review precedence mismatch: {review}")
+            if review.get("operational_keys") != expected_keys or review.get("applied") is not False:
+                errors.append("installed review consumer overclaims activation or workflow execution")
+        result = run_command([str(target / ".codex/hooks/studio-status-on-start.sh")], target, env)
+        if result.returncode != 0 or "Review mode: lean (project.local.yaml)" not in result.stdout:
+            errors.append(f"installed status hook bypassed review resolution: {command_failure(result)}")
+
+        for consumer in ("workflow", "stage", "qa-policy", "team-policy", "technical", "code-root"):
+            result = run_command([sys.executable, str(target / ".codex/lib/project_config.py"), consumer], target)
+            if result.returncode != 0 or json.loads(result.stdout).get("applied") is not False:
+                errors.append(f"installed {consumer} consumer failed: {command_failure(result)}")
+
+        # Resolve a project-owned custom scope from another cwd without creating
+        # a conventional source folder or altering the selected file.
+        source_fixture = target / "Custom Source/player.cs"
+        source_fixture.parent.mkdir()
+        source_fixture.write_text("// preserved project source\n", encoding="utf-8")
+        command = [sys.executable, str(target / ".codex/lib/project_config.py"),
+                   "--root", str(target), "code-root"]
+        result = run_command(command, root)
+        if result.returncode != 0 or json.loads(result.stdout).get("resolution") != "unresolved":
+            errors.append("installed unconfigured source scope inferred an engine")
+        result = run_command(command + ["--path", "Custom Source"], root)
+        data = json.loads(result.stdout) if result.returncode == 0 else {}
+        if (data.get("roots") != ["Custom Source"] or data.get("resolution") != "resolved" or
+                data.get("scan_status") != "NOT ASSESSED" or data.get("applied") is not False):
+            errors.append(f"installed custom source resolution failed: {command_failure(result)}")
+        if source_fixture.read_text(encoding="utf-8") != "// preserved project source\n" or (target / "src").exists():
+            errors.append("installed source resolution modified the project layout")
+
+        # Explicit fixture migration is separate from installation. Its project-owned
+        # receipt, backup, outside-block ignore rule and YAML must survive upgrade/removal.
+        migration = target / ".codex/lib/migrate_project_config.py"
+        result = run_command([sys.executable, str(migration), "plan"], target)
+        if result.returncode != 0:
+            errors.append(f"installed migration preview failed: {command_failure(result)}")
+            return
+        proposal = json.loads(result.stdout)
+        if proposal.get("operational_keys") != expected_keys:
+            errors.append("installed migration preview did not report partial consumer support")
+        if proposal["status"] != "ready":
+            errors.append("installer automatically staged config or installed helper could not plan")
+            return
+        result = run_command([sys.executable, str(migration), "apply", "--expect-plan", proposal["plan_id"]], target)
+        if result.returncode != 0 or json.loads(result.stdout).get("status") != "staged":
+            errors.append(f"explicit installed fixture migration failed: {command_failure(result)}")
+            return
+        migration_directory = target / proposal["transaction"]
+        migration_artifacts = {p: p.read_bytes() for p in migration_directory.iterdir() if p.is_file()}
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        if any(str(p.relative_to(target)) in state["package_owned_paths"] for p in migration_artifacts):
+            errors.append("installer claimed ownership of config-migration artifacts")
+
         legacy_state = dict(state)
         legacy_state.pop("package_owned_paths", None)
         state_path.write_text(json.dumps(legacy_state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -247,6 +379,26 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         if not backup_matches:
             errors.append("--replace-modified did not retain a durable backup")
 
+        if not evidence.exists() or evidence.read_bytes() != evidence_bytes:
+            errors.append("upgrade changed project-owned capture evidence")
+        if not artifact.exists() or artifact.read_bytes() != artifact_bytes:
+            errors.append("upgrade changed project-owned inspected artifact")
+        for relative, content in project_settings.items():
+            if not (target / relative).exists() or (target / relative).read_bytes() != content:
+                errors.append(f"upgrade changed project-owned settings: {relative}")
+        for path, content in migration_artifacts.items():
+            if not path.exists() or path.read_bytes() != content:
+                errors.append(f"upgrade changed project-owned config migration: {path.name}")
+        outside_block = re.sub(
+            r"(?ms)^# BEGIN CCGS CODEX PORT GITIGNORE\n.*?^# END CCGS CODEX PORT GITIGNORE\n?",
+            "", (target / ".gitignore").read_text(),
+        )
+        if "/project.local.yaml" not in outside_block.splitlines():
+            errors.append("upgrade removed project-owned local-config ignore rule")
+        ignored = run_command(["git", "-C", str(target), "check-ignore", "--no-index", "project.local.yaml"], root)
+        if ignored.returncode != 0 or ignored.stdout.strip() != "project.local.yaml":
+            errors.append("upgrade left personal configuration trackable")
+
         project_profile = target / ".agents" / "skills" / "gen-asset" / "profiles" / "custom.md"
         project_profile.parent.mkdir(parents=True, exist_ok=True)
         project_profile.write_text("project-owned\n", encoding="utf-8")
@@ -264,6 +416,28 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         result = run_command([str(uninstall), str(target)], root)
         if result.returncode != 0:
             errors.append(f"uninstall failed: {command_failure(result)}")
+        if not evidence.exists() or evidence.read_bytes() != evidence_bytes:
+            errors.append("uninstall changed project-owned capture evidence")
+        if not artifact.exists() or artifact.read_bytes() != artifact_bytes:
+            errors.append("uninstall changed project-owned inspected artifact")
+        for relative, content in project_settings.items():
+            if not (target / relative).exists() or (target / relative).read_bytes() != content:
+                errors.append(f"uninstall changed project-owned settings: {relative}")
+        for path, content in migration_artifacts.items():
+            if not path.exists() or path.read_bytes() != content:
+                errors.append(f"uninstall changed project-owned config migration: {path.name}")
+        outside_block = re.sub(
+            r"(?ms)^# BEGIN CCGS CODEX PORT GITIGNORE\n.*?^# END CCGS CODEX PORT GITIGNORE\n?",
+            "", (target / ".gitignore").read_text(),
+        )
+        if "/project.local.yaml" not in outside_block.splitlines():
+            errors.append("uninstall removed project-owned local-config ignore rule")
+        ignored = run_command(["git", "-C", str(target), "check-ignore", "--no-index", "project.local.yaml"], root)
+        if ignored.returncode != 0 or ignored.stdout.strip() != "project.local.yaml":
+            errors.append("uninstall left personal configuration trackable")
+        for relative in helper_paths:
+            if (target / relative).exists():
+                errors.append(f"uninstall retained package-owned support: {relative}")
         if not project_profile.exists():
             errors.append("uninstall removed project-owned gen-asset content")
         if not resume_index.exists():
@@ -719,6 +893,8 @@ def main() -> int:
                     errors.append(f"installed-files must not own project-local gen-asset path {path}")
                 if path == "production/resume-index.md":
                     errors.append("installed-files must not own the project-created resume index")
+                if path in {"project.yaml", "project.local.yaml"}:
+                    errors.append("installed-files must not own project configuration: " + path)
                 if not (root / path).exists():
                     errors.append(f"installed-files path missing on disk: {path}")
             if len(rows) != EXPECTED_INSTALLED_FILE_COUNT:

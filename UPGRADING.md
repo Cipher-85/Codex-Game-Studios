@@ -69,7 +69,7 @@ upgrade then installs
 `.agent-continuity.toml` and `production/handoff/*.md`; it does not install or
 modify Agent Bindery's global skills.
 
-### Upgrading to v0.7.4
+### The v0.7.4 package line
 
 Game projects now receive `.github/workflows/ccgs-runtime-check.yml`, which
 runs the runtime audit without requiring CCGS release tags or a package
@@ -113,6 +113,113 @@ are ignored.
 Before tagging any release, update the root README, `.codex/README.md`,
 `.codex/docs/README.md`, `CHANGELOG.md`, and any shared-path merge notes for the
 new version. Release metadata does not merge downstream project-owned changes.
+
+## Selective v1.2.0 adoption
+
+The comparison target is upstream [v1.2.0 at
+`05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418`](https://github.com/Donchitos/Claude-Code-Game-Studios/commit/05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418),
+released on 2026-10-19. Its tree contains 638 files; the original port baseline
+contains 417. `.codex/manifest/upstream-assets.json` remains the historical
+inventory of `984023ddac0d5e27624f2baacde6105e45de375f`, not a claim that all
+638 target files were ported. This working package is `0.7.4`; the selective
+changes remain unreleased until an explicitly authorized release completes.
+
+### Adoption matrix
+
+| Upstream area | Disposition in this package |
+| --- | --- |
+| Test commands, evidence and review freshness | Adapted to Codex, supported runner discovery, required evidence and read-only hash receipts |
+| Project configuration and rigor | Adapted with strict parsing, provenance, explicit compatibility and no inferred rigor for existing projects |
+| Configuration migration | Separate approved preview/apply/recovery transaction; preserves existing YAML and custom prose |
+| Review, workflow, density, stories and stage | Connected consumers; minimal brief path and source-aware single-target stage updates |
+| QA, team and technical settings | Connected within shared contracts; strictness preserves evidence, team size changes only optional participation, performance needs measurements |
+| Source-root procedure | Adapted to configured/observed engine and explicit custom scope; unknown scope stays unassessed |
+| Story/ADR/GDD/bug facts | Read-only shared parser and graph observations; workflow quality and approval decisions stay with the skills |
+| Automation and new upstream-only settings | Deferred/unsupported; parsing a candidate never grants action authority |
+| Full role-prompt refresh | Deferred; selected prompts were adapted, all 49 model/effort settings are preserved |
+| Engine-reference refresh | Deferred; 34 reference files differ upstream, while the package's actual pins/references are preserved |
+| `studio-tests/` rename and wholesale template/reference split | Deferred; keep `CCGS Skill Testing Framework/` and current package ownership paths |
+| Claude runtime hooks, bootstrap, command permissions and footer | Not imported as runtime dependencies; use Codex surfaces and retain documented capability gaps |
+| Executable handoff/resume/rotation | Owned by Agent Bindery; CCGS retains its manifest and project modules |
+
+The 35 new upstream helpers are accounted for below. Adapted/replaced means a
+bounded Codex implementation or existing contract, not identical source parity.
+
+| Helpers | Disposition / current implementation |
+| --- | --- |
+| `story-facts.sh`, `story-status.sh`, `adr-status.sh`, `adr-dep-graph.sh`, `gdd-structure-check.sh`, `bug-stats.sh` | Adapted as `artifact_facts.py`; no count-based readiness, automatic closure or next-story choice |
+| `review-receipts.sh` | Adapted as the read-only Codex receipt helper |
+| `migrate-v1-config.sh` | Replaced by the guarded `migrate_project_config.py` transaction |
+| `yaml-get.awk` | Replaced by the restricted shared configuration parser |
+| `config-set.sh` | Inspection/preview adapted through `$settings`; general assignment application remains deferred |
+| `set-stage.sh` | Shared stage reader plus approved single-target update/readback; no automatic dual write |
+| `project-state.sh`, `project-coherence.sh` | Partial: stage/source-root and configuration/pin observations; broader state inference, live-binary/render/export coherence deferred |
+| `hook-input.sh`, `agent-check.sh`, `skill-lint.sh`, `compat-inventory.sh` | Existing Codex parser/validators cover applicable boundaries; broader upstream analyses not ported |
+| `review-scope.sh` | Existing content-hash review scope retained; no Git/mtime-based replacement |
+| `session-state.sh`, `rotate-session-state.sh` | Executable continuity remains Agent Bindery-owned |
+| `read-guard.sh`, `write-guard.sh` | Deferred as upstream helpers; existing Codex permissions/path rules remain authoritative |
+| `godot-parse-check.gd`, `test-run.sh`, `test-scaffold.sh` | Deferred; retain existing engine-specific workflow guidance and require native validation |
+| `artifact-check.sh`, `asset-scan.sh`, `code-markers.sh`, `content-count.sh`, `debt-register.sh`, `flaky-stats.sh`, `inputs-check.sh`, `md-section.sh`, `plan-math.sh`, `registry.sh` | Deferred; no generic helper suite or additional mutation API introduced |
+
+### Current contracts and acceptance
+
+Use `project_config.py` for `resolve`, `preview`, `review-mode`, `workflow`,
+`stage`, `qa-policy`, `team-policy`, `technical` and `code-root`. The authoritative
+field registry and `operational_keys` come from `schema`. See
+[configuration](.codex/docs/config-resolution.md),
+[workflow tiers](.codex/docs/workflow-modes.md), [QA](.codex/docs/qa-policy.md),
+[teams](.codex/docs/team-policy.md), [technical/source scope](.codex/docs/technical-config.md)
+and [artifact inspection](.codex/docs/artifact-inspection.md).
+
+Package inventory: 76 skills, 49 role profiles, 74 skill behavioral specs, 49 role
+specs and 533 installed files. `studio-status` and the deprecated `studio-next`
+have no separate skill behavioral specs. The executable helper fixtures are
+separate from these native behavior specifications.
+
+The recorded native matrix has **30/30 accepted cases for declared assertions**
+across approved October 20-21 runs. This includes actual role loading and the
+full/lean/solo routing checks, not just package fixtures. Source-root cases
+remain discovery preflights; engine execution, visual/gameplay, performance and
+platform acceptance are unassessed. See
+[Validation](.codex/docs/VALIDATION.md#native-acceptance-for-the-selective-update)
+for retained evidence, expected negative outcomes, scheduling and hook-trust
+qualifications. Final package/release/headless/docs audits passed.
+
+The selective integration is local and uncommitted. Version selection,
+commit/push, tagging, publication and downstream deployment remain separate
+user decisions; none is established by a passing audit or synthetic fixture.
+
+## Optional Configuration Staging
+
+Package installation never runs configuration migration or takes ownership of
+root `project.yaml` / `project.local.yaml`. Existing valid YAML affects connected
+review, workflow, density, story granularity, stage, QA, team and technical
+consumers on subsequent invocations, even without a migration receipt.
+Inspect the resolved values and sources before using updated workflows.
+
+`resolve` and `preview` are read-only: `applied: false` does not make existing
+YAML inert. `$settings` assignments remain previews, automation settings grant
+no authority, and invalid configuration stops the affected workflow. The startup
+status hook reports diagnostics without preventing repair. Preserve custom
+technical prose, installed runners and actual engine pins.
+
+After installation, `$settings migrate` or the following command provides a
+read-only preview of mapped fields, unmapped prose, conflicts, exact changes
+and backup/receipt paths:
+
+```bash
+python3 .codex/lib/migrate_project_config.py plan
+```
+
+Review and explicitly approve the full changeset before running the preview's
+`apply --expect-plan <plan_id>` command. Installation approval does not cover
+this transaction. The helper creates root YAML only if absent, preserves existing
+YAML and legacy files, and adds a project-owned root local-file ignore rule
+outside the installer block. It never guesses rigor or executes workflows;
+staged operational values are read by subsequent invocations.
+Backups and receipts survive upgrade and uninstall. See
+[the migration contract](.codex/docs/config-migration.md) for requirements,
+stale-plan handling, failure recovery and separately approved rollback.
 
 ## Verify After Upgrade
 

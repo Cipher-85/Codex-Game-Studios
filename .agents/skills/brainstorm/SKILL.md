@@ -3,16 +3,36 @@ name: brainstorm
 description: "Guided game concept ideation — from zero idea to a structured game concept document. Uses professional studio ideation techniques, player psychology frameworks, and structured creative exploration."
 ---
 
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+**Project-minimal branch:** Use the same collaborative decisions to fill only the brief's
+required fields and any optional context the user requests. Use
+`.codex/docs/templates/game-brief.md`, show the complete draft, and ask "May I
+write this to `design/game-brief.md`?" Preserve any existing concept. After the
+approved write/readback, recommend engine setup if owed, otherwise
+`$create-stories design/game-brief.md`. Do not run the full-concept template,
+visual-anchor requirement or full-pipeline closing list below for this branch.
+Retain applicable review gates under the separately resolved review mode.
+
+
 When this skill is invoked:
 
 1. **Parse the argument** for an optional genre/theme hint (e.g., `roguelike`,
    `space survival`, `cozy farming`). If `open` or no argument, start from
    scratch. Also resolve the review mode (once, store for all gate spawns this run):
-   1. If `--review [full|lean|solo]` was passed → use that
-   2. Else read `production/review-mode.txt` → use that value
-   3. Else → default to `lean`
-
-   See `.codex/docs/director-gates.md` for the full check pattern.
+   Read and apply the shared `review-mode` contract in
+   `.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+   Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 2. **Check for existing concept work**:
    - Read `design/gdd/game-concept.md` if it exists (resume, don't restart)

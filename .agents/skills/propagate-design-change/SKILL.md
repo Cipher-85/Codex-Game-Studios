@@ -3,6 +3,26 @@ name: propagate-design-change
 description: "When a GDD is revised, scans all ADRs and the traceability index to identify which architectural decisions are now potentially stale. Produces a change impact report and guides the user through resolution for Codex Game Studios."
 ---
 
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Check only applicable requirements and actual references. A minimal brief can
+supply design intent; optional absent GDD/registry/manifest/ADR artifacts are N/A
+with a reason, not errors or proof of success. At standard require critical
+architecture only. Preserve contradictions and broken explicit references as
+findings; with nothing assessable return NOT ASSESSED. Existing document content
+remains subject to consistency review regardless of tier.
+
+
 # Propagate Design Change
 
 When a GDD changes, architectural decisions written against it may no longer be

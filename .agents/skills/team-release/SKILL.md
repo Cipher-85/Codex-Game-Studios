@@ -3,6 +3,40 @@ name: team-release
 description: "Orchestrate the release team: coordinates release-manager, qa-lead, devops-engineer, and producer to execute a release from candidate to deployment for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## Team participation
+
+Before dispatch, read `.codex/docs/team-policy.md` and run
+`project_config.py team-policy`. Identify required/conditional/explicitly optional
+roles in this pipeline, then filter only optional participation by size. A role
+whose condition holds stays required. Preserve domain ownership, review-mode
+filtering and runtime role-identity checks; size authorizes no new roles or writes.
+Show the resulting roster and any omitted optional advisors. Unavailable required
+roles remain blocked rather than simulated by the coordinator.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+
 **Argument check:** If no version number is provided:
 1. Read `production/session-state/active.md` and the most recent file in `production/milestones/` (if they exist) to infer the target version.
 2. If a version is found: report "No version argument provided — inferred [version] from milestone data. Proceeding." Then confirm with `numbered choice prompt`: "Releasing [version]. Is this correct?"
@@ -16,10 +50,9 @@ full analysis in conversation, then capture the decision with concise labels.
 The user must approve before moving to the next phase.
 
 ## Phase 0: Resolve Review Mode
-
-1. If `--review [mode]` was passed as an argument, use that mode.
-2. Else read `production/review-mode.txt` — use whatever is written there.
-3. Else default to `lean`.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 Modes:
 - `full` — spawn all director and lead gates as described
@@ -162,7 +195,9 @@ Verdict: **BLOCKED** — release halted; go/no-go was NO or a hard blocker is un
 
 - Monitor post-release dashboards for 48 hours.
 - Run `$retrospective` if significant issues occurred during the release.
-- Update `production/stage.txt` to `Live` after successful deployment.
+- After separately authorized, verified deployment, offer `Live` through the
+  shared stage approval/readback contract. Deployment success never authorizes
+  an unapproved YAML or legacy stage write.
 
 ## Ported metadata
 

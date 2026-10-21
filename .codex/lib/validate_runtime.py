@@ -113,6 +113,7 @@ REQUIRED_CORE_SKILLS = {
     "review-all-gdds",
     "scope-check",
     "security-audit",
+    "settings",
     "setup-engine",
     "skill-improve",
     "skill-test",
@@ -347,7 +348,7 @@ CONTINUITY_MODULES = {
 CONTINUITY_MODULE_REQUIRED_PHRASES = {
     "production/handoff/orientation.md": (
         "Vertical-slice forcing function",
-        "production/stage.txt",
+        "project_config.py stage",
         ".codex/docs/workflow-catalog.yaml",
         "`extend`",
         "`feed`",
@@ -356,7 +357,8 @@ CONTINUITY_MODULE_REQUIRED_PHRASES = {
     "production/handoff/lanes.md": (
         "production/sprint-status.yaml",
         ".codex/docs/director-gates.md",
-        "production/review-mode.txt",
+        "project_config.py review-mode",
+        "INVALID/NOT ASSESSED",
         "A lane selection only",
     ),
     "production/handoff/integrity.md": (
@@ -407,6 +409,10 @@ AGENTS_MD_MAX_BYTES = 20 * 1024
 INSTRUCTION_CHAIN_MAX_BYTES = 28 * 1024
 COMMON_PATH_RULE_CHAINS = (
     ("src", ("source-code.md",)),
+    ("Assets/Scripts", ("source-code.md",)),
+    ("Packages/local", ("source-code.md",)),
+    ("Source/Game", ("source-code.md",)),
+    ("Plugins/Game/Source", ("source-code.md",)),
     ("src/gameplay", ("source-code.md", "gameplay-code.md")),
     ("src/core", ("source-code.md", "engine-code.md")),
     ("src/ai", ("source-code.md", "ai-code.md")),
@@ -839,6 +845,111 @@ def validate_active_state_checkpoint_text(rel: Path, text: str, exempt: bool = F
     return errors
 
 
+# These skills either consume review mode or explain its independent relationship
+# to a pipeline. Keep the shared read explicit; legacy initialization is bounded
+# to the three onboarding/planning writers.
+REVIEW_ROUTED_SKILLS = frozenset([
+    "adopt",
+    "architecture-decision",
+    "art-bible",
+    "brainstorm",
+    "create-architecture",
+    "create-epics",
+    "create-stories",
+    "design-review",
+    "design-system",
+    "gate-check",
+    "map-systems",
+    "milestone-review",
+    "playtest-report",
+    "prototype",
+    "sprint-plan",
+    "start",
+    "story-done",
+    "story-readiness",
+    "studio-status",
+    "team-audio",
+    "team-combat",
+    "team-level",
+    "team-live-ops",
+    "team-narrative",
+    "team-polish",
+    "team-qa",
+    "team-release",
+    "team-ui",
+    "vertical-slice"
+])
+
+
+def validate_review_routing_text(rel: Path, text: str) -> list[str]:
+    if rel.parent.name not in REVIEW_ROUTED_SKILLS:
+        return []
+    errors: list[str] = []
+    if "`.codex/docs/director-gates.md`" not in text or "`review-mode`" not in text:
+        errors.append(f"{rel}: missing shared review-mode contract binding")
+    if rel.parent.name not in {"adopt", "start", "sprint-plan"} and "production/review-mode.txt" in text:
+        errors.append(f"{rel}: direct legacy review path bypasses the shared consumer")
+    if re.search(r"(?im)^\s*\d+\.\s*Else read[^\n]*review-mode\.txt", text):
+        errors.append(f"{rel}: stale legacy-only review fallback chain")
+    return errors
+
+
+WORKFLOW_ROUTED_SKILLS = frozenset("""adopt architecture-decision architecture-review
+art-bible brainstorm consistency-check content-audit create-architecture
+create-control-manifest create-epics create-stories day-one-patch design-review
+design-system dev-story gate-check help map-systems playtest-report
+project-stage-detect propagate-design-change prototype qa-plan regression-suite
+reverse-document settings setup-engine soak-test sprint-plan sprint-status start
+story-done story-readiness studio-status team-level team-qa team-release team-ui
+ux-design vertical-slice review-all-gdds""".split())
+
+
+def validate_workflow_routing_text(rel: Path, text: str) -> list[str]:
+    if rel.parent.name not in WORKFLOW_ROUTED_SKILLS:
+        return []
+    errors = []
+    if "`.codex/docs/workflow-modes.md`" not in text or "project_config.py workflow" not in text:
+        errors.append(f"{rel}: missing shared workflow policy binding")
+    if re.search(r"(?im)^.*(?:workflow|rigor).*defaults? to [` ]*(?:minimal|standard)", text):
+        errors.append(f"{rel}: inferred workflow default bypasses compatibility")
+    if re.search(r'(?m)^echo[^\n]*>\s*production/stage\.txt', text):
+        errors.append(f"{rel}: direct legacy stage write bypasses source-aware approval")
+    return errors
+
+
+QA_CONFIG_SKILLS = frozenset('create-stories dev-story gate-check qa-plan regression-suite smoke-check story-done story-readiness team-qa test-evidence-review test-helpers test-setup'.split())
+TEAM_CONFIG_SKILLS = frozenset('team-audio team-combat team-level team-live-ops team-narrative team-polish team-qa team-release team-ui'.split())
+TECHNICAL_CONFIG_SKILLS = frozenset('adopt architecture-decision architecture-review art-bible asset-spec code-review create-architecture create-control-manifest create-stories design-review design-system dev-story gate-check help launch-checklist localize perf-profile project-stage-detect prototype qa-plan regression-suite release-checklist review-all-gdds security-audit settings setup-engine smoke-check soak-test start story-done story-readiness team-audio team-combat team-level team-live-ops team-narrative team-polish team-qa team-release team-ui test-evidence-review test-helpers test-setup ux-design ux-review vertical-slice'.split())
+SOURCE_SCOPE_SKILLS = frozenset('adopt code-review content-audit dev-story gate-check help localize onboard project-stage-detect reverse-document security-audit setup-engine sprint-status start story-done team-ui'.split())
+ARTIFACT_CONSUMERS = {
+    "story-readiness": ("stories", "adrs"), "dev-story": ("stories", "adrs"),
+    "story-done": ("stories", "adrs"), "sprint-status": ("stories",),
+    "architecture-review": ("adrs", "stories"), "gate-check": ("stories", "adrs", "gdds", "bugs"),
+    "design-review": ("gdds",), "review-all-gdds": ("gdds",),
+    "bug-triage": ("bugs",), "release-checklist": ("bugs",),
+}
+
+def validate_config_consumer_text(rel: Path, text: str) -> list[str]:
+    errors = []
+    for names, command, doc in ((QA_CONFIG_SKILLS, "qa-policy", "qa-policy.md"),
+                                 (TEAM_CONFIG_SKILLS, "team-policy", "team-policy.md"),
+                                 (TECHNICAL_CONFIG_SKILLS, "technical", "technical-config.md")):
+        if rel.parent.name in names and ("project_config.py " + command not in text or ".codex/docs/" + doc not in text):
+            errors.append(f"{rel}: missing shared {command} consumer binding")
+    if rel.parent.name == "perf-profile" and ("Estimated Current" in text or "[OK/WARNING/OVER]" in text):
+        errors.append(f"{rel}: estimates must not produce a passing performance status")
+    if rel.parent.name in SOURCE_SCOPE_SKILLS:
+        if "project_config.py code-root" not in text or ".codex/docs/technical-config.md" not in text:
+            errors.append(f"{rel}: missing shared source-scope consumer binding")
+        if re.search(r"(?im)^(?:Search|Scan|Grep|Glob) `src/", text):
+            errors.append(f"{rel}: unqualified src scan bypasses resolved source scope")
+    if rel.parent.name in ARTIFACT_CONSUMERS:
+        required = (".codex/docs/artifact-inspection.md", *("artifact_facts.py " + kind for kind in ARTIFACT_CONSUMERS[rel.parent.name]))
+        if any(token not in text for token in required):
+            errors.append(f"{rel}: missing shared artifact-observation binding")
+    return errors
+
+
 def validate_skills(root: Path, require_present: bool = False) -> list[str]:
     errors: list[str] = []
     skill_root = root / ".agents" / "skills"
@@ -886,6 +997,9 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
         errors.extend(validate_duplicate_delegation_consent_text(rel, text))
         errors.extend(validate_internal_readonly_closeout_options(rel, text))
         errors.extend(validate_task_label_corruption(rel, text))
+        errors.extend(validate_review_routing_text(rel, text))
+        errors.extend(validate_workflow_routing_text(rel, text))
+        errors.extend(validate_config_consumer_text(rel, text))
         if skill_names:
             slash_pattern = r"(?m)(^|\\s)/(" + "|".join(re.escape(name) for name in sorted(skill_names, key=len, reverse=True)) + r")\\b"
             if re.search(slash_pattern, text):
@@ -1036,6 +1150,46 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
     return errors
 
 
+def validate_evidence_contract(root: Path) -> list[str]:
+    """Static regression guards, not execution evidence for a skill or engine."""
+    errors: list[str] = []
+    forbidden = {
+        "smoke-check": [
+            r"PASS or NOT RUN",
+            r"Unconfirmed NOT RUN is treated as PASS WITH WARNINGS",
+            r"leave all unselected if everything passed",
+            r"addons/gdunit4/GdUnitRunner\.gd",
+        ],
+        "team-qa": [
+            r"UNKNOWN \(treat as PASS WITH WARNINGS",
+            r"PASS, PASS WITH WARNINGS, or UNKNOWN",
+        ],
+        "test-setup": [r"addons/gdunit4/GdUnitRunner\.gd", r"Create `Source/Tests/"],
+        "story-done": [r"then check `production/session-logs/`",
+                       r"ask if profiled or accept as assumed",
+                       r"≤50%.*UNTESTED.*ADVISORY"],
+        "test-evidence-review": [r"`production/session-logs/` for playtest"],
+        "qa-plan": [r"`production/session-logs/playtest-"],
+        "architecture-review": [r"\[A\] Write all three files"],
+    }
+    for name, patterns in forbidden.items():
+        path = root / ".agents" / "skills" / name / "SKILL.md"
+        if not path.exists():
+            continue  # Missing core skills are checked separately.
+        text = path.read_text(encoding="utf-8")
+        for pattern in patterns:
+            if re.search(pattern, text):
+                errors.append(f"{path.relative_to(root)}: obsolete evidence behavior: {pattern}")
+    story = root / ".agents/skills/create-stories/SKILL.md"
+    if story.exists() and not re.search(r"^## Files\s*$", story.read_text(encoding="utf-8"), re.M):
+        errors.append("create-stories: story template must include a Files section for scope review")
+    for name in ("smoke-check", "story-done", "team-qa", "gate-check"):
+        path = root / ".agents/skills" / name / "SKILL.md"
+        if path.exists() and "NOT ASSESSED" not in path.read_text(encoding="utf-8"):
+            errors.append(f"{name}: missing unassessed-evidence verdict")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
@@ -1055,6 +1209,7 @@ def main() -> int:
     if args.kind in {"runtime", "skills"}:
         errors.extend(validate_continuity_integration(root))
         errors.extend(validate_gen_asset_contract(root))
+        errors.extend(validate_evidence_contract(root))
     if args.kind == "skills":
         errors.extend(validate_skills(root, args.require_present))
     if args.kind == "agents":

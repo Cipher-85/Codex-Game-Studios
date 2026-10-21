@@ -3,6 +3,46 @@ name: architecture-review
 description: "Validates completeness and consistency of the project architecture against all GDDs. Builds a traceability matrix mapping every GDD technical requirement to ADRs, identifies coverage gaps, detects cross-ADR conflicts, verifies engine compatibility consistency across all decisions, and produces a PASS/CONCERNS/FAIL verdict. The architecture equivalent of $design-review for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py adrs`,
+`python3 .codex/lib/artifact_facts.py stories`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Check only applicable requirements and actual references. A minimal brief can
+supply design intent; optional absent GDD/registry/manifest/ADR artifacts are N/A
+with a reason, not errors or proof of success. At standard require critical
+architecture only. Preserve contradictions and broken explicit references as
+findings; with nothing assessable return NOT ASSESSED. Existing document content
+remains subject to consistency review regardless of tier.
+
+
 # Architecture Review
 
 The architecture review validates that the complete body of architectural decisions
@@ -319,7 +359,7 @@ Post-Cutoff API Conflicts:
 ### Engine Specialist Consultation
 
 After completing the engine audit above, spawn the **primary engine specialist** via Codex subagent delegation for a domain-expert second opinion:
-- Read `.codex/docs/technical-preferences.md` `Engine Specialists` section to get the primary specialist
+- Use the technical reader's compatible, registered Primary specialist and inspect custom routing notes before dispatch
 - If no engine is configured, skip this consultation
 - Spawn `[primary specialist]` via Codex subagent delegation with: all ADRs that contain engine-specific decisions or `Post-Cutoff APIs Used` fields, the engine reference docs, and the Phase 5 audit findings. Ask them to:
   1. Confirm or challenge each audit finding — specialists may know of engine nuances not captured in the reference docs
@@ -451,9 +491,24 @@ FAIL: Critical gaps (Foundation/Core layer requirements uncovered),
 
 ## Phase 8: Write and Update Traceability Index
 
+**Scoped write boundary:** for `single-gdd`, first name the exact GDD/system
+and its existing TR-IDs. Re-read the registry and traceability index immediately
+before drafting edits and again immediately before applying the approved patch.
+If they changed, revise the preview before writing. Change only that system's rows and
+append its newly reviewed requirements. Preserve all other systems' rows, IDs,
+status, comments and ordering. Absence from this limited review is never grounds
+to deprecate another system's requirement. Allocate new IDs above the highest
+ever used in that system, including deprecated entries.
+
+If the existing format cannot be patched safely, offer a standalone scoped report
+only and leave shared indexes unchanged. A partial report is labeled
+`Mode: single-gdd` and names the GDD; it cannot claim project-wide coverage.
+For other modes, label mode and actual coverage just as explicitly.
+
 Use `numbered choice prompt` for the write approval:
 - "Review complete. What would you like to write?"
-  - [A] Write all three files (review report + traceability index + TR registry)
+  - [A] Write the report and the previewed in-scope index/registry patch
+    (single-gdd never replaces the project-wide index)
   - [B] Write review report only — `docs/architecture/architecture-review-[date].md`
   - [C] Don't write anything yet — I need to review the findings first
 
@@ -529,8 +584,9 @@ If yes:
 - **Append** any new TR-IDs that weren't in the registry before this review
 - **Update** `requirement` text and `revised` date for any entries whose GDD
   wording changed (ID stays the same)
-- **Mark** `status: deprecated` for any registry entries whose GDD requirement
-  no longer exists (confirm with user before marking deprecated)
+- **Mark** `status: deprecated` only for an entry within the explicitly reviewed
+  system whose requirement was verified removed from that GDD (confirm first).
+  Requirements absent from a partial review are preserved, not retired.
 - **Never** renumber or delete existing entries
 - Update the `last_updated` and `version` fields at the top
 

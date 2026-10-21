@@ -3,6 +3,38 @@ name: design-system
 description: "Guided, section-by-section GDD authoring for a single game system. Gathers context from existing docs, walks through each required section collaboratively, cross-references dependencies, and writes incrementally to file."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use `required_sections` for the exact system stem, adding Formulas for numeric
+rules at standard. In a new skeleton and section cycle, include those sections
+plus user-selected optional sections; preserve all existing sections in retrofit
+mode. At project minimal, a requested GDD is voluntary: agree its useful sections before
+writing. The brief supplies concept context and the index is optional. Apply
+section-specific specialist checks only to sections being authored. Report the
+actual sections completed, not a fixed eight-section count.
+
+
 When this skill is invoked:
 
 Before creating or editing `design/**`, read
@@ -12,11 +44,9 @@ Before creating or editing `design/**`, read
 ## 1. Parse Arguments & Validate
 
 Resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
-
-See `.codex/docs/director-gates.md` for the full check pattern.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 A system name or retrofit path is **required**. If missing:
 
@@ -35,9 +65,8 @@ If the argument starts with `retrofit` or the argument is a file path to an
 existing `.md` file in `design/gdd/`, enter **retrofit mode**:
 
 1. Read the existing GDD file.
-2. Identify which of the 8 required sections are present (scan for section headings).
-   Required sections: Overview, Player Fantasy, Detailed Design/Rules, Formulas,
-   Edge Cases, Dependencies, Tuning Knobs, Acceptance Criteria.
+2. Identify which of the tier-required sections are present (scan for section headings).
+   Use the resolver section list and conditional Formulas rule; accept Detailed Design/Rules as aliases.
 3. Identify which sections contain only placeholder text (`[To be designed]` or
    equivalent — blank, a single line, or obviously incomplete).
 4. Present to the user before doing anything:
@@ -73,9 +102,9 @@ primary advantage over ad-hoc design — it arrives informed.
 
 ### 2a: Required Reads
 
-- **Game concept**: Read `design/gdd/game-concept.md` — fail if missing:
+- **Design source**: Read the tier-selected concept/brief; fail if its required source is missing:
   > "No game concept found. Run `$brainstorm` first."
-- **Systems index**: Read `design/gdd/systems-index.md` — fail if missing:
+- **Systems index**: Read when required by the workflow tier; otherwise use the brief. For a required missing index:
   > "No systems index found. Run `$map-systems` first to map your systems."
 - **Target system**: Find the system in the index. If not listed, warn:
   > "[system-name] is not in the systems index. Would you like to add it, or
@@ -647,7 +676,7 @@ For required systems: **spawn `art-director` via Codex subagent delegation** bef
 For **all other system categories** (Foundation/Infrastructure, Economy, AI/pathfinding, Camera/input), offer the optional sections after the required sections:
 
 Use `numbered choice prompt`:
-- "The 8 required sections are complete. Do you want to also define Visual/Audio
+- "The tier-required sections are complete. Do you want to also define Visual/Audio
   requirements, UI requirements, or capture open questions?"
   - Options: "Yes, all three", "Just open questions", "Skip — I'll add these later"
 
@@ -686,7 +715,7 @@ the final closeout after all automatic phases and write prompts are resolved.
 Automatically read back the complete GDD from file (not from conversation memory
 — the file is the source of truth). Do not ask whether to run this readback or
 self-check. Verify:
-- All 8 required sections have real content (not placeholders)
+- All tier-required sections have real content (not placeholders)
 - Formulas reference defined variables
 - Edge cases have resolutions
 - Dependencies are listed with interfaces
@@ -781,7 +810,7 @@ checkpoint. Do not ask a separate "May I write?" for this file.
 - Current task: [system-name] GDD
 - Status: Complete (or In Review if design-review was run)
 - File: design/gdd/[system-name].md
-- Sections: All 8 written
+- Sections: Required sections written
 - Next: [suggest next system from design order]
 
 ### 5f: Suggest Next Steps

@@ -3,6 +3,27 @@ name: team-polish
 description: "Orchestrate the polish team: coordinates performance-analyst, technical-artist, sound-designer, and qa-tester to optimize, polish, and harden a feature or area for release quality for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## Team participation
+
+Before dispatch, read `.codex/docs/team-policy.md` and run
+`project_config.py team-policy`. Identify required/conditional/explicitly optional
+roles in this pipeline, then filter only optional participation by size. A role
+whose condition holds stays required. Preserve domain ownership, review-mode
+filtering and runtime role-identity checks; size authorizes no new roles or writes.
+Show the resulting roster and any omitted optional advisors. Unavailable required
+roles remain blocked rather than simulated by the coordinator.
+
+
 If no argument is provided, output usage guidance and exit without spawning any agents:
 > Usage: `$team-polish [feature or area]` — specify the feature or area to polish (e.g., `combat`, `main menu`, `inventory system`, `level-1`). Do not use `numbered choice prompt` here; output the guidance directly.
 
@@ -14,10 +35,9 @@ full analysis in conversation, then capture the decision with concise labels.
 The user must approve before moving to the next phase.
 
 ## Phase 0: Resolve Review Mode
-
-1. If `--review [mode]` was passed as an argument, use that mode.
-2. Else read `production/review-mode.txt` — use whatever is written there.
-3. Else default to `lean`.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 Modes:
 - `full` — spawn all director and lead gates as described
@@ -59,12 +79,13 @@ Delegate to **performance-analyst**:
 - Output: performance report with prioritized optimization list
 
 ### Phase 2: Optimization
-Delegate to **performance-analyst** (with relevant programmers as needed):
-- Fix performance hotspots identified in Phase 1
-- Optimize draw calls, reduce overdraw
-- Fix memory leaks and reduce allocation pressure
-- Verify optimizations don't change gameplay behavior
-- Output: optimized code with before/after metrics
+Delegate the optimization proposal to **performance-analyst**:
+- Identify measured hotspots and propose scoped changes with expected effects
+- Define the before/after measurement and behavior checks
+- Obtain approval before implementation; the analyst does not become a programmer
+- Route engine fixes to the declared **engine-programmer** when applicable
+- Route other code changes through `$dev-story` with the proposal and evidence
+- Output: approved proposal or programmer-owned changes with measured validation
 
 If Phase 1 identified engine-level root causes (rendering pipeline, resource loading, memory allocator), delegate those fixes to **engine-programmer** in parallel:
 - Optimize hot paths in engine systems

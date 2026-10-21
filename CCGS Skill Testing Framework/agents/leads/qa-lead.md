@@ -83,3 +83,11 @@ Verified by parsing the agent's `.codex/agents/qa-lead.toml` fields and develope
 - Bug severity triage (P0/P1/P2 classification) is not covered here — deferred to $bug-triage skill integration.
 - Release quality gate behavior (PASS / FAIL vocabulary variant) is not covered.
 - Interaction between QL-STORY-READY and story Done criteria ($story-done skill) is not covered.
+
+## Phase 4C policy evidence
+
+Native acceptance NOT RUN. Verify the role receives the resolved QA/technical
+policy and uses it without weakening required evidence. Test an estimate-only
+performance report, a required unrun test, false strictness, and a conflicting
+engine pin. Preserve the role's ownership and exact custom-profile identity;
+configuration does not count as an observed test or a successful role dispatch.

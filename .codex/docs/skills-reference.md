@@ -1,16 +1,18 @@
 # Available Skills (Slash Commands)
 
-75 core skills organized by phase. Invoke them from Codex with the `$skill-name`
-form when available.
+76 packaged skills organized by phase. Invoke them from Codex with the `$skill-name`
+form when available. The set comprises the original 73 workflow skills plus
+`settings`, `studio-status`, and the deprecated `studio-next` reference.
 
 Projects may also provide optional local extensions. They are not part of the
-75 shipped skills and remain owned by the game project rather than CCGS.
+packaged skills and remain owned by the game project rather than CCGS.
 
 ## Onboarding & Navigation
 
 | Command | Purpose |
 |---------|---------|
 | `$start` | First-time onboarding — asks where you are, then guides you to the right workflow |
+| `$settings` | Inspect resolved configuration and preview assignments or an explicitly approved migration |
 | `$help` | Context-aware "what do I do next?" — reads current stage and surfaces the required next step |
 | `$studio-next` | Deprecated manual continuity reference; normal routing reads `active.md` Session Worklist |
 | `$studio-status` | Show stage, review mode, and active-session breadcrumb from shared project state |
@@ -20,7 +22,7 @@ Projects may also provide optional local extensions. They are not part of the
 
 ## External Continuity Skills
 
-Agent Bindery supplies these global skills. They are not among the 75 CCGS
+Agent Bindery supplies these global skills. They are not among the 76 CCGS
 repo-local skills and must not be copied into `.agents/skills/`. CCGS configures
 them through `.agent-continuity.toml` and `production/handoff/*.md`.
 
@@ -56,7 +58,7 @@ Optional project-local extension:
 | `$gen-asset` | Generate profiled raster candidates with built-in image generation, stage them under `tmp/gen-asset/**`, and wait for one contact-sheet approval before placement |
 
 CCGS validates a present `.agents/skills/gen-asset/` core and its profiles but
-does not ship, install, uninstall, or count it among the 75 core skills. ACTIVE
+does not ship, install, uninstall, or count it among the 76 packaged skills. ACTIVE
 profiles must define the full generation/placement schema; minimal STUB
 profiles are valid and refuse generation.
 

@@ -3,6 +3,19 @@ name: day-one-patch
 description: "Prepare a day-one patch for a game launch. Scopes, prioritises, implements, and QA-gates a focused patch addressing known issues discovered after gold master but before or immediately after public launch. Treats the patch as a mini-sprint with its own QA gate and rollback plan."
 ---
 
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+
 # Day-One Patch
 
 Every shipped game has a day-one patch. Planning it before launch day prevents
@@ -29,13 +42,13 @@ ships. It is a mini-sprint — not a hotfix, not a full sprint.
 ## Phase 1: Load Release Context
 
 Read:
-- `production/stage.txt` — confirm project is in Release stage
+- `project_config.py stage` — confirm the recorded release phase
 - The most recent file in `production/gate-checks/` — read the release gate verdict
 - `production/qa/bugs/*.md` — load all bugs with Status: Open or Fixed — Pending Verification
 - `production/sprints/` most recent — understand what shipped
 - `production/security/security-audit-*.md` most recent — check for any open security items
 
-If `production/stage.txt` is not `Release` or `Polish`:
+If the resolved recorded stage is not `Release`, `Polish` or terminal `Live`:
 > "Day-one patch prep is for Release-stage projects. Current stage: [stage]. This skill is not appropriate until you are approaching launch."
 
 ---

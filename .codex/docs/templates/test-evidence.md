@@ -21,9 +21,9 @@ the acceptance criteria numbers from the story that this evidence covers.]
 
 | # | Criterion (from story) | Result | Notes |
 |---|----------------------|--------|-------|
-| AC-1 | [exact criterion text] | PASS / FAIL | [any observations] |
-| AC-2 | [exact criterion text] | PASS / FAIL | |
-| AC-3 | [exact criterion text] | PASS / FAIL | |
+| AC-1 | [exact criterion text] | PASS / FAIL / NOT ASSESSED | [any observations] |
+| AC-2 | [exact criterion text] | PASS / FAIL / NOT ASSESSED | |
+| AC-3 | [exact criterion text] | PASS / FAIL / NOT ASSESSED | |
 
 ---
 
@@ -41,11 +41,26 @@ document or in `production/qa/evidence/[story-slug]/`.
 
 ---
 
+## Capture Provenance and Freshness
+
+- **Run observed by / when**: [person or tool and timestamp]
+- **Build/ref and dirty files**: [identity and uncommitted changes]
+- **Launch command/tool and scene/state**: [exact reproduction setup]
+- **Images opened by reviewer**: [paths; not just file existence]
+- **Receipt**: `production/qa/evidence/[story-slug]/stamp.json` or "no receipt"
+- **Files covered / known omissions**: [source, scenes, data and assets]
+- **Freshness**: [UNCHANGED / CHANGED / GONE / unknown, with affected paths]
+
+Follow `.codex/docs/verification-integrity.md` to capture and compare receipts.
+Hash only after a new observed capture; never restamp an old image. Matching
+content does not establish a passing test. Record interaction/feel/performance
+observations separately from the pictured state.
+
 ## Test Conditions
 
 - **Game state at start**: [e.g., "fresh save, player at level 1, no items"]
 - **Platform / hardware**: [e.g., "Windows 11, GTX 1080, 1080p"]
-- **Framerate during test**: [e.g., "stable 60fps" or "~45fps — within budget"]
+- **Framerate during test**: [measured FPS with method, or NOT ASSESSED; estimates do not prove compliance]
 - **Any special setup required**: [e.g., "dev menu used to trigger specific state"]
 
 ---
@@ -88,3 +103,12 @@ past the sprint review.
 *Template: `.codex/docs/templates/test-evidence.md`*
 *Used for: Visual/Feel and UI story type evidence records*
 *Location: `production/qa/evidence/[story-slug]-evidence.md`*
+
+## Effective policy and scope
+
+- QA level/source: [resolved value or compatibility]
+- Effective strictness / constrained requests: [per relevant story type]
+- Engine pin and verified runner: [identity, verification or NOT ASSESSED]
+- Coverage: [inactive, or metric/report/build/scope/measured value/threshold]
+- Performance: [budget/source; measured tool/report or estimate only]
+- Unassessed required checks: [explicit list; never assumed passing]

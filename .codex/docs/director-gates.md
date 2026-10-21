@@ -1,5 +1,14 @@
 # Director Gates — Shared Review Pattern
 
+
+For any gate reached while authoring, reviewing or planning artifacts, read
+`.codex/docs/workflow-modes.md`. Pass the resolved project tier, any per-system
+GDD tier, design_source, applicable requirements and actual evidence to the
+reviewer. Use the brief instead of a missing concept at project minimal; label
+optional absent fields explicitly. Missing optional artifacts/sections alone
+are not blockers. Existing constraints and required verification remain binding.
+This affects review inputs, not role selection or review-mode filtering.
+
 This document defines the standard gate prompts for all director and lead reviews
 across every workflow stage. Skills reference gate IDs from this document instead
 of embedding full prompts inline — eliminating drift when prompts need updating.
@@ -35,11 +44,41 @@ commit, push, branch-change, design-decision, game-feel, balance, or undeclared
 agent permission. Do not ask a duplicate confirmation before spawning declared
 director or lead gates that survived review-mode filtering.
 
-**Global config**: `production/review-mode.txt` — one word: `full`, `lean`, or `solo`.
-Set once during `$start`. Edit the file directly to change it at any time.
+**Shared `review-mode` contract:** Before any review routing, bind the canonical
+project root, read `.codex/docs/config-resolution.md`, and run its installed
+helper through Python 3. Use an absolute helper path outside the root:
 
-**Per-run override**: any gate-using skill accepts `--review [full|lean|solo]` as an
-argument. This overrides the global config for that run only.
+```bash
+python3 .codex/lib/project_config.py review-mode
+python3 .codex/lib/project_config.py review-mode --review full
+```
+
+Pass the original `--review full|lean|solo` argument unchanged when supplied.
+The helper validates all configuration first, then resolves:
+
+`--review` → `project.local.yaml` → `project.yaml` →
+`production/review-mode.txt` → explicit `modes.rigor` expansion → `lean`.
+
+Accept only exit 0 with `status: ready`. Retain `value`, `source`, and
+`configured` for this invocation; resolve again after an approved configuration
+change during the run. INVALID configuration stops review routing before spawns.
+Unavailable Python/helper is NOT ASSESSED and also stops review routing. Show the
+error and required repair; never reconstruct precedence or substitute `lean`.
+The read-only startup status hook may display those diagnostics without blocking
+the session so the user can repair configuration.
+
+`configured: true` includes YAML, legacy, rigor-derived, and per-run values;
+a missing legacy file alone does not mean review setup is needed. A run flag
+is not persisted. For initial setup without a configured value, `$start`,
+`$adopt`, and new `$sprint-plan` may propose the legacy file's exact content and
+ask for write approval. Existing YAML stays project-owned; `$settings`
+assignments remain previews. `modes.rigor` can supply review routing now, while
+its workflow/density/QA/granularity/team effects remain candidates.
+
+Review mode filters **director gates**, not ordinary pipeline agents or a
+skill's separate review-depth setting. `$design-review --depth` keeps its own
+analysis/specialist/senior-review pipeline. Review settings grant no file-write,
+delegation beyond the invoked workflow, design, commit, or publishing authority.
 
 Examples:
 ```
@@ -68,9 +107,8 @@ only.
 
 ```
 Before spawning gate [GATE-ID]:
-1. If skill was called with --review [mode], use that
-2. Else read production/review-mode.txt
-3. Else default to lean
+1. Use the validated value/source from this invocation's shared review-mode contract.
+2. If no valid result is available, stop review routing and report INVALID/NOT ASSESSED.
 
 Apply the resolved mode:
 - solo → skip all gates. Note: "[GATE-ID] skipped — Solo mode"
@@ -86,10 +124,12 @@ spawn, mark those gates skipped or blocked and do not simulate their verdicts.
 
 ## Invocation Pattern (copy into any skill)
 
-**MANDATORY: Resolve review mode before every gate spawn.** Never spawn a gate without checking. The resolved mode is determined once per skill run:
-1. If skill was called with `--review [mode]`, use that
-2. Else read `production/review-mode.txt`
-3. Else default to `lean`
+**MANDATORY: Apply the shared `review-mode` contract before gate routing.**
+Read `.codex/docs/director-gates.md` Review Modes above, run
+`project_config.py review-mode` with any per-run `--review` flag, and retain its
+validated value/source for this skill invocation. Stop spawns on INVALID or
+NOT ASSESSED. Apply that result before every gate; direct legacy reads and
+hand-written fallback chains do not satisfy this contract.
 
 Apply the resolved mode:
 - `solo` → **skip all gates**. Note in output: `[GATE-ID] skipped — Solo mode`
@@ -847,3 +887,8 @@ When a new gate is needed for a new skill or workflow:
 | **Production** | LP-CODE-REVIEW (per story), QL-STORY-READY, PR-SPRINT (per sprint), QL-TEST-COVERAGE (per sprint close-out) | PR-MILESTONE, AD-VISUAL |
 | **Polish** | QL-TEST-COVERAGE, CD-PLAYTEST, PR-MILESTONE | AD-VISUAL |
 | **Release** | All four PHASE-GATEs (via gate-check) | QL-TEST-COVERAGE |
+
+When a gate evaluates QA or performance, also pass the effective shared QA and
+technical policy, including measured-evidence scope and any configuration
+conflicts. Team size only filters explicitly optional participation; preserve
+this document's review-mode filtering and required role ownership.

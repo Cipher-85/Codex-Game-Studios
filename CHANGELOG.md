@@ -1,5 +1,47 @@
 # Changelog
 
+## Unreleased — selective upstream v1.2.0 adoption
+
+Selective adaptation of upstream
+`05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418`; the historical 417-file baseline
+remains `984023ddac0d5e27624f2baacde6105e45de375f`. This is not a full sync.
+Package version remains `0.7.4`; this entry is not a publication receipt.
+See [the adoption matrix](UPGRADING.md#selective-v120-adoption) for deferred work.
+
+- Add provenance-aware configuration and `$settings` inspection. Connect review,
+  workflow, documentation density, story granularity, stage, QA, team and
+  technical consumers without inferring a rigor tier for existing projects.
+- Add minimal game briefs and tier-aware artifact requirements. Preserve
+  accepted architecture, user decisions and required evidence at every tier.
+- Stage configuration only through a separately approved, fingerprinted
+  migration with backups and guarded recovery. Installation preserves
+  project-owned YAML and evidence and never applies migration automatically.
+- Correct test/runner guidance and evidence handling. Require fresh results,
+  observed visual evidence and explicit unassessed outcomes; use read-only
+  content hashes for freshness, not as proof that a test or review ran.
+- Resolve native/custom source scopes before inspection or source writes;
+  unresolved roots cannot produce a clean scan or a fresh-project inference.
+- Add read-only story, ADR, GDD and bug observations with source locations,
+  explicit ambiguity, incomplete graph reporting and retained self-cycles.
+- Preserve role model/effort settings, engine pins, legacy coexistence and
+  Agent Bindery ownership of executable continuity workflows.
+- Reconcile public inventory and usage docs: 76 skills, 49 roles, 74 skill
+  behavioral specs, 49 role specs and 533 packaged files. Keep the existing
+  testing directory and original upstream inventory rather than imply parity
+  with the new upstream layout.
+
+- Accept current typed subagent-start events in role-evidence validation while
+  retaining legacy events and strict identity/model/fork checks; add four
+  regression fixtures, including malformed, mismatched and duplicate events.
+
+Recorded native matrix: 30/30 accepted for declared assertions across approved
+October 20-21 runs. Source cases are discovery preflights; engine execution,
+visible/gameplay and platform acceptance remain unassessed. See
+[Validation](.codex/docs/VALIDATION.md#native-acceptance-for-the-selective-update)
+for evidence and limits. Final package/release/headless/docs audits passed.
+Commit, push, version selection, tagging, publication and downstream deployment
+still require their own explicit authorization.
+
 ## v0.7.4 - 2026-09-05
 
 - Back up complete instruction files before uninstall removes managed or

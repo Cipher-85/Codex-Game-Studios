@@ -165,3 +165,62 @@ None. `$sprint-status` is a read-only reporting skill; no gates are invoked.
   count-by-status output implies them.
 - The `solo` mode review-mode variant is not separately tested; gate
   behavior in Case 5 applies to all modes equally.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 5A source-scope acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Configuration
+fixture results do not prove this workflow's behavior.
+
+- Resolve the source scope before scans/writes and retain its provenance.
+  Test Godot, Unity and Unreal layouts plus an existing custom script folder.
+  Use actual paths; never create `src/` to satisfy an example.
+- Test lowercase `assets/`, missing conventional roots, conflicting engine
+  markers and invalid configuration. Unresolved dependent checks stay
+  NOT ASSESSED; no empty scan, fresh-project inference or clean verdict follows.
+- Keep source and content scope distinct. Inspect native scenes, local packages
+  and plugins where applicable; show scan denominators and exclusions. A
+  resolved directory alone supplies no scan, build, coverage or playtest proof.
+- Preserve engine-native test locations, explicit target paths, custom layout,
+  role ownership and existing write/engine approval gates. A mixed native/custom
+  project must not silently omit a source location or follow an external link.
+
+## Phase 5B artifact-reader acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Parser/graph
+fixtures alone do not establish this skill's behavior.
+
+- Keep the workflow's selected scope and call the applicable artifact readers.
+  Verify source paths/lines and read incomplete or ambiguous values as unknown.
+- Exercise absent files, duplicate metadata, code/comment examples, empty
+  sections and nonstandard layouts. Empty discovery cannot establish a PASS,
+  zero open bugs, a ready story or a completed quality review.
+- Apply existing tier and evidence rules after reading facts. Missing optional
+  TR/ADR/GDD artifacts in minimal workflows remain N/A where permitted; named
+  broken references and actual missing evidence keep their existing effect.
+- For ADR graphs retain self-loops, multi-node cycles, missing/duplicate IDs and
+  unknown dependencies. A partial graph yields no complete implementation order.
+- Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
+  and source header status versus evidence/closure status. Counts do not
+  authorize edits, closure, new priorities, stage changes or role dispatch.

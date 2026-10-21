@@ -11,8 +11,11 @@
 # required: false → optional enhancement (shown as OPTIONAL)
 # repeatable: true → runs multiple times (one per system, story, etc.)
 #
-# Phase gates ($gate-check): verdicts are ADVISORY — they guide the decision
-# but never hard-block advancement. The user always decides whether to proceed.
+# This catalog describes the compatibility/full baseline. Before reading required
+# flags, apply .codex/docs/workflow-modes.md for the resolved tier. Minimal uses
+# a brief/build order; waived documentation is not a missing required step.
+# Verdicts report actual evidence. A user decision never relabels FAIL or
+# NOT ASSESSED as PASS or waives a required implementation/QA gate.
 
 phases:
 
@@ -33,7 +36,7 @@ phases:
         required: true
         artifact:
           glob: ".codex/docs/technical-preferences.md"
-          pattern: "Engine: [^[]"
+          pattern: "Engine.*: (Godot|Unity|Unreal)"
         description: "Configure engine, pin version, set naming conventions and performance budgets"
 
       - id: game-concept
@@ -85,7 +88,7 @@ phases:
         command: $design-review
         required: true
         repeatable: true
-        description: "Validate each GDD (8 required sections, no MAJOR REVISION verdict). Run per system."
+        description: "Validate each GDD (tier-required sections, no MAJOR REVISION verdict). Run per system."
 
       - id: review-all-gdds
         name: "Cross-GDD Review"

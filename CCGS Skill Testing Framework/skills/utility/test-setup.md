@@ -3,11 +3,10 @@
 ## Skill Summary
 
 `$test-setup` scaffolds the test framework for the project based on the
-configured engine. It creates the `tests/` directory structure defined in
-`coding-standards.md` (unit/, integration/, performance/, playtest/) and
+configured engine. It resolves engine-native test roots from `coding-standards.md` and
 generates the appropriate test runner configuration for the detected engine:
-GdUnit4 config for Godot, Unity Test Runner asmdef for Unity, or Unreal headless
-runner for Unreal Engine.
+installed GdUnit4 CLI for Godot, test asmdefs under Assets for Unity, or a
+compiled Unreal module with a platform-specific build/run command.
 
 Each file or directory created is gated behind a "May I write" ask. If the test
 framework already exists, the skill verifies the configuration rather than
@@ -47,17 +46,18 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 **Expected behavior:**
 1. Skill reads engine from `technical-preferences.md` → Godot 4 + GDScript
 2. Skill drafts the test directory structure: tests/unit/, tests/integration/,
-   tests/performance/, tests/playtest/, and a GdUnit4 runner config file
+   tests/smoke/, production/qa/evidence/, production/qa/playtests/, and a README
+   referencing the installed GdUnit4 CLI
 3. Skill asks "May I write the tests/ directory structure?"
-4. Directories and GdUnit4 runner script created on approval
-5. Skill confirms the runner script matches the CI command in coding-standards.md:
-   `godot --headless --script tests/gdunit4_runner.gd`
+4. Directories and README created on approval; no fake runner is generated
+5. Skill resolves the installed `bin/GdUnitCmdTool.gd` path and checks its options
+   against the installed version; command uses quoted editor/project paths
 6. Verdict is COMPLETE
 
 **Assertions:**
-- [ ] All 4 subdirectories (unit/, integration/, performance/, playtest/) are created
-- [ ] GdUnit4 runner config is generated
-- [ ] Runner script path matches coding-standards.md CI command
+- [ ] Only approved engine test directories and canonical manual evidence destinations are created
+- [ ] Installed GdUnit4 CLI is discovered; no SceneTree wrapper can simply exit 0
+- [ ] README and CI match the installed runner and shared command contract
 - [ ] "May I write" is asked before creating any files
 - [ ] Verdict is COMPLETE
 
@@ -73,14 +73,14 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 
 **Expected behavior:**
 1. Skill reads engine → Unity + C#
-2. Skill creates `Tests/` directory with Unity conventions (capitalized)
-3. Skill generates `Tests/Tests.asmdef` and `Tests/Editor/EditorTests.asmdef`
+2. Skill previews `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/`
+3. Skill drafts test asmdefs referencing the actual project assembly
 4. EditMode and PlayMode test runner modes are configured
-5. Skill asks "May I write the Tests/ directory structure?"
+5. Skill asks "May I write the Assets/Tests/ directory structure?" before any writes
 6. Verdict is COMPLETE
 
 **Assertions:**
-- [ ] Unity-specific `Tests/` structure is created (not the Godot structure)
+- [ ] Unity-specific `Assets/Tests/` structure is created (not the Godot structure)
 - [ ] `.asmdef` files are generated
 - [ ] EditMode and PlayMode runner config is present
 - [ ] Verdict is COMPLETE
@@ -91,7 +91,7 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 
 **Fixture:**
 - `tests/unit/`, `tests/integration/` exist
-- GdUnit4 runner script exists (Godot project)
+- Installed GdUnit4 CLI exists (Godot project)
 
 **Input:** `$test-setup`
 
@@ -100,7 +100,7 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 2. Skill reports: "Test framework already exists — verifying configuration"
 3. Skill checks: runner script path, directory completeness, CI command alignment
 4. If all checks pass: reports "Configuration verified — no changes needed"
-5. If checks fail (e.g., missing tests/performance/): reports specific gap and
+5. If checks fail (e.g., missing tests/integration/): reports specific gap and
    asks "May I add the missing directories?"
 
 **Assertions:**
@@ -155,7 +155,7 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 
 - [ ] Reads engine from `technical-preferences.md` before generating any scaffold
 - [ ] Generates engine-appropriate test runner config (not generic)
-- [ ] Creates all 4 subdirectories from coding-standards.md
+- [ ] Uses the resolved engine test root, not a universal tests/ assumption
 - [ ] Asks "May I write" before creating files
 - [ ] Detects existing framework and offers verification (not reinitialization)
 - [ ] Verdict is COMPLETE when scaffold is in place
@@ -164,10 +164,48 @@ None. `$test-setup` is a scaffolding utility. No director gates apply.
 
 ## Coverage Notes
 
-- Unreal Engine test scaffolding (headless runner with `-nullrhi`) follows the
-  same pattern as Cases 1 and 2 and is not separately fixture-tested.
+- Unreal module/build discovery and null-RHI limitations require an engine fixture;
+  no rendering claim can be established with `-nullrhi`.
 - CI integration file generation (e.g., `.github/workflows/test.yml`) is
   referenced but not assertion-tested here — it may be a separate skill concern.
 - The case where tests/ exists but is from a different engine (e.g., Unity tests
   in a now-Godot project) is not tested; the skill would detect the mismatch
   and offer to reconcile.
+
+## Phase 1 Backport Regression Cases
+
+- [ ] Godot: missing addon stops execution claims; no dependency installation
+  without authority. Preserve addon casing, use the installed CLI, import first,
+  and interpret failed/warning exit codes with actual test counts.
+- [ ] Godot target setup: preview `production/.gdignore` with the scaffold; do not
+  add it silently to this framework repository.
+- [ ] Unity: use the full quoted editor path, both required modes, fresh XML/log
+  destinations, and no `-quit`; asmdefs reference existing runtime assemblies.
+- [ ] Unreal: place tests inside a compiled module, build its editor target with
+  the host platform's tool, and reject zero discovered tests/stale reports.
+- [ ] A scaffold may be COMPLETE while execution is explicitly NOT ASSESSED;
+  completion of setup must never be reported as tests passing.
+- [ ] CI permissions permit intended report publication and generated commands
+  reject missing/empty results. All dependency/version choices remain explicit.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

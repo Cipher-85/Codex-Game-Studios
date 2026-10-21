@@ -9,20 +9,14 @@ Use this before authoring or editing design files outside more specific rules.
 
 ## GDD Files
 
-Every GDD in `design/gdd/` must include all eight required sections in this
-order:
-
-1. Overview
-2. Player Fantasy
-3. Detailed Rules
-4. Formulas
-5. Edge Cases
-6. Dependencies
-7. Tuning Knobs
-8. Acceptance Criteria
+Read `.codex/docs/workflow-modes.md` before authoring design artifacts. Use its
+resolved section/artifact requirements, including the minimal brief and standard
+numeric-formula condition. Existing optional content is preserved and reviewed.
+A concept or brief uses its own template, not the system GDD section checklist.
 
 - File naming: `[system-slug].md`, such as `movement-system.md`.
-- Update `design/gdd/systems-index.md` when adding a new GDD.
+- Update an existing systems index after approval when adding a GDD; create a
+  required index through its workflow. Minimal does not require a new index.
 - Design order is Foundation, Core, Feature, Presentation, Polish.
 - Run `$design-review [path]` after authoring any GDD.
 - Run `$review-all-gdds` after completing related GDDs.

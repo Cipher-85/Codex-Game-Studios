@@ -117,6 +117,10 @@ def validate_role_activation_records(
             spawn_candidates.append((parse_call_arguments(payload.get("arguments")), current_context.copy()))
         if row.get("type") == "event_msg" and payload.get("type") == "sub_agent_activity" and payload.get("kind") == "started":
             started_events.append(payload)
+        if row.get("type") == "event_msg" and payload.get("type") == "item_completed":
+            item = payload.get("item")
+            if isinstance(item, dict) and item.get("type") == "SubAgentActivity" and item.get("kind") == "started":
+                started_events.append(item)
 
     if task_name:
         spawn_candidates = [item for item in spawn_candidates if item[0].get("task_name") == task_name]

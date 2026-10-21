@@ -177,3 +177,25 @@ review specs separately but this is not a gate within this skill.
   state requirements aligned to the UX spec.
 - The case where GDD is also missing (neither GDD nor art bible exists) is not
   separately tested; spec would be generated with both dependency gaps flagged.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

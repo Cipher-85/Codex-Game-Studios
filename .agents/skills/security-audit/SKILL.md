@@ -3,6 +3,25 @@ name: security-audit
 description: "Audit the game for security vulnerabilities: save tampering, cheat vectors, network exploits, data exposure, and input validation gaps. Produces a prioritised security report with remediation guidance. Run before any public release or multiplayer launch."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
 # Security Audit
 
 Security is not optional for any shipped game. Even single-player games have
@@ -31,7 +50,7 @@ remediation plan.
 - `quick` — high-severity checks only (fastest, for iterative use)
 - No argument — run `full`
 
-Read `.codex/docs/technical-preferences.md` to determine:
+Use the technical reader and preserved custom project notes to determine:
 - Engine and language (affects which patterns to search for)
 - Target platforms (affects which attack surfaces apply)
 - Whether multiplayer/networking is in scope
@@ -43,7 +62,8 @@ Read `.codex/docs/technical-preferences.md` to determine:
 Spawn `security-engineer` via Codex subagent delegation. Pass:
 - The audit scope/mode
 - Engine and language from technical preferences
-- A manifest of all source directories: `src/`, `assets/data/`, any config files
+- A manifest of resolved source/content directories, native asset/data folders
+  and relevant config files, with excluded or unassessed paths stated
 
 The security-engineer runs the audit across 6 categories (see Phase 3). Collect their full findings before proceeding.
 
@@ -81,7 +101,7 @@ Grep for: `recv`, `receive`, `PacketPeer`, `socket`, `NetworkedMultiplayerPeer`,
 Grep for: `get_input`, `Input.get_`, `input_map`, user-facing text fields — check validation.
 
 ### Category 4: Data Exposure
-- Are any API keys, credentials, or secrets hardcoded in `src/` or `assets/`?
+- Are any API keys, credentials, or secrets hardcoded in the assessed source/content scope?
 - Are debug symbols or verbose error messages included in release builds?
 - Does the game log sensitive player data to disk or console?
 - Are any internal file paths or system information exposed to players?

@@ -1,7 +1,16 @@
 # Codex Game Studios
 
+
+Workflow requirements are resolved by `.codex/lib/project_config.py workflow`
+and defined in `.codex/docs/workflow-modes.md`. Unconfigured projects preserve
+compatibility; minimal uses a brief/build order, standard a reduced GDD and
+critical architecture set, and full the complete pipeline. The detailed pipeline
+below is the compatibility/full reference where tiers differ. Documentation
+reductions preserve required evidence and all user approvals. Recorded stage
+uses the source-aware `stage` reader in `.codex/docs/config-resolution.md`.
+
 Codex Game Studios turns a game repository into a Codex-native indie studio
-workflow: 49 declared role profiles, 75 repo-local skills, Agent Bindery-backed
+workflow: 49 declared role profiles, 76 repo-local skills, Agent Bindery-backed
 continuity, and Godot-first production guidance for small teams building
 playable slices.
 
@@ -9,16 +18,19 @@ Current package version: `0.7.4`.
 
 This project is an unofficial Codex-native port of
 [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios),
-pinned to upstream commit `984023ddac0d5e27624f2baacde6105e45de375f`. It keeps
-the upstream studio shape and MIT attribution while replacing Claude runtime
-surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
+whose original port baseline is `984023ddac0d5e27624f2baacde6105e45de375f`.
+The working tree selectively adapts upstream v1.2.0 at
+`05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418`; it is not a complete upstream sync.
+It keeps MIT attribution while replacing Claude runtime surfaces with
+Codex-native agents, skills, hooks, rules, and install behavior. See the
+[adoption matrix and upgrade guidance](UPGRADING.md#selective-v120-adoption).
 
 ## What Is Included
 
 - 49 Codex custom-agent profiles in `.codex/agents/*.toml`
-- 75 repo-local Codex skills in `.agents/skills/*/SKILL.md`
+- 76 repo-local Codex skills in `.agents/skills/*/SKILL.md`
   - 73 upstream workflow skills ported to Codex
-  - 2 Codex support skills: `studio-status` and `studio-next`
+  - 3 additional skills: `settings`, `studio-status`, and `studio-next`
 - `.agent-continuity.toml` and CCGS modules under `production/handoff/` for the
   globally installed Agent Bindery `handoff` / `resume-from-handoff` pair
 - Root `AGENTS.md` startup instructions and hidden path rules under `.codex/`
@@ -31,7 +43,16 @@ surfaces with Codex-native agents, skills, hooks, rules, and install behavior.
 
 ## Current Status
 
-The current release line is `v0.7.4`. It includes:
+The current release line is `v0.7.4`. This is the working package version,
+not proof of publication or native acceptance. The selective update includes:
+
+- Provenance-aware configuration, separate approved migration, and connected
+  review, workflow, QA, team and technical consumers.
+- Engine/custom source-scope resolution and read-only story, ADR, GDD and bug
+  observations; unknown inputs stay distinct from passing checks.
+- Required evidence and approval boundaries preserved at every workflow tier.
+
+The package also includes:
 
 - Complete instruction-file backups before uninstall removes managed or
   migrated blocks, with backup failures preventing removal of that file.
@@ -449,3 +470,15 @@ and conversion notes.
 - [.codex/docs/COEXISTENCE.md](.codex/docs/COEXISTENCE.md)
 - [PORTING_NOTES.md](PORTING_NOTES.md)
 - [CHANGELOG.md](CHANGELOG.md)
+
+
+## Connected QA, team and technical settings
+
+The shared `project_config.py qa-policy`, `team-policy` and `technical` readers
+apply existing-schema settings without running workflows. See
+`.codex/docs/qa-policy.md`, `team-policy.md` and `technical-config.md` for policy.
+QA levels preserve mandatory evidence; team size changes only optional declared
+participation; technical settings must agree with engine pins and verified
+runners. Performance estimates cannot pass measured checks. Existing prose and
+custom routing remain authoritative; setup/migration still need exact approvals.
+Automation settings and new upstream-only fields remain outside this integration.

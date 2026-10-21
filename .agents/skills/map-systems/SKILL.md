@@ -3,6 +3,25 @@ name: map-systems
 description: "Decompose a game concept into individual systems, map dependencies, prioritize design order, and create the systems index."
 ---
 
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use `design/game-brief.md` as concept/requirement context at project minimal; otherwise
+use the concept and applicable GDDs. Read optional architecture/art/index inputs
+when present, but their absence alone is not a blocker for the lighter tier.
+Preserve explicit constraints, engine checks, user decisions and actual observed
+playtest/evidence requirements. Route follow-ups using the effective workflow.
+
+
 When this skill is invoked:
 
 ## Parse Arguments
@@ -15,11 +34,9 @@ Two modes:
   from the index and hand off to `$design-system` (Phase 6).
 
 Also resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
-
-See `.codex/docs/director-gates.md` for the full check pattern.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 ---
 
@@ -29,7 +46,7 @@ Read the game concept and any existing design work. This provides the raw materi
 for systems decomposition.
 
 **Required:**
-- Read `design/gdd/game-concept.md` — **fail with a clear message if missing**:
+- Read the resolved `design_source` — **fail with a clear message if missing**:
   > "No game concept found at `design/gdd/game-concept.md`. Run `$brainstorm` first
   > to create one, then come back to decompose it into systems."
 
@@ -284,7 +301,7 @@ Once a system is selected, invoke the `$design-system [system-name]` skill.
 The `$design-system` skill handles the full GDD authoring process:
 - Gathers context from game concept, systems index, and dependency GDDs
 - Creates a file skeleton immediately
-- Walks through all 8 required sections one at a time (collaborative, incremental)
+- Walks through all tier-required sections one at a time (collaborative, incremental)
 - Cross-references existing docs to prevent contradictions
 - Routes to specialist agents for domain expertise
 - Writes each section to file as soon as it's approved

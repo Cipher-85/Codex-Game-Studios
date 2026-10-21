@@ -3,6 +3,45 @@ name: regression-suite
 description: "Map test coverage to GDD critical paths, identify fixed bugs without regression tests, flag coverage drift from new features, and maintain tests/regression-suite.md. Run after implementing a bug fix or before a release gate for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+For a minimal audit, derive critical paths from the approved brief and linked
+story criteria; an absent systems index/GDD is not a gap. For standard, apply
+the system's required/present sections. Keep current evidence and bug-regression
+requirements; optional design documentation never waives a missing test.
+
+
 # Regression Suite
 
 This skill ensures that every bug fix is backed by a test that would have

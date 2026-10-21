@@ -3,9 +3,57 @@ name: team-ui
 description: "Orchestrate the UI team through the full UX pipeline: from UX spec authoring through visual design, implementation, review, and polish. Integrates with $ux-design, $ux-review, and studio UX templates for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## Team participation
+
+Before dispatch, read `.codex/docs/team-policy.md` and run
+`project_config.py team-policy`. Identify required/conditional/explicitly optional
+roles in this pipeline, then filter only optional participation by size. A role
+whose condition holds stays required. Preserve domain ownership, review-mode
+filtering and runtime role-identity checks; size authorizes no new roles or writes.
+Show the resulting roster and any omitted optional advisors. Unavailable required
+roles remain blocked rather than simulated by the coordinator.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use `design/game-brief.md` as concept/requirement context at project minimal; otherwise
+use the concept and applicable GDDs. Read optional architecture/art/index inputs
+when present, but their absence alone is not a blocker for the lighter tier.
+Preserve explicit constraints, engine checks, user decisions and actual observed
+playtest/evidence requirements. Route follow-ups using the effective workflow.
+
+
 When this skill is invoked, orchestrate the UI team through a structured pipeline.
 
-Before any UI implementation writes `src/ui/**`, read
+Before any UI implementation writes game source in the resolved scope, read
 `.codex/instructions/path-rules/source-code.md` and
 `.codex/instructions/path-rules/ui-code.md`. Before writing UX specs under
 `design/**`, read `.codex/instructions/path-rules/design-directory.md`.
@@ -16,10 +64,9 @@ full analysis in conversation, then capture the decision with concise labels.
 The user must approve before moving to the next phase.
 
 ## Phase 0: Resolve Review Mode
-
-1. If `--review [mode]` was passed as an argument, use that mode.
-2. Else read `production/review-mode.txt` — use whatever is written there.
-3. Else default to `lean`.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 Modes:
 - `full` — spawn all director and lead gates as described

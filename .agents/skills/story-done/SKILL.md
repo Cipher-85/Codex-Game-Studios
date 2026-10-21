@@ -3,6 +3,64 @@ name: story-done
 description: "End-of-story completion review. Reads the story file, verifies each acceptance criterion against the implementation, checks for GDD/ADR deviations, prompts code review, updates story status to Complete, and surfaces the next ready story from the sprint for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py stories`,
+`python3 .codex/lib/artifact_facts.py adrs`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Read the numbered brief requirement for minimal stories; use exact GDD sections
+at standard when the optional registry is absent. Only read optional architecture
+inputs that exist or are explicitly referenced. Missing referenced inputs and
+stale declared versions remain findings. Keep every acceptance/evidence check
+and completion gate below unchanged. Without a sprint, select the next ready
+story by brief build order and dependencies; completed work stays completed.
+
+
 # Story Done
 
 This skill closes the loop between design and implementation. Run it at the end
@@ -18,11 +76,9 @@ forgotten, and the story file reflects actual completion status.
 ## Phase 1: Find the Story
 
 Resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
-
-See `.codex/docs/director-gates.md` for the full check pattern.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 **If a file path is provided** (e.g., `$story-done production/epics/core/story-damage-calculator.md`):
 read that file directly.
@@ -48,13 +104,14 @@ Read the full story file. Extract and hold in context:
 - **Manifest Version** embedded in the story header (e.g., `2026-03-10`)
 - **ADR reference(s)** referenced
 - **Acceptance Criteria** — the complete list (every checkbox item)
-- **Implementation files** — files listed under "files to create/modify"
+- **Implementation files** — files listed under `## Files` (legacy "files to create/modify" is accepted)
 - **Story Type** — the `Type:` field from the story header (Logic / Integration / Visual/Feel / UI / Config/Data)
 - **Engine notes** — any engine-specific constraints noted
 - **Definition of Done** — if present, the story-level DoD
 - **Estimated vs actual scope** — if an estimate was noted
 
-Also read:
+Read required/present or explicitly referenced inputs; at project minimal use the
+numbered brief feature instead of an absent registry:
 - `docs/architecture/tr-registry.yaml` — look up each TR-ID in the story.
   Read the *current* `requirement` text from the registry entry. This is the
   source of truth for what the GDD required — do not use any requirement text
@@ -78,7 +135,7 @@ three methods:
 - **Test pass check**: if a test file path is mentioned, run it via `Bash`.
 - **No hardcoded values check**: `Grep` for numeric literals in gameplay code
   paths that should be in config files.
-- **No hardcoded strings check**: `Grep` for player-facing strings in `src/`
+- **No hardcoded strings check**: `Grep` for player-facing strings in the resolved source/content scope
   that should be in localization files.
 - **Dependency check**: if a criterion says "depends on X", check that X exists.
 
@@ -86,7 +143,7 @@ three methods:
 
 - Criteria about subjective qualities ("feels responsive", "animations play correctly")
 - Criteria about gameplay behaviour ("player takes damage when...", "enemy responds to...")
-- Performance criteria ("completes within Xms") — ask if profiled or accept as assumed
+- Performance criteria ("completes within Xms") — require measured results; never accept as assumed
 
 Batch up to 4 manual verification questions into a single `numbered choice prompt` call:
 
@@ -95,10 +152,15 @@ question: "Does [criterion]?"
 options: "Yes — passes", "No — fails", "Not tested yet"
 ```
 
-### Unverifiable (flag without blocking)
+### Unassessed criteria
 
-- Criteria that require a full game build to test (end-to-end gameplay scenarios)
-- Mark as: `DEFERRED — requires playtest session`
+- Unrun end-to-end/gameplay checks: `DEFERRED — requires playtest session`.
+- "Not tested yet", an empty response, missing required evidence, unreadable
+  captures or unavailable tooling: NOT ASSESSED.
+- No such criterion counts as passed. Any required unassessed criterion prevents
+  COMPLETE and COMPLETE WITH NOTES until applicable evidence is supplied.
+- Test file existence is not execution. Follow the engine execution contract in
+  `.codex/docs/coding-standards.md`; zero tests or an old output file is not a pass.
 
 ### Test-Criterion Traceability
 
@@ -125,20 +187,21 @@ For each acceptance criterion in the story:
 | AC-3: [criterion text] | — | UNTESTED |
 ```
 
-3. Apply these escalation rules:
-
-   - If **>50% of criteria are UNTESTED**: escalate to **BLOCKING** — test
-     coverage is insufficient to confirm the story is actually done. The verdict
-     in Phase 6 cannot be COMPLETE until coverage improves.
-   - If **some (≤50%) criteria are UNTESTED**: remain ADVISORY — does not block
-     completion, but must appear in Completion Notes.
-   - If **all criteria are COVERED**: no action needed beyond including the
-     table in the report.
-
-4. For any ADVISORY untested criteria, add to the Completion Notes in Phase 7:
-   `"Untested criteria: [AC-N list]. Recommend adding tests in a follow-up story."`
+3. Distinguish test presence from observed execution. A criterion with a test
+   file but no applicable passing run is UNTESTED, not COVERED. Resolve test roots
+   per engine and record the exact run/report or explicit manual observation.
+4. Any required UNTESTED criterion keeps the verdict NOT ASSESSED. An observed
+   failure is BLOCKED. List advisory recommendations separately; percentages
+   cannot waive a required acceptance criterion.
 
 ### Test Evidence Requirement
+
+Resolve engine test roots using `.codex/docs/coding-standards.md`. The `tests/`
+examples below apply to Godot; Unity uses `Assets/Tests/` assemblies and Unreal
+uses tests in a compiled module. Search the story's exact paths first.
+For visible criteria, the observed-run and opened-capture requirements in
+`.codex/docs/verification-integrity.md` apply even if the table's role sign-off
+policy is advisory. Missing required visual evidence is NOT ASSESSED.
 
 Based on the Story Type extracted in Phase 2, check for required evidence:
 
@@ -160,18 +223,27 @@ slightly different location). If no test file is found at either location:
 
 **For Integration stories**: read the story's **Test Evidence** section for the exact
 required path. Use `Glob` to check that exact path first, then search
-`tests/integration/[system]/` broadly, then check `production/session-logs/` for a
+`tests/integration/[system]/` broadly, then check `production/qa/playtests/` for a
 playtest record referencing this story.
 If none found: flag as **BLOCKING** (same rule as Logic).
 
-**For Visual/Feel and UI stories**: glob `production/qa/evidence/` for a file
+**For Visual/Feel and UI stories**: open the referenced images and inspect criterion coverage;
+file existence or a sign-off checkbox alone is not visual proof. Then glob `production/qa/evidence/` for a file
 referencing this story.
 - If none: flag as **ADVISORY** — "No manual test evidence found. Create `production/qa/evidence/[story-slug]-evidence.md` using the test-evidence template and obtain sign-off before final closure."
 - If found: read the file and check the sign-off table for unchecked boxes. Grep for lines matching `| .* | .* | .* | \[ \] Approved` (a sign-off row with an unchecked checkbox). If any unchecked sign-off rows are found: flag as **ADVISORY** — "Evidence file found at `[path]` but [N] sign-off(s) are still pending (shown as `[ ] Approved` in the sign-off table). Obtain required sign-offs before final closure. Note: for solo developers, all roles may be signed off by the same person."
 - If all sign-off rows show `[x] Approved` or equivalent: note "Evidence file found and all sign-offs complete — ADVISORY passed."
 
-**For Config/Data stories**: check for any `production/qa/smoke-*.md` file.
-If none: flag as **ADVISORY** — "No smoke check report found. Run `$smoke-check`."
+**Freshness:** run `bash .codex/lib/review-receipts.sh check
+production/qa/evidence/<story-slug>/stamp.json`. Report CHANGED/GONE inputs and
+request recapture; absent or invalid receipts mean freshness unknown. This is a
+warning about applicability, not a new automatic test failure. Do not create a
+stamp here for old evidence or turn matching hashes into a verification claim.
+
+**For Config/Data stories**: read the smoke report for this build, scope and
+platform. An unrelated, quick-only or stale report cannot verify the required
+data check. Missing applicable evidence is NOT ASSESSED; an observed failure
+is BLOCKED. Name the exact `$smoke-check` coverage still owed.
 
 **If no Story Type is set**: flag as **ADVISORY** —
 "Story Type not declared. Add `Type: [Logic|Integration|Visual/Feel|UI|Config/Data]`
@@ -209,8 +281,14 @@ Run these checks automatically:
 4. **Hardcoded values check**: `Grep` the implemented files for numeric literals
    in gameplay logic that should be in data files.
 
-5. **Scope check**: Did the implementation touch files outside the story's stated
-   scope? (files not listed in "files to create/modify")
+5. **Scope check**: compare `## Files` with the verified story diff and the
+   pre-implementation scope/baseline recorded by `$dev-story`. Retain any
+   planned-versus-actual deviations. A legacy file list is accepted. If neither
+   a story list nor a story-specific checkpoint supplies the scope, report
+   `Scope: NOT ASSESSED — no file list`. A clean working tree does not prove
+   scope: inspect the recorded commit range if available; otherwise report the
+   comparison unassessed. Never label unrelated pre-existing edits out of scope
+   for this story, and never infer that a worker's file list proves the diff.
 
 For each deviation found, categorize:
 
@@ -276,7 +354,11 @@ If the story has no implementation files yet (verdict is being run before coding
 
 ## Phase 6: Present the Completion Report
 
-Before updating any files, present the full report:
+Before updating any files, present the full report. Always include **Reviewed by**:
+- the actual independently loaded reviewer when its gate ran;
+- `user-reported review — not verified here` when the user reports one;
+- `self — no independent review` when no independent reviewer ran.
+Report unavailable/failed role activation as blocked, never as an independent pass.
 
 ```markdown
 ## Story Done: [Story Name]
@@ -306,26 +388,40 @@ Before updating any files, present the full report:
 - BLOCKING: [description] — [GDD/ADR reference]
 - ADVISORY: [description] — user accepted / flagged for tech debt
 
+### Review
+**Reviewed by**: [actual reviewer | user-reported review — not verified here | self — no independent review]
+
 ### Scope
 [All changes within stated scope] OR:
 - Extra files touched: [list] — [note whether valid or scope creep]
 
-### Verdict: COMPLETE / COMPLETE WITH NOTES / BLOCKED
+### Verdict: COMPLETE / COMPLETE WITH NOTES / NOT ASSESSED / BLOCKED
 ```
 
-**Verdict definitions:**
-- **COMPLETE**: all criteria pass, no blocking deviations
-- **COMPLETE WITH NOTES**: all criteria pass, advisory deviations documented
-- **BLOCKED**: failing criteria or blocking deviations must be resolved first
+**Verdict definitions (first matching rule wins):**
+- **BLOCKED**: a failing criterion or blocking deviation was observed.
+- **NOT ASSESSED**: any required criterion/check lacks applicable evidence,
+  including deferred playtests or failed/unavailable required review gates.
+- **COMPLETE WITH NOTES**: all required criteria pass; advisory findings remain.
+- **COMPLETE**: all required criteria pass; no advisory findings remain.
 
-If the verdict is **BLOCKED**: do not proceed to Phase 7. List what must be
-fixed. Offer to help fix the blocking items.
+For BLOCKED or NOT ASSESSED, recommend leaving the story open and name what
+would settle each gap. An explicit user choice to accept deviations may change
+administrative status, but must retain the original verification verdict and
+unverified criteria in Completion Notes. It never establishes acceptance or
+satisfies a required QA/stage gate.
 
 ---
 
 ## Phase 7: Update Story Status
 
 Use `numbered choice prompt` before writing anything:
+For BLOCKED or NOT ASSESSED, recommend fixing/verifying first. Do not call the
+verification complete or recommend closure. Offer administrative closure only
+as an explicit override retaining the original verdict and every unresolved
+criterion; ask before writing the named story/status files.
+
+For COMPLETE or COMPLETE WITH NOTES, use:
 - Prompt: "Verification complete. How do you want to proceed?"
 - Options:
   - `Close the story — update file, mark Complete, log notes (Recommended)`
@@ -343,6 +439,8 @@ If "Fix first": stop here and list what the user flagged. Do not write any files
 
 ```markdown
 ## Completion Notes
+**Verification verdict**: [original verdict, including any unverified criteria]
+**Reviewed by**: [actual reviewer or explicit provenance]
 **Completed**: [date]
 **Criteria**: [X/Y passing] ([any deferred items listed])
 **Deviations**: [None] or [list of advisory deviations]
@@ -366,7 +464,7 @@ If "Fix first": stop here and list what the user flagged. Do not write any files
 
 ```
 Suggested commit:
-git add [src/ and tests/ files changed during implementation] [story-file-path]
+git add [actual source and native test files changed during implementation] [story-file-path]
 git commit -m "feat: [story title] ([TR-ID])"
 ```
 
@@ -379,7 +477,7 @@ After updating the story file, silently append to
 separate "May I write?" for this file:
 
     ## Session Extract — $story-done [date]
-    - Verdict: [COMPLETE / COMPLETE WITH NOTES / BLOCKED]
+    - Verdict: [COMPLETE / COMPLETE WITH NOTES / NOT ASSESSED / BLOCKED]
     - Story: [story file path] — [story title]
     - Tech debt logged: [N items, or "None"]
     - Next recommended: [next ready story title and path, or "None identified"]
@@ -411,7 +509,7 @@ Run `$story-readiness [path]` to confirm a story is implementation-ready
 before starting.
 ```
 
-If no more Must Have stories remain in this sprint (all are Complete or Blocked):
+If all Must Have stories have passing completion evidence (none Blocked or NOT ASSESSED):
 
 ```
 ### Sprint Close-Out Sequence
@@ -427,6 +525,9 @@ Run these in order:
 
 Do not run `$gate-check` until `$team-qa` returns APPROVED or APPROVED WITH CONDITIONS.
 ```
+
+If Must Have stories remain Blocked or NOT ASSESSED, list those first and route
+to their missing verification or fix; do not claim the sprint is complete.
 
 If there are Should Have stories still unstarted, surface them alongside the close-out sequence so the user can choose: close the sprint now, or pull in more work first.
 
@@ -449,7 +550,7 @@ genuinely tied.
 - **Never auto-fix failing criteria** — report them and ask what to do.
 - **Deviations are facts, not judgments** — present them neutrally; the user
   decides if they are acceptable.
-- **BLOCKED verdict is advisory** — the user can override and mark complete
+- **Status overrides do not change evidence** — preserve BLOCKED/NOT ASSESSED and unverified criteria even if the user explicitly closes the story
   anyway; document the risk explicitly if they do.
 - Use `numbered choice prompt` for the code review prompt and for batching manual
   criteria confirmations.

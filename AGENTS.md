@@ -212,6 +212,7 @@ instructions, not command-approval policy. Keep command policy in
 | Path | Rule Files |
 | ---- | ---- |
 | `src/**` | `source-code.md` |
+| `Assets/**/*.cs`, `Packages/**/*.cs`, `Source/**`, `Plugins/**/Source/**` | `source-code.md`; add the discipline rule for the code's responsibility |
 | `src/gameplay/**` | `source-code.md`, `gameplay-code.md` |
 | `src/core/**` | `source-code.md`, `engine-code.md` |
 | `src/ai/**` | `source-code.md`, `ai-code.md` |
@@ -224,8 +225,15 @@ instructions, not command-approval policy. Keep command policy in
 | `assets/data/**` | `data-files.md` |
 | `assets/shaders/**` | `shader-code.md` |
 | `tests/**` | `test-standards.md` |
+| `Assets/Tests/**`, `Source/*/Tests/**`, `Source/*/Private/Tests/**` | `test-standards.md` |
+| `**/*.tscn`, `**/*.tres`, `**/*.uid`, `**/*.unity`, `**/*.prefab`, `Assets/**/*.asset`, `**/*.uasset`, `**/*.umap` | `scene-files.md` |
 | `tools/**` | `tool-code.md` |
 | `prototypes/**` | `prototype-code.md` |
+
+Before source/content scans or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`.
+Preserve custom layouts. An unresolved scope is NOT ASSESSED, not zero findings.
+Use the same source and discipline rules for approved custom source paths.
 
 ## Code-Turn Discipline
 

@@ -10,8 +10,8 @@ NEEDS REVISION / MAJOR REVISION NEEDED.
 
 In `full` review mode, the skill spawns two director gate agents in parallel:
 TD-ARCHITECTURE (technical-director) and LP-FEASIBILITY (lead-programmer). In
-`lean` or `solo` mode, both gates are skipped and noted. The skill is read-only —
-no files are written.
+`lean` or `solo` mode, both gates are skipped and noted. Review is read-only until the user approves a specific systems-index or
+registry/RTM update preview. Single-GDD writes remain scoped to that system.
 
 ---
 
@@ -22,7 +22,7 @@ Verified automatically by `$skill-test static` — no fixture needed.
 - [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Does NOT require "May I write" language (read-only skill)
+- [ ] Requires approval before optional index/registry/RTM writes
 - [ ] Has a next-step handoff at the end
 - [ ] Documents gate behavior: TD-ARCHITECTURE + LP-FEASIBILITY in full mode; skipped in lean/solo
 
@@ -65,7 +65,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 - [ ] All 8 required sections are checked and reported
 - [ ] TD-ARCHITECTURE and LP-FEASIBILITY spawn in parallel (not sequentially)
 - [ ] Verdict is APPROVED when all sections are present and no conflicts exist
-- [ ] Skill does NOT write any files
+- [ ] Skill does NOT write any files without approval
 - [ ] Next-step handoff to `$create-control-manifest` or `$create-epics` is present
 
 ---
@@ -173,7 +173,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 ## Protocol Compliance
 
-- [ ] Does NOT write any files (read-only skill)
+- [ ] Does NOT write any files without an approved update preview
 - [ ] Presents section completeness check before issuing verdict
 - [ ] TD-ARCHITECTURE and LP-FEASIBILITY spawn in parallel in full mode
 - [ ] Skipped gates are noted by name and mode in lean/solo output
@@ -190,3 +190,82 @@ In `solo` mode: both gates are skipped with equivalent notes.
   is part of Case 1's happy path but not independently fixture-tested.
 - RTM (requirement traceability matrix) mode is a separate concern covered by
   the `$architecture-review` skill's own `rtm` argument mode, not tested here.
+
+## Phase 1 Backport Regression Cases
+
+These assertions require workflow evaluation; adding them is not a passing test run.
+
+- [ ] Given `single-gdd combat` with inventory registry/index/RTM rows present,
+  preview and update only combat rows after approval. Preserve inventory content,
+  comments, ordering, and existing identifiers.
+- [ ] Re-read all target files immediately before applying the approved patch;
+  drift requires a revised preview rather than overwriting intervening changes.
+- [ ] New IDs exceed the highest ever allocated ID, including deprecated rows.
+  Never recycle identifiers or deprecate unrelated requirements.
+- [ ] A safe bounded patch that cannot be identified results in report-only
+  output; it does not fall back to rebuilding the shared files.
+- [ ] The report identifies `single-gdd` scope and cannot satisfy a full-system
+  architecture gate merely because its local verdict passes.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Phase 5B artifact-reader acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Parser/graph
+fixtures alone do not establish this skill's behavior.
+
+- Keep the workflow's selected scope and call the applicable artifact readers.
+  Verify source paths/lines and read incomplete or ambiguous values as unknown.
+- Exercise absent files, duplicate metadata, code/comment examples, empty
+  sections and nonstandard layouts. Empty discovery cannot establish a PASS,
+  zero open bugs, a ready story or a completed quality review.
+- Apply existing tier and evidence rules after reading facts. Missing optional
+  TR/ADR/GDD artifacts in minimal workflows remain N/A where permitted; named
+  broken references and actual missing evidence keep their existing effect.
+- For ADR graphs retain self-loops, multi-node cycles, missing/duplicate IDs and
+  unknown dependencies. A partial graph yields no complete implementation order.
+- Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
+  and source header status versus evidence/closure status. Counts do not
+  authorize edits, closure, new priorities, stage changes or role dispatch.

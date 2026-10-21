@@ -3,6 +3,27 @@ name: team-combat
 description: "Orchestrate the combat team: coordinates game-designer, gameplay-programmer, ai-programmer, technical-artist, sound-designer, and qa-tester to design, implement, and validate a combat feature end-to-end."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## Team participation
+
+Before dispatch, read `.codex/docs/team-policy.md` and run
+`project_config.py team-policy`. Identify required/conditional/explicitly optional
+roles in this pipeline, then filter only optional participation by size. A role
+whose condition holds stays required. Preserve domain ownership, review-mode
+filtering and runtime role-identity checks; size authorizes no new roles or writes.
+Show the resulting roster and any omitted optional advisors. Unavailable required
+roles remain blocked rather than simulated by the coordinator.
+
+
 **Argument check:** If no combat feature description is provided, output:
 > "Usage: `$team-combat [combat feature description]` — Provide a description of the combat feature to design and implement (e.g., `melee parry system`, `ranged weapon spread`)."
 Then stop immediately without spawning any subagents or reading any files.
@@ -15,10 +36,9 @@ full analysis in conversation, then capture the decision with concise labels.
 The user must approve before moving to the next phase.
 
 ## Phase 0: Resolve Review Mode
-
-1. If `--review [mode]` was passed as an argument, use that mode.
-2. Else read `production/review-mode.txt` — use whatever is written there.
-3. Else default to `lean`.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 Modes:
 - `full` — spawn all director and lead gates as described

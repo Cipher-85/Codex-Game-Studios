@@ -3,25 +3,43 @@ name: sprint-plan
 description: "Generates a new sprint plan or updates an existing one based on the current milestone, completed work, and available capacity. Pulls context from production documents and design backlogs for Codex Game Studios."
 ---
 
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+At project minimal, first explain that the brief's build order is already the plan;
+recommend its next ready story. If the user explicitly requested a separate
+sprint artifact, continue the approved planning flow using brief-linked stories.
+A missing optional sprint plan is not a project gap. Use density for prose and
+granularity for grouping, preserving criteria and scope limits.
+
+
 ## Phase 0: Parse Arguments
 
 Extract the mode argument (`new`, `update`, or `status`) and resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
-See `.codex/docs/director-gates.md` for the full check pattern.
+**Review mode setup** (before gates run):
+- If the shared result has `configured: true`, use its value/source, including a
+  per-run flag. Preserve existing YAML and legacy files; no initialization prompt.
+- If `configured: false` and this is a `new` sprint, offer Full / Lean / Solo.
+  Explain that the current operational default is `lean`. After selection, show
+  the exact single-line content and ask "May I write this to
+  `production/review-mode.txt`?" with `a. yes` / `b. no` before writing it.
+- Re-run the shared `review-mode` contract after an approved initialization.
+  A declined write leaves the validated default in use for this run.
+- For other sprint modes, use the validated result without a setup prompt.
 
-**Review mode check** (before gates run):
-- Read `production/review-mode.txt` if it exists. Use that mode.
-- If the file doesn't exist and this is a `new` sprint: use `numbered choice prompt`:
-  - Prompt: "No review mode is set. Which review depth would you like for this sprint?"
-  - Options:
-    - `[A] full — spawn all director and lead gates`
-    - `[B] lean — skip non-phase-gate director reviews (recommended for most sprints)`
-    - `[C] solo — skip all gate spawning`
-  - After selection: write `production/review-mode.txt` with the chosen mode. Say: "Review mode set to [mode] and saved to production/review-mode.txt."
-- If the file doesn't exist and this is NOT a `new` sprint (e.g., updating an existing sprint): default to `lean` silently.
 
 ---
 
@@ -267,12 +285,12 @@ After the sprint plan is written and QA plan status is resolved:
 - `$sprint-status` — check progress mid-sprint
 - `$scope-check [epic]` — verify no scope creep before implementation begins
 
-**Review mode configuration:** All director gates (producer feasibility, QA review, code review) respect the project review mode. The review mode is set in Phase 0 when the file does not exist (for `new` sprints), or can be overridden per-run with `--review full|lean|solo` as an argument. The file `production/review-mode.txt` contains one of:
-- `lean` — skip automated director gates (default if file is absent — fastest for solo dev)
-- `full` — run all director gates as spawned sub-agents
-- `solo` — skip all gates unconditionally (single-developer, no review)
+**Review mode configuration:** Resolve through the shared `review-mode`
+contract in `.codex/docs/director-gates.md`. A `--review full|lean|solo` flag is
+per-run only. `lean` runs PHASE-GATEs and skips per-skill director gates; `full`
+runs declared gates; `solo` skips director gates. Pipeline agents and independent
+review-depth settings keep their own declared behavior.
 
-This file is read by `$sprint-plan`, `$story-readiness`, `$story-done`, and other skills at startup.
 
 ## Ported metadata
 

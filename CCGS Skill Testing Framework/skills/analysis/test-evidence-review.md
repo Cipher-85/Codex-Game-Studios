@@ -2,174 +2,119 @@
 
 ## Skill Summary
 
-`$test-evidence-review` performs a quality review of test files in `tests/`,
-checking test naming conventions, determinism, isolation, and absence of
-hardcoded magic numbers — all against the project's test standards defined in
-`coding-standards.md`. Findings may be flagged for qa-lead review. No director
-gates are invoked. The skill does not write without user approval. Verdicts:
-PASS, WARNINGS, or FAIL.
-
----
+Reviews the quality and completeness of evidence for a story, sprint, or system.
+Reads stories, resolves their engine-native evidence paths, and assesses test
+quality, criterion linkage, sign-offs, visual artifacts, and content freshness.
+Per-story verdicts are ADEQUATE / INCOMPLETE / MISSING / NOT ASSESSED. Source
+quality review is separate from test execution. The optional report is written
+only after approval. These cases specify behavior; they are not execution receipts.
 
 ## Static Assertions (Structural)
 
-Verified automatically by `$skill-test static` — no fixture needed.
-
-- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
-- [ ] Has ≥2 phase headings
-- [ ] Contains verdict keywords: PASS, WARNINGS, FAIL
-- [ ] Does NOT require "May I write" language (read-only; write is optional flagging report)
-- [ ] Has a next-step handoff (what to do after findings are reviewed)
-
----
-
-## Director Gate Checks
-
-None. Test evidence review is an advisory quality skill; QL-TEST-COVERAGE gate
-is a separate skill invocation and is NOT triggered here.
-
----
+- [ ] Has the Codex metadata contract and multiple workflow phases.
+- [ ] Contains ADEQUATE, INCOMPLETE, MISSING, and NOT ASSESSED.
+- [ ] Requests approval before an optional report write.
+- [ ] No director gates; quality findings may be referred to qa-lead.
 
 ## Test Cases
 
-### Case 1: Happy Path — Tests follow all standards
+### Case 1: Adequate story evidence
 
-**Fixture:**
-- `tests/unit/combat/health_system_take_damage_test.gd` exists with:
-  - Naming: `test_health_system_take_damage_reduces_health()` (follows `test_[system]_[scenario]_[expected]`)
-  - Arrange/Act/Assert structure present
-  - No `sleep()`, `await` with time values, or random seeds
-  - No calls to external APIs or file I/O
-  - No inline magic numbers (uses constants from `tests/unit/combat/fixtures/`)
-
-**Input:** `$test-evidence-review tests/unit/combat/`
-
-**Expected behavior:**
-1. Skill reads test standards from `coding-standards.md`
-2. Skill reads the test file; checks all 5 standards
-3. All checks pass: naming, structure, determinism, isolation, no hardcoded data
-4. Verdict is PASS
-
+**Fixture:** Logic story with exact Test Evidence path, tests satisfying shared
+standards, complete criterion linkage, and an applicable passing execution log.
+**Input:** `$test-evidence-review production/epics/combat/story-health.md`
 **Assertions:**
-- [ ] Each of the 5 test standards is checked and reported
-- [ ] All checks show PASS when standards are met
-- [ ] Verdict is PASS
-- [ ] No files are written
+- [ ] Loads the story, shared standards, and referenced evidence.
+- [ ] Assesses quality and every required criterion, not merely file existence.
+- [ ] Returns ADEQUATE for reviewed quality and separately labels the inspected
+  run's build/ref, scope, results, and historical/current provenance.
+- [ ] Does not claim it executed tests just because it inspected a result file.
+- [ ] Does not write without approval.
 
----
+### Case 2: Incomplete assertion/criterion coverage
 
-### Case 2: Fail — Timing dependency detected
-
-**Fixture:**
-- `tests/unit/ui/hud_update_test.gd` contains:
-  ```gdscript
-  await get_tree().create_timer(1.0).timeout
-  assert_eq(label.text, "Ready")
-  ```
-- Real-time wait of 1 second used instead of mock or signal-based assertion
-
-**Input:** `$test-evidence-review tests/unit/ui/hud_update_test.gd`
-
-**Expected behavior:**
-1. Skill reads the test file
-2. Skill detects real-time wait (`create_timer(1.0)`) — non-deterministic timing dependency
-3. Skill flags this as a FAIL-level finding
-4. Verdict is FAIL
-5. Skill recommends replacing the timer with a signal-based assertion or mock
-
+**Fixture:** Logic story's test file exists but misses named edge cases and has
+assertions with no acceptance-criterion linkage.
+**Input:** `$test-evidence-review production/epics/combat/story-health.md`
 **Assertions:**
-- [ ] Real-time wait usage is detected as a non-deterministic timing dependency
-- [ ] Finding is classified as FAIL severity (blocking — violates determinism standard)
-- [ ] Verdict is FAIL
-- [ ] Remediation suggestion references signal-based or mock-based approach
-- [ ] Skill does not edit the test file
+- [ ] Returns INCOMPLETE with precise missing cases and criterion links.
+- [ ] Separates blocking evidence gaps from advisory quality suggestions.
+- [ ] Does not repair tests during review without an approved follow-up.
 
----
+### Case 3: Missing required evidence
 
-### Case 3: Fail — Test calls external API directly
-
-**Fixture:**
-- `tests/unit/networking/auth_test.gd` contains:
-  ```gdscript
-  var result = HTTPRequest.new().request("https://api.example.com/auth")
-  ```
-- Direct HTTP call to external API without a mock
-
-**Input:** `$test-evidence-review tests/unit/networking/auth_test.gd`
-
-**Expected behavior:**
-1. Skill reads the test file
-2. Skill detects direct external API call (HTTPRequest to live URL)
-3. Skill flags this as a FAIL-level finding — violates isolation standard
-4. Verdict is FAIL
-5. Skill recommends injecting a mock HTTP client
-
+**Fixture:** Story references a required automated test or visual capture that
+is absent; other stories in the same sprint have adequate evidence.
+**Input:** `$test-evidence-review sprint`
 **Assertions:**
-- [ ] Direct external API call is detected and flagged
-- [ ] Finding is classified as FAIL severity (violates isolation standard)
-- [ ] Verdict is FAIL
-- [ ] Remediation references dependency injection with a mock HTTP client
-- [ ] Skill does not modify the test file
+- [ ] Names the absent artifact and returns MISSING for that story.
+- [ ] Overall review cannot be ADEQUATE merely because other stories pass.
+- [ ] Recommends creation/capture of the actual missing evidence rather than a
+  blanket framework reset when infrastructure already exists.
 
----
+### Case 4: Unreadable capture and changed input
 
-### Case 4: Edge Case — No Test Files Found
-
-**Fixture:**
-- User calls `$test-evidence-review tests/unit/audio/`
-- `tests/unit/audio/` directory does not exist
-
-**Input:** `$test-evidence-review tests/unit/audio/`
-
-**Expected behavior:**
-1. Skill attempts to read files in `tests/unit/audio/` — not found
-2. Skill outputs: "No test files found at `tests/unit/audio/` — run `$test-setup` to scaffold test directories"
-3. No verdict is emitted
-
+**Fixture:** Visual story has a corrupt image or no image access; existing stamp
+names a file changed since capture. Repeat with missing stamp and matching hashes.
+**Input:** `$test-evidence-review production/epics/ui/story-hud.md`
 **Assertions:**
-- [ ] Skill does not crash when path does not exist
-- [ ] Output names the attempted path in the message
-- [ ] Output recommends `$test-setup` for scaffolding
-- [ ] No verdict is emitted when there is nothing to review
+- [ ] Attempts to open the image; unreadable evidence yields NOT ASSESSED.
+- [ ] Names changed inputs and requests fresh capture without modifying the stamp.
+- [ ] Missing stamp means freshness unknown, never unchanged.
+- [ ] Hash matches alone never establish visual acceptance or passing execution.
 
----
+### Case 5: Mixed sprint review and write boundary
 
-### Case 5: Gate Compliance — No gate; QL-TEST-COVERAGE is a separate skill
-
-**Fixture:**
-- Test file has 1 WARNINGS-level finding (magic number in a non-boundary test)
-- `review-mode.txt` contains `full`
-
-**Input:** `$test-evidence-review tests/unit/combat/`
-
-**Expected behavior:**
-1. Skill reviews tests; finds 1 WARNINGS-level finding
-2. No director gate is invoked (QL-TEST-COVERAGE is invoked separately, not here)
-3. Verdict is WARNINGS
-4. Output notes: "For full test coverage gate, run `$gate-check` which invokes QL-TEST-COVERAGE"
-5. Skill offers optional report write; asks "May I write" if user opts in
-
+**Fixture:** One ADEQUATE story, one INCOMPLETE, and one unassessed capture.
+**Input:** `$test-evidence-review sprint`
 **Assertions:**
-- [ ] No director gate is invoked in any review mode
-- [ ] Output distinguishes this skill from the QL-TEST-COVERAGE gate invocation
-- [ ] Optional report requires "May I write" before writing
-- [ ] Verdict is WARNINGS for advisory-level test quality issues
-
----
+- [ ] Overall quality verdict retains INCOMPLETE and lists unassessed items;
+  unknown evidence cannot erase a known gap or produce ADEQUATE.
+- [ ] Shows all story findings and next actions before offering report output.
+- [ ] Asks "May I write" with the exact report path and writes only on approval.
+- [ ] No simulated qa-lead/director verdict appears.
 
 ## Protocol Compliance
 
-- [ ] Reads `coding-standards.md` test standards before reviewing test files
-- [ ] Checks naming, Arrange/Act/Assert structure, determinism, isolation, no hardcoded data
-- [ ] Does not edit any test files (read-only skill)
-- [ ] No director gates are invoked
-- [ ] Verdict is one of: PASS, WARNINGS, FAIL
+- [ ] Uses story/sprint/system scope rather than treating a test directory as a story.
+- [ ] Preserves original artifacts and stamps during review.
+- [ ] Separates test source quality, observed execution, and visual inspection.
+- [ ] Flags missing evidence and provenance before recommending QA sign-off.
 
----
+## Phase 1 Backport Regression Cases
 
-## Coverage Notes
+These assertions require workflow evaluation; adding them is not a passing test run.
 
-- Batch review of all test files in `tests/` is not explicitly tested; behavior
-  is assumed to apply the same checks file by file and aggregate the verdict.
-- The QL-TEST-COVERAGE director gate (which checks test coverage percentage) is
-  a separate concern and is intentionally NOT invoked by this skill.
+- [ ] Resolve test roots from the engine; test-code quality PASS is not a claim
+  that the test executed or the feature passed.
+- [ ] A referenced screenshot must be opened. Missing files are MISSING evidence;
+  unreadable or unreviewed captures leave the visual check NOT ASSESSED.
+- [ ] Read capture build/ref, command, time, covered input files, and omissions.
+  Check the existing stamp without modifying it; changed/deleted inputs require
+  fresh evidence. An absent stamp establishes no freshness guarantee.
+- [ ] Unchanged hashes do not prove capture time, test execution, correct behavior,
+  or inspection of the image; preserve those separate evidence requirements.
+- [ ] Use `production/qa/playtests/` for playtests; never infer current results
+  from historical notes alone.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

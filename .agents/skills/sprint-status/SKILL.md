@@ -3,6 +3,42 @@ name: sprint-status
 description: "Fast sprint status check. Reads the current sprint plan, scans story files for status, and produces a concise progress snapshot with burndown assessment and emerging risks. Run at any time during a sprint for quick situational awareness. Use when user asks 'how is the sprint going', 'sprint update', 'show sprint progress' for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py stories`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+Read the actual sprint paths first; the helper does not choose the sprint or
+next story and does not replace the existing status source.
+
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+When minimal has no sprint file, report that no separate sprint is configured;
+read brief-linked story statuses and dependencies for progress instead of
+inventing a sprint or reporting its absence as a blocker.
+
+
 # Sprint Status
 
 This is a fast situational awareness check, not a sprint review. It reads the
@@ -70,7 +106,7 @@ fall back to markdown scanning:
 When using the fallback, add a note at the bottom of the output:
 "⚠ No `sprint-status.yaml` found — status inferred from markdown. Run `$sprint-plan update` to generate one."
 
-Optionally (fast check only — do not do a deep scan): grep `src/` for a
+Optionally (fast check only — do not do a deep scan): search the resolved source scope for a
 directory or file name that matches the story's system slug to check for
 implementation evidence. This is a hint only, not a definitive status.
 

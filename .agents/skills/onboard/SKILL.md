@@ -3,6 +3,14 @@ name: onboard
 description: "Generates a contextual onboarding document for a new contributor or agent joining the project. Summarizes project state, architecture, conventions, and current priorities relevant to the specified role or area for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
 ## Phase 1: Load Project Context
 
 Read AGENTS.md for project overview and standards.
@@ -13,7 +21,7 @@ Read the relevant agent definition from `.codex/agents/` if a specific role is s
 
 ## Phase 2: Scan Relevant Area
 
-- For programmers: scan `src/` for architecture, patterns, key files
+- For programmers: scan the resolved source scope for architecture, patterns and key files
 - For designers: scan `design/` for existing design documents
 - For narrative: scan `design/narrative/` for world-building and story docs
 - For QA: scan `tests/` for existing test coverage

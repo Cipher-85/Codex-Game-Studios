@@ -22,5 +22,7 @@ prose authoring instructions there.
 | `assets/data/**` | `data-files.md` | JSON validity, naming conventions, schema rules |
 | `assets/shaders/**` | `shader-code.md` | Naming, performance targets, cross-platform shader rules |
 | `tests/**` | `test-standards.md` | Test naming, deterministic fixtures, coverage expectations |
+| `Assets/Tests/**`, `Source/*/Tests/**`, `Source/*/Private/Tests/**` | `test-standards.md` | Engine-native test discovery |
+| `**/*.tscn`, `**/*.tres`, `**/*.uid`, `**/*.unity`, `**/*.prefab`, `Assets/**/*.asset`, `**/*.uasset`, `**/*.umap` | `scene-files.md` | Scene/resource identity and editor validation |
 | `tools/**` | `tool-code.md` | Deterministic tool behavior and CLI compatibility |
 | `prototypes/**` | `prototype-code.md` | Throwaway prototype isolation and relaxed standards |

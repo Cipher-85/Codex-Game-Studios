@@ -3,6 +3,32 @@ name: reverse-document
 description: "Generate design or architecture documents from existing implementation. Works backwards from code/prototypes to create missing planning docs for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+At project minimal, `design` or `concept` may produce a one-page brief from observed
+implementation using the brief template, subject to draft/path approval. Label
+inferred intent and ask the user to confirm it. A voluntarily requested GDD uses
+its effective section set. Never describe observed code as approved design.
+
+
 # Reverse Documentation
 
 This skill analyzes existing implementation (code, prototypes, systems) and generates
@@ -191,15 +217,18 @@ Would you like me to tackle any of these now?
 
 ---
 
+Examples above use Godot paths; resolve the actual engine/custom paths before
+reading them. Select a template by the code's responsibility, not its folder name.
+
 ## Template Selection Logic
 
 | If analyzing... | Use template... | Because... |
 |----------------|-----------------|------------|
-| `src/gameplay/*` | design-doc-from-implementation.md | Gameplay mechanics → GDD |
-| `src/core/*`, `src/ai/*` | architecture-doc-from-code.md | Core systems → ADR |
+| Gameplay code in the resolved source scope | design-doc-from-implementation.md | Gameplay mechanics → GDD |
+| Core or AI code in the resolved source scope | architecture-doc-from-code.md | Core systems → ADR |
 | `prototypes/*` | concept-doc-from-prototype.md | Experiments → concept doc |
-| `src/networking/*` | architecture-doc-from-code.md | Technical systems → ADR |
-| `src/ui/*` | design-doc-from-implementation.md | UI/UX → design spec |
+| Network code in the resolved source scope | architecture-doc-from-code.md | Technical systems → ADR |
+| UI code in the resolved source scope | design-doc-from-implementation.md | UI/UX → design spec |
 
 ---
 

@@ -3,6 +3,17 @@ name: perf-profile
 description: "Structured performance profiling workflow. Identifies bottlenecks, measures against budgets, and generates optimization recommendations with priority rankings for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
 ## Phase 1: Determine Scope
 
 Read the argument:
@@ -14,7 +25,8 @@ Read the argument:
 
 ## Phase 2: Load Performance Budgets
 
-Check for existing performance targets in design docs or AGENTS.md:
+Use the resolved performance fields and their sources; read additional explicit
+requirements from design docs/AGENTS.md. Unset targets stay unset:
 
 - Target FPS (e.g., 60fps = 16.67ms frame budget)
 - Memory budget (total and per-system)
@@ -62,12 +74,12 @@ Check for existing performance targets in design docs or AGENTS.md:
 Generated: [Date]
 
 ### Performance Budgets
-| Metric | Budget | Estimated Current | Status |
-|--------|--------|-------------------|--------|
-| Frame time | [16.67ms] | [estimate] | [OK/WARNING/OVER] |
-| Memory | [target] | [estimate] | [OK/WARNING/OVER] |
-| Load time | [target] | [estimate] | [OK/WARNING/OVER] |
-| Draw calls | [target] | [estimate] | [OK/WARNING/OVER] |
+| Metric | Budget and source | Measured value and provenance | Estimate (separate) | Status |
+|--------|-------------------|-------------------------------|---------------------|--------|
+| Frame time | [configured target/source or unset] | [measurement/report or none] | [optional estimate] | [MET / BREACH / NOT ASSESSED] |
+| Memory | [configured target/source or unset] | [measurement/report or none] | [optional estimate] | [MET / BREACH / NOT ASSESSED] |
+| Load time | [configured target/source or unset] | [measurement/report or none] | [optional estimate] | [MET / BREACH / NOT ASSESSED] |
+| Draw calls | [configured target/source or unset] | [measurement/report or none] | [optional estimate] | [MET / BREACH / NOT ASSESSED] |
 
 ### Hotspots Identified
 | # | Location | Issue | Estimated Impact | Fix Effort |
@@ -87,7 +99,15 @@ Generated: [Date]
 - [Area that needs actual runtime profiling to confirm impact]
 ```
 
-Output the report with a summary: top 3 hotspots, estimated headroom vs budget, and recommended next action.
+Record the measured build/ref, hardware, scenario, tool/command and report path.
+An estimate alone is NOT ASSESSED for budget compliance; calculate headroom only
+from compatible measured units and an explicit target. Apply resolved enforcement:
+warn = concerns, block = a breach/required unassessed measurement blocks the gate,
+off = informational budget comparison. Unset keeps existing enforcement. A required
+performance criterion still needs proof under every setting.
+
+Output the top hotspots and next action. Distinguish static candidates from
+measured bottlenecks; never turn code-cost estimates into passing evidence.
 
 ---
 
@@ -104,7 +124,8 @@ Present significant-effort items and ask the user to choose for each:
 
 If multiple items are deferred to Polish (choice C), record them under `### Deferred to Polish`.
 
-This skill is read-only — no files are written. Verdict: **COMPLETE** — performance profile generated.
+This skill is read-only — no files are written. Verdict: **COMPLETE** — scoped analysis generated; separately report each
+budget as MET, BREACH or NOT ASSESSED. COMPLETE is not a runtime performance pass.
 
 ---
 

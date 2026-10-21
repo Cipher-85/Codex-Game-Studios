@@ -2,12 +2,12 @@
 
 ## Skill Summary
 
-Orchestrates the QA team through a 7-phase structured testing cycle. Coordinates
+Orchestrates the QA team through a 6-phase structured testing cycle after review-mode resolution. Coordinates
 qa-lead (strategy, test plan, sign-off report) and qa-tester (test case writing,
 bug report writing). Covers scope detection, story classification, QA plan
 generation, smoke check gate, test case writing, manual QA execution with bug
 filing, and a final sign-off report with an APPROVED / APPROVED WITH CONDITIONS /
-NOT APPROVED verdict. Parallel qa-tester spawning is used in Phase 5 for
+NOT APPROVED verdict. Parallel qa-tester spawning is used in Phase 4 for
 independent stories.
 
 ---
@@ -21,10 +21,10 @@ independent stories.
 - [ ] Contains "May I write" language for both the QA plan and the sign-off report
 - [ ] Has an Error Recovery Protocol section
 - [ ] Uses `numbered choice prompt` at phase transitions to capture user approval before proceeding
-- [ ] Phase 4 (smoke check) is a hard gate: FAIL stops the cycle
+- [ ] Phase 4 (smoke check) is a hard gate: FAIL or NOT ASSESSED blocks execution/sign-off
 - [ ] Bug reports are written to `production/qa/bugs/` with `BUG-[NNN]-[short-slug].md` naming
 - [ ] Next-step guidance differs by verdict (APPROVED / APPROVED WITH CONDITIONS / NOT APPROVED)
-- [ ] Independent qa-tester tasks in Phase 5 are spawned in parallel
+- [ ] Independent qa-tester tasks in Phase 4 are spawned in parallel
 
 ---
 
@@ -33,7 +33,8 @@ independent stories.
 ### Case 1: Happy Path — All stories pass manual QA, APPROVED verdict
 
 **Fixture:**
-- `production/sprints/sprint-03/` exists with 4 story files
+- `production/sprints/sprint-03.md` references 4 story files
+- A full smoke report and run evidence match this build/scope/platforms
 - Stories are a mix of types: 1 Logic, 1 Integration, 2 Visual/Feel
 - All stories have acceptance criteria populated
 - `tests/smoke/` contains a smoke test list; all items are verifiable
@@ -42,21 +43,21 @@ independent stories.
 **Input:** `$team-qa sprint-03`
 
 **Expected behavior:**
-1. Phase 1: Reads all story files in `production/sprints/sprint-03/`; reads `production/stage.txt`; reports "Found 4 stories. Current stage: [stage]. Ready to begin QA strategy?"
+1. Phase 1: Reads `production/sprints/sprint-03.md` and its referenced stories; reads `production/stage.txt`; reports "Found 4 stories. Current stage: [stage]. Ready to begin QA strategy?"
 2. Phase 2: Spawns `qa-lead` via Task; produces strategy table classifying all 4 stories; no blockers flagged; presents to user; numbered choice prompt: user selects "Looks good — proceed to test plan"
 3. Phase 3: Produces QA plan document; asks "May I write the QA plan to `production/qa/qa-plan-sprint-03-[date].md`?"; writes after approval
-4. Phase 4: Spawns `qa-lead` via Task; reviews `tests/smoke/`; returns PASS; reports "Smoke check passed. Proceeding to test case writing."
-5. Phase 5: Spawns `qa-tester` via Task for each Visual/Feel and Integration story (2–3 stories); run in parallel; presents test cases grouped by story; numbered choice prompt per group; user approves
-6. Phase 6: Walks through each approved story; user marks all as PASS; result summary: "Stories PASS: 4, FAIL: 0, BLOCKED: 0"
-7. Phase 7: Spawns `qa-lead` via Task to produce sign-off report; report shows all stories PASS; no bugs filed; Verdict: APPROVED; asks "May I write this QA sign-off report to `production/qa/qa-signoff-sprint-03-[date].md`?"; writes after approval
+4. Before Phase 4: validate the Phase 2 smoke evidence against the requested build/scope; applicable PASS permits test-case writing.
+5. Phase 4: Spawns `qa-tester` via Task for each Visual/Feel and Integration story (2–3 stories); run in parallel; presents test cases grouped by story; numbered choice prompt per group; user approves
+6. Phase 5: Walks through each approved story; user marks all as PASS; result summary: "Stories PASS: 4, FAIL: 0, BLOCKED: 0"
+7. Phase 6: Spawns `qa-lead` via Task to produce sign-off report; report shows all stories PASS; no bugs filed; Verdict: APPROVED; asks "May I write this QA sign-off report to `production/qa/qa-signoff-sprint-03-[date].md`?"; writes after approval
 8. Verdict: COMPLETE — QA cycle finished
 
 **Assertions:**
 - [ ] Phase 1 correctly counts and reports 4 stories with current stage
 - [ ] Strategy table in Phase 2 classifies all 4 stories with correct types
 - [ ] QA plan written only after "May I write?" approval
-- [ ] Smoke check PASS allows pipeline to continue without user intervention
-- [ ] Phase 5 qa-tester tasks for independent stories are issued in parallel
+- [ ] Applicable smoke PASS permits the pipeline to continue through its normal approval points
+- [ ] Phase 4 qa-tester tasks for independent stories are issued in parallel
 - [ ] Sign-off report includes Test Coverage Summary table and Verdict: APPROVED
 - [ ] Sign-off report written only after "May I write?" approval
 - [ ] Verdict: COMPLETE appears in final output
@@ -68,19 +69,19 @@ independent stories.
 
 **Fixture:**
 - `production/sprints/sprint-04/` exists with 3 story files
-- `tests/smoke/` exists with 5 smoke test items; 2 items cannot be verified (e.g., build is unstable, core navigation broken)
+- `tests/smoke/` exists with 5 smoke test items; 2 items have observed failures (build crashes and core navigation is broken)
 
 **Input:** `$team-qa sprint-04`
 
 **Expected behavior:**
 1. Phases 1–3 complete normally; QA plan is written
-2. Phase 4: Spawns `qa-lead` via Task; smoke check returns FAIL; two specific failures are identified
+2. Phase 2 identifies two observed smoke failures; Phase 3 may prepare the plan, but the Phase 4 entry gate stops execution
 3. Skill reports: "Smoke check failed. QA cannot begin until these issues are resolved: [list of 2 failures]. Fix them and re-run `$smoke-check`, or re-run `$team-qa` once resolved."
-4. Skill stops immediately after Phase 4 — no Phase 5, 6, or 7 is executed
+4. Skill stops at the Phase 4 entry gate — Phases 4, 5, and 6 are not executed
 5. No sign-off report is produced; no "May I write?" for a sign-off is issued
 
 **Assertions:**
-- [ ] Smoke check FAIL causes the pipeline to halt at Phase 4 — Phases 5, 6, 7 are NOT executed
+- [ ] Smoke check FAIL causes the pipeline to halt at Phase 4 — Phases 4, 5, 6 are NOT executed
 - [ ] Failure list is shown to the user explicitly (not summarized vaguely)
 - [ ] Skill recommends `$smoke-check` and `$team-qa` re-run as remediation steps
 - [ ] No QA sign-off report is written or offered
@@ -100,20 +101,20 @@ independent stories.
 **Input:** `$team-qa sprint-05`
 
 **Expected behavior:**
-1. Phases 1–5 complete normally; test cases are written for the Visual/Feel story
-2. Phase 6: User marks Visual/Feel story as FAIL; numbered choice prompt collects failure description: "Animation plays at 2x speed — jitter visible on every loop"
-3. Phase 6: Spawns `qa-tester` via Task to write a formal bug report; bug report written to `production/qa/bugs/BUG-001-animation-speed-jitter.md` (or next increment if bugs exist); report includes severity field
+1. Phases 1–4 complete normally; test cases are written for the Visual/Feel story
+2. Phase 5: User marks Visual/Feel story as FAIL; numbered choice prompt collects failure description: "Animation plays at 2x speed — jitter visible on every loop"
+3. Phase 5: Spawns `qa-tester` via Task to write a formal bug report; bug report written to `production/qa/bugs/BUG-001-animation-speed-jitter.md` (or next increment if bugs exist); report includes severity field
 4. Result summary: "Stories PASS: 1, FAIL: 1 — bugs filed: BUG-001"
-5. Phase 7: Spawns `qa-lead` to produce sign-off report; Bugs Found table lists BUG-001 with severity and status Open; Verdict: NOT APPROVED (S1/S2 bug open, or FAIL without documented workaround)
+5. Phase 6: Spawns `qa-lead` to produce sign-off report; Bugs Found table lists BUG-001 with severity and status Open; Verdict: NOT APPROVED (S1/S2 bug open, or FAIL without documented workaround)
 6. Sign-off report write is offered; writes after approval
 7. Next step: "Resolve S1/S2 bugs and re-run `$team-qa` or targeted manual QA before advancing."
 
 **Assertions:**
-- [ ] FAIL result in Phase 6 triggers numbered choice prompt to collect the failure description before the bug report is written
+- [ ] FAIL result in Phase 5 triggers numbered choice prompt to collect the failure description before the bug report is written
 - [ ] `qa-tester` is spawned via Task to write the bug report — orchestrator does not write it directly
 - [ ] Bug report follows naming convention: `BUG-[NNN]-[short-slug].md` in `production/qa/bugs/`
 - [ ] Bug report NNN is incremented correctly from existing bugs in the directory
-- [ ] Phase 7 sign-off report Bugs Found table includes the bug ID, story name, severity, and status
+- [ ] Phase 6 sign-off report Bugs Found table includes the bug ID, story name, severity, and status
 - [ ] Verdict in sign-off report is NOT APPROVED
 - [ ] Next step explicitly mentions re-running `$team-qa`
 - [ ] Verdict: COMPLETE is still issued by the orchestrator (the QA cycle finished — the verdict is NOT APPROVED, but the skill completed its pipeline)
@@ -163,16 +164,16 @@ independent stories.
 **Input:** `$team-qa sprint-07`
 
 **Expected behavior:**
-1. Phases 1–5 proceed; Phase 5 test cases cover stories B, C, D
-2. Phase 6: User marks Story A as implicitly PASS (automated); Story B: PASS WITH NOTES; Story C: FAIL; Story D: BLOCKED
+1. Phases 1–4 proceed; Phase 4 test cases cover stories B, C, D
+2. Phase 5: User marks Story A as PASS based on inspected, applicable automated results; Story B: PASS WITH NOTES; Story C: FAIL; Story D: BLOCKED
 3. After Story C FAIL: qa-tester spawned to write bug report `BUG-001-crash-ability-activation.md` with S1 severity
 4. Result summary presented: "Stories PASS: 1, PASS WITH NOTES: 1, FAIL: 1 — bugs filed: BUG-001 (S1), BLOCKED: 1"
-5. Phase 7: qa-lead produces sign-off report covering all 4 stories; BUG-001 listed as S1/Open; Story D listed as BLOCKED; Verdict: NOT APPROVED
+5. Phase 6: qa-lead produces sign-off report covering all 4 stories; BUG-001 listed as S1/Open; Story D listed as BLOCKED; Verdict: NOT APPROVED
 6. Sign-off report written after "May I write?" approval
 7. Next step: "Resolve S1/S2 bugs and re-run `$team-qa` or targeted manual QA before advancing."
 
 **Assertions:**
-- [ ] All 4 stories appear in the Phase 7 sign-off report Test Coverage Summary table — none are silently omitted
+- [ ] All 4 stories appear in the Phase 6 sign-off report Test Coverage Summary table — none are silently omitted
 - [ ] Story D (BLOCKED) is listed in the report with a BLOCKED status, not silently dropped
 - [ ] S1 bug causes Verdict: NOT APPROVED regardless of the other stories passing
 - [ ] PASS WITH NOTES stories do not downgrade to FAIL — they are tracked separately
@@ -184,11 +185,11 @@ independent stories.
 
 ## Protocol Compliance
 
-- [ ] `numbered choice prompt` used at Phase 2 (strategy review), Phase 5 (test case approval per group), and Phase 6 (per-story manual QA result)
-- [ ] Phase 4 smoke check is a hard gate: FAIL halts the pipeline at Phase 4 with no exceptions
-- [ ] "May I write?" asked separately for QA plan (Phase 3) and sign-off report (Phase 7)
+- [ ] `numbered choice prompt` used at Phase 2 (strategy review), Phase 4 (test case approval per group), and Phase 5 (per-story manual QA result)
+- [ ] Phase 4 smoke check is a hard gate: FAIL or NOT ASSESSED halts the pipeline at Phase 4 with no exceptions
+- [ ] "May I write?" asked separately for QA plan (Phase 3) and sign-off report (Phase 6)
 - [ ] Bug reports are always written by `qa-tester` via Task — orchestrator does not write directly
-- [ ] Phase 5 qa-tester tasks for independent stories are issued in parallel where possible
+- [ ] Phase 4 qa-tester tasks for independent stories are issued in parallel where possible
 - [ ] Error recovery: any BLOCKED agent is surfaced immediately with numbered choice prompt options
 - [ ] Partial report always produced — no work is discarded because one story failed or blocked
 - [ ] Sign-off verdict rules are strictly applied: any S1/S2 bug open = NOT APPROVED; no exceptions
@@ -198,7 +199,66 @@ independent stories.
 
 ## Coverage Notes
 
-- The "APPROVED WITH CONDITIONS" verdict path (S3/S4 bugs, PASS WITH NOTES) is covered implicitly by Case 5's PASS WITH NOTES story (Story B) — if no S1/S2 bugs existed, that case would produce APPROVED WITH CONDITIONS. A dedicated case is not required as the verdict logic is table-driven.
+- The "APPROVED WITH CONDITIONS" requires all required checks assessed and passing, with only advisory findings. Case 5 remains NOT APPROVED while Story D is blocked, even if its S1 bug is removed.
 - The `feature: [system-name]` argument form is not separately tested — it follows the same Phase 1 logic as the sprint form, using glob instead of directory read. The no-argument inference path (Case 4) provides sufficient coverage of the detection logic.
 - Logic stories with passing automated tests do not need manual QA — this is validated implicitly by Case 5 (Story A) where the Logic story receives no manual QA phase.
-- Parallel qa-tester spawning in Phase 5 is validated implicitly by Case 1 (multiple Visual/Feel stories issued simultaneously); no dedicated parallelism case is required beyond the Static Assertions check.
+- Parallel qa-tester spawning in Phase 4 is validated implicitly by Case 1 (multiple Visual/Feel stories issued simultaneously); no dedicated parallelism case is required beyond the Static Assertions check.
+
+## Phase 1 Backport Regression Cases
+
+These assertions require workflow evaluation; adding them is not a passing test run.
+
+- [ ] No smoke report, unknown provenance, stale build, quick-only scope, or an
+  untested required platform is NOT ASSESSED; never UNKNOWN-as-PASS-WITH-WARNINGS.
+- [ ] QA strategy/plan authoring may continue, but FAIL or NOT ASSESSED stops the
+  workflow before QA execution/sign-off; report the missing check/build/scope.
+- [ ] An applicable passing report must be read and matched, not selected solely
+  by modification time or a passing heading.
+- [ ] Required unassessed story results cannot yield APPROVED or APPROVED WITH
+  CONDITIONS, including when other stories passed or have only advisory bugs.
+- [ ] A role verdict requires actual role activation and returned review evidence;
+  self or user-reported review remains labeled with that provenance.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

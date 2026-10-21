@@ -3,6 +3,69 @@ name: gate-check
 description: "Validate readiness to advance between development phases. Produces a PASS/CONCERNS/FAIL verdict with specific blockers and required artifacts. Use when user says 'are we ready to move to X', 'can we advance to production', 'check if we can start the next phase', 'pass the gate' for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py stories`,
+`python3 .codex/lib/artifact_facts.py adrs`,
+`python3 .codex/lib/artifact_facts.py gdds`,
+`python3 .codex/lib/artifact_facts.py bugs`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+Use only artifact kinds applicable to the target gate and resolved tier. An
+absent optional artifact is not a failure, and empty inspection is not a PASS.
+
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Before choosing a gate, resolve stage with the shared `stage` contract in
+`.codex/docs/config-resolution.md`. Apply the workflow gate table before checking
+artifacts or dispatching directors. Use `workflow --check-systems` and resolve
+GDD requirements per system. NOT APPLICABLE/NOT ASSESSED is not PASS and offers
+no stage advancement. After actual PASS, use the shared single-target stage
+approval/readback procedure; never blindly write the legacy stage file.
+
+
 # Phase Gate Validation
 
 This skill validates whether the project is ready to advance to the next development
@@ -23,8 +86,8 @@ The project progresses through these stages:
 6. **Polish** — Performance, playtesting, bug fixing
 7. **Release** — Launch prep, certification
 
-**When a gate passes**, write the new stage name to `production/stage.txt`
-(single line, e.g. `Production`). This updates the status line immediately.
+**After actual PASS**, offer the stage change through the shared `stage`
+approval/readback contract. A passing gate alone never writes or advances stage.
 
 ---
 
@@ -33,11 +96,11 @@ The project progresses through these stages:
 **Target phase:** `$ARGUMENTS[0]` (blank = auto-detect current stage, then validate next transition)
 
 Also resolve the review mode (once, store for all gate spawns this run):
-1. If `--review [full|lean|solo]` was passed → use that
-2. Else read `production/review-mode.txt` → use that value
-3. Else → default to `lean`
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
-Note: in `solo` mode, director spawns (CD-PHASE-GATE, TD-PHASE-GATE, PR-PHASE-GATE, AD-PHASE-GATE) are skipped — gate-check becomes artifact-existence checks only. In `lean` mode, all four directors still run (phase gates are the purpose of lean mode).
+Note: in `solo` mode, director spawns (CD-PHASE-GATE, TD-PHASE-GATE, PR-PHASE-GATE, AD-PHASE-GATE) are skipped — only those director spawns are skipped; applicable artifact, quality and evidence checks still run. In `lean` mode, all four directors still run (phase gates are the purpose of lean mode).
 
 - **With argument**: `$gate-check production` — validate readiness for that specific phase
 - **No argument**: Auto-detect current stage using the same heuristics as
@@ -83,7 +146,7 @@ Note: in `solo` mode, director spawns (CD-PHASE-GATE, TD-PHASE-GATE, PR-PHASE-GA
 - [ ] A cross-GDD review report exists in `design/gdd/` (from `$review-all-gdds`)
 
 **Quality Checks:**
-- [ ] All MVP GDDs pass individual design review (8 required sections, no MAJOR REVISION NEEDED verdict)
+- [ ] All MVP GDDs pass individual design review (tier-required sections, no MAJOR REVISION NEEDED verdict)
 - [ ] `$review-all-gdds` verdict is not FAIL (cross-GDD consistency and design theory checks pass)
 - [ ] All cross-GDD consistency issues flagged by `$review-all-gdds` are resolved or explicitly accepted
 - [ ] System dependencies are mapped in the systems index and are bidirectionally consistent
@@ -195,8 +258,8 @@ A depends on B). If any cycle is detected (e.g. A→B→A, or A→B→C→A):
 ### Gate: Production → Polish
 
 **Required Artifacts:**
-- [ ] `src/` has active code organized into subsystems
-- [ ] All core mechanics from GDD are implemented (cross-reference `design/gdd/` with `src/`)
+- [ ] The resolved and actually scanned source scope has active code organized into subsystems
+- [ ] All core mechanics from GDD are implemented (cross-reference `design/gdd/` with the resolved source/content scope)
 - [ ] Main gameplay path is playable end-to-end
 - [ ] Test files exist in `tests/unit/` and `tests/integration/` covering Logic and Integration stories
 - [ ] All Logic stories from this sprint have corresponding unit test files in `tests/unit/`
@@ -227,7 +290,7 @@ A depends on B). If any cycle is detected (e.g. A→B→A, or A→B→C→A):
 **Required Artifacts:**
 - [ ] All features from milestone plan are implemented
 - [ ] Content is complete (all levels, assets, dialogue referenced in design docs exist)
-- [ ] Localization strings are externalized (no hardcoded player-facing text in `src/`)
+- [ ] Localization strings are externalized (no hardcoded player-facing text in the resolved source/content scope)
 - [ ] QA test plan exists (`$qa-plan` output in `production/qa/`)
 - [ ] QA sign-off report exists (`$team-qa` output — APPROVED or APPROVED WITH CONDITIONS)
 - [ ] All Must Have story test evidence is present (Logic/Integration: test files pass; Visual/Feel/UI: sign-off docs in `production/qa/evidence/`)
@@ -276,13 +339,14 @@ cross-GDD consistency check failed and must be resolved before advancing.
 
 ### Quality Checks
 - For test checks: Run the test suite via `Bash` if a test runner is configured
-- For design review checks: `Read` the GDD and check for the 8 required sections
-- For performance checks: `Read` technical-preferences.md and compare against any
-  profiling data in `tests/performance/` or recent `$perf-profile` output
-- For localization checks: `Grep` for hardcoded strings in `src/`
+- For design review checks: `Read` the GDD and check for the tier-required sections
+- For performance checks: use resolved budgets/enforcement and compare against
+  applicable measured reports, with build/scope/hardware provenance. Estimates
+  or unavailable measurements are NOT ASSESSED; required criteria stay blocking.
+- For localization checks: `Grep` for hardcoded strings in the resolved source/content scope
 
 ### Cross-Reference Checks
-- Compare `design/gdd/` documents against `src/` implementations
+- Compare `design/gdd/` documents against implementations in the resolved source/content scope
 - Check that every system referenced in architecture docs has corresponding code
 - Verify sprint plans reference real work items
 
@@ -359,7 +423,7 @@ Art Director:       [READY / CONCERNS / NOT READY]
 - [x] production/sprints/ — exists, 1 sprint plan
 
 ### Quality Checks: [X/Y passing]
-- [x] GDD has 8/8 required sections
+- [x] GDD has 8/tier-required sections
 - [ ] Tests — FAILED (3 failures in tests/unit/)
 - [?] Core loop playtested — MANUAL CHECK NEEDED
 
@@ -372,13 +436,31 @@ Art Director:       [READY / CONCERNS / NOT READY]
 - [Priority actions to resolve blockers]
 - [Optional improvements that aren't blocking]
 
-### Verdict: [PASS / CONCERNS / FAIL]
+### Verdict: [PASS / CONCERNS / FAIL / NOT ASSESSED]
 - **PASS**: All required artifacts present, all quality checks passing
 - **CONCERNS**: Minor gaps exist but can be addressed during the next phase
 - **FAIL**: Critical blockers must be resolved before advancing
+- **NOT ASSESSED**: Required evidence is missing or unrun; advancement is blocked
 ```
 
 ---
+
+## Required Evidence Precedence
+
+Before finalizing any stage verdict, apply
+`.codex/docs/verification-integrity.md`. Known failed required checks produce
+FAIL, including an observed missing required artifact. Otherwise an unrun,
+unreadable, missing or out-of-scope required execution check
+produces NOT ASSESSED, even when other findings would be CONCERNS. Name each
+missing check and the action that would establish it. Neither verdict permits
+stage advancement on the strength of accepting concerns.
+
+Read smoke/review reports for mode, build/ref, inputs, provenance and coverage.
+A `quick` smoke check cannot satisfy full sprint/coverage requirements. A
+`single-gdd` architecture review covers only its named system; a consistency-only
+report cannot satisfy a full architecture or engine audit. Old reports with
+unknown scope do not silently count as full checks. Status Complete by itself
+is not proof a story's required acceptance criteria were verified.
 
 ## 5a. Chain-of-Verification
 
@@ -424,23 +506,18 @@ Do NOT reference the draft verdict text — re-check specific files or ask the u
 
 ## 6. Update Stage on PASS
 
-When the verdict is **PASS** and the user confirms they want to advance:
-
-1. Write the new stage name to `production/stage.txt` (single line, no trailing newline)
-2. This immediately updates the status line for all future sessions
-
-Example: if passing the "Pre-Production → Production" gate:
-```bash
-echo -n "Production" > production/stage.txt
-```
-
-**Always ask before writing**: "Gate passed. May I update `production/stage.txt` to 'Production'?"
+Only after actual PASS, resolve `project_config.py stage` and follow
+`.codex/docs/config-resolution.md` → Approved stage update. Preview the new
+stage and exact target diff, obtain approval, preserve unrelated contents, and
+re-resolve after writing. Use project.yaml only when its explicit stage owns the
+value; otherwise use production/stage.txt. NOT APPLICABLE, NOT ASSESSED, CONCERNS
+and FAIL do not offer advancement as a passed gate.
 
 ---
 
 ## 7. Closing Continuity Step
 
-After the verdict is presented and any stage.txt update is complete, read or
+After the verdict is presented and any approved stage update is complete, read or
 silently refresh the `## Session Worklist` and `## Phase Guard` in
 `production/session-state/active.md`. Recommend one best next action unless the
 gate outcome leaves 2-3 genuinely viable lanes. When multiple lanes are viable,

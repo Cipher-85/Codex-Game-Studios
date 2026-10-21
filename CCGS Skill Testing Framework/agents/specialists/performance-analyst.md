@@ -80,3 +80,11 @@ No gate IDs assigned.
 - Frame time analysis (Case 1) output should be structured as a report filed in `production/qa/evidence/`
 - Regression case (Case 3) confirms the agent investigates cause, not just measures symptoms
 - Code quality trade-off (Case 4) verifies the agent does not recommend optimizations that violate coding standards without flagging the conflict
+
+## Phase 4C policy evidence
+
+Native acceptance NOT RUN. Verify the role receives the resolved QA/technical
+policy and uses it without weakening required evidence. Test an estimate-only
+performance report, a required unrun test, false strictness, and a conflicting
+engine pin. Preserve the role's ownership and exact custom-profile identity;
+configuration does not count as an observed test or a successful role dispatch.

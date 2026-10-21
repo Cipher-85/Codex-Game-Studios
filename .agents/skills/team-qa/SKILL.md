@@ -3,6 +3,50 @@ name: team-qa
 description: "Orchestrate the QA team through a full testing cycle. Coordinates qa-lead (strategy + test plan) and qa-tester (test case writing + bug reporting) to produce a complete QA package for a sprint or feature. Covers: test plan generation, test case writing, smoke check gate, manual QA execution, and sign-off report for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+## Team participation
+
+Before dispatch, read `.codex/docs/team-policy.md` and run
+`project_config.py team-policy`. Identify required/conditional/explicitly optional
+roles in this pipeline, then filter only optional participation by size. A role
+whose condition holds stays required. Preserve domain ownership, review-mode
+filtering and runtime role-identity checks; size authorizes no new roles or writes.
+Show the resulting roster and any omitted optional advisors. Unavailable required
+roles remain blocked rather than simulated by the coordinator.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+
 When this skill is invoked, orchestrate the QA team through a structured testing cycle.
 
 **Decision Points:** At each phase transition, use `numbered choice prompt` to present
@@ -11,10 +55,9 @@ full analysis in conversation, then capture the decision with concise labels.
 The user must approve before moving to the next phase.
 
 ## Phase 0: Resolve Review Mode
-
-1. If `--review [mode]` was passed as an argument, use that mode.
-2. Else read `production/review-mode.txt` — use whatever is written there.
-3. Else default to `lean`.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 Modes:
 - `full` — spawn all director and lead gates as described
@@ -34,7 +77,7 @@ Use the Codex subagent delegation to spawn each team member as a subagent:
 - Delegate to `qa-lead` — Strategy, planning, classification, sign-off
 - Delegate to `qa-tester` — Test case writing and bug report writing
 
-Always provide full context in each agent's prompt (story file paths, QA plan path, scope constraints). Launch independent qa-tester tasks in parallel where possible (e.g., multiple stories in Phase 5 can be scaffolded simultaneously).
+Always provide full context in each agent's prompt (story file paths, QA plan path, scope constraints). Launch independent qa-tester tasks in parallel where possible (e.g., multiple stories in Phase 4 can be scaffolded simultaneously).
 
 ## Pipeline
 
@@ -47,7 +90,7 @@ Before doing anything else, gather the full scope:
    - If argument is `feature: [system-name]`: glob story files tagged for that system
    - If no argument: read `production/session-state/active.md` and `production/sprint-status.yaml` (if present) to infer the active sprint
 
-2. Read `production/stage.txt` to confirm the current project phase.
+2. Resolve `project_config.py stage` to confirm the current phase and source.
 
 3. Count stories found and report to the user:
    > "QA cycle starting for [sprint/feature]. Found [N] stories. Current stage: [stage]. Ready to begin QA strategy?"
@@ -62,15 +105,24 @@ Prompt the qa-lead to:
 - Identify which stories require automated test evidence vs. manual QA
 - Flag any stories with missing acceptance criteria or missing test evidence that would block QA
 - Estimate manual QA effort (number of test sessions needed)
-- **Before assessing smoke status, check for an existing smoke check report**: Glob `production/qa/smoke-*.md` and read the most recently modified file (if found). If a report exists, use its verdict and findings directly — do not re-interview the user. If no report exists, note: "No prior smoke check report found — run `$smoke-check sprint` before proceeding." and set smoke check status to UNKNOWN (treat as PASS WITH WARNINGS for the purpose of continuing). Produce a smoke check verdict: **PASS** / **PASS WITH WARNINGS [list]** / **FAIL [list of failures]** / **UNKNOWN (no report found)**
+- **Before assessing smoke status**, inspect `production/qa/smoke-*.md` for a
+  report matching this build/ref, scope and target platforms. Read findings and
+  skipped checks, not just its verdict or modification time. Keep prior results
+  labeled historical. Missing/unreadable evidence, unresolved build identity,
+  unrun required checks, or `quick` scope when full coverage is required means
+  NOT ASSESSED. Never promote UNKNOWN to PASS WITH WARNINGS. An observed failure
+  remains FAIL. Reuse applicable evidence without re-interviewing the user, but
+  do not claim it ran in this turn.
+
 - Produce a strategy summary table and smoke check result:
 
   | Story | Type | Automated Required | Manual Required | Blocker? |
   |-------|------|--------------------|-----------------|----------|
 
-  **Smoke Check**: [PASS / PASS WITH WARNINGS / FAIL / UNKNOWN] — [source: `production/qa/smoke-[date].md` or "no report found"] — [details if not PASS]
+  **Smoke Check**: [PASS / PASS WITH WARNINGS / FAIL / NOT ASSESSED] — [source: `production/qa/smoke-[date].md` or "no report found"] — [details if not PASS]
 
-If the smoke check result is **FAIL**, the qa-lead must list the failures prominently. QA cannot proceed past the strategy phase with a failed smoke check.
+List FAIL/NOT ASSESSED findings prominently. QA strategy and plan authoring may
+continue, but QA execution/sign-off requires applicable passing smoke evidence.
 
 Present the qa-lead's full strategy to the user, then use `numbered choice prompt`:
 
@@ -84,10 +136,10 @@ options:
   - "Cancel — resolve blockers first"
 ```
 
-If smoke check **FAIL**: do not proceed to Phase 3. Surface the failures from the smoke check report and stop. The user must fix them, re-run `$smoke-check sprint`, and then re-run `$team-qa`.
-If smoke check **UNKNOWN**: surface a warning — "No smoke check report found. Recommend running `$smoke-check sprint` before QA. Proceeding with caution."
-If smoke check **PASS WITH WARNINGS**: note the warnings for the sign-off report and continue.
-If blockers are present: list them explicitly. The user may choose to skip blocked stories or cancel the cycle.
+For **FAIL** or **NOT ASSESSED**, offer to prepare the QA plan, resolve the
+smoke blocker, or stop. Preparing a plan does not admit the build to QA. For
+**PASS WITH WARNINGS**, confirm all required checks passed and the warnings are
+advisory; list them for the eventual sign-off report.
 
 ### Phase 3: Test Plan Generation
 
@@ -108,7 +160,10 @@ Write only after receiving approval.
 
 ### Phase 4: Test Case Writing (qa-tester)
 
-> **Smoke check** is performed as part of Phase 2 (QA Strategy). If the smoke check returned FAIL in Phase 2, the cycle was stopped there. This phase only runs when the Phase 2 smoke check was PASS, PASS WITH WARNINGS, or UNKNOWN.
+> **Entry gate:** stop here on FAIL or NOT ASSESSED smoke evidence. Only an
+> applicable PASS/PASS WITH WARNINGS report covering the required build, scope
+> and platforms admits the build to QA execution and sign-off. A saved QA plan
+> or a story marked Complete does not override this gate.
 
 For each story requiring manual QA (Visual/Feel, UI, Integration without automated tests):
 
@@ -137,6 +192,9 @@ options:
   - "Skip manual QA for [story name] — not ready"
 ```
 
+Retain skipped stories as BLOCKED/NOT ASSESSED in the requested scope and final
+report. Do not silently drop them to obtain approval for the whole sprint.
+
 ### Phase 5: Manual QA Execution
 
 Walk through each story in the approved manual QA list.
@@ -152,6 +210,10 @@ options:
   - "BLOCKED — cannot test yet (reason)"
 ```
 
+An empty/dismissed answer or a required criterion not tested is NOT ASSESSED,
+recorded with the blocked stories and its owed action. A passing status requires
+explicit results for all required criteria and applicable evidence provenance.
+
 After each FAIL result: use `numbered choice prompt` to collect the failure description, then spawn `qa-tester` via Codex subagent delegation to write a formal bug report in `production/qa/bugs/`.
 
 Bug report naming: `BUG-[NNN]-[short-slug].md` (increment NNN from existing bugs in the directory).
@@ -164,13 +226,16 @@ After collecting all results, summarize:
 
 ### Phase 6: QA Sign-Off Report
 
-Spawn `qa-lead` via Codex subagent delegation to produce the sign-off report using all results from Phases 4–6.
+Spawn `qa-lead` via Codex subagent delegation to produce the sign-off report using all results from Phases 2–5.
 
 The sign-off report format:
 
 ```markdown
 ## QA Sign-Off Report: [Sprint/Feature]
 **Date**: [date]
+**Scope/build/platforms**: [what was assessed; omissions]
+**Smoke evidence**: [applicable report and run provenance]
+**Reviewed by**: [actual reviewer | user-reported review | self — no independent review]
 
 ### Test Coverage Summary
 | Story | Type | Auto Test | Manual QA | Result |
@@ -192,9 +257,12 @@ The sign-off report format:
 ```
 
 Verdict rules:
-- **APPROVED**: All stories PASS or PASS WITH NOTES; no S1/S2 bugs open
-- **APPROVED WITH CONDITIONS**: S3/S4 bugs open, or PASS WITH NOTES issues documented; no S1/S2 bugs
-- **NOT APPROVED**: Any S1/S2 bugs open; or stories FAIL without documented workaround
+- **APPROVED**: applicable smoke evidence passes, all required story checks PASS
+  or PASS WITH NOTES, no unassessed required checks, and no S1/S2 bugs open
+- **APPROVED WITH CONDITIONS**: the same required evidence is complete, with
+  only documented advisory findings/S3/S4 bugs; no S1/S2 bugs
+- **NOT APPROVED**: Any required story check remains unassessed/blocked; any
+  S1/S2 bugs open; or stories FAIL without a documented, verified workaround
 
 Next step guidance by verdict:
 - APPROVED: "Build is ready for the next phase. Run `$gate-check` to validate advancement."

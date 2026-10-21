@@ -169,3 +169,18 @@ Verified automatically by `$skill-test static` — no fixture needed.
   have been planned.
 - Velocity calculation specifics (story points vs. story count) are not
   verified here; they are implementation details of the review compilation phase.
+
+## Review routing coverage (Phase 4A)
+
+Use the shared `review-mode` contract in `.codex/docs/director-gates.md`.
+Legacy `production/review-mode.txt` fixtures below remain fallback cases; also
+exercise project/local YAML, explicit rigor, and a per-run `--review` override.
+
+- [ ] Observe actual declared director gates using the returned value/source;
+      the flag wins over local YAML and is not persisted.
+- [ ] Invalid configuration stops director routing with diagnostics. Missing
+      tooling is NOT ASSESSED; neither case silently selects a review mode.
+- [ ] Review settings preserve existing evidence requirements and write approvals.
+
+These are native behavioral assertions. Resolver/hook/static audits alone do not
+establish that this skill or a role agent executed.

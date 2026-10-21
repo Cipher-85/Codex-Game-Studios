@@ -3,11 +3,48 @@ name: design-review
 description: "Reviews a game design document for completeness, internal consistency, implementability, and adherence to project design standards. Run this before handing a design document to programmers."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py gdds`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+
 ## Phase 0: Parse Arguments
 
 Extract `--depth [full|lean|solo]` if present. Default is `full` when no flag is given.
 
-**Note**: `--depth` controls the *analysis depth* of this skill (how many specialist agents are spawned). It is independent of the global review mode in `production/review-mode.txt`, which controls director gate spawning. These are two different concepts — `--depth` is about how thoroughly *this* skill analyses the document.
+**Note**: `--depth` controls this review's analysis and specialist/senior-review
+pipeline. It remains independent of `modes.review_mode`, which controls director
+gates through the shared `review-mode` contract in `.codex/docs/director-gates.md`.
+A global `solo` review mode does not change this skill's `--depth full` default
+or suppress its depth-selected review pipeline. Pass a depth flag only to this
+skill; it is not a `--review` override.
 
 - **`full`**: Complete review — all phases + specialist agent delegation (Phase 3b)
 - **`lean`**: All phases, no specialist agents — faster, single-session analysis
@@ -29,16 +66,12 @@ Read the target design document in full. Read AGENTS.md to understand project co
 
 ## Phase 2: Completeness Check
 
-Evaluate against the Design Document Standard checklist:
-
-- [ ] Has Overview section (one-paragraph summary)
-- [ ] Has Player Fantasy section (intended feeling)
-- [ ] Has Detailed Rules section (unambiguous mechanics)
-- [ ] Has Formulas section (all math defined with variables)
-- [ ] Has Edge Cases section (unusual situations handled)
-- [ ] Has Dependencies section (other systems listed)
-- [ ] Has Tuning Knobs section (configurable values identified)
-- [ ] Has Acceptance Criteria section (testable success conditions)
+Use the target's actual document kind. A brief must fill its required fields;
+a concept uses its own template. For a system GDD, check the resolver's
+`required_sections`, accept Detailed Design/Rules as aliases, and require
+Formulas at standard when numeric rules exist. Inspect optional existing content
+for correctness but do not fail for an absent optional section. Report each
+required section's evidence and each inapplicable check's reason.
 
 ---
 

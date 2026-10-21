@@ -3,6 +3,44 @@ name: adopt
 description: "Brownfield onboarding — audits existing project artifacts for template format compliance (not just existence), classifies gaps by impact, and produces a numbered migration plan. Run this when joining an in-progress project or upgrading from an older template version. Distinct from $project-stage-detect (which checks what exists) — this checks whether what exists will actually work with the template's skills for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Resolve recorded stage through the shared `stage` contract. Audit gaps against
+the effective workflow: optional artifacts are enhancements, not missing
+infrastructure. Minimal may adopt a brief and brief-linked stories; standard
+needs only critical ADRs. Preserve existing documents, IDs and ongoing stories;
+no blanket registry/manifest/sprint bootstrap. Offer only applicable fixes.
+
+
 # Adopt — Brownfield Template Adoption
 
 This skill audits an existing project's artifacts for **format compliance** with
@@ -38,7 +76,7 @@ skill is running during the silent read phase.
 Then read silently before presenting anything else.
 
 ### Existence check
-- `production/stage.txt` — if present, read it (authoritative phase)
+- `project_config.py stage` — use configured value/source before inference
 - `design/gdd/game-concept.md` — concept exists?
 - `design/gdd/systems-index.md` — systems index exists?
 - Count GDD files: `design/gdd/*.md` (excluding game-concept.md and systems-index.md)
@@ -48,14 +86,14 @@ Then read silently before presenting anything else.
 - `docs/engine-reference/` — engine reference docs present?
 - Glob `docs/adoption-plan-*.md` — note the filename of the most recent prior plan if any exist
 
-### Infer phase (if no stage.txt)
+### Infer phase (only if resolved stage is unset)
 Use the same heuristic as `$project-stage-detect`:
-- 10+ source files in `src/` → Production
+- 10+ source files in the resolved, actually scanned source scope → Production
 - Stories in `production/epics/` → Pre-Production
 - ADRs exist → Technical Setup
 - systems-index.md exists → Systems Design
 - game-concept.md exists → Concept
-- Nothing → Fresh (not a brownfield project — suggest `$start`)
+- No artifacts and an actually assessed empty source scope → Fresh (suggest `$start`). Unresolved source scope cannot establish a fresh project.
 
 If the project appears fresh (no artifacts at all), use `numbered choice prompt`:
 - "This looks like a fresh project — no existing artifacts found. `$adopt` is for
@@ -78,7 +116,7 @@ the file exists but that it contains the internal structure the template require
 
 ### 2a: GDD Format Audit
 
-For each GDD file found, check for the 8 required sections by scanning headings:
+For each GDD file found, check for the tier-required sections by scanning headings:
 
 | Required Section | Heading pattern to look for |
 |---|---|
@@ -149,7 +187,7 @@ For each story file found:
 | Control manifest | `docs/architecture/control-manifest.md` | HIGH — no layer rules for stories |
 | Manifest version stamp | In manifest header: `Manifest Version:` | MEDIUM — staleness checks blind |
 | Sprint status | `production/sprint-status.yaml` | MEDIUM — `$sprint-status` falls back to markdown |
-| Stage file | `production/stage.txt` | MEDIUM — phase auto-detect unreliable |
+| Recorded stage | Shared stage reader; YAML or legacy source | MEDIUM if unset — inference must be labelled |
 | Engine reference | `docs/engine-reference/[engine]/VERSION.md` | HIGH — ADR engine checks blind |
 | Architecture traceability | `docs/architecture/architecture-traceability.md` | MEDIUM — no persistent matrix |
 
@@ -221,7 +259,7 @@ For each affected GDD, list which sections are missing and the fix:
 2. Run `$architecture-review` → bootstraps `tr-registry.yaml`
 3. Run `$create-control-manifest` → creates manifest with version stamp
 4. Run `$sprint-plan update` → creates `sprint-status.yaml`
-5. Run `$gate-check [phase]` → writes `stage.txt` authoritatively
+5. Run `$gate-check [phase]` → offers the source-aware stage update after PASS
 
 **Existing stories** — note explicitly:
 > "Existing stories continue to work with all template skills — all new format
@@ -325,7 +363,7 @@ Run `$sprint-plan update`
 ### 3d. Set authoritative project stage
 Run `$gate-check [current-phase]`
 **Time**: 5 min
-- [ ] production/stage.txt written
+- [ ] Recorded stage verified through the shared stage reader after approval
 
 ---
 
@@ -360,25 +398,29 @@ are resolved. The new run will reflect the current state of the project.
 
 ## Phase 6b: Set Review Mode
 
-After writing the adoption plan (or if the user cancels writing), check whether
-`production/review-mode.txt` exists.
+After the adoption-plan decision, use this review setup:
 
-**If it exists**: Read it and note the current mode — "Review mode is already set to `[current]`." — skip the prompt.
+Resolve through the shared `review-mode` contract in
+`.codex/docs/director-gates.md`, passing any `--review` flag unchanged.
+If configuration is INVALID/NOT ASSESSED, show the diagnostic and stop review
+routing; do not initialize a fallback file.
 
-**If it does not exist**: Use `numbered choice prompt`:
+If `configured: true`, show the returned value/source and continue. This includes
+project/local YAML, legacy values, explicit rigor expansion, and per-run flags.
+Preserve those files and skip review setup; a missing legacy file is not a reason
+to create one that could shadow rigor or a YAML setting.
 
-- **Prompt**: "One more setup step: how much design review would you like as you work through the workflow?"
-- **Options**:
-  - `Full` — Director specialists review at each key workflow step. Best for teams, learning the workflow, or when you want thorough feedback on every decision.
-  - `Lean (recommended)` — Directors only at phase gate transitions ($gate-check). Skips per-skill reviews. Balanced for solo devs and small teams.
-  - `Solo` — No director reviews at all. Maximum speed. Best for game jams, prototypes, or if reviews feel like overhead.
+If `configured: false`, explain that the operational default is `lean` and offer:
 
-Write the choice to `production/review-mode.txt` immediately after selection — no separate "May I write?" needed:
-- `Full` → write `full`
-- `Lean (recommended)` → write `lean`
-- `Solo` → write `solo`
+1. Full — all declared director gates.
+2. (Recommended) Lean — PHASE-GATE directors only.
+3. Solo — no director gates; ordinary pipeline agents keep their declared roles.
 
-Create the `production/` directory if it does not exist.
+After selection, show the exact single-line value (`full`, `lean`, or `solo`) and
+ask "May I write this to `production/review-mode.txt`?" with `a. yes` / `b. no`.
+Create its parent only after approval. Re-run the shared contract after writing;
+a declined write leaves the validated default in use. Keep YAML assignments as
+`$settings` previews; this setup does not edit YAML or persist a per-run flag.
 
 ---
 

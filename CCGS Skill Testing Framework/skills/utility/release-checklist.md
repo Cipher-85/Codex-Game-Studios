@@ -175,3 +175,44 @@ is managed by `$gate-check`.
 - Stories with `Status: In Review` (not Done) are treated as incomplete
   and result in RELEASE BLOCKED; this edge case follows the same pattern
   as the HIGH bug case.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Phase 5B artifact-reader acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Parser/graph
+fixtures alone do not establish this skill's behavior.
+
+- Keep the workflow's selected scope and call the applicable artifact readers.
+  Verify source paths/lines and read incomplete or ambiguous values as unknown.
+- Exercise absent files, duplicate metadata, code/comment examples, empty
+  sections and nonstandard layouts. Empty discovery cannot establish a PASS,
+  zero open bugs, a ready story or a completed quality review.
+- Apply existing tier and evidence rules after reading facts. Missing optional
+  TR/ADR/GDD artifacts in minimal workflows remain N/A where permitted; named
+  broken references and actual missing evidence keep their existing effect.
+- For ADR graphs retain self-loops, multi-node cycles, missing/duplicate IDs and
+  unknown dependencies. A partial graph yields no complete implementation order.
+- Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
+  and source header status versus evidence/closure status. Counts do not
+  authorize edits, closure, new priorities, stage changes or role dispatch.

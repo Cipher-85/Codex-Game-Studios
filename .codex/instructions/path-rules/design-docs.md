@@ -5,9 +5,10 @@ paths:
   - "design/gdd/**"
 ---
 
-- Every design document must contain these eight sections: Overview, Player
-  Fantasy, Detailed Rules, Formulas, Edge Cases, Dependencies, Tuning Knobs,
-  Acceptance Criteria.
+- Before authoring or checking a system GDD, read
+  `.codex/docs/workflow-modes.md` and resolve the exact system stem. Author the
+  effective required sections and user-selected optional sections; preserve
+  existing content. Accept Detailed Design and Detailed Rules as aliases.
 - Formulas must include variable definitions, expected value ranges, and example
   calculations.
 - Edge cases must explicitly state what happens, not just "handle gracefully."

@@ -1,7 +1,35 @@
 ---
 name: test-setup
-description: "Scaffold the test framework and CI/CD pipeline for the project's engine. Creates the tests/ directory structure, engine-specific test runner configuration, and GitHub Actions workflow. Run once during Technical Setup phase before the first sprint begins for Codex Game Studios."
+description: "Scaffold engine-native tests and the CI/CD pipeline for the project's engine. Creates the tests/ directory structure, engine-specific test runner configuration, and GitHub Actions workflow. Run once during Technical Setup phase before the first sprint begins for Codex Game Studios."
 ---
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+**Setup write boundary:** Before the write phases below, use the approved-setup
+procedure in `technical-config.md`. Preview one exact changeset including active
+YAML/legacy targets, affected pins and runner files; preserve unrelated content.
+A settings declaration alone does not install a framework or migrate an engine.
+Re-read inputs before editing, re-resolve/read back afterward, and report unrun
+engine/import/build/test checks separately. Existing custom runners are retained.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
 
 # Test Setup
 
@@ -25,16 +53,16 @@ by this workflow after the user approves the test setup plan.
 ## Phase 1: Detect Engine and Existing State
 
 1. **Read engine config**:
-   - Read `.codex/docs/technical-preferences.md` and extract the `Engine:` value.
-   - If engine is not configured (`[TO BE CONFIGURED]`), stop:
+   - Use the shared technical result for engine family, language and reference pin.
+   - If required engine configuration is missing or conflicted, stop:
      "Engine not configured. Run `$setup-engine` first, then re-run `$test-setup`."
 
 2. **Check for existing test infrastructure**:
-   - Glob `tests/` — does the directory exist?
-   - Glob `tests/unit/` and `tests/integration/` — do subdirectories exist?
+   - Resolve the engine test roots from `.codex/docs/coding-standards.md`.
+   - Inspect those roots and the installed framework/version before proposing files.
    - Glob `.github/workflows/` — does a CI workflow file exist?
-   - Glob `tests/gdunit4_runner.gd` (Godot) or `tests/EditMode/` (Unity) or
-     `Source/Tests/` (Unreal) for engine-specific artifacts.
+   - Inspect existing custom commands, gdUnit4 addon runner (Godot),
+     `Assets/Tests/` assemblies (Unity), or tests in a compiled module (Unreal).
 
 3. **Report findings**:
    - "Engine: [engine]. Test directory: [found / not found]. CI workflow: [found / not found]."
@@ -57,12 +85,10 @@ Based on the engine detected and the existing state, present a plan:
 
 I will create the following (skipping any that already exist):
 
-tests/
-  unit/           — Isolated unit tests for formulas, state, and logic
-  integration/    — Cross-system tests and save/load round-trips
-  smoke/          — Critical path test list (15-minute manual gate)
-  evidence/       — Screenshot and manual test sign-off records
-  README.md       — Test framework documentation
+[Resolved engine test root]/ — Automated tests and README
+tests/smoke/                — Shared manual smoke checklist
+production/qa/evidence/     — Approved visual evidence destinations
+production/qa/playtests/    — Approved playtest report destinations
 
 [Engine-specific files — see per-engine details below]
 
@@ -80,7 +106,9 @@ Do not proceed without approval.
 
 ## Phase 3: Create Directory Structure
 
-After approval, create `tests/` on demand and then create the following files:
+After approval, create only the resolved paths in the plan. The following
+Godot README/layout is an example: substitute Unity/Unreal test roots before
+showing the plan or writing it. Manual evidence always uses `production/qa/`.
 
 ### `tests/README.md`
 
@@ -99,7 +127,7 @@ tests/
   unit/           # Isolated unit tests (formulas, state machines, logic)
   integration/    # Cross-system and save/load tests
   smoke/          # Critical path test list for $smoke-check gate
-  evidence/       # Screenshot logs and manual test sign-off records
+  # Screenshots/sign-off: production/qa/evidence/; playtests: production/qa/playtests/
 ```
 
 ## Running Tests
@@ -118,14 +146,15 @@ tests/
 |---|---|---|
 | Logic | Automated unit test — must pass | `tests/unit/[system]/` |
 | Integration | Integration test OR playtest doc | `tests/integration/[system]/` |
-| Visual/Feel | Screenshot + lead sign-off | `tests/evidence/` |
-| UI | Manual walkthrough OR interaction test | `tests/evidence/` |
+| Visual/Feel | Screenshot + lead sign-off | `production/qa/evidence/` |
+| UI | Manual walkthrough OR interaction test | `production/qa/evidence/` |
 | Config/Data | Smoke check pass | `production/qa/smoke-*.md` |
 
 ## CI
 
 Tests run automatically on every push to `main` and on every pull request.
-A failed test suite blocks merging.
+A failed suite must block the test job. Requiring that job for merges needs
+branch protection configured separately; do not claim the workflow enables it.
 ```
 ```
 
@@ -133,78 +162,53 @@ A failed test suite blocks merging.
 
 #### Godot 4 (`Engine: Godot`)
 
-Create `tests/gdunit4_runner.gd`:
+Read the Godot execution contract in `.codex/docs/coding-standards.md`.
+Record the installed gdUnit4 runner and exact command in `tests/README.md`.
+Create `tests/unit/.gitkeep` and `tests/integration/.gitkeep` if needed.
+Do not generate a replacement runner. If gdUnit4 is absent, report setup as
+incomplete and present installation as a separate approval decision.
 
-```gdscript
-# GdUnit4 test runner — invoked by CI and $smoke-check
-# Usage: godot --headless --script tests/gdunit4_runner.gd
-extends SceneTree
-
-func _init() -> void:
-    var runner := load("res://addons/gdunit4/GdUnitRunner.gd")
-    if runner == null:
-        push_error("GdUnit4 not found. Install via AssetLib or addons/.")
-        quit(1)
-        return
-    var instance = runner.new()
-    instance.run_tests()
-    quit(0)
-```
-
-Create `tests/unit/.gdignore_placeholder` with content:
-`# Unit tests go here — one subdirectory per system (e.g., tests/unit/combat/)`
-
-Create `tests/integration/.gdignore_placeholder` with content:
-`# Integration tests go here — one subdirectory per system`
-
-Note in the README: **Installing GdUnit4**
-```
-1. Open Godot → AssetLib → search "GdUnit4" → Download & Install
-2. Enable the plugin: Project → Project Settings → Plugins → GdUnit4 ✓
-3. Restart the editor
-4. Verify: res://addons/gdunit4/ exists
-```
+Include an empty `production/.gdignore` in the Godot setup preview when missing;
+this excludes evidence images/audio from Godot imports and default exports.
+Do not replace an existing file. This is Godot-only and requires the setup approval.
 
 #### Unity (`Engine: Unity`)
 
-Create `tests/EditMode/` placeholder file `tests/EditMode/README.md`:
-```markdown
-# Edit Mode Tests
-Unit tests that run without entering Play Mode.
-Use for pure logic: formulas, state machines, data validation.
-Assembly definition required: `tests/EditMode/EditModeTests.asmdef`
-```
-
-Create `tests/PlayMode/README.md`:
-```markdown
-# Play Mode Tests
-Integration tests that run in a real game scene.
-Use for cross-system interactions, physics, and coroutines.
-Assembly definition required: `tests/PlayMode/PlayModeTests.asmdef`
-```
-
-Note in the README: **Enabling Unity Test Framework**
-```
-Window → General → Test Runner
-(Unity Test Framework is included by default in Unity 2019+)
-```
+Use `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/`, each with its test
+assembly definition and README. Resolve the game's assembly references from
+existing asmdefs. Prefer the Editor's test-assembly creation tools; otherwise
+use the installed Test Framework's supported asmdef format and validate it in
+the Editor. The plan must name the exact asmdef files and references. Preserve
+existing assemblies, and report missing game/test assemblies instead of guessing.
+Document both CLI commands from the coding standards. A README alone is not
+working test infrastructure: confirm compilation and nonzero discovery.
 
 #### Unreal Engine (`Engine: Unreal` or `Engine: UE5`)
 
-Create `Source/Tests/README.md`:
-```markdown
-# Unreal Automation Tests
-Tests use the UE Automation Testing Framework.
-Run via: Session Frontend → Automation → select "MyGame." tests
-Or headlessly: UnrealEditor -nullrhi -ExecCmds="Automation RunTests MyGame.; Quit"
-
-Test class naming: F[SystemName]Test
-Test category naming: "MyGame.[System].[Feature]"
-```
+Find the module's `.Build.cs` and Editor target. Put tests in the existing test
+module or `Source/<Module>/Private/Tests/`, never an uncompiled standalone folder.
+Create a README there describing the project's actual test filter, build command,
+and automation command from the coding standards. Ask separately before changing
+an existing module's build configuration. Each automation test needs a unique
+class and an applicable context plus filter, for example
+`EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter` for
+Editor tests, guarded by `WITH_DEV_AUTOMATION_TESTS`.
 
 ---
 
 ## Phase 4: Create CI/CD Workflow
+
+Keep existing CI and action pins unless a supported change is required and
+included in the approved preview. For every engine, validate a fresh report with
+nonzero executed tests, no failed required cases and no skipped required cases;
+fail the job when results are missing or unassessed. Configure a report parser or
+use a runner that enforces this, and validate it with an empty-suite case before
+calling CI ready. Artifact-upload success alone is not a test verdict.
+
+Godot's `version: installed` preserves the committed addon. Verify the selected
+action supports its case-sensitive directory and exact engine/framework pair;
+otherwise use the existing project's compatible CI runner. Never silently fetch
+`latest`. Check the job result, not only a report-publishing check.
 
 ### Godot 4
 
@@ -223,6 +227,9 @@ jobs:
   test:
     name: Run GdUnit4 Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
 
     steps:
       - name: Checkout
@@ -233,7 +240,8 @@ jobs:
       - name: Run GdUnit4 Tests
         uses: MikeSchulze/gdUnit4-action@v1
         with:
-          godot-version: '[VERSION FROM docs/engine-reference/godot/VERSION.md]'
+          godot-version: '[FULL PINNED VERSION VERIFIED FROM THE EDITOR]'
+          version: 'installed'
           paths: |
             tests/unit
             tests/integration
@@ -300,46 +308,20 @@ secrets before the first CI run.
 
 ### Unreal Engine
 
-Create `.github/workflows/tests.yml`:
+Generate CI only after resolving the runner OS, engine executable, Editor target,
+module and test prefix. Show the full resulting workflow in the setup preview.
+Use an OS-specific self-hosted label (for example `[self-hosted, windows]`), build
+the Editor target first, then run the automation command from
+`.codex/docs/coding-standards.md` with absolute quoted paths and a fresh report
+directory. On Windows use PowerShell and the installed `Build.bat`/Editor paths;
+check `$LASTEXITCODE` after each process. On Linux use the corresponding build
+script and command-line editor. Never assume a generic self-hosted runner is
+Windows, or emit an unresolved `[ProjectName]` into a working workflow.
 
-```yaml
-name: Automated Tests
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    name: Run UE Automation Tests
-    runs-on: self-hosted  # UE requires a local runner with the editor installed
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - name: Run Automation Tests
-        run: |
-          "$UE_EDITOR_PATH" "${{ github.workspace }}/[ProjectName].uproject" \
-            -nullrhi -nosound \
-            -ExecCmds="Automation RunTests MyGame.; Quit" \
-            -log -unattended
-        shell: bash
-
-      - name: Upload Logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-logs
-          path: Saved/Logs/
-```
-
-Note: UE CI requires a self-hosted runner with Unreal Editor installed.
-Set the `UE_EDITOR_PATH` environment variable on the runner.
+Retain logs and report artifacts even on failure. Validate actual executed test
+counts and results: no matches/missing reports must fail the CI job as unassessed,
+not produce a green job. If the needed runner is unavailable, leave CI execution
+NOT ASSESSED and identify the exact setup/action still owed.
 
 ---
 

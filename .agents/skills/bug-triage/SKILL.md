@@ -3,6 +3,17 @@ name: bug-triage
 description: "Read all open bugs in production/qa/bugs/, re-evaluate priority vs. severity, assign to sprints, surface systemic trends, and produce a triage report. Run at sprint start or when the bug count grows enough to need re-prioritization for Codex Game Studios."
 ---
 
+## Artifact observations
+
+Before summarizing selected artifacts, apply
+`.codex/docs/artifact-inspection.md`. Run `python3 .codex/lib/artifact_facts.py bugs`
+with the exact files selected by this workflow, from the bound root. Keep
+errors, ambiguous/missing fields and source lines visible. Counts and graph order do not establish readiness,
+quality, closure or evidence; apply the policies and source review below.
+
+When bugs use consolidated logs or QA tables, retain their existing direct-read
+fallback. Empty default discovery does not establish zero open bugs.
+
 # Bug Triage
 
 This skill processes the open bug backlog into a prioritised, sprint-assigned

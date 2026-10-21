@@ -50,7 +50,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 **Fixture:**
 - No existing `docs/architecture/architecture.md`
 - `docs/architecture/` contains Accepted ADRs for reference
-- `production/session-state/review-mode.txt` contains `full`
+- `production/review-mode.txt` contains `full`
 
 **Input:** `$create-architecture`
 
@@ -76,7 +76,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 **Fixture:**
 - Architecture doc is fully drafted (all sections)
-- `production/session-state/review-mode.txt` contains `full`
+- `production/review-mode.txt` contains `full`
 - TD-ARCHITECTURE gate returns MAJOR REVISION: "[specific structural issue]"
 
 **Input:** `$create-architecture`
@@ -100,7 +100,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 **Fixture:**
 - No existing architecture doc
-- `production/session-state/review-mode.txt` contains `lean`
+- `production/review-mode.txt` contains `lean`
 
 **Input:** `$create-architecture`
 
@@ -146,7 +146,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 **Fixture:**
 - Architecture doc is being authored
 - One section references or depends on an ADR that has `Status: Proposed`
-- `production/session-state/review-mode.txt` contains `full`
+- `production/review-mode.txt` contains `full`
 
 **Input:** `$create-architecture`
 
@@ -185,3 +185,62 @@ In `solo` mode: both gates are skipped with equivalent notes.
 - The retrofit mode for updating multiple sections in one session follows the
   same per-section approval pattern — not independently tested for multi-section
   retrofits.
+
+## Review routing coverage (Phase 4A)
+
+Use the shared `review-mode` contract in `.codex/docs/director-gates.md`.
+Legacy `production/review-mode.txt` fixtures below remain fallback cases; also
+exercise project/local YAML, explicit rigor, and a per-run `--review` override.
+
+- [ ] Observe actual declared director gates using the returned value/source;
+      the flag wins over local YAML and is not persisted.
+- [ ] Invalid configuration stops director routing with diagnostics. Missing
+      tooling is NOT ASSESSED; neither case silently selects a review mode.
+- [ ] Review settings preserve existing evidence requirements and write approvals.
+
+These are native behavioral assertions. Resolver/hook/static audits alone do not
+establish that this skill or a role agent executed.
+
+## Phase 4B workflow and stage acceptance
+
+Status: NOT RUN — native skill behavior requires a separate observed invocation.
+The executable project-config/hook tests verify resolution, not this skill run.
+
+- Run with no selected rigor/workflow: retain compatibility requirements and show
+  the unset source; do not select minimal or standard implicitly.
+- Run with explicit minimal, standard and full fixtures. Apply
+  `.codex/docs/workflow-modes.md` before required-artifact checks, report source,
+  and preserve existing optional documents. Standard numeric rules require
+  Formulas; Detailed Design and Detailed Rules are aliases.
+- For named systems, resolve the GDD filename stem per item. A future authoring
+  stem is valid; a gate reports unmatched keys without silently applying them.
+- When this skill plans or implements minimal work, use the brief's numbered MVP
+  requirements. Do not demand optional registry/ADR/sprint artifacts, invent IDs,
+  or waive concrete criteria and current story-type evidence requirements.
+- When this skill reads/updates stage, use the shared reader and approved target.
+  Test YAML overriding a stale legacy stage, unset stage, invalid configuration,
+  and terminal Live. A declined write changes nothing; success needs readback.
+- A no-input or zero-required-check review is NOT ASSESSED or explicitly NOT
+  APPLICABLE, never evidence of a passing review or permission to advance.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

@@ -177,3 +177,21 @@ None. `$onboard` is a read-only orientation skill. No director gates apply.
   tested here.
 - Discipline roles beyond "artist" (e.g., programmer, designer, producer) follow
   the same tailoring pattern as Case 4 and are not separately tested.
+
+## Phase 5A source-scope acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Configuration
+fixture results do not prove this workflow's behavior.
+
+- Resolve the source scope before scans/writes and retain its provenance.
+  Test Godot, Unity and Unreal layouts plus an existing custom script folder.
+  Use actual paths; never create `src/` to satisfy an example.
+- Test lowercase `assets/`, missing conventional roots, conflicting engine
+  markers and invalid configuration. Unresolved dependent checks stay
+  NOT ASSESSED; no empty scan, fresh-project inference or clean verdict follows.
+- Keep source and content scope distinct. Inspect native scenes, local packages
+  and plugins where applicable; show scan denominators and exclusions. A
+  resolved directory alone supplies no scan, build, coverage or playtest proof.
+- Preserve engine-native test locations, explicit target paths, custom layout,
+  role ownership and existing write/engine approval gates. A mixed native/custom
+  project must not silently omit a source location or follow an external link.

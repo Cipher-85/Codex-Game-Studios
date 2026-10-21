@@ -3,6 +3,25 @@ name: localize
 description: "Full localization pipeline: scan for hardcoded strings, extract and manage string tables, validate translations, generate translator briefings, run cultural/sensitivity review, manage VO localization, test RTL/platform requirements, enforce string freeze, and report coverage for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
 # Localization Pipeline
 
 Localization is not just translation — it is the full process of making a game
@@ -29,7 +48,9 @@ If no subcommand is provided, output usage and stop. Verdict: **FAIL** — missi
 
 ## Phase 2A: Scan Mode
 
-Search `src/` for hardcoded user-facing strings:
+Search verified source/content scopes for hardcoded user-facing strings.
+Include native UI scenes/assets and custom script locations; record which
+paths were scanned and any exclusions:
 
 - String literals in UI code not wrapped in a localization function (`tr()`, `Tr()`, `NSLocalizedString`, `GetText`, etc.)
 - Concatenated strings that should be parameterized
@@ -85,7 +106,7 @@ Read all string table files in `assets/data/strings/`. For each locale, check:
 - **Placeholder mismatches** — source has `{name}` but translation omits it or adds extras
 - **String length violations** — translation exceeds the character limit recorded in the source `context` field
 - **Plural form count** — locale requires N plural forms; translation provides fewer
-- **Orphaned keys** — translation exists but nothing in `src/` references the key
+- **Orphaned keys** — translation exists but nothing in the assessed source/content scope references the key
 - **Stale translations** — source string changed after translation was written (flag for re-translation)
 - **Encoding** — non-ASCII characters present and font atlas supports them (flag if uncertain)
 
@@ -270,7 +291,9 @@ Glob `assets/audio/vo/[locale]/` for all `.wav`/`.ogg` files. Cross-reference ag
 
 ### VO Pipeline: Integrate
 
-Grep `src/` for VO audio references. Verify each referenced path exists in `assets/audio/vo/[locale]/`. Report broken references.
+Search the verified source/content scopes for VO audio references. Resolve each
+reference using the project's actual asset layout (`assets/audio/vo/[locale]/`
+is a Godot convention). Report broken references and unassessed scope.
 
 ---
 
@@ -279,7 +302,7 @@ Grep `src/` for VO audio references. Verify each referenced path exists in `asse
 Right-to-left languages (Arabic, Hebrew, Persian, Urdu) require layout mirroring beyond
 just translating text. This mode validates the implementation.
 
-Read `.codex/docs/technical-preferences.md` to determine the engine. Then check:
+Use the technical reader's resolved engine and reference-pin context. Then check:
 
 **Layout mirroring**
 - Is RTL layout enabled in the engine? (Godot: `Control.layout_direction`, Unity: `RTL Support` package, Unreal: text direction flags)

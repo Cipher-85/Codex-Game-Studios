@@ -3,6 +3,44 @@ name: project-stage-detect
 description: "Automatically analyze project state, detect stage, identify gaps, and recommend next steps based on existing artifacts. Use when user asks 'where are we in development', 'what stage are we in', 'full project audit' for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Read recorded stage through the shared `stage` contract before inference.
+Unrecognized/invalid configuration stops stage routing. With unset stage,
+report artifact inference explicitly, including a minimal brief as concept
+input. Compare gaps to the effective tier, never require optional documents.
+Live is terminal and routes to maintenance, not an invented eighth gate.
+
+
 # Project Stage Detection
 
 This skill scans your project to determine its current development stage, completeness
@@ -28,7 +66,7 @@ Analyze project structure and content:
 - Count narrative docs in `design/narrative/`
 - Count level designs in `design/levels/`
 
-**Source Code** (`src/`):
+**Source Code** (resolved source scope):
 - Count source files (language-agnostic)
 - Identify major systems (directories with 5+ files)
 - Check for core/, gameplay/, ai/, networking/, ui/ directories
@@ -50,21 +88,21 @@ Analyze project structure and content:
 
 **Tests** (`tests/`):
 - Count test files
-- Estimate test coverage (rough heuristic)
+- Describe observed test scope; file counts do not measure coverage
 
 ### 2. Classify Project Stage
 
-Based on scanned artifacts, determine stage. Check `production/stage.txt` first —
-if it exists, use its value (explicit override from `$gate-check`). Otherwise,
-auto-detect using these heuristics (check from most-advanced backward):
+Resolve `project_config.py stage` first. A configured stage outranks artifact
+inference; report disagreements. Only when unset, use these heuristics and label
+the result inferred. INVALID/NOT ASSESSED stops stage-dependent routing.
 
 | Stage | Indicators |
 |-------|-----------|
 | **Concept** | No game concept doc, brainstorming phase |
 | **Systems Design** | Game concept exists, systems index missing or incomplete |
 | **Technical Setup** | Systems index exists, engine not configured |
-| **Pre-Production** | Engine configured, `src/` has <10 source files |
-| **Production** | `src/` has 10+ source files, active development |
+| **Pre-Production** | Engine configured, assessed source scope has <10 source files |
+| **Production** | Assessed source scope has 10+ source files, active development |
 | **Polish** | Explicit only (set by `$gate-check` Production → Polish gate) |
 | **Release** | Explicit only (set by `$gate-check` Polish → Release gate) |
 
@@ -72,7 +110,7 @@ auto-detect using these heuristics (check from most-advanced backward):
 
 **DO NOT** just list missing files. Instead, **ask clarifying questions**:
 
-- "I see combat code (`src/gameplay/combat/`) but no `design/gdd/combat-system.md`. Was this prototyped first, or should we reverse-document?"
+- "I see combat code (`[actual combat path]`) but no `design/gdd/combat-system.md`. Was this prototyped first, or should we reverse-document?"
 - "You have 15 ADRs but no architecture overview. Should I create one to help new contributors?"
 - "No sprint plans in `production/`. Are you tracking work elsewhere (Jira, Trello, etc.)?"
 - "I found a game concept but no systems index. Have you decomposed the concept into individual systems yet, or should we run `$map-systems`?"
@@ -183,7 +221,7 @@ $project-stage-detect designer
 After generating the report, suggest relevant next steps:
 
 - **Concept exists but no systems index?** → `$map-systems` to decompose into systems
-- **Missing design docs?** → `$reverse-document design src/[system]`
+- **Missing design docs?** → `$reverse-document design [actual system path]`
 - **Missing architecture docs?** → `$architecture-decision` or `$reverse-document architecture`
 - **Prototypes need documentation?** → `$reverse-document concept prototypes/[name]`
 - **No sprint plan?** → `$sprint-plan`

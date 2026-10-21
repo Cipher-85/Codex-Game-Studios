@@ -2558,5 +2558,110 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": "src/.gitkeep"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/instructions/path-rules/scene-files.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/review-receipts.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_evidence.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/project_config.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_project_config.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/config-resolution.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/project.local.yaml"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/settings/SKILL.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": "CCGS Skill Testing Framework/skills/utility/settings.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/migrate_project_config.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_config_migration.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/config-migration.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/workflow-modes.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/templates/game-brief.md"
+  },
+  {
+    "path": ".codex/docs/qa-policy.md",
+    "owner": "codex-game-studios",
+    "mode": "file"
+  },
+  {
+    "path": ".codex/docs/team-policy.md",
+    "owner": "codex-game-studios",
+    "mode": "file"
+  },
+  {
+    "path": ".codex/docs/technical-config.md",
+    "owner": "codex-game-studios",
+    "mode": "file"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/artifact_facts.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/validate_artifact_facts.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/docs/artifact-inspection.md"
   }
 ]

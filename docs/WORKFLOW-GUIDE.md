@@ -1,5 +1,20 @@
 # Codex Game Studios -- Complete Workflow Guide
 
+This guide reflects a selective upstream v1.2.0 adaptation, not a complete
+source sync. [UPGRADING.md](../UPGRADING.md#selective-v120-adoption) records the
+adopted/deferred work; [VALIDATION.md](../.codex/docs/VALIDATION.md#native-acceptance-for-the-selective-update)
+records the native evidence still owed. Godot-style paths in examples must be
+resolved through the shared source-scope contract for the actual project.
+
+
+Workflow requirements are resolved by `.codex/lib/project_config.py workflow`
+and defined in `.codex/docs/workflow-modes.md`. Unconfigured projects preserve
+compatibility; minimal uses a brief/build order, standard a reduced GDD and
+critical architecture set, and full the complete pipeline. The detailed pipeline
+below is the compatibility/full reference where tiers differ. Documentation
+reductions preserve required evidence and all user approvals. Recorded stage
+uses the source-aware `stage` reader in `.codex/docs/config-resolution.md`.
+
 > **How to go from zero to a shipped game using the Agent Architecture.**
 >
 > This guide walks you through every phase of game development using the
@@ -89,7 +104,7 @@ At any point, run:
 $help
 ```
 
-This reads your current phase from `production/stage.txt`, checks which
+This reads your current phase through `project_config.py stage`, checks which
 artifacts exist, and tells you exactly what to do next. It distinguishes
 between REQUIRED next steps and OPTIONAL opportunities.
 
@@ -1155,9 +1170,13 @@ These topics apply across all phases.
 ### Director Review Modes
 
 Director gates are specialist agents that review your work at key workflow steps.
-By default they run at every checkpoint. You can control how much review you get.
+The resolved review mode controls which declared gates run.
 
-**Set your review intensity once during `$start`.** Saved to `production/review-mode.txt`.
+**Resolve review intensity through the shared `review-mode` contract** in
+`.codex/docs/director-gates.md`. Precedence is per-run `--review`, local YAML,
+project YAML, legacy `production/review-mode.txt`, explicit rigor expansion,
+then `lean`. Invalid configuration stops review routing instead of supplying
+a default; missing tooling is NOT ASSESSED.
 
 | Mode | What runs | Best for |
 |------|-----------|----------|
@@ -1172,8 +1191,17 @@ $brainstorm space horror --review full
 $architecture-decision --review solo
 ```
 
-The `--review` flag works on all gate-using skills. Change the global mode at any
-time by editing `production/review-mode.txt` directly or re-running `$start`.
+The `--review` flag works on gate-using skills and is never persisted. Existing
+YAML values are preserved by onboarding. Unconfigured review setup may propose
+the legacy file's exact value and ask before writing it; changing a shadowed
+legacy value cannot override YAML. `$settings` shows sources and previews
+assignments. Connected consumers now include review, workflow, density, story
+granularity, stage, QA, team and technical settings. Explicit rigor supplies its
+linked knobs without granting permission to act; unset rigor preserves existing
+project behavior. Automation and unsupported upstream-only fields do not create
+new authority. `$design-review --depth` independently controls its
+analysis/specialist/senior-review pipeline. See the current
+[adoption matrix](../UPGRADING.md#selective-v120-adoption).
 
 Full gate definitions and check pattern: `.codex/docs/director-gates.md`
 
@@ -1344,7 +1372,7 @@ $gate-check polish               # Polish -> Release
 - **CONCERNS** -- requirements met with acknowledged risks, passable
 - **FAIL** -- requirements not met, blocks advancement with specific remediation
 
-When a gate passes, `production/stage.txt` is updated (only then), which
+After a gate passes, its approved stage update targets the effective source and is read back, which
 controls the status line and `$help` behavior.
 
 ### Reverse Documentation
@@ -1439,14 +1467,17 @@ conflicts go to `producer`.
 
 ## Appendix B: Slash Command Quick-Reference
 
-### All 73 Commands by Category
+### All 76 Packaged Skills by Category
 
-#### Onboarding and Navigation (6)
+#### Onboarding and Navigation (9)
 
 | Command | Purpose | Phase |
 |---------|---------|-------|
 | `$start` | Guided onboarding, routes to right workflow | Any (first session) |
 | `$help` | Context-aware "what do I do next?" | Any |
+| `$settings` | Inspect configuration; preview assignments or migration | Any |
+| `$studio-status` | Show shared stage/review/session state | Any |
+| `$studio-next` | Deprecated manual continuity reference | Any |
 | `$project-stage-detect` | Full project audit to determine current phase | Any |
 | `$setup-engine` | Configure engine, pin version, set preferences | 1 |
 | `$adopt` | Brownfield audit and migration plan | Any (existing projects) |
@@ -1718,3 +1749,15 @@ conflicts go to `producer`.
 13. **Write to files early and often.** Incremental section writing means your
     design decisions survive crashes and compactions. The file is the memory,
     not the conversation.
+
+
+## Connected QA, team and technical settings
+
+The shared `project_config.py qa-policy`, `team-policy` and `technical` readers
+apply existing-schema settings without running workflows. See
+`.codex/docs/qa-policy.md`, `team-policy.md` and `technical-config.md` for policy.
+QA levels preserve mandatory evidence; team size changes only optional declared
+participation; technical settings must agree with engine pins and verified
+runners. Performance estimates cannot pass measured checks. Existing prose and
+custom routing remain authoritative; setup/migration still need exact approvals.
+Automation settings and new upstream-only fields remain outside this integration.

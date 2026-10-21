@@ -3,6 +3,51 @@ name: setup-engine
 description: "Configure the project's game engine and version. Pins the engine in Codex project instructions, detects knowledge gaps, and populates engine reference docs when the version is beyond the model's training data."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+**Setup write boundary:** Before the write phases below, use the approved-setup
+procedure in `technical-config.md`. Preview one exact changeset including active
+YAML/legacy targets, affected pins and runner files; preserve unrelated content.
+A settings declaration alone does not install a framework or migrate an engine.
+Re-read inputs before editing, re-resolve/read back afterward, and report unrun
+engine/import/build/test checks separately. Existing custom runners are retained.
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use `design/game-brief.md` as concept/requirement context at project minimal; otherwise
+use the concept and applicable GDDs. Read optional architecture/art/index inputs
+when present, but their absence alone is not a blocker for the lighter tier.
+Preserve explicit constraints, engine checks, user decisions and actual observed
+playtest/evidence requirements. Route follow-ups using the effective workflow.
+
+
 When this skill is invoked:
 
 ## 1. Parse Arguments
@@ -172,7 +217,9 @@ After updating AGENTS.md, create or update `.codex/docs/technical-preferences.md
 engine-appropriate defaults. Read the existing template first, then fill in:
 
 ### Engine & Language Section
-- Fill from the engine choice made in step 4
+- Use the approved engine choice from step 4 and the technical reader's active
+  write targets. Include actual reference-pin updates in the full preview.
+  Do not write a shadowed legacy field in place of its YAML owner.
 
 ### Naming Conventions (engine defaults)
 
@@ -195,8 +242,9 @@ engine-appropriate defaults. Read the existing template first, then fill in:
 
 ### Input & Platform Section
 
-Populate `## Input & Platform` using the answers gathered in Section 2 (or extracted
-from the game concept). Derive the values using this mapping:
+Propose platform/input values from Section 2 (or the approved game concept),
+using the active write target for each typed field. Keep custom input-method
+notes in technical-preferences. This mapping suggests values for confirmation:
 
 | Platform target | Gamepad Support | Touch Support |
 |-----------------|-----------------|---------------|
@@ -231,7 +279,7 @@ Example filled section:
   - Prompt: "Should I set default performance budgets now, or leave them for later?"
   - Options: `[A] Set defaults now (60fps, 16.6ms frame budget, engine-appropriate draw call limit)` / `[B] Leave as [TO BE CONFIGURED] — I'll set these when I know my target hardware`
   - If [A]: populate with the suggested defaults. If [B]: leave as placeholder.
-- **Testing**: Suggest engine-appropriate framework (GUT for Godot, NUnit for Unity, etc.) — ask before adding.
+- **Testing**: Preserve the installed framework. If absent, present compatible options for the pinned engine and ask before configuring or installing one; no default is silently applied.
 - **Forbidden Patterns**: Leave as placeholder — do NOT pre-populate.
 - **Allowed Libraries**: Leave as placeholder — do NOT pre-populate dependencies the project does not currently need. Only add a library here when it is actively being integrated, not speculatively.
 
@@ -459,7 +507,7 @@ any "must migrate" items.
 
 ### Step 3 — Pre-Upgrade Audit
 
-Scan `src/` for code that uses APIs known to be deprecated or changed in the
+Scan the resolved source scope for code that uses APIs known to be deprecated or changed in the
 target version:
 
 - Use Grep to search for deprecated API names extracted from the migration
@@ -488,8 +536,10 @@ Recommended migration order (dependency-sorted):
   ...
 ```
 
-If no deprecated APIs are found in `src/`, report: "No deprecated API usage
-found in src/ — upgrade may be low-risk."
+Only after scanning, report the actual paths and files checked: "No occurrences
+of the checked deprecated APIs in [scope]." List exclusions and unresolved
+scope as NOT ASSESSED; this result alone does not establish upgrade safety.
+The table above uses Godot example paths, not required source locations.
 
 ### Step 4 — Confirm Before Updating
 

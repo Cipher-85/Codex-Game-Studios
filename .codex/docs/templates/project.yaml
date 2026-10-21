@@ -1,0 +1,17 @@
+# Candidate CCGS configuration. Copy only during an approved migration/setup.
+# This template is package-owned; a root project.yaml is project-owned.
+# Operational consumers are listed by project_config.py; automation settings
+# remain candidates. Existing projects without a chosen rigor keep compatibility.
+schema_version: 1
+
+modes:
+  # Recommended for NEW projects. Existing projects need a preservation review.
+  rigor: standard
+  automation: collaborative
+
+# Do not seed the six rigor-derived knobs here; explicit values shadow rigor.
+# Add engine name/version/language only from the project's verified pins.
+# Read .codex/docs/config-resolution.md before adding fields or local overrides.
+
+# QA/team/technical readers report supported fields and effective constraints.
+# Mandatory evidence, engine pins and installed runners remain independently verified.

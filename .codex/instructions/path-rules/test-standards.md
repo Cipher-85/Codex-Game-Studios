@@ -3,6 +3,9 @@
 ---
 paths:
   - "tests/**"
+  - "Assets/Tests/**"
+  - "Source/*/Tests/**"
+  - "Source/*/Private/Tests/**"
 ---
 
 ## Code-Turn Discipline
@@ -27,3 +30,17 @@ paths:
 - Mock external dependencies; tests should be fast and deterministic.
 - Every bug fix must have a regression test that would have caught the original
   bug.
+
+## Engine test locations
+
+Read `.codex/docs/coding-standards.md` for the engine test roots and execution
+contract. Godot tests use `tests/`; Unity tests use test assemblies under
+`Assets/Tests/`; Unreal tests belong to a compiled module under
+`Source/<Module>/Private/Tests/` (or the project's existing test module).
+Use the language's naming conventions: `test_*` GDScript functions, NUnit
+`[Test]` methods, unique Unreal automation classes and matching test filters.
+A test file's existence is not proof it compiled, was discovered, or passed.
+
+Read `.codex/docs/qa-policy.md` for effective level/strictness and the mandatory
+evidence floor. Use `.codex/docs/technical-config.md` to verify the installed
+runner and engine pin; lower QA settings never excuse a required failing test.

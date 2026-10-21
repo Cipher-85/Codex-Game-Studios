@@ -3,6 +3,27 @@ name: test-evidence-review
 description: "Quality review of test files and manual evidence documents. Goes beyond existence checks — evaluates assertion coverage, edge case handling, naming conventions, and evidence completeness. Produces ADEQUATE/INCOMPLETE/MISSING verdict per story. Run before QA sign-off or on demand for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
 # Test Evidence Review
 
 `$smoke-check` verifies that test files **exist** and **pass**. This skill
@@ -52,6 +73,11 @@ For each story, collect:
 
 ## 3. Locate Evidence Files
 
+Resolve engine test roots per `.codex/docs/coding-standards.md`; the `tests/`
+examples below are Godot paths. Prefer the story's exact Test Evidence path.
+Label source inspection as quality review, never as test execution. Execution
+claims require applicable run reports with nonzero executed tests and provenance.
+
 For each story, find the evidence:
 
 **Logic stories**: Glob `tests/unit/[system]/[story-slug]_test.*`
@@ -59,7 +85,7 @@ For each story, find the evidence:
     containing the story slug
 
 **Integration stories**: Glob `tests/integration/[system]/[story-slug]_test.*`
-  - Also check `production/session-logs/` for playtest records mentioning the story
+  - Also check `production/qa/playtests/` for playtest records mentioning the story
 
 **Visual/Feel and UI stories**: Glob `production/qa/evidence/[story-slug]-evidence.*`
 
@@ -137,18 +163,20 @@ closed without all required sign-offs.
 
 ### Screenshot / artefact completeness
 
-For Visual/Feel stories: check whether screenshot file paths are referenced
-in the evidence doc. If referenced, Glob for them to confirm they exist.
+For Visual/Feel and visible UI criteria, open the retained screenshots and map
+what is visible to each criterion. Existence alone is insufficient. Read the
+run/setup/build provenance; a checkpoint's description is reported evidence,
+not your own observation. Interaction, timing, performance and feel need their
+own applicable observations/sign-offs. An unreadable image or unrun required
+criterion is NOT ASSESSED; a missing required image is MISSING.
 
-For UI stories: check whether a walkthrough sequence (step-by-step interaction
-log) is present.
+### Content freshness
 
-### Date coverage
-
-Evidence doc should have a date. If the date is earlier than the story's
-last major change (heuristic: compare against sprint start date from the sprint
-plan), flag as POTENTIALLY STALE — the evidence may not cover the final
-implementation.
+Follow `.codex/docs/verification-integrity.md`. Run:
+`bash .codex/lib/review-receipts.sh check production/qa/evidence/<story-slug>/stamp.json`.
+Name CHANGED/GONE inputs and request recapture. Missing/invalid receipts mean
+freshness unknown. These are freshness warnings, not automatic test failures;
+unchanged hashes do not prove acceptance. Do not restamp old evidence.
 
 ---
 
@@ -158,11 +186,14 @@ For each story, assign a verdict:
 
 | Verdict | Meaning |
 |---------|---------|
-| **ADEQUATE** | Test/evidence exists, passes quality checks, all criteria covered |
+| **ADEQUATE** | Inspected evidence meets the reviewed quality requirements; execution provenance stated separately |
 | **INCOMPLETE** | Test/evidence exists but has quality gaps (thin assertions, missing sign-offs) |
 | **MISSING** | No test or evidence found for a story type that requires it |
 
-The overall sprint/system verdict is the worst story verdict present.
+Add **NOT ASSESSED** when required existing evidence cannot be read or evaluated.
+For the overall verdict, known missing/quality failures remain MISSING/INCOMPLETE
+and list unassessed items alongside them; otherwise any unassessed item prevents
+ADEQUATE. A source-quality verdict never establishes that tests ran or passed.
 
 ```markdown
 ## Test Evidence Review
@@ -170,7 +201,7 @@ The overall sprint/system verdict is the worst story verdict present.
 > **Date**: [date]
 > **Scope**: [single story path | Sprint [N] | [system name]]
 > **Stories reviewed**: [N]
-> **Overall verdict**: ADEQUATE / INCOMPLETE / MISSING
+> **Overall verdict**: ADEQUATE / INCOMPLETE / MISSING / NOT ASSESSED
 
 ---
 
@@ -190,7 +221,8 @@ The overall sprint/system verdict is the worst story verdict present.
 - Criterion linkage: [N/M criteria referenced]
 - Sign-offs: [Developer ✓ | Designer ✗ | QA Lead ✗]
 - Artefacts: [screenshots present / missing / N/A]
-- Freshness: [dated [date] — current / potentially stale]
+- Freshness: [receipt result, affected inputs, known coverage limits]
+- Run provenance: [observed / user-reported / historical / NOT ASSESSED]
 
 **Issues**:
 - BLOCKING: [description] *(prevents story-done)*

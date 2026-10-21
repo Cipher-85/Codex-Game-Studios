@@ -170,3 +170,43 @@ None. Code review is a read-only advisory skill; no gates are invoked.
   is assumed to apply the same checks file by file and aggregate the verdict.
 - Test coverage checks (verifying corresponding test files exist) are a stretch
   goal not tested here; that is primarily the domain of `$test-evidence-review`.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Phase 5A source-scope acceptance
+
+Status: NOT RUN — requires an observed native skill invocation. Configuration
+fixture results do not prove this workflow's behavior.
+
+- Resolve the source scope before scans/writes and retain its provenance.
+  Test Godot, Unity and Unreal layouts plus an existing custom script folder.
+  Use actual paths; never create `src/` to satisfy an example.
+- Test lowercase `assets/`, missing conventional roots, conflicting engine
+  markers and invalid configuration. Unresolved dependent checks stay
+  NOT ASSESSED; no empty scan, fresh-project inference or clean verdict follows.
+- Keep source and content scope distinct. Inspect native scenes, local packages
+  and plugins where applicable; show scan denominators and exclusions. A
+  resolved directory alone supplies no scan, build, coverage or playtest proof.
+- Preserve engine-native test locations, explicit target paths, custom layout,
+  role ownership and existing write/engine approval gates. A mixed native/custom
+  project must not silently omit a source location or follow an external link.

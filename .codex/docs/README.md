@@ -8,6 +8,15 @@ Use repo-local skills by their upstream names, for example `$start`, `$prototype
 not by this repo. `.agent-continuity.toml` and `production/handoff/*.md`
 configure that pair for CCGS projects.
 
+The working package selectively adapts upstream v1.2.0; the original port
+inventory remains historical. Read [the adoption matrix](../../UPGRADING.md#selective-v120-adoption)
+before upgrading. Current consumer contracts are
+[configuration](config-resolution.md), [workflow tiers](workflow-modes.md),
+[QA](qa-policy.md), [teams](team-policy.md), [technical/source scope](technical-config.md),
+and [artifact inspection](artifact-inspection.md).
+[Validation](VALIDATION.md#native-acceptance-for-the-selective-update) separates
+package checks from the native evidence still owed.
+
 Core commands:
 
 ```bash

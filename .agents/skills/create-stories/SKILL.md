@@ -3,6 +3,54 @@ name: create-stories
 description: "Break a single epic into implementable story files. Reads the epic, its GDD, governing ADRs, and control manifest. Each story embeds its GDD requirement TR-ID, ADR guidance, acceptance criteria, story type, and test evidence path. Run after $create-epics for each epic for Codex Game Studios."
 ---
 
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+## QA configuration
+
+Before evidence planning or a QA verdict, read `.codex/docs/qa-policy.md` and run
+`project_config.py qa-policy`. Keep level/source, effective type gates and any
+active coverage threshold. Apply it to the checks and delegated briefs below.
+Required evidence, known failures and unassessed criteria retain their existing
+blocking behavior at every level. Strict false cannot waive that floor. Full QA
+adds affected critical-path regression evidence; optional numeric coverage uses
+an applicable measured report, never test counts. Report unrun checks honestly.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+**Project-minimal branch:** Accept `design/game-brief.md`, or discover it when no epic
+exists. Follow the shared brief-to-story procedure instead of requiring an epic,
+GDD, registry, manifest or ADR. Use numbered MVP references, concrete criteria,
+normal story types and the unchanged evidence rules. Show every story and any
+proposed EPIC.md/index path in one approval; append only uncovered work and never
+rewrite existing stories. Then recommend the first ready story. The brief's
+build order replaces a required sprint plan.
+
+At standard, missing optional TR registry/manifest is N/A; use exact GDD section
+references and validate each explicitly named ADR. At full/compatibility keep
+existing requirements. Apply granularity when grouping criteria and density to
+prose; neither changes evidence or removes criteria. The remaining epic-based
+procedure applies to standard/full/compatibility or an existing optional epic.
+
+
 # Create Stories
 
 A story is a single implementable behaviour — small enough to complete in one
@@ -15,6 +63,13 @@ then Core, and so on — matching the dependency order.
 
 **Output:** `production/epics/[epic-slug]/story-NNN-[slug].md` files
 
+For minimal story fields: `GDD: design/game-brief.md`; requirement =
+`Brief MVP feature N`; absent TR-ID = `N/A — brief reference`; absent ADR and
+Manifest Version = `N/A — optional at project minimal`. Retain actual named references
+when they exist, the engine risk check, complete criteria, dependencies, planned
+files and required Test Evidence. Populate the normal story template from this
+mapping; never generate TR placeholders or an empty fake ADR.
+
 **Previous step:** `$create-epics [system]`
 **Next step after stories exist:** `$story-readiness [story-path]` then `$dev-story [story-path]`
 
@@ -22,25 +77,24 @@ then Core, and so on — matching the dependency order.
 
 ## 1. Parse Argument
 
-Extract `--review [full|lean|solo]` if present and store as the review mode
-override for this run. If not provided, read `production/review-mode.txt`
-(default `lean` if missing). This resolved mode applies to all gate spawns
-in this skill — apply the check pattern from `.codex/docs/director-gates.md`
-before every gate invocation.
+Read and apply the shared `review-mode` contract in
+`.codex/docs/director-gates.md` for this run. Pass any `--review` flag unchanged.
+Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all gate checks.
 
 - `$create-stories [epic-slug]` — e.g. `$create-stories combat`
 - `$create-stories production/epics/combat/EPIC.md` — full path also accepted
-- No argument — ask: "Which epic would you like to break into stories?"
+- At project minimal, `design/game-brief.md` or no existing epic takes the minimal branch above.
+- Otherwise, no argument — ask: "Which epic would you like to break into stories?"
   Glob `production/epics/*/EPIC.md` and list available epics with their status.
 
 ---
 
 ## 2. Load Everything for This Epic
 
-Read in full:
+For the epic-based branch, read required/present inputs in full:
 
 - `production/epics/[epic-slug]/EPIC.md` — epic overview, governing ADRs, GDD requirements table
-- The epic's GDD (`design/gdd/[filename].md`) — read all 8 sections, especially Acceptance Criteria, Formulas, and Edge Cases
+- The epic's GDD (`design/gdd/[filename].md`) — read all required/present sections, especially Acceptance Criteria, Formulas, and Edge Cases
 - All governing ADRs listed in the epic — read the Decision, Implementation Guidelines, Engine Compatibility, and Engine Notes sections
 - `docs/architecture/control-manifest.md` — extract rules for this epic's layer; note the Manifest Version date from the header
 - `docs/architecture/tr-registry.yaml` — load all TR-IDs for this system
@@ -87,7 +141,7 @@ group of criteria would take longer, split into two stories.
 
 For each story, determine:
 - **GDD requirement**: which acceptance criterion(ia) does this satisfy?
-- **TR-ID**: look up in `tr-registry.yaml`. Use the stable ID. If no match, use `TR-[system]-???` and warn.
+- **TR-ID**: look up in `tr-registry.yaml`. Use the stable ID. If no match, use the exact approved requirement section at standard/minimal; at full report the missing registration. Never invent a placeholder TR-ID.
 - **Governing ADR**: which ADR governs how to implement this?
   - `Status: Accepted` → embed normally
   - `Status: Proposed` → set story `Status: Blocked` with note: "BLOCKED: ADR-NNNN is Proposed — run `$architecture-decision` to advance it"
@@ -216,6 +270,14 @@ For each story, write `production/epics/[epic-slug]/story-[NNN]-[slug].md`:
 
 ---
 
+## Files
+
+Planned files (exact project-relative paths, including tests):
+- `[path]` — [create / modify; purpose]
+
+`$dev-story` records actual changed files here and retains planned-versus-actual
+scope deviations in Completion Notes. This list is not permission to expand scope.
+
 ## Implementation Notes
 
 *Derived from ADR-NNNN Implementation Guidelines:*
@@ -257,11 +319,12 @@ change meaning. This is what the programmer reads instead of the ADR.]
 ## Test Evidence
 
 **Story Type**: [type]
-**Required evidence**:
+**Required evidence** (resolve paths for the engine per `.codex/docs/coding-standards.md`;
+the `tests/` examples below are Godot paths):
 - Logic: `tests/unit/[system]/[story-slug]_test.[ext]` — must exist and pass
-- Integration: `tests/integration/[system]/[story-slug]_test.[ext]` OR playtest doc
+- Integration: `tests/integration/[system]/[story-slug]_test.[ext]` OR playtest doc in `production/qa/playtests/`
 - Visual/Feel: `production/qa/evidence/[story-slug]-evidence.md` + sign-off
-- UI: `production/qa/evidence/[story-slug]-evidence.md` or interaction test
+- UI: `production/qa/evidence/[story-slug]-evidence.md` or interaction test; opened screenshots for visible criteria
 - Config/Data: smoke check pass (`production/qa/smoke-*.md`)
 
 **Status**: [ ] Not yet created

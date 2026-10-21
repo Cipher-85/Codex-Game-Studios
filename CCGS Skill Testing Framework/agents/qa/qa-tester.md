@@ -4,16 +4,16 @@
 - **Domain**: Detailed test case authoring, bug reports (structured format), test execution documentation, regression checklists, smoke check execution docs, test evidence recording per the project's coding standards
 - **Does NOT own**: Test strategy and test plan design (qa-lead), implementation fixes for found bugs (appropriate programmer), QA process architecture (qa-lead)
 - **Category**: qa
-- **Model tier**: Sonnet
+- **Model**: `gpt-5.6-sol` (Codex role profile)
 - **Gate IDs**: None; flags ambiguous acceptance criteria to qa-lead rather than resolving independently
 
 ---
 
 ## Static Assertions (Structural)
 
-- [ ] `description:` field is present and domain-specific (references test cases, bug reports, test execution, regression testing)
-- [ ] `allowed-tools:` list matches the agent's role (Read/Write for tests/ and production/qa/evidence/; no source code editing tools)
-- [ ] Model tier is Sonnet (default for QA specialists)
+- [ ] `description` field is present and domain-specific (references test cases, bug reports, test execution, regression testing)
+- [ ] `developer_instructions` preserves the testing domain and approval boundaries; no legacy tool allowlist is required
+- [ ] Model remains `gpt-5.6-sol`; no reasoning-effort override is added
 - [ ] Agent definition does not claim authority over test strategy, fix implementation, or acceptance criterion definition
 
 ---
@@ -85,3 +85,28 @@
 - Case 5 requires coding-standards.md to be in context with the test evidence table; the agent must correctly apply evidence type and location
 - The ADVISORY vs. BLOCKING gate level (Case 5) is a detail that affects story completion — verify the agent reports it
 - No automated runner; review manually or via `$skill-test`
+
+## Phase 1 Backport Regression Cases
+
+These assertions require workflow evaluation; adding them is not a passing test run.
+
+- [ ] Godot Node test fixtures use `auto_free` (or an equivalent valid lifecycle);
+  RefCounted fixtures are not treated as Nodes requiring manual free.
+- [ ] Unity samples import NUnit and use supported assertions such as
+  `Assert.That(actual, Is.EqualTo(expected))` inside discoverable test assemblies.
+- [ ] Unreal samples include `Misc/AutomationTest.h`, use the development-test
+  guard and unique scenario class names, and live inside a compiled module.
+- [ ] Resolve engine-native roots and commands from shared coding standards;
+  fresh, nonzero results are required before reporting executed tests as passing.
+- [ ] Visual review opens images and records source/build/run provenance; unknown
+  freshness or unrun checks remain NOT ASSESSED. Hash matches are not execution.
+- [ ] Playtests use `production/qa/playtests/`; reviewer identity reflects actual
+  review, not a role named in a prompt or an unverified worker completion claim.
+
+## Phase 4C policy evidence
+
+Native acceptance NOT RUN. Verify the role receives the resolved QA/technical
+policy and uses it without weakening required evidence. Test an estimate-only
+performance report, a required unrun test, false strictness, and a conflicting
+engine pin. Preserve the role's ownership and exact custom-profile identity;
+configuration does not count as an observed test or a successful role dispatch.

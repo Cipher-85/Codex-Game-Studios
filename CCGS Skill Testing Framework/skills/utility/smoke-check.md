@@ -2,192 +2,132 @@
 
 ## Skill Summary
 
-`$smoke-check` is the gate between implementation and QA hand-off. It detects the
-test environment, runs the automated test suite (via Bash), scans test coverage
-against sprint stories, and uses `numbered choice prompt` to batch-verify manual smoke
-checks with the developer. It writes a report to `production/qa/smoke-[date].md`
-after explicit user approval.
+Runs the applicable engine tests, maps evidence to sprint stories, and obtains
+explicit per-check manual results before QA hand-off. A report is written to
+`production/qa/smoke-[date].md` only after approval. These are behavioral test
+specifications, not records that the workflows below have run.
 
-Verdicts: PASS (tests pass, all smoke checks pass, no missing test evidence),
-PASS WITH WARNINGS (tests pass or NOT RUN, all critical checks pass, but advisory
-gaps exist such as missing test coverage), or FAIL (any automated test failure or
-any Batch 1/Batch 2 smoke check returns FAIL).
-
-No director gates apply. The skill does NOT invoke any director agents.
-
----
+Verdict precedence: observed required failure → FAIL; otherwise missing required
+execution/evidence → NOT ASSESSED; otherwise advisory issues → PASS WITH WARNINGS;
+otherwise PASS. Justified N/A is recorded with its reason and scope.
 
 ## Static Assertions (Structural)
 
-Verified automatically by `$skill-test static` — no fixture needed.
-
-- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
-- [ ] Has ≥2 phase headings
-- [ ] Contains verdict keywords: PASS, PASS WITH WARNINGS, FAIL
-- [ ] Contains "May I write" collaborative protocol language before writing the report
-- [ ] Has a next-step handoff (e.g., `$bug-report` on FAIL, QA hand-off guidance on PASS)
-
----
-
-## Director Gate Checks
-
-None. `$smoke-check` is a pre-QA utility skill. No director gates apply.
-
----
+- [ ] Has the Codex metadata contract and multiple phases.
+- [ ] Contains PASS, PASS WITH WARNINGS, FAIL, and NOT ASSESSED.
+- [ ] Asks "May I write" before the report and supplies a next action.
+- [ ] Does not invoke director gates.
 
 ## Test Cases
 
-### Case 1: Happy Path — Automated tests pass, manual items confirmed, PASS
+### Case 1: Current complete evidence permits PASS
 
-**Fixture:**
-- `tests/` directory exists with a GDUnit4 runner script
-- Engine detected as Godot from `technical-preferences.md`
-- `production/qa/qa-plan-sprint-005.md` exists
-- Automated test runner reports 12 tests, 12 passing, 0 failing
-- Developer confirms all Batch 1 and Batch 2 smoke checks as PASS
-- All sprint stories have matching test files (no MISSING coverage)
-
+**Fixture:** Godot with an installed GdUnit4 CLI, 12 applicable tests, a QA plan,
+all required story evidence, and explicit passing manual results for this build.
 **Input:** `$smoke-check`
-
-**Expected behavior:**
-1. Skill detects test directory and engine, notes QA plan found
-2. Runs `godot --headless --script tests/gdunit4_runner.gd` via Bash
-3. Parses output: 12/12 passing
-4. Scans test coverage — all stories COVERED or EXPECTED
-5. Uses `numbered choice prompt` for Batch 1 (core stability) and Batch 2 (sprint mechanics)
-6. Developer selects PASS for all items
-7. Report assembled: automated tests PASS, all smoke checks PASS, no MISSING coverage
-8. Asks "May I write this smoke check report to `production/qa/smoke-[date].md`?"
-9. Writes report after approval
-10. Delivers verdict: PASS
-
 **Assertions:**
-- [ ] Automated test runner is invoked via Bash
-- [ ] `numbered choice prompt` is used for manual smoke check batches
-- [ ] "May I write" is asked before writing the report file
-- [ ] Report is written to `production/qa/smoke-[date].md`
-- [ ] Verdict is PASS
+- [ ] Resolves the installed CLI and editor, quotes executable/project paths,
+  and uses the command contract in `.codex/docs/coding-standards.md`.
+- [ ] Reads fresh results: 12 executed, 12 passed, zero failed; records command,
+  version, build/ref, run time, result path, and skipped count.
+- [ ] Test-file presence is PRESENT, not proof that a criterion ran.
+- [ ] Requests PASS / FAIL / Not tested / justified N/A for each manual check.
+- [ ] All required evidence assessed and passing produces PASS.
+- [ ] Writes the report only after showing it and obtaining approval.
 
----
+### Case 2: Failure outranks incomplete evidence
 
-### Case 2: Failure Path — Automated test fails, FAIL verdict
-
-**Fixture:**
-- `tests/` directory exists, engine is Godot
-- Automated test runner reports 10 tests run: 8 passing, 2 failing
-  - Failing tests: `test_health_clamp_at_zero`, `test_damage_calculation_negative`
-- QA plan exists
-
+**Fixture:** Ten tests executed, two failures, plus an unanswered manual check.
 **Input:** `$smoke-check`
-
-**Expected behavior:**
-1. Skill runs automated tests via Bash
-2. Parses output — 2 failures detected
-3. Records failing test names
-4. Proceeds through manual smoke check batches
-5. Report shows automated tests as FAIL with failing test names listed
-6. Asks to write report; writes after approval
-7. Delivers FAIL verdict with message: "The smoke check failed. Do not hand off to
-   QA until these failures are resolved." Lists failing tests and suggests fixing
-   then re-running `$smoke-check`
-
 **Assertions:**
-- [ ] Failing test names are listed in the report
-- [ ] Verdict is FAIL
-- [ ] Post-verdict message directs developer to fix failures before QA hand-off
-- [ ] `$smoke-check` re-run is suggested after fixing
+- [ ] Lists both failing test names and the unassessed manual check.
+- [ ] Overall FAIL; does not hide failures behind NOT ASSESSED.
+- [ ] Blocks QA execution/sign-off and recommends correction and rerun.
 
----
+### Case 3: Zero tests, missing runner, and stale results
 
-### Case 3: Manual Confirmation — numbered choice prompt used, PASS WITH WARNINGS
-
-**Fixture:**
-- `tests/` directory exists, engine is Godot
-- Automated test runner reports all tests passing (8/8)
-- One Logic story has no matching test file (MISSING coverage)
-- Developer confirms all Batch 1 and Batch 2 smoke checks as PASS
-
+**Fixtures:** Independently exercise zero tests with exit 0; unavailable editor;
+missing CLI; an old passing result with no current output; missing required
+Logic-story test evidence despite eight other passing tests.
 **Input:** `$smoke-check`
-
-**Expected behavior:**
-1. Automated tests PASS
-2. Coverage scan finds 1 MISSING entry for a Logic story
-3. `numbered choice prompt` is used for Batch 1 and Batch 2 — developer confirms all PASS
-4. Report shows: automated tests PASS, manual checks all PASS, 1 MISSING coverage entry
-5. Verdict is PASS WITH WARNINGS — build ready for QA, but MISSING entry must be
-   resolved before `$story-done` closes the affected story
-6. Asks to write report; writes after approval
-
 **Assertions:**
-- [ ] `numbered choice prompt` is used for manual smoke check batches (not inline text prompts)
-- [ ] MISSING test coverage entry appears in the report
-- [ ] Verdict is PASS WITH WARNINGS (not PASS, not FAIL)
-- [ ] Advisory note explains MISSING entry must be resolved before `$story-done`
-- [ ] Report file is written to `production/qa/smoke-[date].md`
+- [ ] Each variant yields NOT ASSESSED, never PASS WITH WARNINGS.
+- [ ] Names the missing execution/evidence and remediation.
+- [ ] A supplied prior result remains historical/user-reported until inspected
+  and matched to the requested scope/build.
+- [ ] Planning may continue, but missing execution cannot permit QA sign-off.
 
----
+### Case 4: Engine-native roots
 
-### Case 4: No Test Directory — Skill stops with guidance
-
-**Fixture:**
-- `tests/` directory does not exist
-- Engine is configured as Godot
-
+**Fixtures:** Unity tests under `Assets/Tests/` with test asmdefs; Unreal tests
+inside a compiled project module; Godot with no installed framework.
 **Input:** `$smoke-check`
-
-**Expected behavior:**
-1. Phase 1 checks for `tests/` directory — not found
-2. Skill outputs: "No test directory found at `tests/`. Run `$test-setup` to
-   scaffold the testing infrastructure, or create the directory manually if
-   tests live elsewhere."
-3. Skill stops — no automated tests run, no manual smoke checks, no report written
-
 **Assertions:**
-- [ ] Error message references the missing `tests/` directory
-- [ ] `$test-setup` is suggested as the remediation step
-- [ ] Skill stops after this message (no further phases run)
-- [ ] No report file is written
+- [ ] Unity/Unreal do not fail merely because top-level `tests/` is absent.
+- [ ] Unity runs EditMode/PlayMode as required, omits `-quit`, reads fresh results.
+- [ ] Unreal builds the editor target before tests and verifies module discovery.
+- [ ] Missing Godot infrastructure is NOT ASSESSED and suggests `$test-setup`.
 
----
+### Case 5: Dismissed and partial manual answers
 
-### Case 5: Director Gate Check — No gate; smoke-check is a QA pre-check utility
-
-**Fixture:**
-- Valid test setup, automated tests pass, manual smoke checks confirmed
-
+**Fixture:** Automated checks pass; user skips, dismisses, or partially answers
+core/sprint/data checks. Repeat with an explicit observed manual failure.
 **Input:** `$smoke-check`
-
-**Expected behavior:**
-1. Skill runs all phases and produces a PASS or PASS WITH WARNINGS verdict
-2. No director agents are spawned at any point
-3. No gate IDs (CD-*, TD-*, AD-*, PR-*) appear in output
-4. No `$gate-check` is invoked
-
 **Assertions:**
-- [ ] No director gate is invoked
-- [ ] No gate skip messages appear
-- [ ] Verdict is PASS, PASS WITH WARNINGS, or FAIL — no gate verdict involved
+- [ ] Empty responses never mean all passed; unanswered required items are
+  NOT ASSESSED and remain in the report.
+- [ ] N/A requires a recorded reason; required items cannot be silently omitted.
+- [ ] An observed required failure yields FAIL.
+- [ ] Optional performance checks stay distinct from required core/data checks.
 
----
+### Case 6: Quick and platform scope
+
+**Fixture:** Quick run or two platforms, with only one platform actually tested.
+**Input:** `$smoke-check quick` or `$smoke-check --platform pc,console`
+**Assertions:**
+- [ ] Quick report records omitted checks and cannot satisfy full QA entry.
+- [ ] Required untested platform yields NOT ASSESSED overall unless FAIL applies.
+- [ ] Report includes per-platform assessed and unassessed counts.
+
+### Case 7: Advisory warnings only
+
+**Fixture:** Every required check passes, and only a documented advisory gap remains.
+**Input:** `$smoke-check`
+**Assertions:**
+- [ ] PASS WITH WARNINGS applies only to the verified build/platform/scope.
+- [ ] Missing required coverage cannot be relabeled advisory to allow entry.
 
 ## Protocol Compliance
 
-- [ ] Uses `numbered choice prompt` for all manual smoke check batches (Batch 1, Batch 2, Batch 3)
-- [ ] Runs automated tests via Bash before asking any manual questions
-- [ ] Asks "May I write" before creating the report file — never writes without approval
-- [ ] Verdict vocabulary is strictly PASS / PASS WITH WARNINGS / FAIL — no other verdicts
-- [ ] FAIL is triggered by automated test failures or Batch 1/Batch 2 FAIL responses
-- [ ] PASS WITH WARNINGS is triggered when MISSING test coverage exists but no critical failures
-- [ ] NOT RUN (engine binary unavailable) is recorded as a warning, not a FAIL
-- [ ] Does not invoke director gates at any point
-
----
+- [ ] Read and execute checks before claiming results; file existence is not execution.
+- [ ] Keep user-reported, historical, and directly observed evidence distinct.
+- [ ] No write without approval; no director delegation.
+- [ ] Follow-up identifies failures or unassessed evidence before QA hand-off.
 
 ## Coverage Notes
 
-- The `quick` argument (skips Phase 3 coverage scan and Batch 3) is not separately
-  fixture-tested; it follows the same pattern as Case 1 with a coverage-skip note in output.
-- The `--platform` argument adds platform-specific numbered choice prompt batches and a
-  per-platform verdict table; not separately tested here.
-- The case where the engine binary is not on PATH (NOT RUN) follows the PASS WITH
-  WARNINGS pattern and is covered by the protocol compliance assertions above.
+These fixtures require an actual workflow evaluation with the stated engines
+and manual responses. Static validators only detect selected unsafe instruction
+patterns; they do not execute this specification or prove engine compatibility.
+
+## Phase 4C consumer acceptance
+
+Status: NOT RUN — these cases need an observed native skill invocation.
+The executable configuration tests validate resolution, not this workflow.
+
+- Verify `technical` values/sources against YAML, legacy literals and actual pin
+  files. Unmapped custom prose remains visible; wrong/missing pins and runners
+  are not successful setup. Preserve custom routing and actual installed tools.
+- For QA consumers, run every level with missing/failed required evidence and
+  false strictness: closure/admission stays blocked. Check true strictness on
+  an otherwise-advisory finding. Full adds affected-path regression evidence;
+  an active coverage target needs an applicable measured report, not test counts.
+- For team consumers, compare individual/small/studio and unconfigured rosters.
+  Only explicitly optional participation changes. Required owners, conditional
+  owners whose conditions hold, and surviving review gates remain present.
+- Verify optional performance enforcement with measured data, missing data and
+  estimates. Estimates never pass compliance. Off does not waive an acceptance
+  criterion or erase an observed failure.
+- Verify setup previews name every affected file, retain approval across the
+  unchanged scope, reject stale previews, and re-read actual writes. No config
+  reader installs, migrates, spawns, commits or changes root YAML by itself.

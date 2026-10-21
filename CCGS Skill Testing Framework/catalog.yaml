@@ -1,6 +1,17 @@
 version: 2
 last_updated: ""
 skills:
+  - name: settings
+    spec: CCGS Skill Testing Framework/skills/utility/settings.md
+    last_static: ""
+    last_static_result: ""
+    last_spec: ""
+    last_spec_result: ""
+    last_category: ""
+    last_category_result: ""
+    priority: high
+    category: utility
+
   # Critical — gate skills that control phase transitions
   - name: gate-check
     spec: CCGS Skill Testing Framework/skills/gate/gate-check.md

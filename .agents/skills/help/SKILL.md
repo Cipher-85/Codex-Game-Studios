@@ -3,6 +3,44 @@ name: help
 description: "Analyzes what is done and the users query and offers advice on what to do next. Use if user says what should I do next or what do I do now or I'm stuck or I don't know what to do for Codex Game Studios."
 ---
 
+## Source scope
+
+Before source/content inspection or source writes, apply **Source scope** in
+`.codex/docs/technical-config.md` and run `project_config.py code-root`. Use its
+listed paths, resolving verified custom paths with `--path`. Unresolved/invalid
+scope leaves dependent checks NOT ASSESSED; continue independent work. A
+resolved path is not an executed scan. Do not substitute or create `src/`.
+
+## Technical configuration
+
+Before using engine, framework, platform or performance fields, read
+`.codex/docs/technical-config.md` and run `project_config.py technical`. Use its
+resolved values/provenance for typed fields; the technical-preferences reads
+below still supply custom prose, policies and routing notes. Check conflicts
+and field-specific readiness before affected work. Pin agreement is not an
+engine run; runner availability needs actual metadata/help verification. Keep
+estimates separate from measured evidence and preserve existing pins/runners.
+
+
+## Workflow policy
+
+Before artifact reads, apply `.codex/docs/workflow-modes.md` and run the shared
+`project_config.py workflow` reader. Retain tier/source, density and granularity;
+resolve an exact GDD stem per system when applicable. Use `project_tier` and
+`design_source` for project inputs; `tier` selects only that system's GDD sections.
+A system override does not waive project-wide architecture. INVALID/NOT ASSESSED stops
+the affected workflow. The prerequisite lists below are the compatibility/full
+baseline: apply the shared tier table to reads, required sections, findings and
+next actions. Pass that policy and the actual requirement source to delegated
+roles. Review-mode filtering and required verification remain independent.
+
+Use the shared `stage` result before catalog lookup; only infer when unset and
+label that inference. Map Live to maintenance. Evaluate catalog requirements
+through the workflow gate table: optional/waived steps cannot become required
+next actions. For minimal, route brief → engine if missing → brief-linked stories
+→ next ready story, retaining owed verification first.
+
+
 # Studio Help — What Do I Do Next?
 
 This skill is read-only — it reports findings but writes no files.
@@ -57,22 +95,16 @@ skills in production/polish, etc.).
 
 Check in this order:
 
-1. **Read `production/stage.txt`** — if it exists and has content, this is the
-   authoritative phase name. Map it to a catalog phase key:
-   - "Concept" → `concept`
-   - "Systems Design" → `systems-design`
-   - "Technical Setup" → `technical-setup`
-   - "Pre-Production" → `pre-production`
-   - "Production" → `production`
-   - "Polish" → `polish`
-   - "Release" → `release`
+1. Resolve `project_config.py stage` using `config-resolution.md`. Use its
+   `phase` when configured, including terminal `live`. Report source and any
+   shadowed legacy value. INVALID/NOT ASSESSED stops stage-dependent routing.
 
-2. **If stage.txt is missing**, infer phase from artifacts (most-advanced match wins):
-   - `src/` has 10+ source files → `production`
+2. **Only if stage is unset**, infer phase from artifacts (most-advanced match wins):
+   - The resolved and actually scanned source scope has 10+ source files → `production`
    - `production/stories/*.md` exists → `pre-production`
    - `docs/architecture/adr-*.md` exists → `technical-setup`
    - `design/gdd/systems-index.md` exists → `systems-design`
-   - `design/gdd/game-concept.md` exists → `concept`
+   - `design/gdd/game-concept.md` or `design/game-brief.md` exists → `concept`
    - Nothing → `concept` (fresh project)
 
 ---
@@ -262,7 +294,8 @@ The following upstream metadata is preserved as context only; Codex does not enf
 - `user-invocable: true`
 - `allowed-tools: Read, Glob, Grep`
 - `context: |`
-- `!echo "=== Live Project State ===" && echo "Stage: $(cat production/stage.txt 2>/dev/null | tr -d '[:space:]' || echo 'not set')" && echo "Latest sprint: $(ls -t production/sprints/*.md 2>/dev/null | head -1 || echo 'none')" && echo "Session state: $(head -5 production/session-state/active.md 2>/dev/null || echo 'none')"`
+- Read-only live state: run `project_config.py stage`; read the current sprint
+  and active session when present. Use its provenance, not a direct stage-file read.
 
 ## Codex Model Guidance
 

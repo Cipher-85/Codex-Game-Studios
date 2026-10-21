@@ -321,6 +321,11 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         source_fixture = target / "Custom Source/player.cs"
         source_fixture.parent.mkdir()
         source_fixture.write_text("// preserved project source\n", encoding="utf-8")
+        source_root = target / "src"
+        source_before = (source_root.exists(), {
+            p.relative_to(source_root): p.read_bytes() if p.is_file() else None
+            for p in source_root.rglob("*")
+        })
         command = [sys.executable, str(target / ".codex/lib/project_config.py"),
                    "--root", str(target), "code-root"]
         result = run_command(command, root)
@@ -331,7 +336,11 @@ def validate_installer_integration(root: Path, errors: list[str]) -> None:
         if (data.get("roots") != ["Custom Source"] or data.get("resolution") != "resolved" or
                 data.get("scan_status") != "NOT ASSESSED" or data.get("applied") is not False):
             errors.append(f"installed custom source resolution failed: {command_failure(result)}")
-        if source_fixture.read_text(encoding="utf-8") != "// preserved project source\n" or (target / "src").exists():
+        source_after = (source_root.exists(), {
+            p.relative_to(source_root): p.read_bytes() if p.is_file() else None
+            for p in source_root.rglob("*")
+        })
+        if source_fixture.read_text(encoding="utf-8") != "// preserved project source\n" or source_after != source_before:
             errors.append("installed source resolution modified the project layout")
 
         # Explicit fixture migration is separate from installation. Its project-owned

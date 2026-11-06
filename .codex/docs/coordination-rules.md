@@ -104,3 +104,13 @@ When an orchestration skill spawns multiple independent agents:
 3. If any agent is BLOCKED, surface it immediately — do not silently skip
 4. Never replace a blocked or skipped agent with an internal simulated verdict
 5. Always produce a partial report if some agents complete and others block
+
+## Delegated questions and artifact readback
+
+A delegated role without approval returns its draft and question to the caller
+and ends its turn. The caller obtains the user's decision; no role waits for a
+reply it cannot receive or treats its own output as approval. Carry existing
+approval only for its explicit paths and scope. The parent checks claimed
+artifacts exist and inspects the diff before accepting implementation completion.
+Code stories receive a post-implementation engine-specialist review of the actual
+changed files; keep required corrections and unavailable review evidence visible.

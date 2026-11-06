@@ -3,6 +3,14 @@ name: story-done
 description: "End-of-story completion review. Reads the story file, verifies each acceptance criterion against the implementation, checks for GDD/ADR deviations, prompts code review, updates story status to Complete, and surfaces the next ready story from the sprint for Codex Game Studios."
 ---
 
+## Bounded context reads
+
+Use `python3 .codex/lib/artifact_facts.py section <path> --heading '<heading>'`
+for named GDD, ADR and manifest sections; omit `--heading` to list headings first.
+A section includes its subsections through the next peer/ancestor heading.
+Read every section required by this workflow; bounded reads do not reduce scope.
+Report missing or ambiguous headings instead of silently truncating context.
+
 ## Artifact observations
 
 Before summarizing selected artifacts, apply
@@ -301,56 +309,11 @@ For each deviation found, categorize:
 
 ---
 
-## Phase 4b: QA Coverage Gate
+## Phases 4b–5: Review Gates
 
-**Review mode check** — apply before spawning QL-TEST-COVERAGE:
-- `solo` → skip. Note: "QL-TEST-COVERAGE skipped — Solo mode." Proceed to Phase 5.
-- `lean` → skip (not a PHASE-GATE). Note: "QL-TEST-COVERAGE skipped — Lean mode." Proceed to Phase 5.
-- `full` → spawn as normal.
-
-After completing the deviation checks in Phase 4, spawn `qa-lead` via Codex subagent delegation using gate **QL-TEST-COVERAGE** (`.codex/docs/director-gates.md`).
-
-Pass:
-- The story file path and story type
-- Test file paths found during Phase 3 (exact paths, or "none found")
-- The story's `## QA Test Cases` section (the pre-written test specs from story creation)
-- The story's `## Acceptance Criteria` list
-
-The qa-lead reviews whether the tests actually cover what was specified — not just whether files exist.
-
-Apply the verdict:
-- **ADEQUATE** → proceed to Phase 5
-- **GAPS** → flag as **ADVISORY**: "QA lead identified coverage gaps: [list]. Story can complete but gaps should be addressed in a follow-up story."
-- **INADEQUATE** → flag as **BLOCKING**: "QA lead: critical logic is untested. Verdict cannot be COMPLETE until coverage improves. Specific gaps: [list]."
-
-Skip this phase for Config/Data stories (no code tests required).
-
----
-
-## Phase 5: Lead Programmer Code Review Gate
-
-**Review mode check** — apply before spawning LP-CODE-REVIEW:
-- `solo` → skip. Note: "LP-CODE-REVIEW skipped — Solo mode." Proceed to Phase 6 (completion report).
-- `lean` → use `numbered choice prompt` before proceeding:
-  - Prompt: "Code review is skipped in lean mode. Did you run `$code-review` on the implemented files?"
-  - Options:
-    - `Yes — $code-review passed or was approved with suggestions`
-    - `No — skipping code review for this story`
-    - `No — I'll run $code-review before the sprint close-out`
-  - Record the answer in the completion notes (Phase 7). All three options proceed to Phase 6.
-- `full` → spawn as normal.
-
-Spawn `lead-programmer` via Codex subagent delegation using gate **LP-CODE-REVIEW** (`.codex/docs/director-gates.md`).
-
-Pass: implementation file paths, story file path, relevant GDD section, governing ADR.
-
-Present the verdict to the user. If CONCERNS, surface them via `numbered choice prompt`:
-- Options: `Revise flagged issues` / `Accept and proceed` / `Discuss further`
-If REJECT, do not proceed to Phase 6 verdict until the issues are resolved.
-
-If the story has no implementation files yet (verdict is being run before coding is done), skip this phase and note: "LP-CODE-REVIEW skipped — no implementation files found. Run after implementation is complete."
-
----
+Read [review gates](references/review-gates.md) after the deviation checks and
+before the completion report. Preserve review-mode skips, required verdicts and
+reviewer provenance; unavailable delegation cannot be replaced with self-review.
 
 ## Phase 6: Present the Completion Report
 
@@ -415,6 +378,13 @@ satisfies a required QA/stage gate.
 
 ## Phase 7: Update Story Status
 
+Before the prompt, preview the story's status and Completion Notes plus the
+matching entry and top-level date changes in `production/sprint-status.yaml`
+when that file exists. List every exact path. If proposing tech debt, also show
+the entry and `docs/tech-debt-register.md` path for that option. Approval covers
+only the displayed changeset; omit an absent sprint-status file rather than
+creating it.
+
 Use `numbered choice prompt` before writing anything:
 For BLOCKED or NOT ASSESSED, recommend fixing/verifying first. Do not call the
 verification complete or recommend closure. Offer administrative closure only
@@ -422,7 +392,7 @@ as an explicit override retaining the original verdict and every unresolved
 criterion; ask before writing the named story/status files.
 
 For COMPLETE or COMPLETE WITH NOTES, use:
-- Prompt: "Verification complete. How do you want to proceed?"
+- Prompt: "Verification complete. May I write the displayed closure changes to [story path] and [existing sprint-status path, if any]?"
 - Options:
   - `Close the story — update file, mark Complete, log notes (Recommended)`
   - `Close and log advisory deviations as tech debt in docs/tech-debt-register.md`
@@ -448,17 +418,15 @@ If "Fix first": stop here and list what the user flagged. Do not write any files
 **Code Review**: [Pending / Complete / Skipped]
 ```
 
-4. If the user chose "Close and log tech debt": append each advisory deviation to `docs/tech-debt-register.md` in this format:
-   ```
-   - **[date]** ([story title]): [deviation description] — tracked from [story file path]
-   ```
-   Create the file with a `# Tech Debt Register` heading if it does not exist.
+4. Only when the debt-register path was explicitly approved, follow
+   [the tech-debt entry format](references/tech-debt-row.md).
 
 5. **Update `production/sprint-status.yaml`** (if it exists):
    - Find the entry matching this story's file path or ID
    - Set `status: done` and `completed: [today's date]`
    - Update the top-level `updated` field
-   - This is a silent update — no extra approval needed (already approved in step above)
+   - Apply only the previewed, approved update; unchanged approval carries forward
+     without another prompt. If this path was omitted, obtain approval before writing it.
 
 6. **Suggest a git commit**: Output a ready-to-use commit command covering the implementation files from the dev-story summary and the updated story file:
 
@@ -489,59 +457,8 @@ Confirm in conversation: "Session state updated."
 
 ## Phase 8: Surface the Next Story
 
-After completion, help the developer keep momentum:
-
-1. Read the current sprint plan from `production/sprints/`.
-2. Find stories that are:
-   - Status: READY or NOT STARTED
-   - Not blocked by other incomplete stories
-   - In the Must Have or Should Have tier
-
-Present:
-
-```
-### Next Up
-The following stories are ready to pick up:
-1. [Story name] — [1-line description] — Est: [X hrs]
-2. [Story name] — [1-line description] — Est: [X hrs]
-
-Run `$story-readiness [path]` to confirm a story is implementation-ready
-before starting.
-```
-
-If all Must Have stories have passing completion evidence (none Blocked or NOT ASSESSED):
-
-```
-### Sprint Close-Out Sequence
-
-All Must Have stories are complete. QA sign-off is required before advancing.
-Run these in order:
-
-1. `$smoke-check sprint` — verify the critical path still works end-to-end
-2. `$team-qa sprint` — full QA cycle: test case execution, bug triage, sign-off report
-3. `$retrospective` — capture what went well, what didn't, and action items for the next sprint
-4. `$gate-check` — advance to the next phase once QA approves (only if advancing a phase)
-5. `$sprint-plan new` — plan the next sprint, incorporating velocity data and retrospective action items
-
-Do not run `$gate-check` until `$team-qa` returns APPROVED or APPROVED WITH CONDITIONS.
-```
-
-If Must Have stories remain Blocked or NOT ASSESSED, list those first and route
-to their missing verification or fix; do not claim the sprint is complete.
-
-If there are Should Have stories still unstarted, surface them alongside the close-out sequence so the user can choose: close the sprint now, or pull in more work first.
-
-If no more stories are ready but Must Have stories are still In Progress (not Complete):
-"No more stories ready to start — [N] Must Have stories still in progress. Continue implementing those before sprint close-out."
-
-After surfacing the next-story or sprint close-out inventory, read or silently
-refresh the `## Session Worklist` in `production/session-state/active.md`.
-Recommend one
-best next action across the ready-story, smoke-check, QA, gate, tech-debt, and
-handoff lanes. Use `request_user_input` when available only if 2-3 lanes are
-genuinely tied.
-
----
+Read [next story and sprint routing](references/sprint-next.md). Complete that
+read-only inventory before offering the next action; do not start another story.
 
 ## Collaborative Protocol
 

@@ -26,7 +26,7 @@ the defaults. Consolidated bug logs and QA report tables retain their existing
 manual-reading fallback. Absence from these defaults does not prove absence
 from the project.
 
-The helper reads UTF-8 Markdown only, up to 1 MiB per file, 2,000 files and
+The story/ADR/GDD/bug readers read UTF-8 Markdown, up to 1 MiB per file, 2,000 files and
 20,000 discovery entries. It rejects absolute/traversal/secret paths and links,
 including linked parents, without reading their targets. Recursive discovery
 reports links it cannot inspect. It never runs commands from artifacts or
@@ -94,3 +94,25 @@ Selectively adapted from upstream v1.2.0 at
 `05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418`: story-facts, story-status,
 adr-status, adr-dep-graph, gdd-structure-check and bug-stats. The upstream
 shell scripts are not Codex runtime dependencies.
+
+## Sections and registries
+
+```bash
+python3 .codex/lib/artifact_facts.py section design/gdd/combat.md
+python3 .codex/lib/artifact_facts.py section design/gdd/combat.md --heading 'Detailed Rules'
+python3 .codex/lib/artifact_facts.py registry docs/architecture/tr-registry.yaml
+```
+
+`section` lists actual headings with line numbers, excluding fenced examples and
+comments. A named heading must be unique; the result includes the complete section
+and nested subsections through the next peer/ancestor heading. It reports exact
+start/end lines rather than truncating to a fixed grep window. Read every section
+required by the workflow, including relevant definitions elsewhere in the file.
+
+`registry` reads only the three canonical registry paths. It observes block-list
+identities/statuses, reports duplicates/missing or invalid statuses and computes
+next TR suffixes from the highest used number, including retired entries. Nested
+block-scalar examples are not entries. This is a bounded observer, not full YAML
+schema validation. Unknown syntax is not permission to rewrite a registry.
+These operations return `ready`, `partial` or `invalid`; assessment remains
+NOT ASSESSED and applied remains false. Their success is not workflow acceptance.

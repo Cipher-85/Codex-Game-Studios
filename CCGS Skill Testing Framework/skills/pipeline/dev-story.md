@@ -2,207 +2,91 @@
 
 ## Skill Summary
 
-`$dev-story` reads a story file, loads all required context (referenced ADR,
-TR-ID from the registry, control manifest, engine preferences), implements the
-story, verifies that all acceptance criteria are met, and marks the story
-Complete. The skill routes implementation to the correct specialist agent based
-on the engine and file type — it does not write source code directly.
-
-In `full` review mode, an LP-CODE-REVIEW gate runs before marking the story
-Complete. In `lean` or `solo` mode, LP-CODE-REVIEW is skipped and the story is
-marked Complete after the user confirms all criteria are met. The skill asks
-"May I write" before updating story status and before writing code files.
-
----
+Implements an approved story through the matching programmer role, then verifies
+its actual artifacts and runs a separate engine-specialist review for code.
+Implementation status and evidence are reported separately. Story closure belongs
+to `$story-done`; this skill never marks a story Complete merely because a worker
+returns. Config/Data follows its no-agent path and still needs applicable checks.
 
 ## Static Assertions (Structural)
 
-Verified automatically by `$skill-test static` — no fixture needed.
+These are specifications, not a record of native execution.
 
-- [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
-- [ ] Has ≥2 phase headings
-- [ ] Contains verdict keywords: COMPLETE, BLOCKED, IN PROGRESS, NEEDS CHANGES
-- [ ] Contains "May I write" collaborative protocol language (story status + code files)
-- [ ] Has a next-step handoff at the end (`$story-done`)
-- [ ] Documents LP-CODE-REVIEW gate: active in full mode, skipped in lean/solo
-- [ ] Notes that implementation is delegated to specialist agents (not done directly)
-
----
+- [ ] Has Codex name/description metadata, multiple phases and bounded-read guidance.
+- [ ] Loads linked `references/version-mismatch.md` and `references/engine-checks.md`
+      when their phases apply. Missing support files are not silently skipped.
+- [ ] Requires approved source, test, story and evidence paths before writes.
+- [ ] Keeps implementation COMPLETE/INCOMPLETE/BLOCKED distinct from story closure.
+- [ ] Routes to `$code-review` and `$story-done` after the implementation summary.
 
 ## Director Gate Checks
 
-In `full` mode: LP-CODE-REVIEW gate runs after implementation is complete and all
-criteria are verified, before marking the story Complete.
-
-In `lean` mode: LP-CODE-REVIEW is skipped. Output notes:
-"LP-CODE-REVIEW skipped — lean mode". Story is marked Complete after user confirms.
-
-In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
-
----
+The post-implementation engine-specialist review is not a director gate and runs
+for code stories in full, lean and solo. LP-CODE-REVIEW belongs to the separate
+review/closure flow. A failed custom-role load is NOT ASSESSED, never a simulated
+specialist verdict.
 
 ## Test Cases
 
-### Case 1: Happy Path — Story implemented and marked Complete (full mode)
+### Case 1: Code story — verified artifacts and engine review
 
-**Fixture:**
-- A story file exists at `production/epics/[layer]/story-[name].md` with:
-  - `Status: Ready`
-  - A TR-ID referencing a registered requirement
-  - At least 2 Given-When-Then acceptance criteria
-  - A test evidence path
-- Referenced ADR has `Status: Accepted`
-- `docs/architecture/control-manifest.md` exists
-- `.codex/docs/technical-preferences.md` has engine and language configured
-- `production/session-state/review-mode.txt` contains `full`
+**Fixture:** Ready story with concrete criteria, approved source/test paths,
+accepted named ADR, valid configured engine, and required tier-specific context.
+**Input:** `$dev-story <story-path>` in each review mode.
 
-**Input:** `$dev-story production/epics/[layer]/story-[name].md`
+- [ ] Reads the story and applicable context before delegating to the exact role.
+- [ ] Includes tests and declared evidence in the approved implementation scope.
+- [ ] On worker return, inspects existing files and the actual diff.
+- [ ] Only then spawns the configured engine reviewer, with read-only authority.
+- [ ] Reports current check commands/results and unverified criteria separately.
+- [ ] Does not close the story; routes closure to `$story-done`.
 
-**Expected behavior:**
-1. Skill reads the story file and all referenced context
-2. Skill verifies the ADR is Accepted (no block)
-3. Skill routes implementation to the correct specialist agent
-4. All acceptance criteria are verified as met
-5. LP-CODE-REVIEW gate spawns and returns APPROVED
-6. Skill asks "May I update story status to Complete?"
-7. Story status is updated to Complete
+### Case 2: Proposed ADR or ambiguous criterion
 
-**Assertions:**
-- [ ] Skill reads story before spawning any agent
-- [ ] ADR status is checked before implementation begins
-- [ ] Implementation is delegated to a specialist agent (not done inline)
-- [ ] All acceptance criteria are confirmed before LP-CODE-REVIEW
-- [ ] LP-CODE-REVIEW appears in output as a completed gate
-- [ ] Story status is updated to Complete only after gate approval and user consent
-- [ ] Test file is written as part of implementation (not deferred)
+**Fixture:** A named governing ADR is Proposed, or a criterion is subjective and
+has no agreed observable meaning.
 
----
+- [ ] Names the blocking ADR before implementation begins.
+- [ ] Surfaces unresolved design meaning to the user; does not invent acceptance.
+- [ ] Does not perform unapproved story/status writes while reporting the blocker.
 
-### Case 2: Failure Path — Referenced ADR is Proposed
+### Case 3: Worker output absent or engine review requires corrections
 
-**Fixture:**
-- A story file exists with `Status: Ready`
-- The story's TR-ID points to a requirement covered by an ADR with `Status: Proposed`
+**Fixture:** Worker claims success but a file is missing; repeat with a real file
+and a criterion-breaking engine review finding.
 
-**Input:** `$dev-story production/epics/[layer]/story-[name].md`
+- [ ] Missing artifacts produce INCOMPLETE with exact owed outputs.
+- [ ] Returns required corrections within approved scope to the programmer.
+- [ ] Re-reads and re-reviews corrected files before claiming completion.
+- [ ] Scope expansion requires approval; advisory findings remain visible.
+- [ ] Unavailable role evidence remains NOT ASSESSED in every director mode.
 
-**Expected behavior:**
-1. Skill reads the story file
-2. Skill resolves the TR-ID and reads the governing ADR
-3. ADR status is Proposed — skill outputs a BLOCKED message
-4. Skill names the specific ADR blocking the story
-5. Skill recommends running `$architecture-decision` to advance the ADR
-6. Implementation does NOT begin
+### Case 4: No argument and mismatched manifest version
 
-**Assertions:**
-- [ ] Skill does NOT begin implementation with a Proposed ADR
-- [ ] BLOCKED message names the specific ADR number and title
-- [ ] Skill recommends `$architecture-decision` as the next action
-- [ ] Story status remains unchanged (not set to In Progress or Complete)
+**Fixture:** Active checkpoint names an In Progress story with a stale manifest.
 
----
+- [ ] Reads and confirms the selected story before implementation.
+- [ ] Loads the version-mismatch support reference and presents its decision.
+- [ ] Does not silently refresh the version or ignore changed layer constraints.
+- [ ] Uses complete required sections; duplicate/missing headings are reported.
 
-### Case 3: Ambiguous Acceptance Criteria — Skill asks for clarification
+### Case 5: Config/Data and Visual/Feel evidence boundaries
 
-**Fixture:**
-- A story file exists with `Status: Ready`
-- Referenced ADR is Accepted
-- One acceptance criterion is ambiguous (not Given-When-Then; uses subjective language like "feels responsive")
-
-**Input:** `$dev-story production/epics/[layer]/story-[name].md`
-
-**Expected behavior:**
-1. Skill reads the story and identifies the ambiguous criterion
-2. Before routing to the specialist, skill asks the user to clarify the criterion
-3. User provides a concrete, testable restatement
-4. Skill proceeds with implementation using the clarified criterion
-5. Skill does NOT guess at the intended behavior
-
-**Assertions:**
-- [ ] Skill surfaces the ambiguous criterion before implementation starts
-- [ ] Skill asks for user clarification (not auto-interpretation)
-- [ ] Implementation begins only after clarification is provided
-- [ ] Clarified criterion is used in the test (not the original vague version)
-
----
-
-### Case 4: Edge Case — No argument; reads from session state
-
-**Fixture:**
-- No argument is provided
-- `production/session-state/active.md` references an active story file
-- That story file exists with `Status: In Progress`
-
-**Input:** `$dev-story` (no argument)
-
-**Expected behavior:**
-1. Skill detects no argument is provided
-2. Skill reads `production/session-state/active.md`
-3. Skill finds the active story reference
-4. Skill confirms with user: "Continuing work on [story title] — is that correct?"
-5. After confirmation, skill proceeds with that story
-
-**Assertions:**
-- [ ] Skill reads session state when no argument is provided
-- [ ] Skill confirms the active story with the user before proceeding
-- [ ] Skill does NOT silently assume the active story without confirmation
-- [ ] If session state has no active story, skill asks which story to implement
-
----
-
-### Case 5: Director Gate — LP-CODE-REVIEW returns NEEDS CHANGES; lean mode skips gate
-
-**Fixture (full mode):**
-- Story is implemented and all criteria appear met
-- `production/session-state/review-mode.txt` contains `full`
-- LP-CODE-REVIEW gate returns NEEDS CHANGES with specific feedback
-
-**Full mode expected behavior:**
-1. LP-CODE-REVIEW gate spawns after implementation
-2. Gate returns NEEDS CHANGES with 2 specific issues
-3. Story status remains In Progress — NOT marked Complete
-4. User is shown the gate feedback and asked how to proceed
-
-**Assertions (full mode):**
-- [ ] Story is NOT marked Complete when LP-CODE-REVIEW returns NEEDS CHANGES
-- [ ] Gate feedback is shown to the user verbatim
-- [ ] Story status stays In Progress until issues are resolved and gate passes
-
-**Fixture (lean mode):**
-- Same story, `production/session-state/review-mode.txt` contains `lean`
-
-**Lean mode expected behavior:**
-1. Implementation completes
-2. LP-CODE-REVIEW gate is skipped — noted in output
-3. User is asked to confirm all criteria are met
-4. Story is marked Complete after user confirmation
-
-**Assertions (lean mode):**
-- [ ] "LP-CODE-REVIEW skipped — lean mode" appears in output
-- [ ] Story is marked Complete after user confirms criteria (no gate required)
-- [ ] Skill does NOT block on a gate that is skipped
-
----
+- [ ] Config/Data edits use approved scope without unnecessary programmer or
+      engine-review spawns; applicable smoke evidence is still owed.
+- [ ] Visual/Feel uses the matching programmer and post-code engine review.
+- [ ] Captures are opened and linked to criteria; no old capture is newly stamped.
+- [ ] User-owned feel judgment stays unverified until the user supplies it.
+- [ ] Implementation approval alone does not approve builds or additional writes.
 
 ## Protocol Compliance
 
-- [ ] Does NOT write source code directly — delegates to specialist agents
-- [ ] Reads all context (story, TR-ID, ADR, manifest, engine prefs) before implementation
-- [ ] "May I write" asked before updating story status and before writing code files
-- [ ] Skipped gates noted by name and mode in output
-- [ ] Updates `production/session-state/active.md` after story completion
-- [ ] Ends with next-step handoff: `$story-done`
-
----
-
-## Coverage Notes
-
-- Engine routing logic (Godot vs Unity vs Unreal) is not tested per engine —
-  the routing pattern is consistent; engine selection is a config fact.
-- Visual/Feel and UI story types (no automated test required) have different
-  evidence requirements and are not covered in these cases.
-- Integration story type follows the same pattern as Logic but with a different
-  evidence path — not independently fixture-tested.
+- [ ] Delegates code to its owner and passes paths plus targeted reading instructions.
+- [ ] A missing write approval returns a draft/question to the caller and ends
+      the worker turn; the parent owns the user prompt.
+- [ ] Existing scope approval carries forward without duplicate permission prompts.
+- [ ] Story and sprint-status updates require their paths in the approved changeset.
+- [ ] Only the derived active checkpoint uses the declared checkpoint exception.
 
 ## Phase 1 Backport Regression Cases
 

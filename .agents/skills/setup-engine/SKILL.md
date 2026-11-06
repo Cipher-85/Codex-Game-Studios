@@ -166,6 +166,16 @@ Once the engine is chosen:
 
 ---
 
+Before drafting a pin, inspect the selected editor executable and its version
+using the installed binary's version output (or the editor's About/version UI).
+Record the executable/path and exact observed version separately from the desired
+reference version. Do not infer an installation from these bundled references.
+If unavailable, record `Installed at pin time: NOT DETERMINED` and the owed probe.
+A newer installed editor than the pin also requires a compatibility check: retain
+the current pin until the user approves its update. Include the observed version
+and date in the approved VERSION.md write scope; never copy upstream's machine
+state as this project's observation. No binary download or upgrade is implied.
+
 ## 4. Update AGENTS.md Technology Stack
 
 ### Language Selection (Godot only)

@@ -619,9 +619,9 @@ class ConfigTests(unittest.TestCase):
 
     def test_technical_shipped_pins_accept_versions_without_engine_labels(self):
         cases = (
-            ("godot", "Godot", "GDScript", "4.6", "Godot 4.6"),
+            ("godot", "Godot", "GDScript", "4.7", "Godot 4.7"),
             ("unity", "Unity", "C#", "6.3 LTS", "Unity 6.3 LTS"),
-            ("unreal", "Unreal Engine", "C++", "5.7", "Unreal Engine 5.7"),
+            ("unreal", "Unreal Engine", "C++", "5.8", "Unreal Engine 5.8"),
         )
         for family, name, language, version, displayed in cases:
             for requested in (version, displayed):

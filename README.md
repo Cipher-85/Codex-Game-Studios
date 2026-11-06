@@ -60,7 +60,7 @@ The package also includes:
   changelogs, with safe retirement of unchanged package-owned release workflows.
 - Unconfigured engine, language, and specialist preferences for new projects.
 
-The `v0.7.3` release also includes:
+Historical `v0.7.3` routing (superseded by the current profiles) included:
 
 - Explicit role-tier routing: 3 leadership profiles on Astra/xhigh, 8 department
   leads on Astra/high, 36 specialists on Sol/high, and 2 support roles on Luna/max.
@@ -482,3 +482,11 @@ participation; technical settings must agree with engine pins and verified
 runners. Performance estimates cannot pass measured checks. Existing prose and
 custom routing remain authoritative; setup/migration still need exact approvals.
 Automation settings and new upstream-only fields remain outside this integration.
+
+## Current convergence work
+
+The October 21 selective integration is committed at `4939c2d`, with installer
+correction `8c04b1d`. Subsequent convergence work targets upstream `05ad7c8`:
+complete engine references, shorter story entrypoints, approved settings writes
+and advisory artifact guards. Current profiles leave reasoning effort to the
+runtime. See UPGRADING.md for scope and verification limits.

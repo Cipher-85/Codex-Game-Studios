@@ -3,7 +3,7 @@
 ## Agent Summary
 - **Domain**: Rapid throwaway prototypes in the `prototypes/` directory, concept validation experiments, mechanical feasibility tests. Standards intentionally relaxed for speed — prototypes are not production code.
 - **Does NOT own**: Production source code in `src/` (gameplay-programmer), design documents (game-designer), production-grade architecture decisions (lead-programmer / technical-director)
-- **Model tier**: Sonnet
+- **Model**: `gpt-5.6-sol` in the authoritative role TOML
 - **Gate IDs**: None; produces recommendation docs after prototype conclusion; does not participate in phase gates
 
 ---
@@ -12,7 +12,7 @@
 
 - [ ] `description:` field is present and domain-specific (references rapid prototyping, prototypes/ directory, throwaway code)
 - [ ] `allowed-tools:` list matches the agent's role (Read/Write scoped to prototypes/ directory; no production src/ write access)
-- [ ] Model tier is Sonnet (default for specialists)
+- [ ] Model is `gpt-5.6-sol` in the authoritative role TOML
 - [ ] Agent definition explicitly states that prototype code is not production code and must not be copied to src/
 
 ---
@@ -80,3 +80,14 @@
 - Case 5 requires that technical-preferences.md has the engine and language configured; test is incomplete if not configured
 - The intentional relaxation of coding standards is a feature, not a gap — do not flag missing tests or doc comments as failures in prototype output
 - No automated runner; review manually or via `$skill-test`
+
+## Delegated approval-return acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- When prototype writes lack approval, return the draft, exact prototype paths
+  and question to the calling agent and end the turn.
+- With approved scope, proceed without duplicate permission prompts; do not
+  expand into production code, new paid calls or unapproved engine runs.
+- Report actual artifacts and owed playtest evidence separately from a claim
+  that the prototype was implemented.

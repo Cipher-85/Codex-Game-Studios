@@ -271,3 +271,13 @@ fixtures alone do not establish this skill's behavior.
 - Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
   and source header status versus evidence/closure status. Counts do not
   authorize edits, closure, new priorities, stage changes or role dispatch.
+
+## Readiness support acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- Load `references/qa-lead-gate.md` when the review-mode-filtered phase applies.
+- Exercise full/lean/solo with failed or missing required story evidence. A
+  skipped director gate never changes those findings into READY.
+- Exercise duplicate section headings and partial registry observations; retain
+  the uncertainty and inspect the cited source before declaring readiness.

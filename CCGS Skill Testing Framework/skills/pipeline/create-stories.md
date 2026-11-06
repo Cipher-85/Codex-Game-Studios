@@ -11,7 +11,7 @@ Config/Data) which determines the required test evidence path.
 
 In `full` review mode, a QL-STORY-READY check runs per story after creation. In
 `lean` or `solo` mode, QL-STORY-READY is skipped. The skill asks "May I write"
-before writing each story file. Stories are written to
+once before writing the complete story/EPIC/existing-index changeset. Stories are written to
 `production/epics/[layer]/story-[name].md`.
 
 ---
@@ -23,7 +23,7 @@ Verified automatically by `$skill-test static` — no fixture needed.
 - [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED, NEEDS WORK
-- [ ] Contains "May I write" collaborative protocol language (per-story approval)
+- [ ] Contains "May I write" collaborative protocol language (one approval for the complete exact-path changeset)
 - [ ] Has a next-step handoff at the end (`$story-readiness`, `$dev-story`)
 - [ ] Documents story Status: Blocked when governing ADR is Proposed
 - [ ] Documents QL-STORY-READY gate: active in full mode, skipped in lean/solo
@@ -61,13 +61,15 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 2. Classifies each requirement into a story type (Logic / Integration / Visual/Feel / UI / Config/Data)
 3. Drafts 3 story files with correct frontmatter schema
 4. QL-STORY-READY is skipped (lean mode) — noted in output
-5. Asks "May I write" before writing each story file
-6. Writes all 3 story files after approval
+5. Previews all story files plus the EPIC table and existing index count; asks
+   "May I write" once for the complete exact-path changeset
+6. Writes the approved story files and ancillary updates after approval
 
 **Assertions:**
 - [ ] Each story's frontmatter contains: Title, Epic, Layer, Priority, Status, TR-ID, ADR reference, Acceptance Criteria, DoD
 - [ ] Story types are correctly classified (at least one Logic type in fixture)
-- [ ] "May I write" is asked per story (not once for the entire batch)
+- [ ] One batch approval names every story path, the EPIC path and the existing index path
+- [ ] Declining the batch leaves stories, EPIC and index unchanged; an absent index is not created
 - [ ] QL-STORY-READY skip is noted in output
 - [ ] All 3 story files are written with correct naming: `story-[name].md`
 - [ ] Skill does NOT start implementation
@@ -173,7 +175,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 
 - [ ] All context (EPIC, GDD, ADRs, manifest, TR registry) loaded before drafting stories
 - [ ] Story drafts shown in full before any "May I write" ask
-- [ ] "May I write" asked per story (not once for the entire batch)
+- [ ] "May I write" is asked once for the complete exact-path story/EPIC/existing-index changeset
 - [ ] Blocked stories flagged before write approval — not discovered after writing
 - [ ] TR-IDs reference the registry — requirement text is not embedded inline in story files
 - [ ] Control manifest rules quoted per-story from the manifest, not invented
@@ -259,3 +261,14 @@ The executable configuration tests validate resolution, not this workflow.
 - Verify setup previews name every affected file, retain approval across the
   unchanged scope, reject stale previews, and re-read actual writes. No config
   reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Story support and registry acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- Load `references/qa-lead-gate.md` at the declared gate; full mode performs
+  QL-STORY-READY and lean/solo record the named skip.
+- Read all required context sections with source locations; missing or duplicate
+  headings never imply that the omitted requirements are empty.
+- Preserve the full QA cases and evidence fields when the entrypoint delegates
+  details to support files. Bounded reads never waive tier-required artifacts.

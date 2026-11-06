@@ -3057,5 +3057,75 @@
     "path": ".codex/docs/artifact-inspection.md",
     "rationale": "Shared contract separating artifact observations from workflow decisions.",
     "source": "Selective upstream v1.2.0 artifact-reader adaptation"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-stories/references/qa-lead-gate.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/create-stories/references/qa-lead-gate.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/references/engine-checks.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/dev-story/references/engine-checks.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/references/version-mismatch.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/dev-story/references/version-mismatch.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/review-gates.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/story-done/references/review-gates.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/sprint-next.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/story-done/references/sprint-next.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/tech-debt-row.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/story-done/references/tech-debt-row.md"
+  },
+  {
+    "category": "codex_skill_references",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-readiness/references/qa-lead-gate.md",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/skills/story-readiness/references/qa-lead-gate.md"
+  },
+  {
+    "category": "codex_hooks_new",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-write.sh",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": "Codex advisory artifact hook"
+  },
+  {
+    "category": "codex_artifact_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/artifact_guards.py",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": "Codex literal-patch artifact warnings"
+  },
+  {
+    "category": "codex_engine_helpers",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/godot-parse-check.gd",
+    "rationale": "Approved November convergence; preserve Codex authority and evidence contracts.",
+    "source": ".claude/scripts/godot-parse-check.gd"
   }
 ]

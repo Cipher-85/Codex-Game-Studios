@@ -2,8 +2,9 @@
 
 Default validation is static and headless.
 
-`audit.sh all` includes configuration, migration, artifact-reader, hook and
-installer fixtures. These checks validate package behavior in temporary trees;
+`audit.sh all` includes configuration, migration, artifact-reader and hook
+fixtures plus installer contract checks. The separate `coexistence --integration`
+command exercises the install/upgrade/uninstall matrix. These checks validate package behavior in temporary trees;
 they do not invoke a live skill, establish role loading, or run a game engine.
 The artifact reader's graph tests include all 512 directed graphs on three
 nodes. Counts, matching hashes and a successful package install remain distinct
@@ -19,8 +20,92 @@ Required final gates:
 
 Run `audit.sh docs` for documentation links/contracts. Individual fixture suites
 are available as `project-config`, `config-migration`, and `artifact-facts`.
-`all` already includes headless smoke and the installer matrix; repeating them
-is needed only for changed inputs, failures or a separately required gate.
+`all` already includes headless smoke; repeat checks only for changed inputs,
+failures or a separately required gate. Run the installer integration matrix
+explicitly when package ownership or installed files change.
+
+## November 6 upstream convergence
+
+Working-tree validation against upstream
+`05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418` (v1.2.0), based on local
+`8c04b1dc631662a88e3827b842f98d376817c445`. The package results below and
+the separate native results are historical November 6 runs against identified
+working-tree snapshots; they do not imply a release or downstream deployment.
+
+- All 46 engine-reference files match upstream Git blob hashes after reversing
+  only the documented Codex skill-invocation and Godot-helper path adaptations.
+  34 files changed; 12 were already equal. Pins are Godot 4.7, Unity 6.3 LTS and
+  Unreal Engine 5.8. Pin parity does not establish installed versions.
+- All 49 role configurations retain their non-prompt TOML fields. The 46 affected
+  prompts now return missing-approval questions to the caller.
+- `audit.sh all` passed: manifest, runtime, skills, agents, hooks, config,
+  27 evidence-receipt checks, 52 artifact-reader tests, 101 configuration tests,
+  43 configuration-transaction tests, coexistence contract and headless smoke.
+- `audit.sh docs`, `audit.sh release` and `git diff --check` passed.
+- `audit.sh coexistence --integration` passed with no errors or warnings,
+  covering install/upgrade/uninstall, coexistence, preservation, conflicts,
+  stale/unsafe state and injected transaction failures.
+
+The first full audit caught stale Godot 4.6 / Unreal 5.7 expectations in the
+shipped-pin regression. Only those two expectations were updated to the new
+reference pins; the rerun passed. Earlier assignment tests also caught a legacy
+rollback restriction incorrectly applied to edits of existing YAML; assignment
+receipts now retain their separately bounded target scope and rollback passed.
+
+### Native convergence results and limits
+
+Thirty native cases ran on November 6: 26 passed and four failed. After the
+approved four-file advisory-warning fix, all four affected cases passed in fresh
+fixtures: `hooks-guarded`, `approval-lead-programmer`, `approval-prototyper`, and
+`story-done-full`. The other 26 results apply to the earlier snapshot; they were
+not rerun against the warning fix. Original failures remain retained.
+
+Coverage includes eight settings approval/readback/recovery cases, story support
+loading and review-mode routing, parent/worker approval return, post-code engine
+review in full/lean/solo, and real positive/negative/usage-error parse-helper
+runs. Godot was observed as `4.7.2.stable.official.ed1daf0bf`; the full closure
+rerun imported cleanly and passed 3/3 criterion tests. Unity and Unreal versions
+remain NOT DETERMINED in the inspected locations. No game or platform acceptance
+is established by these synthetic workflow fixtures.
+
+The reruns used Codex CLI 0.167.0 with normal trust preflight and a fresh session,
+without a trust bypass. All six rerun children have verified full role profiles,
+configured models and matching Start/Stop records. This sequence worked without
+lifecycle code changes; the earlier missing-record root cause is not isolated.
+Both advisory warnings are retained in native developer context. One UI notice
+was directly observed; the final-screen capture does not retain both notices.
+
+Both first approval-test drafts exceeded their briefs. The controller rejected
+them before writes and approved previously reviewed fixture content instead.
+Approval return and exact scoped writing passed; autonomous draft fidelity is
+not established. Full-mode QA returned advisory GAPS and LP returned CONCERNS
+for an untested zero-limit case. Closure fixtures lack an implementation-diff
+baseline and retain NOT ASSESSED / NO_RECEIPT. Their approved administrative
+closure tests routing, not verified quality closure or a passed QA/stage gate.
+Initial engine attempts with user-data errors are retained separately from the
+clean approved reruns. A shared Godot log was overwritten by concurrent fixtures;
+the per-command raw transcripts remain authoritative.
+
+Local evidence (temporary artifacts, not shipped package files):
+`/private/tmp/ccgs-native-validation-20261106/README.md` and
+`/private/tmp/ccgs-native-validation-20261106-warning-fix/README.md`, with per-case
+results, raw parent/child transcripts, approvals, exact draft checks and final
+preservation audits alongside them. These reports retain failed attempts,
+controller recovery details and unchanged source/package/fixture inventories.
+The behavioral checklists remain reusable specifications, not execution ledgers;
+their NOT RUN labels do not supersede these separately scoped run records.
+
+The historical selective-update results below apply only to their earlier inputs.
+
+The subsequent handoff review clarified whole-changeset approval in
+`create-stories` and `story-done`, retained BLOCKED for an INADEQUATE readiness
+gate, and corrected behavioral-spec approval, verdict and role names. These
+workflow wording corrections postdate the native fixture snapshots above;
+targeted native approval/readiness replays remain owed. A reviewer concern about
+abstract scripts was withdrawn for the observed Godot 4.7.2 runtime after a
+bounded probe reported `can_instantiate=true`, `reload=0` and helper exit 0 for
+a valid abstract script. Startup user-data permission errors remain in that
+probe, so it is not a clean engine acceptance run. The helper was unchanged.
 
 ## Native acceptance for the selective update
 
@@ -65,7 +150,8 @@ hook-trust gating without that flag.
 **Still unassessed:** pinned Godot/Unity/Unreal runner execution, fresh game-test
 results, imports/builds, opened visual captures, gameplay/performance and
 platform acceptance. Source-root preflights and synthetic evidence do not
-supply them. The package remains local, uncommitted and unreleased at 0.7.4.
+supply them. That integration was subsequently committed at `4939c2d` and `8c04b1d`;
+package version remains 0.7.4. This historical record does not validate later changes.
 Version selection, commit, push, tag, publication and downstream deployment
 remain separate user decisions; a release-audit PASS performs none of them.
 
@@ -117,8 +203,8 @@ also retain parent/child IDs, raw rollouts and the matching SubagentStart record
 then run the interactive validator below against the same role TOML. Missing
 raw records or mismatched identity leave role acceptance unverified.
 
-Engine execution remains a separate readiness gate. The preparation inspection
-observed Godot 4.7.2 while the shipped reference pins 4.6; that executable cannot
+Engine execution remains a separate readiness gate. The historical preparation inspection
+observed Godot 4.7.2 while the then-shipped reference pinned 4.6; that executable cannot
 prove acceptance against the pin. Unity/Unreal executables were not found on
 PATH or in the inspected application locations; this is not proof that no other
 installation exists. Resolve the actual runner and version before an approved

@@ -3,6 +3,14 @@ name: story-readiness
 description: "Validate that a story file is implementation-ready. Checks for embedded GDD requirements, ADR references, engine notes, clear acceptance criteria, and no open design questions. Produces READY / NEEDS WORK / BLOCKED verdict with specific gaps. Use when user says 'is this story ready', 'can I start on this story', 'is story X ready to implement' for Codex Game Studios."
 ---
 
+## Bounded context reads
+
+Use `python3 .codex/lib/artifact_facts.py section <path> --heading '<heading>'`
+for named GDD, ADR and manifest sections; omit `--heading` to list headings first.
+A section includes its subsections through the next peer/ancestor heading.
+Read every section required by this workflow; bounded reads do not reduce scope.
+Report missing or ambiguous headings instead of silently truncating context.
+
 ## Artifact observations
 
 Before summarizing selected artifacts, apply
@@ -368,27 +376,8 @@ If no sprint file exists or no other ready stories are found, skip this section 
 
 ## Phase 8: Director Gate — Story Readiness Review
 
-Apply the review mode resolved in Phase 0 before spawning QL-STORY-READY:
-
-- `solo` → skip. Note: "QL-STORY-READY skipped — Solo mode." Proceed to close.
-- `lean` → skip. Note: "QL-STORY-READY skipped — Lean mode." Proceed to close.
-- `full` → spawn as normal.
-
-Spawn `qa-lead` via Codex subagent delegation using gate **QL-STORY-READY** (`.codex/docs/director-gates.md`).
-
-Pass the following context:
-- Story title
-- Acceptance criteria list (all items from the story's acceptance criteria section)
-- Dependency status (all dependencies listed and their current state: exist / DRAFT / missing)
-- Overall verdict (READY / NEEDS WORK / BLOCKED) from Phase 4
-
-Handle the verdict per standard rules in `director-gates.md`:
-- **ADEQUATE** → story is cleared. Proceed to close.
-- **GAPS [list]** → surface the specific gaps to the user via `numbered choice prompt`:
-  options: `Update story with suggested gaps` / `Accept and proceed anyway` / `Discuss further`.
-- **INADEQUATE** → surface the specific gaps; ask user whether to update the story or proceed anyway.
-
----
+Before closeout, read [QA lead gate](references/qa-lead-gate.md) and apply the
+resolved review mode. A skipped gate never changes a required failing criterion.
 
 ## Recommended Next Steps
 

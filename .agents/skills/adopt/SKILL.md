@@ -420,7 +420,7 @@ After selection, show the exact single-line value (`full`, `lean`, or `solo`) an
 ask "May I write this to `production/review-mode.txt`?" with `a. yes` / `b. no`.
 Create its parent only after approval. Re-run the shared contract after writing;
 a declined write leaves the validated default in use. Keep YAML assignments as
-`$settings` previews; this setup does not edit YAML or persist a per-run flag.
+`$settings` plans with separate write approval; this setup does not edit YAML or persist a per-run flag.
 
 ---
 
@@ -491,3 +491,6 @@ The following upstream metadata is preserved as context only; Codex does not enf
 
 Suggested model: `gpt-5.6-sol`. This is guidance only; Codex does not enforce a model from skill frontmatter.
 - `agent: technical-director`
+
+Settings assignments use `$settings` to preview exact diffs and obtain separate
+write approval. Adoption itself never authorizes a configuration transaction.

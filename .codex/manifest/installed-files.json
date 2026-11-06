@@ -2663,5 +2663,55 @@
     "mode": "file",
     "owner": "codex-game-studios",
     "path": ".codex/docs/artifact-inspection.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/create-stories/references/qa-lead-gate.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/references/engine-checks.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/dev-story/references/version-mismatch.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/review-gates.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/sprint-next.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-done/references/tech-debt-row.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".agents/skills/story-readiness/references/qa-lead-gate.md"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/hooks/validate-write.sh"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/artifact_guards.py"
+  },
+  {
+    "mode": "file",
+    "owner": "codex-game-studios",
+    "path": ".codex/lib/godot-parse-check.gd"
   }
 ]

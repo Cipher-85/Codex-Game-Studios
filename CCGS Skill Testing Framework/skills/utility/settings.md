@@ -2,11 +2,11 @@
 
 ## Skill Summary
 
-Inspects candidate settings or previews assignments with the shared resolver.
+Inspects settings with the shared resolver and previews assignments through the transaction helper.
 Results include READY / INVALID / NOT ASSESSED and explicit staging/recovery
-outcomes. Ordinary assignments remain read-only. A separate migration/rollback
-branch requires concrete write approval. Review routing has an operational
-consumer; other fields remain candidates. Inspection runs no workflow.
+outcomes. Assignment, migration and rollback writes require concrete approval of their
+fresh plans. Operational consumers are identified by `operational_keys`;
+automation policy remains a candidate. Inspection runs no workflow.
 These cases specify native behavior, not records of executed skill invocations.
 
 ## Static Assertions
@@ -27,8 +27,8 @@ These cases specify native behavior, not records of executed skill invocations.
 - [ ] Runs the resolver and reports legacy source paths.
 - [ ] Leaves rigor unset rather than assigning standard/minimal.
 - [ ] Reports custom prose as authoritative/unmigrated.
-- [ ] Reads operational review mode/value/source through `review-mode`, labels
-      the other fields as candidates, and creates no configuration files.
+- [ ] Reads operational review mode/value/source through `review-mode`, reports
+      the current `operational_keys` and remaining candidates, and creates no configuration files.
 
 ### Case 2: Inspect precedence from a nested directory
 
@@ -37,19 +37,19 @@ These cases specify native behavior, not records of executed skill invocations.
 **Assertions:**
 - [ ] Executes the bound project's helper with a root-independent path.
 - [ ] Shows full from project.local.yaml as the supported review-routing value.
-- [ ] Reports only `modes.review_mode` in `operational_keys`; other fields remain
-      candidates. Does not claim a role agent or gate actually ran.
+- [ ] Reports the shared resolver's complete current `operational_keys`. Does not claim a role agent or gate actually ran.
 
 ### Case 3: Preview rigor with an explicit override
 
 **Fixture:** Project rigor standard and explicit docs.density terse.
 **Input:** `$settings modes.rigor=full`
 **Assertions:**
-- [ ] Shows all candidate value/source changes returned by the helper.
+- [ ] Shows full file diffs, plan ID, journal paths and effective value/source changes.
 - [ ] Density stays terse with its explicit provenance.
 - [ ] Reports nothing written; neither YAML nor legacy mirrors change.
-- [ ] A request to save reaches the assignment-write boundary without applying
-      changes. Explicit rigor can supply review mode, but this preview is not saved.
+- [ ] On approval, runs `settings-apply` with the identical assignments and fresh
+      plan ID, then reads back the saved values through the resolver and affected
+      consumer. On decline, writes nothing; a noop asks no redundant approval.
 
 ### Case 4: Invalid input or local scope
 
@@ -84,8 +84,8 @@ locked local rigor; local file without base.
 - [ ] A preview, package-install approval, or `migrate` alone causes no writes.
 - [ ] Applies only the approved fresh plan. Stale inputs cause re-preview and
       renewed approval; conflicts are not repaired or overwritten.
-- [ ] Reports STAGED and that subsequent review routing reads staged values;
-      other fields remain candidates. Preserves legacy files and absent rigor,
+- [ ] Reports STAGED and that subsequent operational consumers read staged values;
+      automation preferences remain candidates. Preserves legacy files and absent rigor,
       and never claims a native workflow or engine test passed.
 
 ### Case 7: Rollback, failure and repeated migration
@@ -155,3 +155,17 @@ The executable configuration tests validate resolution, not this workflow.
 - Verify setup previews name every affected file, retain approval across the
   unchanged scope, reject stale previews, and re-read actual writes. No config
   reader installs, migrates, spawns, commits or changes root YAML by itself.
+
+## Assignment transaction acceptance
+
+Status: NOT RUN — native approval and readback behavior needs an observed invocation.
+
+- Exercise project and `--local` edits, including a local shadow of a project edit.
+  Report both the saved path/value and the effective value/source.
+- Decline a multi-key plan; neither YAML nor journal files may be created.
+- Change an input after approval; the old plan must be refused. Present the new
+  diff for approval instead of retrying a changed plan silently.
+- Preserve comments, BOM, CRLF and modes. Refuse block-list replacement and
+  scalar-to-mapping conversion with a clear scoped-edit diagnostic.
+- Roll back an assignment through the same approved recovery flow; preserve old
+  migration receipts. Later user edits must block overwrite.

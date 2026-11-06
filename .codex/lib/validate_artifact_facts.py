@@ -353,6 +353,42 @@ class ArtifactTests(unittest.TestCase):
         self.assertTrue(validate_runtime.validate_config_consumer_text(path, "Read bugs."))
 
 
+    def test_section_includes_nested_headings_but_not_next_peer(self):
+        self.write('doc.md', '# Doc\n## Rules\nOne\n### Details\nTwo\n```md\n## Fake\n```\n## Other\nNo\n')
+        result = FACTS.read_section(self.root, 'doc.md', 'Rules')
+        self.assertEqual(result['status'], 'ready', result)
+        self.assertEqual(result['start_line'], 2)
+        self.assertEqual(result['end_line'], 8)
+        self.assertIn('### Details', result['text'])
+        self.assertNotIn('## Other', result['text'])
+        self.assertEqual([h['title'] for h in result['headings']], ['Doc', 'Rules', 'Details', 'Other'])
+
+    def test_section_ambiguous_missing_and_setext_headings(self):
+        self.write('doc.md', 'Rules\n=====\nBody\nRules\n-----\nMore\n')
+        self.assertEqual(FACTS.read_section(self.root, 'doc.md', 'Rules')['status'], 'invalid')
+        self.assertEqual(FACTS.read_section(self.root, 'doc.md', 'Absent')['status'], 'invalid')
+        self.assertEqual(FACTS.read_section(self.root, '../doc.md')['status'], 'invalid')
+        self.assertEqual(FACTS.read_section(self.root, '.env')['status'], 'invalid')
+        self.write('doc.md', 'Rules\n=====\nBody\nOther\n=====\n')
+        self.assertEqual(FACTS.read_section(self.root, 'doc.md', 'Rules')['text'], 'Rules\n=====\nBody')
+
+    def test_registry_retired_ids_count_and_nested_example_is_ignored(self):
+        text = ('requirements:\n  - id: TR-combat-009\n    status: deprecated\n'
+                '    note: |\n      - id: TR-fake-999\n        status: active\n'
+                '  - id: TR-combat-002\n    status: active\n')
+        result = FACTS.registry_records(text, 'docs/architecture/tr-registry.yaml')
+        self.assertEqual(result['errors'], [])
+        self.assertEqual(result['next_ids'], {'TR-combat-': 10})
+        self.assertEqual(len(result['records']), 2)
+
+    def test_registry_duplicate_missing_invalid_and_unquoted_status_reported(self):
+        text = ('requirements:\n  - id: TR-core-001\n    status: unknown\n'
+                '  - id: TR-core-001\n    status: superseded-by: TR-core-003\n')
+        result = FACTS.registry_records(text, 'docs/architecture/tr-registry.yaml')
+        self.assertTrue(any('duplicate' in e for e in result['errors']))
+        self.assertTrue(any('invalid registry status' in e for e in result['errors']))
+        self.assertTrue(any('unsupported YAML' in e for e in result['errors']))
+
 def main():
     global FACTS, PACKAGE
     parser = argparse.ArgumentParser()

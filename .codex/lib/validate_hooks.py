@@ -462,6 +462,78 @@ def run_behavioral_fixtures(root: Path, fixtures: Path, errors: list[str], warni
             errors.append(f"session-stop did not archive active session state: {text!r}")
 
 
+def run_artifact_guard_fixtures(root: Path, errors: list[str]) -> None:
+    """Exercise real advisory hooks without changing their input files."""
+    def check_advisory(label: str, result: subprocess.CompletedProcess[str], expected: str | None) -> None:
+        assert_result(errors, label, result, 0)
+        if expected is None:
+            if result.stdout or result.stderr:
+                errors.append(label + ": unexpected output: " + result.stdout + result.stderr)
+            return
+        try:
+            output = json.loads(result.stdout)
+            message = output["systemMessage"]
+            if not isinstance(message, str) or expected not in message:
+                raise ValueError("missing advisory text")
+            if output != {
+                "systemMessage": message,
+                "hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": message},
+            }:
+                raise ValueError("unexpected fields or mismatched model context")
+        except (ValueError, KeyError, TypeError) as error:
+            errors.append(f"{label}: invalid advisory JSON: {error}: {result.stdout!r}")
+
+    with make_temp_project() as tmp:
+        project = Path(tmp)
+        registry = project / "docs/architecture/tr-registry.yaml"
+        registry.parent.mkdir(parents=True)
+        original = "requirements:\n  - id: TR-core-001\n    status: active\n"
+        registry.write_text(original)
+        epic = project / "EPIC.md"
+        epic.write_text("Keep this\n")
+        cases = [
+            ("renumber", "*** Update File: docs/architecture/tr-registry.yaml\n@@\n requirements:\n-  - id: TR-core-001\n+  - id: TR-core-002\n     status: active\n", "deleted or renamed/renumbered"),
+            ("status", "*** Update File: docs/architecture/tr-registry.yaml\n@@\n-    status: active\n+    status: unknown\n", "invalid registry status"),
+            ("retire", "*** Update File: docs/architecture/tr-registry.yaml\n@@\n-    status: active\n+    status: deprecated\n", None),
+            ("delete", "*** Delete File: docs/architecture/tr-registry.yaml\n", "canonical registry deletion"),
+            ("protected", "*** Update File: EPIC.md\n@@\n-Keep this\n+Replace\n", "protected existing artifact"),
+            ("missing context", "*** Update File: docs/architecture/tr-registry.yaml\n@@\n-absent\n+new\n", "NOT ASSESSED"),
+            ("outside", "*** Update File: ../outside.md\n@@\n-a\n+b\n", "NOT ASSESSED"),
+            ("secret", "*** Delete File: .env\n", "unsafe or secret"),
+        ]
+        for name, body, expected in cases:
+            payload = json.dumps({"tool_name": "apply_patch", "tool_input": {"patch": "*** Begin Patch\n" + body + "*** End Patch\n"}})
+            result = run_hook(root, project, "validate-write.sh", payload)
+            check_advisory("artifact guard " + name, result, expected)
+            if registry.read_text() != original or epic.read_text() != "Keep this\n":
+                errors.append("artifact guard mutated a source file")
+        result = run_hook(root, project, "validate-write.sh", "not json")
+        check_advisory("artifact malformed input", result, "NOT ASSESSED")
+        if set(p.relative_to(project).as_posix() for p in project.rglob('*') if p.is_file()) != {"EPIC.md", "docs/architecture/tr-registry.yaml"}:
+            errors.append("artifact guard created files")
+
+    # Isolate dependency failures without changing the real interpreter or helper.
+    with make_temp_project() as tmp:
+        project = Path(tmp)
+        hook = project / ".codex/hooks/validate-write.sh"
+        hook.parent.mkdir(parents=True)
+        hook.write_bytes((root / ".codex/hooks/validate-write.sh").read_bytes())
+        hook.chmod(0o755)
+        lib = project / ".codex/lib"
+        lib.mkdir()
+        failing_python = lib / "failing-python"
+        failing_python.write_text("#!/bin/sh\necho partial-output\nexit 1\n")
+        failing_python.chmod(0o755)
+        for name, selection, expected in [
+            ("missing Python", "return 1", "Python unavailable"),
+            ("failed validator", f"printf '%s\\n' '{failing_python}'", "validator failed"),
+        ]:
+            (lib / "hooks.sh").write_text("ccgs_root=$CCGS_ROOT\nccgs_first_python() { " + selection + "; }\n")
+            # A helper that prints partial output then fails must yield one JSON object.
+            result = run_hook(project, project, "validate-write.sh", "{}")
+            check_advisory("artifact " + name, result, expected)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
@@ -558,6 +630,7 @@ def main() -> int:
             if event and event not in ALLOWED_EVENTS:
                 errors.append(f"{payload.relative_to(root)}: unsupported hook_event_name {event}")
         if not errors:
+            run_artifact_guard_fixtures(root, errors)
             run_behavioral_fixtures(root, fixtures, errors, warnings)
 
     return emit(root, errors, warnings)

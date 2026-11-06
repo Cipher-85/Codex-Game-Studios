@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — November upstream convergence
+
+- Synchronize all engine references with upstream `05ad7c8`, adapting only Codex
+  invocations and the packaged Godot parse-check helper path.
+- Extract conditional story guidance into seven supporting references; require
+  parent artifact readback and a post-implementation engine review.
+- Return delegated approval questions to the caller without implying permission.
+- Add bounded section/registry observations and advisory apply_patch guards.
+- Add exact-plan approved settings assignments with preservation, shared locking,
+  readback and recoverable receipts; retain read-only configuration consumers.
+- Correct historical integration status and keep model routing, evidence rules,
+  project ownership and Agent Bindery continuity unchanged.
+
+
 ## Unreleased — selective upstream v1.2.0 adoption
 
 Selective adaptation of upstream

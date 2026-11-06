@@ -11,6 +11,7 @@ fields.
 | `validate-secrets.sh` | PreToolUse (Bash) | Bash commands | Blocks `.env` secret-file reads, writes, and redirections from `tool_input.command` |
 | `validate-commit.sh` | PreToolUse (Bash) | `git commit` commands | Validates design doc sections, JSON data files, hardcoded values, TODO format |
 | `validate-push.sh` | PreToolUse (Bash) | `git push` commands | Warns on pushes to protected branches (`develop`, `main`, `master`) |
+| `validate-write.sh` | PreToolUse (`apply_patch`) | Supported literal patch payloads | Advises on registry identity/status changes and protected artifacts; never grants or blocks writes |
 | `validate-assets.sh` | PostToolUse (`apply_patch`) | Asset file changes | Checks naming conventions and JSON validity for files in `assets/`; feedback is after the edit and does not roll back side effects |
 | `session-start.sh` | SessionStart | Session begins | Records a local branch/HEAD/timestamp review baseline; previews the bounded canonical handoff before active state; recommends Agent Bindery's global `$resume-from-handoff` |
 | `detect-gaps.sh` | SessionStart | Session begins | Detects fresh projects (suggests $start) and missing documentation when code/prototypes exist, suggests $reverse-document or $project-stage-detect |
@@ -33,3 +34,23 @@ set notification keys.
 
 Hook reference documentation: `.codex/docs/hooks-reference/`
 Hook input schema documentation: `.codex/docs/hooks-reference/hook-input-schemas.md`
+
+## Advisory artifact checks
+
+`validate-write.sh` runs at PreToolUse for `apply_patch`, using
+`.codex/lib/artifact_guards.py`. It warns before protected-artifact edits and about
+canonical registry deletion, changed identities and invalid statuses in a
+literal patch preview. Warnings use JSON on stdout: `systemMessage` surfaces
+the warning in the UI, and `hookSpecificOutput.additionalContext` supplies the
+same warning to the model for `PreToolUse`. Quiet checks emit nothing. The hook
+exits zero without a permission decision or input rewrite; existing approval
+and blocking rules still apply. It writes no log or source file. Missing Python
+or a failed validator produces the same structured NOT ASSESSED advisory.
+
+Malformed, oversized, ambiguous, out-of-root and symlink payloads report NOT
+ASSESSED. It does not intercept general shell writes, establish full YAML schema
+validity or prove a patch was applied. Restart/trust the project in a native
+session before claiming the new hook is active there; fixture execution alone
+proves only the handler behavior. Section-based reads are explicit workflow
+calls, not a universal file-read hook. Claimed delegated artifacts are verified
+by the parent against approved paths, then code receives the engine review.

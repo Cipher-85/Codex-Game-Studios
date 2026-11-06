@@ -6,7 +6,7 @@ Claude-specific runtime surfaces with Codex-native equivalents.
 ## Lineage
 
 - Upstream: [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)
-- Pinned upstream commit: `984023ddac0d5e27624f2baacde6105e45de375f`
+- Original port baseline: `984023ddac0d5e27624f2baacde6105e45de375f`
 - Port target: Codex custom agents, repo-local skills, hooks, rules, install
   manifests, and `AGENTS.md` startup instructions
 
@@ -31,3 +31,12 @@ Key evidence files:
 - [docs/codex-conversion/codex-mapping-matrix.md](docs/codex-conversion/codex-mapping-matrix.md)
 - [docs/codex-conversion/implementation-plan.md](docs/codex-conversion/implementation-plan.md)
 - [docs/codex-conversion/validation-suite.md](docs/codex-conversion/validation-suite.md)
+
+## Convergence target
+
+The current reference/selected-workflow target is upstream
+`05ad7c8a5b8aa2aa86bbd3439ae7cf7295cac418` (v1.2.0). The 417-row upstream-assets
+manifest remains the original historical inventory. All 46 engine-reference
+paths are synchronized, with only Codex invocation/helper-path adaptations.
+Configuration authority, mandatory evidence, model routing, installation and
+Agent Bindery continuity remain Codex-specific contracts.

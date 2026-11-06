@@ -3,6 +3,14 @@ name: dev-story
 description: "Read a story file and implement it. Loads the full context (story, GDD requirement, ADR guidelines, control manifest), routes to the right programmer agent for the system and engine, implements the code and test, and confirms each acceptance criterion. The core implementation skill — run after $story-readiness, before $code-review and $story-done for Codex Game Studios."
 ---
 
+## Bounded context reads
+
+Use `python3 .codex/lib/artifact_facts.py section <path> --heading '<heading>'`
+for named GDD, ADR and manifest sections; omit `--heading` to list headings first.
+A section includes its subsections through the next peer/ancestor heading.
+Read every section required by this workflow; bounded reads do not reduce scope.
+Report missing or ambiguous headings instead of silently truncating context.
+
 ## Artifact observations
 
 Before summarizing selected artifacts, apply
@@ -150,17 +158,8 @@ Read `docs/architecture/control-manifest.md`. Extract the rules for this story's
 - Forbidden patterns
 - Performance guardrails
 
-Check: does the story's embedded Manifest Version match the current manifest header date?
-If they differ, use `numbered choice prompt` before proceeding:
-- Prompt: "Story was written against manifest v[story-date]. Current manifest is v[current-date]. New rules may apply. How do you want to proceed?"
-- Options:
-  - `[A] Update story manifest version and implement with current rules (Recommended)`
-  - `[B] Implement with old rules — I accept the risk of non-compliance`
-  - `[C] Stop here — I want to review the manifest diff first`
-
-If [A]: edit the story file's `Manifest Version:` field to the current manifest date before spawning the programmer. Then read the manifest carefully for new rules.
-If [B]: edit the story file's `Manifest Version:` field to the current manifest date AND add a `Manifest-Note: Proceeded with old manifest rules on [date] — non-compliance risk accepted.` line to the story header. Read the manifest for new rules anyway. Note the decision in the Phase 6 summary under "Deviations". `$story-done` will include the Manifest-Note in its deviations section without re-checking staleness.
-If [C]: stop. Do not spawn any agent. Let the user review and re-run `$dev-story`.
+If the embedded Manifest Version differs from the current header, follow
+[version mismatch](references/version-mismatch.md) before implementation.
 
 ### Dependency validation
 
@@ -192,7 +191,9 @@ Read `.codex/docs/technical-preferences.md`:
 
 ### Mark Story In Progress
 
-Silently update two things before spawning any agent:
+Include these updates in the approved changeset before spawning any agent.
+Carry existing approval forward for the same scope; otherwise show the exact
+paths and proposed changes and ask before writing:
 
 1. **`production/sprint-status.yaml`** (if it exists): find the entry matching this story's file path and set `status: in_progress`. Update the top-level `updated` field to today's date. If the file does not exist, skip silently.
 
@@ -220,22 +221,14 @@ If the story's Type is `Config/Data`, no programmer agent or engine specialist i
 | Core or Feature — networking, replication | `network-programmer` |
 | Config/Data — no code | No agent needed (see Phase 4 Config note) |
 
-### Engine specialist — always spawn as secondary for code stories
+### Engine specialist — review after implementation
 
-Read the `Engine Specialists` section of `.codex/docs/technical-preferences.md`
-to get the configured primary specialist. Spawn them alongside the primary agent
-when the story involves engine-specific APIs, patterns, or the ADR has HIGH
-engine risk.
-
-| Engine | Specialist agents available |
-|--------|----------------------------|
-| Godot 4 | `godot-specialist`, `godot-gdscript-specialist`, `godot-shader-specialist` |
-| Unity | `unity-specialist`, `unity-ui-specialist`, `unity-shader-specialist` |
-| Unreal Engine | `unreal-specialist`, `ue-gas-specialist`, `ue-blueprint-specialist`, `ue-umg-specialist`, `ue-replication-specialist` |
-
-**When engine risk is HIGH** (from the ADR or VERSION.md): always spawn the engine
-specialist, even for non-engine-facing stories. High risk means the ADR records
-assumptions about post-cutoff engine APIs that need expert verification.
+For every code story, resolve the configured engine specialist now. After the
+programmer returns and the parent verifies the outputs, run the read-only engine
+review in [engine checks](references/engine-checks.md). Do not run this review
+alongside implementation: it must inspect the actual changed files. Config/Data
+stories retain their separate path. Missing configuration or a failed role load
+is NOT ASSESSED, never a simulated specialist pass.
 
 ---
 
@@ -305,19 +298,12 @@ Verify each claimed artifact exists and inspect the actual diff against the
 approved paths. A blocked, interrupted or incomplete agent result is INCOMPLETE,
 not "Implementation Complete". Name missing outputs and owed actions.
 
-Run the applicable approved engine/test checks using
-`.codex/docs/coding-standards.md`; report their exact commands and results.
-For visible criteria follow `.codex/docs/verification-integrity.md`: launch,
-reach the required state, open retained screenshots, and record criterion-linked
-observations. Build/import success alone is not visual proof. Missing access or
-unrun criteria are NOT ASSESSED. Preserve existing checks and user-owned feel
-judgments; never infer a subjective sign-off.
-
-Include evidence doc, capture and `stamp.json` paths in the approved capture scope.
-Only after a new observed capture run `bash .codex/lib/review-receipts.sh hash`
-with the covered project-relative code/scene/data/asset paths and save its
-successful JSON output to `production/qa/evidence/<story-slug>/stamp.json`.
-Do not stamp an old capture or claim the receipt proves a test passed.
+For code stories, now read [engine checks](references/engine-checks.md), run the
+specialist review and return required corrections to the programmer within the
+approved scope. Then run the applicable checks and capture procedure there.
+Re-review corrected files; unresolved required findings prevent completion.
+For Config/Data stories, run the applicable approved smoke checks and report
+exact commands/results or NOT ASSESSED; skipping code review does not waive them.
 
 Update the story's `## Files` with verified actual paths only when that write was
 approved. Preserve planned-versus-actual deviations in the summary/checkpoint;

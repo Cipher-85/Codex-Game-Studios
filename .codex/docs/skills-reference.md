@@ -167,3 +167,6 @@ Coordinate multiple agents on a single feature area:
 | `$team-level` | level-designer + narrative-director + world-builder + art-director + systems-designer + qa-tester |
 | `$team-live-ops` | live-ops-designer + economy-designer + community-manager + analytics-engineer |
 | `$team-qa` | qa-lead + qa-tester + gameplay-programmer + producer |
+
+`$settings key=value` produces an exact assignment plan and asks approval before
+writing. Inspection stays read-only; saved automation preferences stay inactive.

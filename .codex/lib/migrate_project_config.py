@@ -222,6 +222,140 @@ def plan(root):
     return result
 
 
+def assignment_values(assignments):
+    """Parse the same key=value surface as the read-only settings preview."""
+    values = {}
+    for assignment in assignments:
+        if "=" not in assignment:
+            raise MigrationError("expected key=value")
+        key, value = assignment.split("=", 1)
+        if key in values:
+            raise MigrationError("duplicate settings assignment: " + key)
+        values[key] = config.scalar(value)
+    if not values:
+        raise MigrationError("at least one settings assignment is required")
+    return values
+
+
+def edit_settings(data, values):
+    """Replace scalar/inline-list leaves, preserving other bytes; refuse ambiguous edits."""
+    bom = b"\xef\xbb\xbf" if data and data.startswith(b"\xef\xbb\xbf") else b""
+    text = data.decode("utf-8-sig") if data is not None else "schema_version: 1\n"
+    original = config.flatten(config.parse_yaml(text, "settings target"))
+    newline = "\r\n" if "\r\n" in text else "\n"
+    for key, value in values.items():
+        current = config.flatten(config.parse_yaml(text, "settings target"))
+        if key in current and current[key] == value and type(current[key]) is type(value):
+            continue
+        lines = text.splitlines(keepends=True)
+        nodes, stack = {}, []
+        for number, raw in enumerate(lines):
+            clean = config.uncomment(raw.rstrip("\r\n").lstrip())
+            match = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_-]*):(?:\s+(.*))?", clean)
+            if not match:
+                continue
+            indent = len(raw) - len(raw.lstrip(" "))
+            while stack and stack[-1][0] >= indent:
+                stack.pop()
+            path = tuple(item[1] for item in stack) + (match[1],)
+            nodes[path] = (number, indent, match[2] or "")
+            stack.append((indent, match[1]))
+        parts = tuple(key.split("."))
+        encoded = json.dumps(value, ensure_ascii=False)
+        if parts in nodes:
+            number, indent, old = nodes[parts]
+            for raw in lines[number + 1:]:
+                if not config.uncomment(raw.strip()):
+                    continue
+                if len(raw) - len(raw.lstrip(" ")) > indent:
+                    raise MigrationError(key + ": replacing a block collection is ambiguous; edit it explicitly")
+                break
+            raw = lines[number]
+            ending = "\r\n" if raw.endswith("\r\n") else "\n" if raw.endswith("\n") else ""
+            body = raw[:-len(ending)] if ending else raw
+            colon = body.index(":")
+            tail = body[colon + 1:]
+            leading = tail[:len(tail) - len(tail.lstrip(" \t"))] or " "
+            unquoted = config.uncomment(tail)
+            suffix = tail[len(unquoted):]
+            lines[number] = body[:colon + 1] + leading + encoded + suffix + ending
+        else:
+            ancestor = parts[:-1]
+            while ancestor and ancestor not in nodes:
+                ancestor = ancestor[:-1]
+            if ancestor:
+                number, indent, old = nodes[ancestor]
+                if old:
+                    raise MigrationError(key + ": parent is not a block mapping")
+                children = [row[1] for path, row in nodes.items()
+                            if len(path) == len(ancestor) + 1 and path[:-1] == ancestor]
+                indent = min(children) if children else indent + 2
+                at = number + 1
+            else:
+                indent, at = 0, len(lines)
+            if at and not lines[at - 1].endswith("\n"):
+                lines[at - 1] += newline
+            added = []
+            for part in parts[len(ancestor):-1]:
+                added.append(" " * indent + part + ":" + newline)
+                indent += 2
+            added.append(" " * indent + parts[-1] + ": " + encoded + newline)
+            lines[at:at] = added
+        text = "".join(lines)
+    expected = {**original, **values}
+    if config.flatten(config.parse_yaml(text, "settings target")) != expected:
+        raise MigrationError("assignment would change unrelated configuration")
+    return bom + text.encode("utf-8")
+
+
+def settings_plan(root, assignments, local=False):
+    """Preview exact approved assignment writes using the migration journal and lock."""
+    root = Path(root).resolve()
+    result = {"root": str(root), "status": "blocked", "activation": "preview-only", "applied": False,
+              "operation": "settings", "local": local, "assignments": list(assignments),
+              "inputs": {}, "tools": tools_hash(), "history": [], "changes": [], "errors": [],
+              "operational_keys": list(config.OPERATIONAL_KEYS),
+              "notes": ["Approval applies only to this exact plan; saved automation preferences grant no action authority."]}
+    try:
+        if not root.is_dir():
+            raise MigrationError("project root is not a directory")
+        result["history"] = history(root)
+        contents = {}
+        for relative in INPUTS:
+            result["inputs"][relative], contents[relative] = snapshot(root, relative)
+        values = assignment_values(assignments)
+        preview = config.resolve(root, overrides=values, local=local)
+        if preview["status"] != "ready":
+            raise MigrationError("; ".join(preview["errors"]))
+        result["effective_changes"] = preview.get("changes", {})
+        result["effective_settings"] = preview["settings"]
+        result["notes"].extend(preview["notes"])
+        target = "project.local.yaml" if local else "project.yaml"
+        proposed = {target: edit_settings(contents[target], values)}
+        if local:
+            proposed[".gitignore"] = ignore_content(contents[".gitignore"])
+        for relative, content in proposed.items():
+            if content == contents[relative]:
+                continue
+            if len(content) > LIMIT:
+                raise MigrationError(relative + ": proposed content exceeds 128 KiB")
+            before = result["inputs"][relative]
+            mode = before.get("mode", 0o600 if local and relative == target else 0o644)
+            result["changes"].append({"path": relative, "action": "replace" if before["exists"] else "create",
+                "before": before, "after": state(content, mode), "content": content.decode("utf-8"),
+                "diff": "".join(difflib.unified_diff((contents[relative] or b"").decode("utf-8").splitlines(keepends=True),
+                    content.decode("utf-8").splitlines(keepends=True), fromfile=relative + " (before)", tofile=relative + " (proposed)"))})
+        result["status"] = "ready" if result["changes"] else "noop"
+    except (MigrationError, config.ConfigError, OSError, UnicodeError) as error:
+        result.update(status="blocked", changes=[], errors=[str(error)])
+    result["plan_id"] = fingerprint(result)
+    result["transaction"] = BACKUPS + "/" + result["plan_id"]
+    result["transaction_files"] = ([result["transaction"] + "/receipt.json", BACKUPS + "/transaction.lock"] +
+        [result["transaction"] + f"/before-{i}" for i, c in enumerate(result["changes"]) if c["before"]["exists"]]) if result["changes"] else []
+    result["temporary_files"] = ["<changed-file-parent>/.ccgs-config-*.tmp (removed after replacement)"] if result["changes"] else []
+    return result
+
+
 def atomic_write(path, data, mode):
     """Same-directory replacement, with flushed contents and original file mode."""
     fd, temporary = tempfile.mkstemp(prefix=".ccgs-config-", suffix=".tmp", dir=path.parent)
@@ -290,9 +424,10 @@ def outcome(status, **kwargs):
             "operational_keys": list(config.OPERATIONAL_KEYS), **kwargs}
 
 
-def apply(root, expected):
+def apply(root, expected, assignments=None, local=False):
     root = Path(root).resolve()
-    proposal = plan(root)
+    make_plan = (lambda: plan(root)) if assignments is None else (lambda: settings_plan(root, assignments, local))
+    proposal = make_plan()
     if proposal["plan_id"] != expected:
         return outcome("blocked", errors=["Stale or wrong-root plan; preview and approve the current plan again."])
     if proposal["status"] in ("blocked", "noop"):
@@ -300,7 +435,7 @@ def apply(root, expected):
     transaction = proposal["transaction"]
     try:
         with transaction_lock(root):
-            if plan(root) != proposal:
+            if make_plan() != proposal:
                 raise MigrationError("inputs changed while acquiring the lock; preview again")
             directory = safe_path(root, transaction)
             directory.mkdir(mode=0o700)
@@ -324,6 +459,12 @@ def apply(root, expected):
                     atomic_write(safe_path(root, change["path"]), change["content"].encode(), change["after"]["mode"])
                     if snapshot(root, change["path"])[0] != change["after"]:
                         raise MigrationError(change["path"] + ": write verification failed")
+                if assignments is not None:
+                    after = config.resolve(root)
+                    expected_settings = proposal["effective_settings"]
+                    if after["status"] != "ready" or any(after["settings"].get(k) != v
+                            for k, v in expected_settings.items() if k != "schema_version"):
+                        raise MigrationError("saved settings differ from the approved effective values")
                 receipt["status"] = "staged"
                 write_receipt(root, transaction, receipt)
                 return outcome("staged", staged=True, transaction=transaction, errors=[])
@@ -364,13 +505,22 @@ def read_receipt(root, transaction):
             transaction != BACKUPS + "/" + proposal["plan_id"] or proposal["transaction"] != transaction):
         raise MigrationError("receipt fingerprint or project root mismatch")
     paths = [c["path"] for c in proposal["changes"]]
-    if not paths or paths != [p for p in TARGETS if p in paths]:
+    if proposal.get("operation") == "settings":
+        if type(proposal.get("local")) is not bool:
+            raise MigrationError("invalid assignment scope in receipt")
+        target = "project.local.yaml" if proposal["local"] else "project.yaml"
+        targets = (target, ".gitignore") if proposal["local"] else (target,)
+    elif "operation" not in proposal:
+        targets = TARGETS
+    else:
+        raise MigrationError("unsupported transaction operation")
+    if not paths or paths != [p for p in targets if p in paths]:
         raise MigrationError("receipt contains unexpected or repeated targets")
     backups = {}
     for i, change in enumerate(proposal["changes"]):
         if (change["before"] != proposal["inputs"][change["path"]] or
                 change["after"] != state(change["content"].encode(), change["after"]["mode"]) or
-                (change["path"] == "project.yaml" and change["before"]["exists"])):
+                (proposal.get("operation") != "settings" and change["path"] == "project.yaml" and change["before"]["exists"])):
             raise MigrationError("receipt contains invalid target states")
         current, _ = snapshot(root, change["path"])
         if current not in (change["before"], change["after"]):
@@ -458,6 +608,12 @@ def main():
     commands.add_parser("plan")
     stage = commands.add_parser("apply")
     stage.add_argument("--expect-plan", required=True)
+    for name in ("settings-plan", "settings-apply"):
+        command = commands.add_parser(name)
+        command.add_argument("--set", action="append", required=True, dest="assignments")
+        command.add_argument("--local", action="store_true")
+        if name == "settings-apply":
+            command.add_argument("--expect-plan", required=True)
     for name in ("rollback-plan", "rollback"):
         command = commands.add_parser(name)
         command.add_argument("transaction")
@@ -468,6 +624,10 @@ def main():
         result = plan(args.root)
     elif args.command == "apply":
         result = apply(args.root, args.expect_plan)
+    elif args.command == "settings-plan":
+        result = settings_plan(args.root, args.assignments, args.local)
+    elif args.command == "settings-apply":
+        result = apply(args.root, args.expect_plan, args.assignments, args.local)
     elif args.command == "rollback-plan":
         result = rollback_plan(args.root, args.transaction)
     else:

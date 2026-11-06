@@ -63,8 +63,7 @@ hook displays the diagnostic while leaving the session available for repair.
 `configured` is false only for the validated default. Onboarding and new-sprint
 setup preserve configured values from YAML, legacy, rigor or run flags. When
 unconfigured, they may show a proposed single-line legacy value and ask for
-approval to write `production/review-mode.txt`; they then re-resolve. Assignment
-writes to YAML remain deferred. Declining initialization leaves the validated
+approval to write `production/review-mode.txt`; they then re-resolve. Assignment writes use a separate approved transaction; the resolver remains read-only. Declining initialization leaves the validated
 `lean` default in effect. See [director-gates.md](director-gates.md) for filtering
 and the independent `$design-review --depth` behavior.
 
@@ -158,7 +157,7 @@ The separate migration helper previews exact changes, requires approval, and
 stages mapped fields plus an outside-block ignore rule with backups and rollback.
 
 `$settings` inspects and previews; its explicit migration branch stages only
-approved paths. Ordinary assignments remain previews. Director-gate routing,
+approved paths. Ordinary assignments require an exact plan and explicit write approval. Director-gate routing,
 review status and the project-owned continuity lane module use the shared
 `review-mode` contract. Workflow consumers follow `workflow-modes.md`; stage readers use the contract
 below. QA/team/technical policy is defined by their shared contracts; automation remains
@@ -245,3 +244,12 @@ fields and performance fields join the previously connected consumers in
 `operational_keys`. Automation and other unconnected metadata remain inspectable
 candidates. Inspect the schema rather than assuming every accepted key has a
 runtime effect. Setup writes retain explicit diff/path approval and readback.
+
+## Approved assignments
+
+The resolver's `preview` command remains read-only. `$settings key=value` uses
+`migrate_project_config.py settings-plan --set 'key=value'` for a file-level
+plan, then asks approval for its exact paths, diff and plan ID. Only the matching
+`settings-apply --set 'key=value' --expect-plan <id>` writes. Repeat every approved
+`--set` and `--local` argument unchanged. Re-resolve after staging; distinguish
+saved values from locally shadowed effective values. See config-migration.md.

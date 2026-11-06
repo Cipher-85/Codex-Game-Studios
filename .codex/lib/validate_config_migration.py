@@ -456,6 +456,110 @@ class MigrationTests(unittest.TestCase):
         self.assertFalse((self.root / "project.yaml").exists())
 
 
+    def test_settings_save_preserves_comments_bom_crlf_and_mode(self):
+        body = b'\xef\xbb\xbfschema_version: 1\r\n# keep\r\nmodes:\r\n    review_mode: lean # note\r\n    automation: collaborative\r\n'
+        path = self.write("project.yaml", body)
+        path.chmod(0o640)
+        proposal = MIGRATION.settings_plan(self.root, ["modes.review_mode=full"])
+        self.assertEqual(proposal["status"], "ready", proposal)
+        self.assertEqual(path.read_bytes(), body)
+        self.assertFalse((self.root / MIGRATION.BACKUPS).exists())
+        result = MIGRATION.apply(self.root, proposal["plan_id"], ["modes.review_mode=full"])
+        self.assertEqual(result["status"], "staged", result)
+        self.assertEqual(path.read_bytes(), body.replace(b'lean #', b'"full" #'))
+        self.assertEqual(path.stat().st_mode & 0o777, 0o640)
+        self.assertEqual(MIGRATION.config.review_mode(self.root)["value"], "full")
+        self.assertEqual(self.rollback(proposal["transaction"])["status"], "rolled_back")
+        self.assertEqual(path.read_bytes(), body)
+
+    def test_settings_create_base_keeps_legacy_values_and_missing_rigor(self):
+        self.write("production/review-mode.txt", "full\n")
+        args = ["project.name=Example"]
+        proposal = MIGRATION.settings_plan(self.root, args)
+        self.assertEqual(proposal["status"], "ready", proposal)
+        self.assertEqual([c["path"] for c in proposal["changes"]], ["project.yaml"])
+        result = MIGRATION.apply(self.root, proposal["plan_id"], args)
+        self.assertEqual(result["status"], "staged", result)
+        config = MIGRATION.config.resolve(self.root)["settings"]
+        self.assertEqual(config["modes.review_mode"]["value"], "full")
+        self.assertIsNone(config["modes.rigor"]["value"])
+        self.assertEqual(self.rollback(proposal["transaction"])["status"], "rolled_back")
+        self.assertFalse((self.root / "project.yaml").exists())
+
+    def test_settings_local_roundtrip_and_shadowed_project_assignment(self):
+        base = self.write("project.yaml", "schema_version: 1\nmodes:\n  review_mode: lean\n")
+        original = base.read_bytes()
+        args = ["modes.review_mode=full"]
+        proposal = MIGRATION.settings_plan(self.root, args, True)
+        result = MIGRATION.apply(self.root, proposal["plan_id"], args, True)
+        self.assertEqual(result["status"], "staged", result)
+        self.assertEqual(base.read_bytes(), original)
+        local = self.root / "project.local.yaml"
+        self.assertEqual(local.stat().st_mode & 0o777, 0o600)
+        self.assertIn('/project.local.yaml', (self.root / '.gitignore').read_text())
+        shadowed = MIGRATION.settings_plan(self.root, ["modes.review_mode=solo"])
+        self.assertEqual(shadowed["effective_changes"], {})
+        self.assertEqual(len(shadowed["changes"]), 1)
+        self.assertEqual(self.rollback(proposal["transaction"])["status"], "rolled_back")
+        self.assertFalse(local.exists())
+
+    def test_settings_noop_and_rejections_never_write(self):
+        path = self.write("project.yaml", "schema_version: 1\nmodes:\n  review_mode: lean\n")
+        original = path.read_bytes()
+        self.assertEqual(MIGRATION.settings_plan(self.root, ["modes.review_mode=lean"])["status"], "noop")
+        for args, local in [(["bad.key=1"], False), (["modes.review_mode=bad"], False),
+                            (["modes.rigor=minimal"], True), (["schema_version=1"], False),
+                            (["modes.review_mode=full", "modes.review_mode=solo"], False), ([], False)]:
+            with self.subTest(args=args, local=local):
+                self.assertEqual(MIGRATION.settings_plan(self.root, args, local)["status"], "blocked")
+                self.assertEqual(path.read_bytes(), original)
+                self.assertFalse((self.root / MIGRATION.BACKUPS).exists())
+
+    def test_settings_new_nested_keys_inline_lists_and_no_final_newline(self):
+        path = self.write("project.yaml", 'schema_version: 1\nmodes:\n    review_mode: lean # keep')
+        args = ["modes.rigor=full", 'platform.targets=[PC, Web]', 'testing.strict.logic=false']
+        proposal = MIGRATION.settings_plan(self.root, args)
+        self.assertEqual(proposal["status"], "ready", proposal)
+        self.assertEqual(MIGRATION.apply(self.root, proposal["plan_id"], args)["status"], "staged")
+        self.assertIn('    review_mode: lean # keep', path.read_text())
+        values = MIGRATION.config.resolve(self.root)["settings"]
+        self.assertEqual(values["platform.targets"]["value"], ['PC', 'Web'])
+        self.assertFalse(values["testing.strict.logic"]["value"])
+
+    def test_settings_ambiguous_collection_and_scalar_parent_refused(self):
+        for body, args in [('schema_version: 1\nplatform:\n  targets:\n    - PC # keep\n', ['platform.targets=[Web]']),
+                           ('schema_version: 1\ntesting:\n  strict: true\n', ['testing.strict.logic=false'])]:
+            path = self.write("project.yaml", body)
+            result = MIGRATION.settings_plan(self.root, args)
+            self.assertEqual(result["status"], "blocked", result)
+            self.assertEqual(path.read_text(), body)
+
+    def test_settings_stale_plan_and_wrong_operation_are_refused(self):
+        path = self.write('project.yaml', 'schema_version: 1\n')
+        args = ['modes.review_mode=full']
+        proposal = MIGRATION.settings_plan(self.root, args)
+        self.assertEqual(MIGRATION.apply(self.root, proposal['plan_id'])["status"], 'blocked')
+        self.assertEqual(MIGRATION.apply(self.root, proposal['plan_id'], ['modes.review_mode=solo'])["status"], 'blocked')
+        path.write_text('schema_version: 1\n# changed\n')
+        self.assertEqual(MIGRATION.apply(self.root, proposal['plan_id'], args)["status"], 'blocked')
+        self.assertFalse((self.root / MIGRATION.BACKUPS).exists())
+
+    def test_settings_failure_recovers_local_file_and_ignore(self):
+        self.write('project.yaml', 'schema_version: 1\n')
+        args = ['modes.review_mode=full']
+        proposal = MIGRATION.settings_plan(self.root, args, True)
+        real = MIGRATION.atomic_write
+        def fail_ignore(path, *rest):
+            if path == self.root / '.gitignore':
+                raise OSError('injected assignment failure')
+            return real(path, *rest)
+        with patch.object(MIGRATION, 'atomic_write', side_effect=fail_ignore):
+            result = MIGRATION.apply(self.root, proposal['plan_id'], args, True)
+        self.assertEqual(result['status'], 'failed_rolled_back', result)
+        self.assertFalse((self.root / 'project.local.yaml').exists())
+        self.assertFalse((self.root / '.gitignore').exists())
+        self.assertEqual(self.plan()['status'], 'ready')
+
 def main():
     global MIGRATION, PACKAGE
     parser = argparse.ArgumentParser(description=__doc__)

@@ -114,7 +114,7 @@ erases a known failure, changes a budget or authorizes an optimization.
 
 ## Approved setup updates
 
-Ordinary `$settings` assignments remain previews. For an already authorized
+`$settings` assignments begin with a read-only plan and require explicit approval to apply. For an already authorized
 engine/test setup workflow, present one exact changeset before writing:
 
 1. Resolve the current values and their sources. Use `write_targets` for mapped

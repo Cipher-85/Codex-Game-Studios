@@ -72,8 +72,8 @@ a missing legacy file alone does not mean review setup is needed. A run flag
 is not persisted. For initial setup without a configured value, `$start`,
 `$adopt`, and new `$sprint-plan` may propose the legacy file's exact content and
 ask for write approval. Existing YAML stays project-owned; `$settings`
-assignments remain previews. `modes.rigor` can supply review routing now, while
-its workflow/density/QA/granularity/team effects remain candidates.
+assignments require a read-only plan followed by explicit approval to write. `modes.rigor` supplies review routing and the linked workflow, density, QA,
+granularity and team values through their shared consumer contracts.
 
 Review mode filters **director gates**, not ordinary pipeline agents or a
 skill's separate review-depth setting. `$design-review --depth` keeps its own

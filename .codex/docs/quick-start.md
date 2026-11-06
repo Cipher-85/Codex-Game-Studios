@@ -97,7 +97,7 @@ Ask yourself: "What department would handle this in a real studio?"
 |---------|-------------|
 | `$start` | First-time onboarding — asks where you are, guides you to the right workflow |
 | `$help` | Context-aware "what do I do next?" — reads your current phase and artifacts |
-| `$settings` | Inspect configuration and preview assignments/migration |
+| `$settings` | Inspect configuration and plan approved assignments/migration |
 | `$studio-status` | Show stage, review mode and active-session breadcrumb |
 | `$studio-next` | Deprecated manual continuity reference |
 | `$project-stage-detect` | Analyze project state, detect stage, identify gaps |

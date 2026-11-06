@@ -246,7 +246,8 @@ After selection, show the exact single-line value (`full`, `lean`, or `solo`) an
 ask "May I write this to `production/review-mode.txt`?" with `a. yes` / `b. no`.
 Create its parent only after approval. Re-run the shared contract after writing;
 a declined write leaves the validated default in use. Keep YAML assignments as
-`$settings` previews; this setup does not edit YAML or persist a per-run flag.
+`$settings` plans and separately approved assignment writes; this setup does not
+edit YAML or persist a per-run flag.
 
 ---
 

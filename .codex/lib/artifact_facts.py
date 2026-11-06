@@ -13,7 +13,7 @@ import sys
 
 # Import the existing section vocabulary without writing an import cache.
 sys.dont_write_bytecode = True
-from project_config import GDD_SECTIONS
+from project_config import GDD_SECTIONS, ConfigError, scalar, uncomment as yaml_uncomment
 
 
 MAX_BYTES = 1024 * 1024
@@ -488,6 +488,127 @@ def inspect_artifacts(root, kind, paths=None, today=None):
     return result
 
 
+def read_section(root, path, heading=None):
+    """List real headings or return one complete section with source locations."""
+    result = {"status": "ready", "applied": False, "assessment": "NOT ASSESSED",
+              "path": path, "headings": [], "errors": []}
+    try:
+        file = safe_path(Path(root).resolve(), path)
+        if not file.is_file() or file.stat().st_size > MAX_BYTES:
+            raise InputError("expected a bounded regular Markdown file")
+        text = file.read_text(encoding="utf-8-sig")
+        doc = Markdown(path, text)
+        if doc.diagnostics:
+            raise InputError("ambiguous Markdown: " + str(doc.diagnostics))
+        headings = [{"title": r["title"], "level": r["heading"], "line": r["line"]}
+                    for r in doc.rows if r["heading"]]
+        result["headings"] = headings
+        if heading is not None:
+            matches = [h for h in headings if normalize(h["title"]) == normalize(heading)]
+            if len(matches) != 1:
+                raise InputError("heading is missing or ambiguous: " + heading)
+            selected = matches[0]
+            end = next((h["line"] - 1 for h in headings
+                        if h["line"] > selected["line"] and h["level"] <= selected["level"]),
+                       len(text.splitlines()))
+            result.update(start_line=selected["line"], end_line=end,
+                          text="\n".join(text.splitlines()[selected["line"] - 1:end]))
+    except (InputError, OSError, UnicodeError) as error:
+        result.update(status="invalid", errors=[str(error)])
+    return result
+
+
+REGISTRIES = {"design/registry/entities.yaml", "docs/architecture/tr-registry.yaml",
+              "docs/registry/architecture.yaml"}
+
+
+def registry_records(text, path):
+    """Observe canonical block-list identities/statuses; never claim full YAML validation."""
+    records, errors, seen = [], [], set()
+    section, entry, depth, scalar_depth = None, None, None, None
+    identities = {"id", "name", "state", "pattern", "system"}
+    for number, raw in enumerate(text.splitlines(), 1):
+        indent = len(raw) - len(raw.lstrip())
+        if scalar_depth is not None:
+            if not raw.strip() or indent > scalar_depth:
+                continue
+            scalar_depth = None
+        line = yaml_uncomment(raw.lstrip()).strip()
+        if not line:
+            continue
+        if "\t" in raw[:indent]:
+            errors.append(f"{number}: tab indentation")
+        if re.search(r":\s*[|>][+-]?\s*$", line):
+            scalar_depth = indent
+        top = re.fullmatch(r"([A-Za-z_][\w-]*):\s*(.*)", line)
+        if indent == 0 and top:
+            section, entry, depth = top[1], None, None
+            if top[2] not in ("", "[]") and section not in ("version", "last_updated"):
+                errors.append(f"{number}: unsupported inline registry section")
+            continue
+        item = re.fullmatch(r"- ([A-Za-z_][\w-]*):\s*(.*)", line)
+        if item and section and (depth is None or indent <= depth):
+            depth = indent
+            entry = None
+            if item[1] not in identities:
+                errors.append(f"{number}: unsupported entry identity {item[1]}")
+                continue
+            try:
+                identity = scalar(item[2])
+                if not isinstance(identity, str) or not identity:
+                    raise ConfigError("entry identity must be a nonempty string")
+                key = section + "/" + identity
+                if key in seen:
+                    errors.append(f"{number}: duplicate identity {key}")
+                seen.add(key)
+                entry = {"key": key, "identity": identity, "line": number, "status": None}
+                records.append(entry)
+            except ConfigError as error:
+                errors.append(f"{number}: {error}")
+        elif entry and indent == depth + 2 and line.startswith("status:"):
+            try:
+                value = scalar(line[len("status:"):])
+                if entry["status"] is not None:
+                    errors.append(f"{number}: duplicate status")
+                entry["status"] = value
+                valid = value in ("active", "deprecated")
+                if path.endswith("tr-registry.yaml"):
+                    valid = valid or isinstance(value, str) and bool(re.fullmatch(r"superseded-by: TR-[\w-]+-\d+(?:,? TR-[\w-]+-\d+)*", value))
+                elif path == "docs/registry/architecture.yaml":
+                    valid = valid or isinstance(value, str) and bool(re.fullmatch(r"superseded_by: ADR-\d+", value))
+                if not valid:
+                    errors.append(f"{number}: invalid registry status {value!r}")
+            except ConfigError as error:
+                errors.append(f"{number}: {error}")
+        elif line.startswith("- ") and (depth is None or indent <= depth):
+            errors.append(f"{number}: unsupported registry entry")
+    for record in records:
+        if record["status"] is None:
+            errors.append(f"{record['line']}: missing status for {record['identity']}")
+    next_ids = {}
+    for record in records:
+        match = re.fullmatch(r"(TR-[\w-]+-)(\d+)", record["identity"])
+        if match:
+            next_ids[match[1]] = max(next_ids.get(match[1], 1), int(match[2]) + 1)
+    return {"records": records, "errors": errors, "next_ids": next_ids}
+
+
+def inspect_registry(root, path):
+    result = {"status": "ready", "applied": False, "assessment": "NOT ASSESSED", "path": path}
+    try:
+        if path not in REGISTRIES:
+            raise InputError("expected a canonical registry path")
+        file = safe_path(Path(root).resolve(), path)
+        if not file.is_file() or file.stat().st_size > MAX_BYTES:
+            raise InputError("expected a bounded regular registry file")
+        result.update(registry_records(file.read_text(encoding="utf-8-sig"), path))
+        if result["errors"]:
+            result["status"] = "partial"
+    except (InputError, OSError, UnicodeError) as error:
+        result.update(status="invalid", errors=[str(error)])
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
@@ -497,8 +618,18 @@ def main():
         command.add_argument("paths", nargs="*", help="exact repository-relative artifact files")
         if kind == "bugs":
             command.add_argument("--today", help="ISO date for reproducible age calculations")
+    section = commands.add_parser("section")
+    section.add_argument("path")
+    section.add_argument("--heading")
+    registry = commands.add_parser("registry")
+    registry.add_argument("path", choices=sorted(REGISTRIES))
     args = parser.parse_args()
-    result = inspect_artifacts(args.root, args.kind, args.paths, getattr(args, "today", None))
+    if args.kind == "section":
+        result = read_section(args.root, args.path, args.heading)
+    elif args.kind == "registry":
+        result = inspect_registry(args.root, args.path)
+    else:
+        result = inspect_artifacts(args.root, args.kind, args.paths, getattr(args, "today", None))
     print(json.dumps(result, indent=2, sort_keys=True))
     return 2 if result["status"] in ("invalid", "partial") else 0
 

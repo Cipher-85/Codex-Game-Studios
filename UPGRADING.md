@@ -137,8 +137,8 @@ changes remain unreleased until an explicitly authorized release completes.
 | Story/ADR/GDD/bug facts | Read-only shared parser and graph observations; workflow quality and approval decisions stay with the skills |
 | Automation and new upstream-only settings | Deferred/unsupported; parsing a candidate never grants action authority |
 | Full role-prompt refresh | Deferred; selected prompts were adapted, all 49 model/effort settings are preserved |
-| Engine-reference refresh | Deferred; 34 reference files differ upstream, while the package's actual pins/references are preserved |
-| `studio-tests/` rename and wholesale template/reference split | Deferred; keep `CCGS Skill Testing Framework/` and current package ownership paths |
+| Engine-reference refresh | Full 46-file upstream reference set adopted; Codex invocation and helper paths adapted |
+| `studio-tests/` rename and wholesale template/reference split | Rename deferred; seven story support references extracted while keeping `CCGS Skill Testing Framework/` and existing ownership paths |
 | Claude runtime hooks, bootstrap, command permissions and footer | Not imported as runtime dependencies; use Codex surfaces and retain documented capability gaps |
 | Executable handoff/resume/rotation | Owned by Agent Bindery; CCGS retains its manifest and project modules |
 
@@ -151,15 +151,16 @@ bounded Codex implementation or existing contract, not identical source parity.
 | `review-receipts.sh` | Adapted as the read-only Codex receipt helper |
 | `migrate-v1-config.sh` | Replaced by the guarded `migrate_project_config.py` transaction |
 | `yaml-get.awk` | Replaced by the restricted shared configuration parser |
-| `config-set.sh` | Inspection/preview adapted through `$settings`; general assignment application remains deferred |
+| `config-set.sh` | Exact assignment plans and approved writes use the existing guarded configuration transaction |
 | `set-stage.sh` | Shared stage reader plus approved single-target update/readback; no automatic dual write |
 | `project-state.sh`, `project-coherence.sh` | Partial: stage/source-root and configuration/pin observations; broader state inference, live-binary/render/export coherence deferred |
 | `hook-input.sh`, `agent-check.sh`, `skill-lint.sh`, `compat-inventory.sh` | Existing Codex parser/validators cover applicable boundaries; broader upstream analyses not ported |
 | `review-scope.sh` | Existing content-hash review scope retained; no Git/mtime-based replacement |
 | `session-state.sh`, `rotate-session-state.sh` | Executable continuity remains Agent Bindery-owned |
-| `read-guard.sh`, `write-guard.sh` | Deferred as upstream helpers; existing Codex permissions/path rules remain authoritative |
-| `godot-parse-check.gd`, `test-run.sh`, `test-scaffold.sh` | Deferred; retain existing engine-specific workflow guidance and require native validation |
-| `artifact-check.sh`, `asset-scan.sh`, `code-markers.sh`, `content-count.sh`, `debt-register.sh`, `flaky-stats.sh`, `inputs-check.sh`, `md-section.sh`, `plan-math.sh`, `registry.sh` | Deferred; no generic helper suite or additional mutation API introduced |
+| `read-guard.sh`, `write-guard.sh` | Section reads and advisory literal-patch checks adapted; shell reads/writes are not universally intercepted |
+| `godot-parse-check.gd` | Adapted under `.codex/lib/`; requires native engine validation |
+| `test-run.sh`, `test-scaffold.sh` | Deferred; preserve installed runners and engine-specific workflows |
+| `artifact-check.sh`, `asset-scan.sh`, `code-markers.sh`, `content-count.sh`, `debt-register.sh`, `flaky-stats.sh`, `inputs-check.sh`, `md-section.sh`, `plan-math.sh`, `registry.sh` | Registry identity/status observations and section reads are adapted; the other listed helpers remain deferred; no generic helper suite or additional mutation API introduced |
 
 ### Current contracts and acceptance
 
@@ -172,7 +173,7 @@ field registry and `operational_keys` come from `schema`. See
 and [artifact inspection](.codex/docs/artifact-inspection.md).
 
 Package inventory: 76 skills, 49 role profiles, 74 skill behavioral specs, 49 role
-specs and 533 installed files. `studio-status` and the deprecated `studio-next`
+specs and 543 installed files after the November convergence. `studio-status` and the deprecated `studio-next`
 have no separate skill behavioral specs. The executable helper fixtures are
 separate from these native behavior specifications.
 
@@ -185,7 +186,8 @@ platform acceptance are unassessed. See
 for retained evidence, expected negative outcomes, scheduling and hook-trust
 qualifications. Final package/release/headless/docs audits passed.
 
-The selective integration is local and uncommitted. Version selection,
+The October selective integration is committed at `4939c2d`; `8c04b1d` corrects
+its installer assertion. The subsequent convergence changes require separate commit/release authority. Version selection,
 commit/push, tagging, publication and downstream deployment remain separate
 user decisions; none is established by a passing audit or synthetic fixture.
 
@@ -198,7 +200,7 @@ consumers on subsequent invocations, even without a migration receipt.
 Inspect the resolved values and sources before using updated workflows.
 
 `resolve` and `preview` are read-only: `applied: false` does not make existing
-YAML inert. `$settings` assignments remain previews, automation settings grant
+YAML inert. `$settings` assignments first produce exact plans and require approval to write; automation settings grant
 no authority, and invalid configuration stops the affected workflow. The startup
 status hook reports diagnostics without preventing repair. Preserve custom
 technical prose, installed runners and actual engine pins.
@@ -251,3 +253,30 @@ a new Codex session before verifying hooks, rules, permissions, and agents.
   neutral shared paths under `production/`.
 - Hooks expect Python for reliable payload parsing; without Python they fail
   open with warnings, as described in `.codex/docs/setup-requirements.md`.
+
+## November convergence changes
+
+The complete `docs/engine-reference/` tree targets upstream `05ad7c8`: 46 paths,
+34 refreshed and 12 already matching before this change, no added/deleted reference
+paths. Godot 4.7, Unity 6.3 LTS and Unreal 5.8 are bundled reference pins, not
+claims about an installed editor. `$setup-engine` and the Godot parse-check helper
+path are adapted to Codex. Existing-project engine upgrades remain explicit.
+
+Seven supporting story references move conditional detail out of entrypoints.
+`artifact_facts.py section` returns whole sections including nested headings;
+`registry` observes stable identities/statuses and next unused TR numbers. These
+are not readiness verdicts or a full YAML schema validator. `validate-write.sh`
+warns on supported literal patches; shell writes and ambiguous patches remain
+unassessed. Parent workflows verify artifacts and run the engine specialist after
+implementation. Model choices, mandatory QA evidence and Agent Bindery ownership
+are unchanged.
+
+`$settings key=value` now plans an approved assignment transaction. Inspect the
+exact diff and effective values before approval, including local shadows. Creation
+of root YAML is limited to the requested assignments plus schema metadata, with
+no inferred rigor. Block-collection replacements and scalar-to-map conversions
+are refused. Saved automation preferences remain inactive candidates.
+
+New package inventory: 76 skills, 49 roles, seven supporting references and 543
+installed files. The historical upstream inventory is unchanged. Package checks,
+native workflow acceptance and engine/gameplay acceptance are separate evidence.

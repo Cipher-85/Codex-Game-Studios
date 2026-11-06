@@ -950,6 +950,12 @@ def validate_config_consumer_text(rel: Path, text: str) -> list[str]:
     return errors
 
 
+def skill_references(skill_file: Path) -> list[Path]:
+    """Return explicit local support links; do not traverse arbitrary document links."""
+    return [skill_file.parent / name for name in sorted(set(re.findall(
+        r"\]\((references/[A-Za-z0-9_-]+\.md)\)", skill_file.read_text(encoding="utf-8"))))]
+
+
 def validate_skills(root: Path, require_present: bool = False) -> list[str]:
     errors: list[str] = []
     skill_root = root / ".agents" / "skills"
@@ -968,6 +974,17 @@ def validate_skills(root: Path, require_present: bool = False) -> list[str]:
     for skill_file in skill_files:
         rel = skill_file.relative_to(root)
         text = skill_file.read_text(encoding="utf-8")
+        for reference in skill_references(skill_file):
+            if reference.is_symlink() or reference.parent.is_symlink() or not reference.is_file():
+                errors.append(f"{rel}: missing or linked support file {reference.name}")
+                continue
+            body = reference.read_text(encoding="utf-8")
+            if not body.strip():
+                errors.append(f"{reference.relative_to(root)}: empty support file")
+            if any(term in body for term in (".claude/", "CLAUDE.md", "AskUserQuestion", "subagent_type:")):
+                errors.append(f"{reference.relative_to(root)}: unported runtime dependency")
+            errors.extend(validate_duplicate_delegation_consent_text(reference.relative_to(root), body))
+            errors.extend(validate_active_state_checkpoint_text(reference.relative_to(root), body))
         meta = frontmatter(text)
         if not meta:
             errors.append(f"{rel}: missing frontmatter")
@@ -1114,6 +1131,8 @@ def validate_agents(root: Path, require_present: bool = False) -> list[str]:
         if not isinstance(data.get("model"), str) or not data["model"].strip():
             errors.append(f"{rel}: missing model")
         instructions = str(data.get("developer_instructions", ""))
+        if re.search(r'Wait for (?:"yes"|yes)(?=\W|$)', instructions):
+            errors.append(f"{rel}: delegated approval question must return to the caller")
         errors.extend(validate_active_state_checkpoint_text(rel, instructions))
         if "Ported Claude memory scope:" in instructions:
             memory_path = f".codex/agent-memory/{agent_file.stem}/MEMORY.md"
@@ -1177,6 +1196,9 @@ def validate_evidence_contract(root: Path) -> list[str]:
         if not path.exists():
             continue  # Missing core skills are checked separately.
         text = path.read_text(encoding="utf-8")
+        for reference in skill_references(path):
+            if reference.is_file() and not reference.is_symlink() and not reference.parent.is_symlink():
+                text += "\n" + reference.read_text(encoding="utf-8")
         for pattern in patterns:
             if re.search(pattern, text):
                 errors.append(f"{path.relative_to(root)}: obsolete evidence behavior: {pattern}")

@@ -160,13 +160,14 @@ Verified automatically by `$skill-test static` — no fixture needed.
 1. Skill reads review mode — determines `full`
 2. After implementation verification, skill invokes LP-CODE-REVIEW gate
 3. Lead programmer reviews the implementation
-4. If LP verdict is NEEDS CHANGES → story cannot be marked Complete
-5. If LP verdict is APPROVED → skill proceeds to mark story Complete
+4. If LP verdict is REJECT → stop before the completion verdict until resolved
+5. If LP verdict is CONCERNS → surface the findings and obtain the user's choice
+6. If LP verdict is APPROVE → continue to the completion report and closure approval
 
 **Assertions (5a):**
 - [ ] Skill reads review mode before deciding whether to invoke LP-CODE-REVIEW
 - [ ] LP-CODE-REVIEW gate is invoked in full mode after implementation check
-- [ ] An LP NEEDS CHANGES verdict prevents story from being marked Complete
+- [ ] An LP REJECT verdict stops progression to the completion report
 - [ ] Gate result is noted in output: "Gate: LP-CODE-REVIEW — [result]"
 - [ ] Skill still asks "May I write" before updating story status even if LP approved
 
@@ -189,6 +190,7 @@ Verified automatically by `$skill-test static` — no fixture needed.
 ## Protocol Compliance
 
 - [ ] Uses "May I write" before updating the story file
+- [ ] Closure approval previews and names the existing sprint-status file as well as the story; an omitted path is not silently written
 - [ ] Uses "May I write" before adding entries to `docs/tech-debt-register.md`
 - [ ] Presents complete findings (criteria check, deviation check) before asking approval
 - [ ] Ends by surfacing the next ready story from the sprint plan
@@ -319,3 +321,17 @@ fixtures alone do not establish this skill's behavior.
 - Preserve incremental-review receipts, sprint scope, consolidated-bug fallbacks
   and source header status versus evidence/closure status. Counts do not
   authorize edits, closure, new priorities, stage changes or role dispatch.
+
+## Closure support acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- Load `references/review-gates.md` before the review phases, preserving
+  QL-TEST-COVERAGE and LP-CODE-REVIEW mode filtering and actual verdicts.
+- Load `references/tech-debt-row.md` before proposing a debt entry and
+  `references/sprint-next.md` before discovering the next story.
+- Missing support files, failed role loads, missing artifacts and unrun required
+  evidence cannot become COMPLETE. Zero findings from partial reads are not proof.
+- In all director modes, closure needs current criterion-linked evidence and
+  explicit approval of story/register writes; the derived checkpoint exception
+  does not authorize those durable writes.

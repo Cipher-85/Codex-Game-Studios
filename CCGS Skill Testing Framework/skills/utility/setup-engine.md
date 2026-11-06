@@ -50,8 +50,8 @@ None. `$setup-engine` is a technical configuration skill. No director gates appl
 3. User selects GDScript
 4. Skill drafts all engine sections: engine/language/rendering/physics fields,
    naming conventions (snake_case for GDScript), specialist assignments
-   (godot-specialist, gdscript-specialist, godot-shader-specialist, etc.)
-5. Skill populates the routing table: `.gd` → gdscript-specialist, `.gdshader` →
+   (godot-specialist, godot-gdscript-specialist, godot-shader-specialist, etc.)
+5. Skill populates the routing table: `.gd` → godot-gdscript-specialist, `.gdshader` →
    godot-shader-specialist, `.tscn` → godot-specialist
 6. Skill asks "May I write to `technical-preferences.md`?"
 7. File is written after approval; verdict is COMPLETE
@@ -78,8 +78,8 @@ None. `$setup-engine` is a technical configuration skill. No director gates appl
 **Expected behavior:**
 1. Skill sets engine to Unity, language to C#
 2. Naming conventions are C#-appropriate (PascalCase for classes, camelCase for fields)
-3. Specialist assignments reference unity-specialist, csharp-specialist
-4. Routing table: `.cs` → csharp-specialist, `.asmdef` → unity-specialist,
+3. Specialist assignments reference unity-specialist for general C# game code
+4. Routing table: `.cs` → unity-specialist, `.asmdef` → unity-specialist,
    `.unity` (scene) → unity-specialist
 5. Skill asks "May I write to `technical-preferences.md`?" and writes on approval
 
@@ -102,8 +102,8 @@ None. `$setup-engine` is a technical configuration skill. No director gates appl
 
 **Expected behavior:**
 1. Skill sets engine to Unreal Engine 5, primary language to Blueprint (Visual Scripting)
-2. Specialist assignments reference unreal-specialist, blueprint-specialist
-3. Routing table: `.uasset` → blueprint-specialist or unreal-specialist,
+2. Specialist assignments reference unreal-specialist, ue-blueprint-specialist
+3. Routing table: Blueprint `.uasset` classes → ue-blueprint-specialist,
    `.umap` → unreal-specialist
 4. Performance budgets are pre-set with Unreal defaults (e.g., higher draw call budget)
 5. Skill asks "May I write" and writes on approval; verdict is COMPLETE
@@ -242,3 +242,17 @@ fixture results do not prove this workflow's behavior.
 - Preserve engine-native test locations, explicit target paths, custom layout,
   role ownership and existing write/engine approval gates. A mixed native/custom
   project must not silently omit a source location or follow an external link.
+
+## Upstream reference and installed-version acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- Read the refreshed VERSION.md for the chosen engine, including its version
+  detection guidance; distinguish the documentation pin from the installed editor.
+- Probe an actual configured executable or editor metadata when available,
+  recording command/path, output and observed version.
+- With no editor available, report NOT DETERMINED. Never present the documentation
+  pin as an observed installation or a successful build.
+- Preview pin/preferences changes before writes; mismatches remain visible.
+- Do not download an editor or execute an engine smoke solely because reference
+  documentation or the Godot parse helper was installed.

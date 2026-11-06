@@ -3,6 +3,14 @@ name: create-stories
 description: "Break a single epic into implementable story files. Reads the epic, its GDD, governing ADRs, and control manifest. Each story embeds its GDD requirement TR-ID, ADR guidance, acceptance criteria, story type, and test evidence path. Run after $create-epics for each epic for Codex Game Studios."
 ---
 
+## Bounded context reads
+
+Use `python3 .codex/lib/artifact_facts.py section <path> --heading '<heading>'`
+for named GDD, ADR and manifest sections; omit `--heading` to list headings first.
+A section includes its subsections through the next peer/ancestor heading.
+Read every section required by this workflow; bounded reads do not reduce scope.
+Report missing or ambiguous headings instead of silently truncating context.
+
 ## Technical configuration
 
 Before using engine, framework, platform or performance fields, read
@@ -91,7 +99,7 @@ Stop review routing on INVALID/NOT ASSESSED; retain its value and source for all
 
 ## 2. Load Everything for This Epic
 
-For the epic-based branch, read required/present inputs in full:
+For the epic-based branch, read required/present inputs by the sections below:
 
 - `production/epics/[epic-slug]/EPIC.md` — epic overview, governing ADRs, GDD requirements table
 - The epic's GDD (`design/gdd/[filename].md`) — read all required/present sections, especially Acceptance Criteria, Formulas, and Edge Cases
@@ -154,49 +162,8 @@ For each story, determine:
 
 ## 4b. QA Lead Story Readiness Gate
 
-**Review mode check** — apply before spawning QL-STORY-READY:
-- `solo` → skip. Note: "QL-STORY-READY skipped — Solo mode." Proceed to Step 5 (present stories for review).
-- `lean` → skip (not a PHASE-GATE). Note: "QL-STORY-READY skipped — Lean mode." Proceed to Step 5 (present stories for review).
-- `full` → spawn as normal.
-
-After decomposing all stories (Step 4 complete) but before presenting them for write approval, spawn `qa-lead` via Codex subagent delegation using gate **QL-STORY-READY** (`.codex/docs/director-gates.md`).
-
-Pass: the full story list with acceptance criteria, story types, and TR-IDs; the epic's GDD acceptance criteria for reference.
-
-Present the QA lead's assessment. For each story flagged as GAPS or INADEQUATE, revise the acceptance criteria before proceeding — stories with untestable criteria cannot be implemented correctly. Once all stories reach ADEQUATE, proceed.
-
-**Before generating test specs**: Glob `production/qa/qa-plan-*.md` for the most recently modified file. If found, read it and check whether it contains test case specifications for the stories in this epic (look for story titles or slugs in the plan's Automated Tests Required section). If matching specs exist:
-- Use `numbered choice prompt`:
-  - Prompt: "A QA plan exists at [path] with test specs for some of these stories. How do you want to proceed?"
-  - Options:
-    - `Use existing specs from the QA plan — embed them into the story files (Recommended)`
-    - `Ask qa-lead to generate fresh specs — override the QA plan`
-    - `Skip test spec generation — I'll fill in ## QA Test Cases manually`
-- If "Use existing specs": extract the test case specs from the qa-plan for each matching story and embed them directly into the `## QA Test Cases` section. No qa-lead spawn needed for those stories. Only spawn qa-lead for stories with no coverage in the qa-plan.
-- If "Generate fresh": proceed with the qa-lead spawn below as normal.
-- If "Skip": leave `## QA Test Cases` with a placeholder: `*Test cases not yet defined — run $qa-plan to generate them.*`
-
-**After ADEQUATE** (or after qa-plan import): for every Logic and Integration story, ask the qa-lead to produce concrete test case specifications — one per acceptance criterion — in this format:
-
-```
-Test: [criterion text]
-  Given: [precondition]
-  When: [action]
-  Then: [expected result / assertion]
-  Edge cases: [boundary values or failure states to test]
-```
-
-For Visual/Feel and UI stories, produce manual verification steps instead:
-```
-Manual check: [criterion text]
-  Setup: [how to reach the state]
-  Verify: [what to look for]
-  Pass condition: [unambiguous pass description]
-```
-
-These test case specs are embedded directly into each story's `## QA Test Cases` section. The developer implements against these cases. The programmer does not write tests from scratch — QA has already defined what "done" looks like.
-
----
+Before presenting the draft, read [QA lead gate](references/qa-lead-gate.md).
+Apply its full/lean/solo filtering, existing-plan choices and test-case requirements.
 
 ## 5. Present Stories for Review
 
@@ -220,9 +187,14 @@ Story 003: [title] — Visual/Feel — ADR-NNNN
 [N stories total: N Logic, N Integration, N Visual/Feel, N UI, N Config/Data]
 ```
 
-Use `numbered choice prompt`:
-- Prompt: "May I write these [N] stories to `production/epics/[epic-slug]/`?"
-- Options: `[A] Yes — write all [N] stories` / `[B] Not yet — I want to review or adjust first`
+Preview the complete changeset: each exact story path, the proposed story table
+in `production/epics/[epic-slug]/EPIC.md`, and the story-count change in
+`production/epics/index.md` when that index exists. Omit an absent index from the
+write scope; do not create it in this workflow.
+
+Use `numbered choice prompt` once for that complete changeset:
+- Prompt: "May I write these [N] stories and the displayed EPIC/index updates to [all exact paths]?"
+- Options: `[A] Yes — write the displayed changeset` / `[B] Not yet — I want to review or adjust first`
 
 ---
 

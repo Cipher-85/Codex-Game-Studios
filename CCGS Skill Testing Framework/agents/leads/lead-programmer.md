@@ -3,7 +3,7 @@
 ## Agent Summary
 **Domain owned:** Code architecture decisions, LP-FEASIBILITY gate, LP-CODE-REVIEW gate, coding standards enforcement, tech stack decisions within the approved engine.
 **Does NOT own:** Game design decisions (game-designer), creative direction (creative-director), production scheduling (producer), visual art direction (art-director).
-**Model tier:** Sonnet (implementation-level analysis of individual systems).
+**Model:** `gpt-6-astra`, as registered in the authoritative role TOML.
 **Gate IDs handled:** LP-FEASIBILITY, LP-CODE-REVIEW.
 
 ---
@@ -14,7 +14,7 @@ Verified by parsing the agent's `.codex/agents/lead-programmer.toml` fields and 
 
 - [ ] `description:` field is present and domain-specific (references code architecture, feasibility, code review, coding standards — not generic)
 - [ ] `allowed-tools:` list includes Read for source files; Bash may be included for static analysis or test runs; no write access outside `src/` without explicit delegation
-- [ ] Model tier is `claude-sonnet-4-6` per coordination-rules.md
+- [ ] Model is `gpt-6-astra` in the authoritative role TOML
 - [ ] Agent definition does not claim authority over game design, creative direction, or production scheduling
 
 ---
@@ -23,10 +23,10 @@ Verified by parsing the agent's `.codex/agents/lead-programmer.toml` fields and 
 
 ### Case 1: In-domain request — appropriate output format
 **Scenario:** A new `CombatSystem` implementation is submitted for code review. The system uses dependency injection for all external references, has doc comments on all public APIs, follows the project's naming conventions, and includes unit tests for all public methods. Request is tagged LP-CODE-REVIEW.
-**Expected:** Returns `LP-CODE-REVIEW: APPROVED` with rationale confirming dependency injection usage, doc comment coverage, naming convention compliance, and test coverage.
+**Expected:** Returns `LP-CODE-REVIEW: APPROVE` with rationale confirming dependency injection usage, doc comment coverage, naming convention compliance, and test coverage.
 **Assertions:**
-- [ ] Verdict is exactly one of APPROVED / NEEDS CHANGES
-- [ ] Verdict token is formatted as `LP-CODE-REVIEW: APPROVED`
+- [ ] Verdict is exactly one of APPROVE / CONCERNS / REJECT
+- [ ] Verdict token is formatted as `LP-CODE-REVIEW: APPROVE`
 - [ ] Rationale references specific coding standards criteria (DI, doc comments, naming, tests)
 - [ ] Output stays within code quality scope — does not comment on whether the mechanic is fun or fits creative vision
 
@@ -69,7 +69,7 @@ Verified by parsing the agent's `.codex/agents/lead-programmer.toml` fields and 
 
 ## Protocol Compliance
 
-- [ ] Returns LP-CODE-REVIEW verdicts using APPROVED / NEEDS CHANGES vocabulary only
+- [ ] Returns LP-CODE-REVIEW verdicts using APPROVE / CONCERNS / REJECT vocabulary only
 - [ ] Returns LP-FEASIBILITY verdicts using FEASIBLE / CONCERNS / INFEASIBLE vocabulary only
 - [ ] Stays within declared code architecture domain
 - [ ] Defers design priority conflicts to creative-director
@@ -83,3 +83,13 @@ Verified by parsing the agent's `.codex/agents/lead-programmer.toml` fields and 
 - Tech debt assessment and prioritization are not covered here — deferred to $tech-debt skill integration.
 - Coding standards document updates (adding a new forbidden pattern) are not covered.
 - Interaction with qa-lead on what constitutes a testable unit (LP vs QL boundary) is not covered.
+
+## Delegated approval-return acceptance
+
+Status: NOT RUN — requires observed native execution.
+
+- When required write approval is absent, return the concrete draft, paths and
+  approval question to the calling agent and end the turn; do not wait internally.
+- With unchanged explicit scope approval, continue within it without asking again.
+- Findings remain read-only unless writes were approved; architecture decisions
+  and scope expansion still belong to the user.

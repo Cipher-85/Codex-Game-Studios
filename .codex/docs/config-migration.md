@@ -52,7 +52,7 @@ authority. A direct request for a preview does not approve its application.
 
 ## Scope and ownership
 
-The helper can change only two root files:
+The legacy migration operation can change only two root files:
 
 1. Create `project.yaml` **only if absent**, with `schema_version: 1` and mapped
    legacy fields. Absent fields keep resolver compatibility defaults; no knobs,
@@ -65,13 +65,13 @@ The helper can change only two root files:
    inside the removable managed block does not substitute for this final rule.
    The package template at `.codex/docs/templates/project.local.yaml` remains visible.
 
-The helper never writes `project.local.yaml`, legacy files, technical-preference
+The legacy migration operation never writes `project.local.yaml`, legacy files, technical-preference
 prose, engine pins, role/model settings, continuity assets or install ownership
 state. It executes no workflow. Root YAML, the appended ignore rule and
 all migration backups/receipts are project-owned. Package install/upgrade only
 distributes the helper, tests and instructions; it never invokes the migration.
 Uninstall preserves the project files, migration artifacts and the outside-block
-ignore rule. Automatic settings assignment writes are still deferred.
+ignore rule. Settings assignments use the separately approved operation described below.
 
 ## Failure recovery and rollback
 
@@ -136,3 +136,36 @@ artifact preservation. These are helper and packaging checks; native `$settings`
 approval behavior, actual gate spawns and remaining consumer migrations need
 separate observation. Review-mode staging tests also check that preserved legacy
 values resolve identically before staging and after an approved rollback.
+
+## Settings assignment transactions
+
+Legacy `plan` / `apply` behavior remains unchanged. The assignment operation uses
+the same journal, lock, stale-plan checks and rollback command, with an explicit
+`operation: settings` receipt. It never broadens a legacy receipt's path scope.
+
+```bash
+python3 .codex/lib/migrate_project_config.py settings-plan --set 'modes.review_mode=full'
+# Only after approval of the plan above:
+python3 .codex/lib/migrate_project_config.py settings-apply --set 'modes.review_mode=full' --expect-plan <plan_id>
+```
+
+Repeat `--set` for multiple fields. `--local` selects `project.local.yaml`; it
+requires an existing base and the resolver's local whitelist. A local operation
+also previews an outside-managed-block `/project.local.yaml` ignore rule when
+needed. New local files use mode 0600. Project assignment can create absent YAML
+with only schema metadata and requested values; it never infers rigor or migrates
+legacy fields implicitly. Existing root YAML remains project-owned.
+
+The editor preserves unrelated bytes, comments, BOM, newline convention and
+existing modes. It supports scalar and inline-list leaves and adding nested block
+keys. It refuses block-collection replacement or a scalar-to-mapping conversion,
+invalid/unsupported YAML, locked local fields and metadata assignment. Resolve
+such cases through an explicit scoped edit instead of reconstructing the file.
+
+Plans contain both file `changes` and `effective_changes`; a project edit may be
+shadowed by local configuration. Noop or declined plans write nothing. Approved
+writes recheck input fingerprints and resolved effective values. Stale plans,
+unfinished journals and later edits prevent application/recovery as appropriate.
+Use `rollback-plan` and the separately approved `rollback` for both operations;
+old migration receipts remain readable. No transaction executes configuration
+consumers or activates automation policy.

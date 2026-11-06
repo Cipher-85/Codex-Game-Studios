@@ -6,7 +6,7 @@ description: "Break a single epic into implementable story files. Reads the epic
 ## Bounded context reads
 
 Use `python3 .codex/lib/artifact_facts.py section <path> --heading '<heading>'`
-for named GDD, ADR and manifest sections; omit `--heading` to list headings first.
+for named GDD, architecture, ADR and manifest sections; omit `--heading` to list headings first.
 A section includes its subsections through the next peer/ancestor heading.
 Read every section required by this workflow; bounded reads do not reduce scope.
 Report missing or ambiguous headings instead of silently truncating context.
@@ -47,7 +47,9 @@ roles. Review-mode filtering and required verification remain independent.
 **Project-minimal branch:** Accept `design/game-brief.md`, or discover it when no epic
 exists. Follow the shared brief-to-story procedure instead of requiring an epic,
 GDD, registry, manifest or ADR. Use numbered MVP references, concrete criteria,
-normal story types and the unchanged evidence rules. Show every story and any
+normal story types and the unchanged evidence rules. Apply the planned-path
+check in Step 4a before the first draft, including any existing architecture
+and custom layout guidance; absent optional architecture remains N/A. Show every story and any
 proposed EPIC.md/index path in one approval; append only uncovered work and never
 rewrite existing stories. Then recommend the first ready story. The brief's
 build order replaces a required sprint plan.
@@ -104,6 +106,7 @@ For the epic-based branch, read required/present inputs by the sections below:
 - `production/epics/[epic-slug]/EPIC.md` — epic overview, governing ADRs, GDD requirements table
 - The epic's GDD (`design/gdd/[filename].md`) — read all required/present sections, especially Acceptance Criteria, Formulas, and Edge Cases
 - All governing ADRs listed in the epic — read the Decision, Implementation Guidelines, Engine Compatibility, and Engine Notes sections
+- `docs/architecture/architecture.md`, or the project's explicitly referenced architecture document — read the applicable component, directory-layout and test-path sections. Apply the workflow tier's required/optional rules; existing accepted architecture remains binding.
 - `docs/architecture/control-manifest.md` — extract rules for this epic's layer; note the Manifest Version date from the header
 - `docs/architecture/tr-registry.yaml` — load all TR-IDs for this system
 
@@ -159,6 +162,36 @@ For each story, determine:
 - **Engine risk**: from the ADR's Knowledge Risk field
 
 ---
+
+## 4a. Check Planned Paths Before the First Draft
+
+Apply this check at every workflow tier, including the brief-to-story branch.
+Load applicable architecture and layout guidance before choosing implementation
+or test paths. Follow explicit references to custom architecture documents;
+do not assume that a conventional filename is the only source. Before scanning
+implementation or test directories, apply Source scope in
+`.codex/docs/technical-config.md` and run `project_config.py code-root` for the
+verified scope. An unresolved scope is not evidence that no layout exists.
+
+For every planned implementation and test path:
+
+- Check it against the applicable architecture, governing ADRs and existing
+  project layout or test-runner documentation. Preserve exact declared paths
+  and custom directories; generic examples in this skill are not project choices.
+- In the draft's `Files` section, cite the supporting document/section or
+  existing layout. If no source specifies the new path, label it a proposal
+  with its rationale, rather than attributing it to an approved decision.
+  Missing optional architecture alone does not block a minimal project.
+- If sources conflict or a required location is unresolved, show the competing
+  evidence and request the missing decision before seeking approval of the
+  affected changeset. Do not silently relocate files or choose a precedence.
+- Use the same resolved paths in `Files`, Implementation Notes, QA Test Cases,
+  Test Evidence and the approval preview. A planned new file need not exist yet;
+  distinguish its planned creation from an existing file or executed test.
+
+This check plans paths only. It does not create implementation files, install a
+runner, or run engine commands. Pass the resolved paths and their evidence to
+any declared QA reviewer along with the draft.
 
 ## 4b. QA Lead Story Readiness Gate
 

@@ -4,15 +4,16 @@
 
 `$create-stories` breaks a single epic into developer-ready story files. It reads
 the EPIC.md, the corresponding GDD, governing ADRs, the control manifest, and the
-TR registry. Each story gets structured frontmatter including: Title, Epic, Layer,
-Priority, Status, TR-ID, ADR references, Acceptance Criteria, and Definition of
-Done. Stories are classified by type (Logic / Integration / Visual/Feel / UI /
+TR registry. Each story gets a title, blockquote metadata (Epic, Status, Layer,
+Type, Estimate, Manifest Version, Last Updated), and sections for Context,
+Acceptance Criteria, Files, Implementation Notes, Out of Scope, QA Test Cases,
+Test Evidence, and Dependencies. Stories are classified by type (Logic / Integration / Visual/Feel / UI /
 Config/Data) which determines the required test evidence path.
 
-In `full` review mode, a QL-STORY-READY check runs per story after creation. In
+In `full` review mode, a QL-STORY-READY check runs on the drafts before write approval. In
 `lean` or `solo` mode, QL-STORY-READY is skipped. The skill asks "May I write"
 once before writing the complete story/EPIC/existing-index changeset. Stories are written to
-`production/epics/[layer]/story-[name].md`.
+`production/epics/[epic-slug]/story-NNN-[slug].md`.
 
 ---
 
@@ -22,7 +23,7 @@ Verified automatically by `$skill-test static` — no fixture needed.
 
 - [ ] Has the Codex metadata contract: `name` and `description` in frontmatter; ported fields in `## Ported metadata`, or an explicit Codex-native support classification
 - [ ] Has ≥2 phase headings
-- [ ] Contains verdict keywords: COMPLETE, BLOCKED, NEEDS WORK
+- [ ] Contains workflow verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "May I write" collaborative protocol language (one approval for the complete exact-path changeset)
 - [ ] Has a next-step handoff at the end (`$story-readiness`, `$dev-story`)
 - [ ] Documents story Status: Blocked when governing ADR is Proposed
@@ -32,8 +33,9 @@ Verified automatically by `$skill-test static` — no fixture needed.
 
 ## Director Gate Checks
 
-In `full` mode: QL-STORY-READY check runs per story after creation. Stories that
-fail the check are noted as NEEDS WORK before the "May I write" ask.
+In `full` mode: QL-STORY-READY checks the story drafts before write approval.
+Stories assessed GAPS or INADEQUATE require revised acceptance criteria; all
+stories must reach ADEQUATE before proceeding to the "May I write" ask.
 
 In `lean` mode: QL-STORY-READY is skipped. Output notes:
 "QL-STORY-READY skipped — lean mode" per story.
@@ -47,7 +49,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 ### Case 1: Happy Path — Epic with 3 stories, all ADRs Accepted
 
 **Fixture:**
-- `production/epics/[layer]/EPIC-[name].md` exists with 3 GDD requirements
+- `production/epics/[epic-slug]/EPIC.md` exists with 3 GDD requirements
 - Corresponding GDD exists with matching acceptance criteria
 - All governing ADRs have `Status: Accepted`
 - `docs/architecture/control-manifest.md` exists
@@ -59,19 +61,20 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 **Expected behavior:**
 1. Skill reads EPIC.md, GDD, governing ADRs, control manifest, and TR registry
 2. Classifies each requirement into a story type (Logic / Integration / Visual/Feel / UI / Config/Data)
-3. Drafts 3 story files with correct frontmatter schema
+3. Drafts 3 story files with the metadata and sections from the skill's template
 4. QL-STORY-READY is skipped (lean mode) — noted in output
 5. Previews all story files plus the EPIC table and existing index count; asks
    "May I write" once for the complete exact-path changeset
 6. Writes the approved story files and ancillary updates after approval
 
 **Assertions:**
-- [ ] Each story's frontmatter contains: Title, Epic, Layer, Priority, Status, TR-ID, ADR reference, Acceptance Criteria, DoD
+- [ ] Each story has the title, metadata and sections listed in Skill Summary;
+      Context contains the GDD, requirement and ADR references
 - [ ] Story types are correctly classified (at least one Logic type in fixture)
 - [ ] One batch approval names every story path, the EPIC path and the existing index path
 - [ ] Declining the batch leaves stories, EPIC and index unchanged; an absent index is not created
 - [ ] QL-STORY-READY skip is noted in output
-- [ ] All 3 story files are written with correct naming: `story-[name].md`
+- [ ] All 3 story files use `production/epics/[epic-slug]/story-NNN-[slug].md`
 - [ ] Skill does NOT start implementation
 
 ---
@@ -115,7 +118,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 5. Both stories are shown in the draft — user asked "May I write" for both
 
 **Assertions:**
-- [ ] Story 2 has `Status: Blocked` in its frontmatter
+- [ ] Story 2 has `Status: Blocked` in its metadata
 - [ ] Blocking note names the specific ADR number and recommends `$architecture-decision`
 - [ ] Story 1 has `Status: Ready` — blocked status does not affect non-blocked stories
 - [ ] Blocked status is shown in the draft preview before writing
@@ -144,7 +147,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 
 ---
 
-### Case 5: Director Gate — Full mode runs QL-STORY-READY; stories failing noted as NEEDS WORK
+### Case 5: Director Gate — Full mode requires ADEQUATE before write approval
 
 **Fixture:**
 - EPIC.md exists with 2 requirements
@@ -157,17 +160,20 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 **Expected behavior:**
 1. Both stories are drafted
 2. QL-STORY-READY check runs for each story
-3. Story 1 passes QL-STORY-READY
-4. Story 2 fails QL-STORY-READY — noted as NEEDS WORK with specific feedback
-5. Both stories are shown to user with pass/fail status before "May I write"
-6. User can proceed (story written as-is with NEEDS WORK note) or revise first
+3. Story 1 is assessed ADEQUATE
+4. Story 2 is assessed GAPS or INADEQUATE with specific feedback
+5. The assessment is presented and Story 2's acceptance criteria require revision
+6. Only after all stories reach ADEQUATE may the workflow present the complete
+   changeset for write approval; it cannot offer to write the failed draft as-is
 
 **Assertions:**
 - [ ] QL-STORY-READY results appear per story in the output
-- [ ] Story 2 is flagged as NEEDS WORK with the specific failing criteria
-- [ ] Story 1 shows as passing QL-STORY-READY
-- [ ] User is given the choice to proceed or revise before writing
-- [ ] Skill does NOT auto-block writing of stories that fail QL-STORY-READY without user input
+- [ ] Story 2 is flagged GAPS or INADEQUATE with the specific failing criteria
+- [ ] Story 1 shows as ADEQUATE
+- [ ] Revision is required before proceeding; write approval waits until all
+      stories reach ADEQUATE
+- [ ] An administrative request to write the failed draft unchanged does not
+      waive the QA gate
 
 ---
 
@@ -202,6 +208,58 @@ These assertions require workflow evaluation; adding them is not a passing test 
   `$dev-story` records after implementation rather than inventing them now.
 - [ ] Test Evidence uses the resolved engine test root; playtest alternatives use
   `production/qa/playtests/`. Approval covers the complete proposed file set.
+
+## Planned-path fidelity regression cases
+
+Status: NOT RUN — these cases require observed native execution. Static checks
+cannot establish first-draft fidelity. Preserve the initial draft and all
+controller messages; a corrected draft is not a first-draft pass.
+
+### Architecture-defined paths
+
+Use an epic whose Accepted ADR defines the implementation pattern but leaves
+its source path unspecified. The architecture document declares
+`src/core/counter.gd`; test guidance declares `tests/run_counter_tests.gd`.
+Both planned files may be absent. Exercise approval, decline and absent-index
+variants in fresh fixtures.
+
+- [ ] Architecture guidance is read before the first draft. That draft uses
+  `src/core/counter.gd`, never the unsupported `src/counter.gd` shortcut.
+- [ ] `Files` cites the path evidence; Implementation Notes, QA Test Cases,
+  Test Evidence and the approval preview agree on the paths wherever referenced.
+- [ ] One complete approval covers story/EPIC/existing-index writes, and saved
+  contents match the approved draft. Declining changes no workflow artifacts;
+  an absent index remains absent. No implementation or test file is created.
+
+### Custom layout
+
+Explicitly reference a custom architecture document declaring
+`scripts/counter_operation.gd` and a test runner at `checks/counter_spec.gd`.
+
+- [ ] The first draft follows that reference, cites its evidence and preserves
+  both exact paths without substituting `src/` or `tests/` examples.
+- [ ] Source-scope resolution uses verified existing paths for inspection;
+  planned new files are not falsely reported as existing or tested.
+
+### Conflicting guidance
+
+Provide architecture and an Accepted ADR that declare different locations for
+the same component, with no recorded decision resolving the conflict.
+
+- [ ] The workflow identifies both sources and asks for a decision before
+  requesting write approval of the affected changeset. It neither invents a
+  precedence nor repairs inputs, relocates files or writes artifacts.
+
+### Minimal project without architecture
+
+Use a minimal brief with no architecture document or ADR and no declared
+component path. Keep existing layout and test guidance when present.
+
+- [ ] Missing optional architecture is N/A, not a prerequisite failure.
+- [ ] New paths without an explicit source are labelled proposals with a
+  rationale; existing custom layout/test guidance is respected.
+- [ ] No architecture, ADR, implementation or test file is invented or created;
+  normal complete-changeset approval still governs story artifacts.
 
 ## Review routing coverage (Phase 4A)
 

@@ -1,6 +1,6 @@
 # Session Handoff
 
-Last Updated: 2026-11-06 — upstream-convergence-validation
+Last Updated: 2026-11-06 — workflow-validation-closure
 
 Slice State Source: Not declared
 
@@ -19,6 +19,14 @@ engine review are integrated. All 49 roles retain their non-prompt fields.
 The handoff gate additionally corrected whole-changeset approval and readiness
 wording plus stale behavioral-spec assertions.
 
+The subsequent targeted approval/readiness replay and first-draft path-fidelity
+lanes are complete. Story creation now reads applicable architecture and custom
+layout guidance before its first draft, cites planned-path provenance, labels
+unsupported new paths as proposals, and stops on conflicting guidance. The
+handoff review aligned stale spec schema, file-path and QA-gate assertions with
+the existing workflow. The lifecycle startup gap was reproduced; its internal
+runtime cause remains unproven and no logger change was made.
+
 Recorded game stage: unset; review mode: lean from the default; workflow tier:
 compatibility from unset configuration. No game engine, milestone, active
 sprint or playable slice is configured. These are package-maintenance carve-out
@@ -26,25 +34,31 @@ lanes; no game-stage progression is inferred from fixture tests.
 
 ## Next Action
 
-Prepare a bounded native regression plan for the handoff gate fixes: complete
-story/EPIC/index approval, story/sprint-status closure approval, and full-mode
-INADEQUATE readiness remaining BLOCKED. Use new disposable fixtures and preserve
-the earlier snapshots. Entry: Agent Bindery `$resume-from-handoff`, then select
-this lane. Planning is read-only; later fixture execution and exact writes need
-their normal declared authority. Size: one session.
+Resume with Agent Bindery `$resume-from-handoff` and choose the next maintenance
+lane. The scoped convergence implementation and targeted validation are complete;
+do not rerun them merely because this is a new session. The remaining diagnostic
+lane is a read-only runtime issue brief using the retained lifecycle A/B evidence:
+separate the reproduced startup symptom, tested workaround and unproven internal
+cause, then let the user choose further investigation or deferral. Size: one
+session. External filing, new probes, release/version changes and downstream
+deployment require their own scope and authorization.
 
 ## Tracked Open Items
 
-- Owed native verification: replay the corrected approval/readiness wording.
-  Earlier native results predate these gate fixes and do not establish their
-  behavior. Package audits and independent review are separate evidence.
-- Worker draft fidelity: both first approval-test drafts exceeded the supplied
-  brief; the controller rejected them and approved previously reviewed content
-  before writes. Approval return and bounded writing passed; autonomous fidelity
-  is unverified. Plan a focused follow-up after the owed replays.
-- Lifecycle: a normal trust-preflight plus fresh-session sequence produced
-  complete Start/Stop records without lifecycle code changes. The earlier
-  missing-record root cause remains unresolved; do not synthesize records.
+- Completed: seven targeted approval/readiness replays, including complete
+  story/EPIC/index approval, ordinary story/sprint-status closure and an actual
+  full-mode INADEQUATE readiness verdict retaining BLOCKED. Controller
+  corrections and initial failures remain recorded; this was not an unassisted
+  end-to-end pass.
+- Completed: first-draft path-fidelity fix and six fresh lean-review cases,
+  all passing without draft correction. Full-review path handoff to the QA role
+  and broader workflow behavior were not covered by that six-case run.
+- Lifecycle: the new A/B probe reproduced missing Start/Stop records for the
+  first child on the initial trust-review turn. The next turn and both children
+  after trust preflight plus restart had matching records. Keep the tested
+  preflight/restart sequence and verify actual event pairs. Internal runtime
+  cause remains unresolved; a next-turn retry is not a universal remedy, and
+  no repository logger repair is justified. Never synthesize missing records.
 - Unity/Unreal runner versions remain NOT DETERMINED in inspected locations;
   gameplay, visuals, performance and platform acceptance remain unassessed.
 - Release/version selection and downstream deployment are separate decisions.
@@ -66,89 +80,89 @@ their normal declared authority. Size: one session.
   production game or establish playable-slice acceptance.
 - Preserve failed native attempts alongside reruns and identify each tested
   package snapshot. Administrative fixture closure never waives quality gates.
+- Planned implementation/test paths must honor applicable architecture, ADRs
+  and custom layouts before the first story draft, at every workflow tier.
+  Cite their evidence or label new paths as proposals; unresolved conflicts
+  require a user decision before affected write approval.
 
 ## Most Recent Session
 
-### 2026-11-06 — Upstream convergence and validation
+### 2026-11-06 — Workflow validation closure
 
-Implemented the approved convergence scope and four-file structured advisory
-warning repair. Warnings now use JSON stdout for UI/model delivery, remain quiet
-when appropriate, exit zero, and grant no write permission. Missing-Python and
-failed-helper fallbacks retain the same advisory contract.
+Implemented the approved two-file first-draft path-fidelity change and retained
+the complete approval boundaries. The handoff gate corrected two stale parts
+of the same behavioral spec: the actual story schema/paths and the requirement
+to revise GAPS/INADEQUATE QA criteria until all stories reach ADEQUATE before
+write approval. These spec corrections do not change the existing QA workflow.
 
 #### Verification and provenance
 
-Current handoff turn: `audit.sh all`, `release`, `smoke-headless`, `docs`, and
-`git diff --check` passed after the substantive gate fixes. Documentation and
-whitespace checks passed again after the final one-line spec correction.
-The initial installer integration passed in 663.144 seconds; the post-fix
-installer matrix also passed in 842.356 seconds, both with no errors or warnings.
-The final one-line spec wording correction is covered by the subsequent docs
-check and reread; it changes no installer behavior or ownership.
-Current 46-file hash comparison has zero mismatches against the captured
-upstream tree. Logs: `/private/tmp/ccgs-handoff-20261106/`.
+Current handoff turn: `audit.sh skills`, `audit.sh docs`, and `git diff --check`
+passed after the spec fixes, with no audit errors or warnings. The empty
+whitespace output is accompanied by an explicit exit-0 command receipt.
+No native test or engine run was repeated during this handoff. The final staged
+diff and continuity checks are part of the completing transaction.
 
-Historical earlier-turn November 6 native evidence: 30 cases initially produced
-26 PASS / 4 FAIL. After the warning fix, four affected cases passed in new
-fixtures; the other 26 were not rerun against that revision. All six rerun role
-children have full profile/model and matching Start/Stop evidence. Godot was
-observed as 4.7.2; the full closure rerun had clean import and 3/3 passing tests.
-QA GAPS / LP CONCERNS for the untested zero-limit case remain advisory evidence.
-No implementation-diff baseline exists in closure fixtures; NOT ASSESSED and
-NO_RECEIPT remain visible. Exact administrative closure is not quality closure.
+Historical November 6 native results, read from retained reports this turn:
 
-Native evidence roots (local temporary artifacts, not shipped dependencies):
-`/private/tmp/ccgs-native-validation-20261106/` and
-`/private/tmp/ccgs-native-validation-20261106-warning-fix/`. Their README files,
-per-case results, transcripts, approvals and preservation audits retain failed
-attempts and controller recovery details. The two warnings are retained in
-developer context; one UI notice was directly observed, but the final-screen
-capture does not retain both. A shared engine log was overwritten by concurrent
-fixtures; per-command transcripts remain authoritative. Initial user-data-error
-runs are distinct from clean approved reruns. All owned native panes were
-captured and closed; the calling pane was preserved.
+- Seven approval/readiness cases passed after documented interventions at
+  `/private/tmp/ccgs-native-regressions-dabb7bd/results/README.md`. Two creation
+  drafts needed path correction. Closure cases ultimately had clean Godot 4.7.2
+  import and 4/4 assertions, including zero limit; original permission failures
+  and evidence-recapture attempts remain. NO_RECEIPT and self/no independent
+  code review remain visible. Actual qa-lead provenance supports the full-mode
+  INADEQUATE/BLOCKED result. Fourteen owned panes exited and were closed.
+- Six fresh draft-fidelity cases passed without first-draft correction at
+  `/private/tmp/ccgs-draft-fidelity-20261106/results/README.md`: architecture
+  approve/decline/absent-index, custom layout, conflicting paths, and minimal
+  without architecture. Approved saved bytes matched the drafts. The frozen
+  package was `dabb7bd` plus the approved two-file patch; twelve owned panes
+  exited 0 and were closed. No engine run or full-mode QA role was included.
+- The lifecycle probe at `/private/tmp/ccgs-lifecycle-probe-20261106/README.md`
+  exercised four actual lead-programmer children with complete registered
+  instructions and gpt-6-astra model evidence. A1 had no event or wrapper
+  receipt; A2/B1/B2 had matching Start/Stop pairs. All six delivered logger
+  calls exited 0 with empty stderr. Both fixtures used identical wrappers and
+  unchanged original loggers. Trust preceded A1's spawn. Per-turn activation
+  state is a hypothesis, not proven runtime internals. Receipts begin after
+  stdin read, so absence alone cannot exclude failure before receipt capture.
+  All three native panes exited 0 and were closed. No synthetic event was used.
+
+All native runs preserved their declared source/package bytes and earlier
+evidence inventories. The diagnostic used an installed snapshot differing from
+source only in generated install-state metadata. Raw transcripts, input hashes,
+approval messages, initial failures and preservation receipts remain under the
+named local temporary roots; they are not shipped runtime dependencies. The
+Jev checks were shadow observations, never applied routing decisions; the probe's
+shared receipt write returned EPERM and its receipts were retained locally.
 
 #### Review receipt
 
-- Route: STANDARD. Scope: 133 existing files, zero deletions; no ignored required
-  deliverables in new directories. Baseline/current pre-commit HEAD: `8c04b1d`.
-- Rung 2: fresh named `handoff-reviewer` agents, with runtime role metadata,
-  successful background reads and inspected tool calls. Complete runtime
-  read-only enforcement was unverified. Git status, staged/unstaged binary diff
-  and scoped/untracked content snapshots matched around both reviews and the
-  clarification. No reviewer writes, network, UI, tests or project execution.
-- Self-review corrected stale native-status prose in `.codex/docs/VALIDATION.md`.
-- Round 1 reviewer `01a1b0da-baa7-7c13-9b57-0ae0563e7328`:
-  MEDIUM `.agents/skills/create-stories/SKILL.md:191`, omitted EPIC/index approval
-  — fixed with full-path preview and approval; MEDIUM
-  `.agents/skills/story-done/SKILL.md:421`, omitted sprint-status approval — fixed;
-  MEDIUM `.agents/skills/story-readiness/references/qa-lead-gate.md:21`, INADEQUATE
-  could proceed — fixed to retain BLOCKED and require revision before inclusion.
-  LOW assertions in `CCGS Skill Testing Framework/skills/pipeline/create-stories.md:70`,
-  `CCGS Skill Testing Framework/skills/readiness/story-done.md:163`, and
-  `CCGS Skill Testing Framework/skills/utility/setup-engine.md:54` — corrected
-  approval, verdict and registered role names. Locations are pre-fix references.
-- Conditional LOW `.codex/lib/godot-parse-check.gd:28` concern was withdrawn by the original reviewer
-  for observed 4.7.2 after the valid abstract probe reported can_instantiate=true,
-  reload=0 and helper exit 0. Startup user-data permission errors remain; this
-  is not a clean engine acceptance run. Helper unchanged.
-- Round 2 reviewer `01a1b0f8-8013-7323-ade9-1c9590beaf4b` checked the seven-file
-  fix set because workflow/spec corrections describe runtime behavior. One LOW
-  residual phrase at `CCGS Skill Testing Framework/skills/pipeline/create-stories.md:26` was corrected and reread under
-  the trivial round-two text-fix rule; docs and whitespace checks passed. Other
-  targeted corrections aligned with the contracts. No third review was needed.
-- Gate outcome: findings resolved; no deferred reviewer findings or waivers.
-  Two independent reviewers, three invocations including the bounded original-
-  reviewer clarification. Receipts, exact fixes and snapshots are retained in
-  `/private/tmp/ccgs-handoff-20261106/`; native replay debt remains above.
-- The final staged whitespace check included newly added files and found one
-  trailing empty line in `.codex/lib/godot-parse-check.gd`. Removed exactly that
-  line, preserving every code byte, then rechecked the staged diff. Earlier
-  unstaged diff checks did not cover the untracked helper.
-- Measured timing: setup/preflight 0.828 s; scope timing unverified; round 1
-  1188.059 s; clarification 3.496 s; round 2 30.650 s. Continuity/push timings
-  are reported by the completing transaction, not predicted here.
+- Route: STANDARD. Scope: two existing files, zero deletions or new directories;
+  baseline/current pre-commit HEAD `dabb7bd66448a7e4203e6a5c5632e105657fbb17`.
+- Rung 2: fresh named handoff-reviewer profiles verified in native metadata and
+  complete loaded instructions; effective runtime-wide read-only enforcement
+  was not established. Both completed their first background read successfully.
+  Inspected tool calls were nonmutating file reads and parent communications.
+  Git status, staged/unstaged binary diff and scoped/untracked content snapshots
+  matched before and after both reviews. No UI, network or project execution.
+- Round 1 reviewer `01a1b14c-5829-7441-bd8b-6cfffb65955a`: MEDIUM at
+  `CCGS Skill Testing Framework/skills/pipeline/create-stories.md:163`, failed
+  QA drafts could be written unchanged — fixed to require ADEQUATE before write
+  approval. LOW at the same file's line 69, obsolete metadata/schema and paths
+  — aligned with the current template and epic-slug/story-NNN layout. Locations
+  refer to the pre-fix file. Self-review independently identified the same drift.
+- Round 2 reviewer `01a1b14d-055f-78c3-9887-2c3957a2ba8c`: CLEAN. Required
+  because the corrections affect a runtime-behavior specification. An empty
+  whitespace log was supplemented with a fresh command/exit receipt before the
+  verdict. Two reviewer invocations total; no waivers or deferred findings.
+- Measured setup/manifest 0.089 s, push preflight 1.115 s, scope 0.303 s,
+  round 1 36.253 s, round 2 32.857 s. Continuity and push measurements are
+  reported by the completing transaction. Gate receipts and exact fix diff:
+  `/private/tmp/ccgs-handoff-draft-fidelity-20261106/`.
 
-First canonical handoff: nothing was rotated; no archive entry was fabricated.
-Tracking auto-sync was skipped because it is off. No external tracker or durable
-memory write, release, tag, deployment, branch switch or force-push is included.
+The prior 83-line session narrative was rotated verbatim into the archive.
+Tracking remains exploratory and automatic sync is off, so no external tracker
+write occurred. Optional memory discovery again returned exit-1 query errors;
+no lack of history is inferred. No durable memory write, release, tag, deployment,
+branch switch or force-push is included in this handoff.
